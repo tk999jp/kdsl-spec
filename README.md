@@ -55,6 +55,12 @@ KDSL / KDSL-DP / ADPS bridge:
   experimental/README.md
   experimental/actor-model.md
   experimental/protocol-stack.md
+
+例:
+  examples/README.md
+  examples/midfd/docs_state_closeout.before.md
+  examples/midfd/docs_state_closeout.after.md
+  examples/midfd/r1_result.example.md
 ```
 
 ## 構成
@@ -82,12 +88,13 @@ Lint: 意味欠落・safety gate欠落検査
 Bridge: KDSL-DP / ADPS / R1境界
 Templates: 実運用向け再利用部品
 Experimental: 検証中の概念・拡張案
+Examples: 正本ではない理解補助
 ```
 
 ## 現在の状態
 
 ```text
-status: template baseline imported
+status: example import completed
 visibility: private
 stability: draft
 release: none
@@ -98,6 +105,7 @@ public: not_yet
 
 - Core / R1 / Lint は慎重に変更する
 - Experimental は正本扱いしない
+- Examples は正本扱いしない
 - Templates は未読時に意味が消えるため、参照だけで読了扱いしない
 - KDSL-DP は P1/P1L へ正規化するまで実行指示扱いしない
 - KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
@@ -107,8 +115,8 @@ public: not_yet
 ## 次候補
 
 ```text
-Phase 4: Example import
-- examples/midfd/docs_state_closeout.before.md
-- examples/midfd/docs_state_closeout.after.md
-- examples/midfd/r1_result.example.md
+Phase 5: Validator design
+- tools/validator/README.md
+- tools/validator/r1-validator-design.md
+- tools/validator/kdsl-template-lint-design.md
 ```
