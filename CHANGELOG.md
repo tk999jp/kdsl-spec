@@ -6,6 +6,9 @@
 
 - Initial private repository structure for KDSL / R1 specification management.
 - README defining repository purpose, navigation, structure, draft status, and next candidate phase.
+- Overview and planning documents:
+  - `docs/overview.md`
+  - `docs/public-readiness.md`
 - Manifest and glossary:
   - `spec/manifest.md`
   - `spec/glossary.md`
@@ -43,6 +46,7 @@
   - `tools/validator/README.md`
   - `tools/validator/r1-validator-design.md`
   - `tools/validator/kdsl-template-lint-design.md`
+  - `tools/validator/mvp-design.md`
 - Review documents:
   - `docs/reviews/v0.1.0-draft-review.md`
   - `docs/reviews/v0.1.0-draft-checklist.md`
@@ -51,11 +55,14 @@
 
 ### Consolidated
 
-- Repository status clarified as `v0.1.0-draft tag plan prepared`.
+- Repository status clarified as `overview public-readiness and validator MVP design completed`.
+- `docs/overview.md` summarizes KDSL/R1 purpose, components, safety principles, and current maturity.
+- `docs/public-readiness.md` records that public release is not recommended yet.
+- `tools/validator/mvp-design.md` defines a limited R1-first MVP scope and explicitly excludes approval/RT:v substitution.
+- `docs/release/v0.1.0-draft-tag-plan.md` separates work continuation from explicit tag creation approval.
 - `spec/manifest.md` defines source-of-truth ownership and reference relationships.
 - `spec/glossary.md` defines key terms such as KDSL, KDSL-DP, P1/P1L, R1, KDSL_PROMPT, KDSL_RESULT, RT:v, D禁止, Evidence, Authority, Template, and Validator.
 - `docs/reviews/v0.1.0-draft-checklist.md` records tag readiness checks and keeps tag creation under U approval.
-- `docs/release/v0.1.0-draft-tag-plan.md` separates work continuation from explicit tag creation approval.
 - Experimental concepts are explicitly not Core specification.
 - Examples are explicitly not Core specification.
 - Tools are optional aids; validator pass is not approval, RT:v, or requirement validity.
