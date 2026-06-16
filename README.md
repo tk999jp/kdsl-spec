@@ -45,9 +45,16 @@ KDSL / KDSL-DP / ADPS bridge:
 
 テンプレート:
   templates/README.md
+  templates/base/kdsl_base_dev.md
+  templates/result/r1_result_spec.md
+  templates/tasks/task_docs_state_closeout.md
+  templates/tasks/task_corrective_impl.md
+  templates/tasks/task_investigation_only.md
 
 実験案:
   experimental/README.md
+  experimental/actor-model.md
+  experimental/protocol-stack.md
 ```
 
 ## 構成
@@ -80,7 +87,7 @@ Experimental: 検証中の概念・拡張案
 ## 現在の状態
 
 ```text
-status: initial specification consolidation
+status: template baseline imported
 visibility: private
 stability: draft
 release: none
@@ -100,9 +107,8 @@ public: not_yet
 ## 次候補
 
 ```text
-Phase 3: Template baseline
-- kdsl_base_dev.md
-- r1_result_spec.md
-- task_docs_state_closeout.md
-- task_investigation_only.md
+Phase 4: Example import
+- examples/midfd/docs_state_closeout.before.md
+- examples/midfd/docs_state_closeout.after.md
+- examples/midfd/r1_result.example.md
 ```
