@@ -9,6 +9,8 @@ R1:=Evidence / 結果証跡
 KDSL_RESULT:=R1系の人間/AI向け結果block
 ```
 
+R1は単なる報告テンプレートではなく、AI作業の検収票である。
+
 ## 1. 基本契約
 
 AI coding tool / Codex の最終回答は、必要時に先頭へ `KDSL_RESULT:` blockを出力する。
@@ -79,6 +81,27 @@ Runtime未確認→RT:u|RT:p + RISK:runtime_unverified
 docs/guidance only→理由明記でRT:na可
 ```
 
+RT:vとして扱える根拠:
+
+```text
+対象環境runtime確認
+U実機観測
+U共有runtime log
+明示された実機確認結果
+```
+
+RT:vとして扱えない根拠:
+
+```text
+build成功
+diff確認
+lint pass
+unit test pass
+静的確認
+推測
+再現していないはずという判断
+```
+
 ## 4. CMD / VERIFY
 
 CMD:
@@ -95,6 +118,12 @@ VERIFY:
 実行した検証のみ記載
 未実行verifyをpass扱禁止
 未実行verifyはnot_runとして記録可
+```
+
+推奨:
+
+```text
+VERIFYは executed / not_run / failed を分離
 ```
 
 ## 5. FILES / WHY
@@ -134,18 +163,36 @@ commit実行済ならcommit hash/messageを明記
 commit未実行ならproposed messageとして明記
 ```
 
+推奨構造:
+
+```text
+COMMIT:
+  actual: <hash/message | none>
+  proposed: <message | none>
+  permission_basis: <KDSL_PROMPT authority | U承認 | none>
+```
+
 ## 7. Evidence separation
 
 R1では、観測・推論・未観測・未確認を分離する。
 
-推奨構造:
+推奨block:
 
 ```text
 EVIDENCE:
-OBSERVED:
-INFERRED:
-NOT_OBSERVED:
-UNVERIFIED:
+  OBSERVED:
+  INFERRED:
+  NOT_OBSERVED:
+  UNVERIFIED:
+```
+
+定義:
+
+```text
+OBSERVED:=ログ/実機/実行結果/差分などにより観測された事実
+INFERRED:=観測から推論したが直接観測ではない内容
+NOT_OBSERVED:=確認対象だが観測されなかった内容
+UNVERIFIED:=未確認であり、確認済み扱いしてはいけない内容
 ```
 
 規則:
@@ -155,6 +202,25 @@ observed=false→confirmed扱禁止
 not_observed→確認済扱禁止
 unverified→RT:v根拠禁止
 inferred→observed扱禁止
+推論をWHYへ書く場合はinferredであることを明示
+```
+
+例:
+
+```text
+OBSERVED:
+- QuickAccess.Open approx 170-215ms
+- resolvedSync=False / reason=unc-path
+
+NOT_OBSERVED:
+- cache=hit
+
+UNVERIFIED:
+- cache hitによる改善
+
+FORBIDDEN_REPORT:
+- cache hit確認済み
+- cache hit改善断定
 ```
 
 ## 8. Authority separation
@@ -168,19 +234,63 @@ NEXT != 実行許可
 report != approval
 ```
 
-推奨追加block:
+推奨block:
 
 ```text
 AUTHORITY:
-read:
-edit:
-stage:
-commit:
-push:
-release:
+  read:
+  edit:
+  stage:
+  commit:
+  push:
+  release:
 ```
 
-## 9. R1 lint minimum
+推奨値:
+
+```text
+allow
+forbid
+target_only
+allow_once
+propose_only
+not_requested
+not_applicable
+```
+
+規則:
+
+```text
+AUTHORITY.commit=propose_only → git commit実行禁止
+AUTHORITY.push=forbid → push/update_ref禁止
+AUTHORITY.release=forbid → release/tag/assets操作禁止
+COMMIT.proposed != AUTHORITY.commit=allow_once
+```
+
+## 9. R1-HMI optional block
+
+Human-AI work interfaceとして、必要時に次のblockを追加できる。
+
+```text
+ANNUNCIATOR:
+  STATUS:
+  PHASE:
+  AUTHORITY:
+  RT:
+  PUBLIC_OPS:
+  DESTRUCTIVE_OPS:
+```
+
+用途:
+
+```text
+mode confusion防止
+権限状態の先頭表示
+runtime状態の明示
+public/release/destructive操作のlock表示
+```
+
+## 10. R1 lint minimum
 
 ```text
 KDSL_RESULT先頭固定
@@ -194,4 +304,5 @@ COMMIT:=推奨message/実行済commit保持
 NEXT実行許可扱禁止保持
 COMMIT自動commit許可扱禁止保持
 観測/推論/未観測/未確認分離
+AUTHORITY権限混同なし
 ```
