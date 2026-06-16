@@ -6,6 +6,9 @@
 
 - Initial private repository structure for KDSL / R1 specification management.
 - README defining repository purpose, navigation, structure, draft status, and next candidate phase.
+- Manifest and glossary:
+  - `spec/manifest.md`
+  - `spec/glossary.md`
 - Core specification drafts:
   - `spec/core/kdsl-spec.md`
   - `spec/core/kdsl-core.md`
@@ -40,12 +43,16 @@
   - `tools/validator/README.md`
   - `tools/validator/r1-validator-design.md`
   - `tools/validator/kdsl-template-lint-design.md`
-- Review document:
+- Review documents:
   - `docs/reviews/v0.1.0-draft-review.md`
+  - `docs/reviews/v0.1.0-draft-checklist.md`
 
 ### Consolidated
 
-- Repository status clarified as `v0.1.0-draft review completed`.
+- Repository status clarified as `manifest and glossary completed`.
+- `spec/manifest.md` defines source-of-truth ownership and reference relationships.
+- `spec/glossary.md` defines key terms such as KDSL, KDSL-DP, P1/P1L, R1, KDSL_PROMPT, KDSL_RESULT, RT:v, D禁止, Evidence, Authority, Template, and Validator.
+- `docs/reviews/v0.1.0-draft-checklist.md` records tag readiness checks and keeps tag creation under U approval.
 - Experimental concepts are explicitly not Core specification.
 - Examples are explicitly not Core specification.
 - Tools are optional aids; validator pass is not approval, RT:v, or requirement validity.
@@ -54,12 +61,12 @@
 - Base dev prompt, R1 result, docs/state closeout, corrective implementation, and investigation-only templates are now available as draft reusable parts.
 - MidFD docs/state closeout example demonstrates before/after compression and R1 verification format.
 - Validator design separates R1 validation from KDSL template lint.
-- v0.1.0-draft review records that tag creation is not recommended yet.
 
 ### Notes
 
 - This repository is currently a draft specification workspace.
 - No tag/release has been created yet.
-- v0.1.0-draft tag is deferred until manifest/glossary/checklist are added.
+- v0.1.0-draft tag is now a candidate after user review, but tag creation requires explicit U approval.
+- Release/publicization are still not recommended.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
 - Validator implementation has not started.
