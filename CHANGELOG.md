@@ -32,14 +32,20 @@
   - `templates/tasks/task_docs_state_closeout.md`
   - `templates/tasks/task_corrective_impl.md`
   - `templates/tasks/task_investigation_only.md`
+- MidFD example drafts:
+  - `examples/midfd/docs_state_closeout.before.md`
+  - `examples/midfd/docs_state_closeout.after.md`
+  - `examples/midfd/r1_result.example.md`
 
 ### Consolidated
 
-- Repository status clarified as `template baseline imported`.
+- Repository status clarified as `example import completed`.
 - Experimental concepts are explicitly not Core specification.
+- Examples are explicitly not Core specification.
 - Template references require actual reading; unreadable templates must not be assumed.
 - R1 is separated as an evidence / result-verification specification.
 - Base dev prompt, R1 result, docs/state closeout, corrective implementation, and investigation-only templates are now available as draft reusable parts.
+- MidFD docs/state closeout example demonstrates before/after compression and R1 verification format.
 
 ### Notes
 
