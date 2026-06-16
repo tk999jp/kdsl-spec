@@ -74,6 +74,9 @@ Validator design:
 Review / checklist:
   docs/reviews/v0.1.0-draft-review.md
   docs/reviews/v0.1.0-draft-checklist.md
+
+Release planning:
+  docs/release/v0.1.0-draft-tag-plan.md
 ```
 
 ## 構成
@@ -110,18 +113,19 @@ Experimental: 検証中の概念・拡張案
 Examples: 正本ではない理解補助
 Tools: 任意補助。validator passは承認/RT:vの代替ではない
 Reviews: tag/release前の判断記録
+Release planning: tag/release判断の準備文書。実行許可ではない
 ```
 
 ## 現在の状態
 
 ```text
-status: manifest and glossary completed
+status: v0.1.0-draft tag plan prepared
 visibility: private
 stability: draft
 release: none
 public: not_yet
 tag: not_created
-next_decision: v0.1.0-draft tag approval
+next_decision: explicit approval required for annotated tag v0.1.0-draft
 ```
 
 ## 運用方針
@@ -133,6 +137,7 @@ next_decision: v0.1.0-draft tag approval
 - Examples は正本扱いしない
 - Tools は補助であり、validator pass を承認/RT:v/要件妥当性の代替にしない
 - Templates は未読時に意味が消えるため、参照だけで読了扱いしない
+- Release planning は実行許可ではない
 - KDSL-DP は P1/P1L へ正規化するまで実行指示扱いしない
 - KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
 - KDSL_RESULT の COMMIT は実行結果または推奨messageであり、自動commit許可ではない
@@ -141,8 +146,9 @@ next_decision: v0.1.0-draft tag approval
 ## 次候補
 
 ```text
-Phase 8: v0.1.0-draft tag decision
-- U承認がある場合のみ annotated tag v0.1.0-draft を検討
-- release作成なし
-- public化なし
+Phase 9: explicit tag approval or next design phase
+A. Uが明示承認する場合のみ annotated tag v0.1.0-draft を作成
+B. tag保留なら overview / public-readiness / validator MVP design へ進む
+release作成なし
+public化なし
 ```
