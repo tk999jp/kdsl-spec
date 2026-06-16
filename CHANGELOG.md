@@ -26,13 +26,20 @@
 - Experimental drafts:
   - `experimental/actor-model.md`
   - `experimental/protocol-stack.md`
+- Template baseline drafts:
+  - `templates/base/kdsl_base_dev.md`
+  - `templates/result/r1_result_spec.md`
+  - `templates/tasks/task_docs_state_closeout.md`
+  - `templates/tasks/task_corrective_impl.md`
+  - `templates/tasks/task_investigation_only.md`
 
 ### Consolidated
 
-- Repository status clarified as `initial specification consolidation`.
+- Repository status clarified as `template baseline imported`.
 - Experimental concepts are explicitly not Core specification.
 - Template references require actual reading; unreadable templates must not be assumed.
 - R1 is separated as an evidence / result-verification specification.
+- Base dev prompt, R1 result, docs/state closeout, corrective implementation, and investigation-only templates are now available as draft reusable parts.
 
 ### Notes
 
