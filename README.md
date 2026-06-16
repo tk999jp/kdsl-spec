@@ -28,6 +28,10 @@ operator / 保護語 / 変換禁止:
 mode / safety / high-risk:
   spec/core/kdsl-modes.md
 
+manifest / glossary:
+  spec/manifest.md
+  spec/glossary.md
+
 dev-prompt運用:
   spec/profiles/kdsl-profile-dev-prompt.md
 
@@ -67,31 +71,36 @@ Validator design:
   tools/validator/r1-validator-design.md
   tools/validator/kdsl-template-lint-design.md
 
-Review:
+Review / checklist:
   docs/reviews/v0.1.0-draft-review.md
+  docs/reviews/v0.1.0-draft-checklist.md
 ```
 
 ## 構成
 
 ```text
 spec/
-  core/       KDSLの正本・core記法・mode定義
-  profiles/   dev-prompt / converter など用途別profile
-  r1/         R1 Result Specification / KDSL_RESULT
-  lint/       KDSL/R1 lint checklist
-  bridge/     KDSL / KDSL-DP / ADPS / R1境界
+  manifest.md  正本参照関係
+  glossary.md  用語集
+  core/         KDSLの正本・core記法・mode定義
+  profiles/     dev-prompt / converter など用途別profile
+  r1/           R1 Result Specification / KDSL_RESULT
+  lint/         KDSL/R1 lint checklist
+  bridge/       KDSL / KDSL-DP / ADPS / R1境界
 
-templates/    再利用prompt template置き場
-experimental/ Actor Model / Protocol Stack / HMI / Python Validator等の実験案
-examples/     変換例・運用例
-tools/        validator等の設計/将来実装置き場
-docs/         review / release planning 等の運用文書
+templates/      再利用prompt template置き場
+experimental/   Actor Model / Protocol Stack / HMI / Python Validator等の実験案
+examples/       変換例・運用例
+tools/          validator等の設計/将来実装置き場
+docs/           review / release planning 等の運用文書
 ```
 
 ## 仕様レベル
 
 ```text
 Core: 壊してはいけない正本
+Manifest: 正本参照関係
+Glossary: 用語定義
 Profile: 用途別の運用仕様
 R1: AI作業結果の証跡・検収仕様
 Lint: 意味欠落・safety gate欠落検査
@@ -106,17 +115,20 @@ Reviews: tag/release前の判断記録
 ## 現在の状態
 
 ```text
-status: v0.1.0-draft review completed
+status: manifest and glossary completed
 visibility: private
 stability: draft
 release: none
 public: not_yet
 tag: not_created
+next_decision: v0.1.0-draft tag approval
 ```
 
 ## 運用方針
 
 - Core / R1 / Lint は慎重に変更する
+- Manifest は正本参照関係を示す
+- Glossary は用語定義を示す
 - Experimental は正本扱いしない
 - Examples は正本扱いしない
 - Tools は補助であり、validator pass を承認/RT:v/要件妥当性の代替にしない
@@ -129,8 +141,8 @@ tag: not_created
 ## 次候補
 
 ```text
-Phase 7: Manifest and glossary
-- spec/manifest.md
-- spec/glossary.md
-- docs/reviews/v0.1.0-draft-checklist.md
+Phase 8: v0.1.0-draft tag decision
+- U承認がある場合のみ annotated tag v0.1.0-draft を検討
+- release作成なし
+- public化なし
 ```
