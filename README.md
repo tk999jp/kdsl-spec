@@ -61,6 +61,11 @@ KDSL / KDSL-DP / ADPS bridge:
   examples/midfd/docs_state_closeout.before.md
   examples/midfd/docs_state_closeout.after.md
   examples/midfd/r1_result.example.md
+
+Validator design:
+  tools/validator/README.md
+  tools/validator/r1-validator-design.md
+  tools/validator/kdsl-template-lint-design.md
 ```
 
 ## 構成
@@ -76,6 +81,7 @@ spec/
 templates/    再利用prompt template置き場
 experimental/ Actor Model / Protocol Stack / HMI / Python Validator等の実験案
 examples/     変換例・運用例
+tools/        validator等の設計/将来実装置き場
 ```
 
 ## 仕様レベル
@@ -89,12 +95,13 @@ Bridge: KDSL-DP / ADPS / R1境界
 Templates: 実運用向け再利用部品
 Experimental: 検証中の概念・拡張案
 Examples: 正本ではない理解補助
+Tools: 任意補助。validator passは承認/RT:vの代替ではない
 ```
 
 ## 現在の状態
 
 ```text
-status: example import completed
+status: validator design imported
 visibility: private
 stability: draft
 release: none
@@ -106,6 +113,7 @@ public: not_yet
 - Core / R1 / Lint は慎重に変更する
 - Experimental は正本扱いしない
 - Examples は正本扱いしない
+- Tools は補助であり、validator pass を承認/RT:v/要件妥当性の代替にしない
 - Templates は未読時に意味が消えるため、参照だけで読了扱いしない
 - KDSL-DP は P1/P1L へ正規化するまで実行指示扱いしない
 - KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
@@ -115,8 +123,8 @@ public: not_yet
 ## 次候補
 
 ```text
-Phase 5: Validator design
-- tools/validator/README.md
-- tools/validator/r1-validator-design.md
-- tools/validator/kdsl-template-lint-design.md
+Phase 6: v0.1.0-draft review
+- Core/R1/Lint/Template/Examples/Validator design の整合性確認
+- 仕様名/ファイル名/責務重複の点検
+- tag作成可否判断
 ```
