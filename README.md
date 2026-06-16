@@ -66,6 +66,9 @@ Validator design:
   tools/validator/README.md
   tools/validator/r1-validator-design.md
   tools/validator/kdsl-template-lint-design.md
+
+Review:
+  docs/reviews/v0.1.0-draft-review.md
 ```
 
 ## 構成
@@ -82,6 +85,7 @@ templates/    再利用prompt template置き場
 experimental/ Actor Model / Protocol Stack / HMI / Python Validator等の実験案
 examples/     変換例・運用例
 tools/        validator等の設計/将来実装置き場
+docs/         review / release planning 等の運用文書
 ```
 
 ## 仕様レベル
@@ -96,16 +100,18 @@ Templates: 実運用向け再利用部品
 Experimental: 検証中の概念・拡張案
 Examples: 正本ではない理解補助
 Tools: 任意補助。validator passは承認/RT:vの代替ではない
+Reviews: tag/release前の判断記録
 ```
 
 ## 現在の状態
 
 ```text
-status: validator design imported
+status: v0.1.0-draft review completed
 visibility: private
 stability: draft
 release: none
 public: not_yet
+tag: not_created
 ```
 
 ## 運用方針
@@ -123,8 +129,8 @@ public: not_yet
 ## 次候補
 
 ```text
-Phase 6: v0.1.0-draft review
-- Core/R1/Lint/Template/Examples/Validator design の整合性確認
-- 仕様名/ファイル名/責務重複の点検
-- tag作成可否判断
+Phase 7: Manifest and glossary
+- spec/manifest.md
+- spec/glossary.md
+- docs/reviews/v0.1.0-draft-checklist.md
 ```
