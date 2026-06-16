@@ -125,13 +125,15 @@ Public readiness: 公開可否判断メモ。公開実行ではない
 ## 現在の状態
 
 ```text
-status: overview public-readiness and validator MVP design completed
+status: v0.1.0-draft tag recorded
+tag: v0.1.0-draft
+tag_type: annotated
+tag_object: 797c88ad176dde5286187984de945040ec5eb945
+tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
 visibility: private
 stability: draft
 release: none
 public: not_yet
-tag: not_created
-next_decision: explicit approval required for annotated tag v0.1.0-draft, or continue internal design
 ```
 
 ## 運用方針
@@ -154,9 +156,9 @@ next_decision: explicit approval required for annotated tag v0.1.0-draft, or con
 
 ```text
 Phase 10: choose next track
-A. Uが明示承認する場合のみ annotated tag v0.1.0-draft を作成
-B. validator-mvp-r1-only の実装設計または実装へ進む
-C. public-facing README / examples/public 設計へ進む
+A. validator-mvp-r1-only の実装設計または実装へ進む
+B. public-facing README / examples/public 設計へ進む
+C. v0.1.0-draft以降のspec整理へ進む
 release作成なし
 public化なし
 ```
