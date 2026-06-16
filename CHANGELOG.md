@@ -40,10 +40,12 @@
   - `tools/validator/README.md`
   - `tools/validator/r1-validator-design.md`
   - `tools/validator/kdsl-template-lint-design.md`
+- Review document:
+  - `docs/reviews/v0.1.0-draft-review.md`
 
 ### Consolidated
 
-- Repository status clarified as `validator design imported`.
+- Repository status clarified as `v0.1.0-draft review completed`.
 - Experimental concepts are explicitly not Core specification.
 - Examples are explicitly not Core specification.
 - Tools are optional aids; validator pass is not approval, RT:v, or requirement validity.
@@ -52,10 +54,12 @@
 - Base dev prompt, R1 result, docs/state closeout, corrective implementation, and investigation-only templates are now available as draft reusable parts.
 - MidFD docs/state closeout example demonstrates before/after compression and R1 verification format.
 - Validator design separates R1 validation from KDSL template lint.
+- v0.1.0-draft review records that tag creation is not recommended yet.
 
 ### Notes
 
 - This repository is currently a draft specification workspace.
 - No tag/release has been created yet.
+- v0.1.0-draft tag is deferred until manifest/glossary/checklist are added.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
 - Validator implementation has not started.
