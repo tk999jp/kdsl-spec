@@ -1,16 +1,7 @@
-# KDSL Lint Checklist v0.1-draft
+# KDSL Lint Checklist v1.1
 
-目的: KDSL圧縮後の意味欠落 / safety gate欠落 / 危険短縮 / ADPS境界破損を検出する。
-
-対象:
-
-```text
-KDSL mode:min / mode:dense
-profile:dev-prompt
-converter出力
-KDSL_PROMPT
-KDSL_RESULT要求
-```
+目的: KDSL圧縮後の意味欠落 / safety gate欠落 / 危険短縮 / ADPS境界破損を検出する  
+対象: KDSL mode:min / mode:dense / profile:dev-prompt / converter出力 / KDSL_PROMPT / KDSL_RESULT要求
 
 ## 判定値
 
@@ -22,7 +13,6 @@ KDSL_RESULT要求
 ```
 
 弱化/欠落時:
-
 ```text
 完成扱い禁止
 意味変化riskへ記録
@@ -81,9 +71,8 @@ STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
 未実行cmd→CMD記載禁止保持
 未実行verify→pass扱禁止保持
 RT:v条件保持
-build/diff/lint/test pass != RT:v保持
 NEXT:=提案保持
-COMMIT:=推奨message/実行済commit保持
+COMMIT:=推奨message保持
 ```
 
 ## 危険短縮
@@ -104,13 +93,11 @@ command/path/code誤変換
 KDSL-DPを実行指示へ短絡
 RT:vをbuild pass扱い
 NEXTを許可扱い
-COMMIT候補をcommit許可扱い
 ```
 
 ## 危険短縮例
 
 NG:
-
 ```text
 Runtime確認未確認
 AI禁止
@@ -124,7 +111,6 @@ KDSL-DP→Codex実装
 ```
 
 OK:
-
 ```text
 Runtime未確認→確認済扱禁止
 共有材判可→AI丸投禁止
@@ -140,7 +126,6 @@ KDSL-DP→P1/P1L正規化必須
 ## 合格条件
 
 合格:
-
 ```text
 必須保持checkが保持または該当なし
 high-risk箇所に弱化なし
@@ -150,7 +135,6 @@ KDSL_PROMPT/KDSL_RESULT要求が必要時保持
 ```
 
 条件付き合格:
-
 ```text
 低risk箇所のみ弱化あり
 意味変化riskへ記録済
@@ -158,7 +142,6 @@ KDSL_PROMPT/KDSL_RESULT要求が必要時保持
 ```
 
 不合格:
-
 ```text
 D禁止欠落
 rollback/revert欠落
@@ -168,7 +151,14 @@ rollback/revert欠落
 public履歴/公開済tag/Release Assets保護欠落
 high-risk箇所で禁止動作不明
 KDSL-DP直接実行禁止欠落
-P1/P1L正規化必須欠落
 RT:v条件欠落
 KDSL_RESULT NEXT/COMMIT条件欠落
+```
+
+## 自然文再展開一致判定
+
+```text
+一致: 条件/対象/禁止動作が同じ
+弱一致: safety側に強化, 元意味維持
+不一致: 条件/対象/禁止動作が変化
 ```
