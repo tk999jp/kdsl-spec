@@ -27,10 +27,13 @@
   - `tools/validator/r1-validator-design.md`
   - `tools/validator/kdsl-template-lint-design.md`
   - `tools/validator/mvp-design.md`
-- Added validator MVP implementation notes and samples:
+- Added validator MVP first implementation slice and samples:
+  - `tools/validator/r1_required_blocks.py`
+  - `tools/validator/r1_required_blocks_usage.md`
   - `tools/validator/r1-mvp-implementation-notes.md`
   - `tools/validator/samples/sample_r1_ok.md`
   - `tools/validator/samples/sample_r1_missing_block.md`
+  - `tools/validator/samples/expected_results.md`
 - Added v1.1 sync review document:
   - `docs/reviews/v1.1-sync-review.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
@@ -41,8 +44,8 @@
 - Existing tag/release/public status is unchanged.
 - No GitHub Release has been created.
 - Repository remains private.
-- Validator implementation has not started.
-- Direct creation of the initial validator code file was blocked during this cleanup pass, so implementation remains `not_started`.
+- Validator implementation has started only for the first R1 required-block slice.
+- Validator first slice does not check RT:v basis, NEXT/COMMIT authority confusion, template expansion, runtime verification, or approval validity.
 
 ## v0.1.0-draft
 
@@ -132,4 +135,4 @@ public: not_yet
 - No GitHub Release has been created.
 - Release/publicization are still not recommended.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has not started.
+- Validator implementation has started only for the first required-block slice.
