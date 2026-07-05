@@ -1,6 +1,6 @@
-# Validator MVP Design v0.1-draft
+# Validator MVP Design v1.1-sync
 
-status: mvp-design-draft
+status: mvp-design-draft-main-v1.1-sync
 implementation: not_started
 
 ## 1. Purpose
@@ -73,6 +73,7 @@ lint pass
 unit test pass
 静的確認
 推測
+validator pass
 ```
 
 結果:
