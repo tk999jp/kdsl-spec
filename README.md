@@ -74,6 +74,9 @@ Validator design:
   tools/validator/r1-validator-design.md
   tools/validator/kdsl-template-lint-design.md
   tools/validator/mvp-design.md
+  tools/validator/r1-mvp-implementation-notes.md
+  tools/validator/samples/sample_r1_ok.md
+  tools/validator/samples/sample_r1_missing_block.md
 
 Review / checklist:
   docs/reviews/v0.1.0-draft-review.md
@@ -159,9 +162,9 @@ validator: design only / implementation not started
 ## 次候補
 
 ```text
-Phase 12: validator/template follow-up
-A. tools/validator/kdsl-template-lint-design.md のheader/status追従を再試行
-B. validator-mvp-r1-only の実装設計または実装へ進む
+Phase 13: validator-mvp-r1-required-blocks
+A. validator実装本体をローカル/別経路で追加
+B. RT:v invalid basis check設計を次sliceへ分離
 C. public-facing README / examples/public 設計へ進む
 release作成なし
 public化なし
