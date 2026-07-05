@@ -1,8 +1,26 @@
-# KDSL Spec Manifest v0.1-draft
+# KDSL Spec Manifest v1.1-sync
 
 目的: kdsl-spec内の各ファイルの責務・正本性・参照関係を定義し、重複規則の更新不一致を防ぐ。
 
-status: draft
+status: draft-main-v1.1-sync
+
+## 0. Current main alignment
+
+```text
+main_spec_sync: v1.1-ADPS-aware oriented
+base_tag: v0.1.0-draft
+base_tag_status: recorded / unchanged
+release: none
+public: not_yet
+validator: design only / implementation not started
+```
+
+注意:
+```text
+v0.1.0-draft tagは履歴として維持する
+mainのv1.1同期はtag移動/Release作成/public化を意味しない
+次tag/release/public化は別途U承認必須
+```
 
 ## 1. Spec layers
 
@@ -210,7 +228,6 @@ BridgeのKDSL-DP/P1/P1L境界変更→breaking候補
 Lint項目追加→compatible候補
 Template追加→compatible候補
 Example追加→patch候補
-Experimental追加→patch候補
 ```
 
 ## 6. Promotion policy
@@ -229,13 +246,13 @@ ExperimentalからCore/R1/Lintへ昇格する場合:
 
 ## 7. Tag readiness dependency
 
-v0.1.0-draft tag前に必要:
+v0.1.0-draft tagは記録済み。以降のtag/release/public化に必要:
 
 ```text
-spec/manifest.md present
-spec/glossary.md present
-docs/reviews/v0.1.0-draft-checklist.md present
 README status updated
 CHANGELOG updated
-tag/release判断はU承認
+manifest current alignment updated
+review/checklist added or updated
+validator未実装なら未実装を明記
+release/public判断はU承認
 ```
