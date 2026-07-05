@@ -1,8 +1,8 @@
-# Task Template: Corrective Implementation v0.1-draft
+# Task Template: Corrective Implementation v1.1-sync
 
 目的: 既存Phase内の不具合・未改善点に対して、原因候補を絞った限定補正を行うためのtask template。
 
-status: template-draft
+status: template-draft-main-v1.1-sync
 requires:
 
 ```text
@@ -64,6 +64,7 @@ stage: target_only
 commit: propose_only
 push: forbid
 release: forbid
+public_repo: forbid
 destructive_ops: forbid
 ```
 
