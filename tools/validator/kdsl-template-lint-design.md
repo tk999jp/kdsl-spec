@@ -1,8 +1,8 @@
-# KDSL Template Lint Design v0.1-draft
+# KDSL Template Lint Design v1.1-sync
 
 目的: KDSL_PROMPTのtemplate参照・instance項目・権限・停止条件の欠落/衝突を機械検査する。
 
-status: design-draft
+status: design-draft-main-v1.1-sync
 implementation: not_started
 source_templates:
 
