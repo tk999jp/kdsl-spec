@@ -5,6 +5,7 @@ from pathlib import Path
 CHECKERS = [
     'r1_required_blocks.py',
     'r1_rt_basis.py',
+    'kdsl_template_refs.py',
 ]
 
 
