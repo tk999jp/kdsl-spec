@@ -1,8 +1,8 @@
-# Task Template: Investigation Only v0.1-draft
+# Task Template: Investigation Only v1.1-sync
 
 目的: 実装・編集を行わず、共有材料/リポジトリ/ログ/差分を調査して、次の安全な判断材料をR1で返すためのtask template。
 
-status: template-draft
+status: template-draft-main-v1.1-sync
 requires:
 
 ```text
@@ -63,6 +63,7 @@ stage: forbid
 commit: forbid
 push: forbid
 release: forbid
+public_repo: forbid
 destructive_ops: forbid
 ```
 
