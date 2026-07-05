@@ -1,6 +1,7 @@
-# KDSL Core v0.1-draft
+# KDSL Core v1.1
 
-目的: KDSLの共通記法 / 保護語 / 変換文型 / ADPS境界語を定義する。
+目的: KDSLの共通記法 / 保護語 / 変換文型 / ADPS境界語を定義する  
+参照正本: `kdsl-spec.md`
 
 ## 基本
 
@@ -11,11 +12,7 @@ mode: <readable|min|dense|lock>
 safety: <normal|lock-critical|lock-all>
 ```
 
-優先:
-
-```text
-意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
-```
+優先: 意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
 
 ## operator
 
@@ -33,13 +30,10 @@ safety: <normal|lock-critical|lock-all>
 ```
 
 注意:
-
-```text
-> 行頭使用禁止
-= を扱/状態指定に使用禁止
-:= は状態/扱い明示に使用
-/ は並列列挙を基本とする
-```
+- `>` は行頭使用禁止
+- `=` を扱/状態指定に使わない
+- `/` は並列列挙が基本、選択は必要時に補足
+- `:=` は「状態/扱い」を明示するために使う
 
 ## abbrev
 
@@ -64,7 +58,6 @@ R1/KDSL_RESULT:=Evidence/結果証跡
 ```
 
 重要:
-
 ```text
 KDSL-DP直接実行禁止
 KDSL-DP→P1/P1L正規化必須
@@ -102,7 +95,6 @@ public履歴
 公開済tag
 Release Assets
 KDSL-DP直接実行禁止
-P1/P1L正規化必須
 RT:v
 KDSL_RESULT NEXT
 KDSL_RESULT COMMIT
@@ -146,6 +138,16 @@ X衝突→Y優先
 X連続→診断先行
 ```
 
+## 優先文型
+
+```text
+A>B
+A優先
+A正扱
+A維持
+A先行
+```
+
 ## 変換禁止
 
 ```text
@@ -163,9 +165,6 @@ Windows path
 ```
 
 code block内:
-
-```text
-原則変換禁止
-Uがcode block全体を変換対象として明示した場合のみ変換可
-command/path/code/API名は常に変換禁止
-```
+- 原則変換禁止
+- Uがcode block全体を変換対象として明示した場合は変換可
+- command/path/code/API名は常に変換禁止
