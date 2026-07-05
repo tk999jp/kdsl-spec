@@ -34,6 +34,8 @@
   - `tools/validator/samples/sample_r1_ok.md`
   - `tools/validator/samples/sample_r1_missing_block.md`
   - `tools/validator/samples/expected_results.md`
+- Added validator first-slice verification record:
+  - `tools/validator/verification/r1_required_blocks_verify.md`
 - Added v1.1 sync review document:
   - `docs/reviews/v1.1-sync-review.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
@@ -45,6 +47,7 @@
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has started only for the first R1 required-block slice.
+- First-slice verification is recorded for OK and missing-block samples.
 - Validator first slice does not check RT:v basis, NEXT/COMMIT authority confusion, template expansion, runtime verification, or approval validity.
 
 ## v0.1.0-draft
