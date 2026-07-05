@@ -4,6 +4,8 @@ KDSL / R1 の再利用可能なprompt template置き場。
 
 このディレクトリは、Core仕様ではなく実運用向けの部品管理を目的とする。
 
+status: draft-main-v1.1-sync
+
 ## 想定構成
 
 ```text
@@ -55,6 +57,7 @@ instance側でPhase/HEAD/target/evidence/authorityを明記
 use: template名 だけで実行指示扱い
 未読templateを過去文脈から推測
 templateのcommit/push権限をinstanceへ自動継承
+KDSL-DPをtemplate経由で実装指示扱いにしない
 ```
 
 ## 推奨template分類
