@@ -1,9 +1,10 @@
-# KDSL Base Dev Prompt Template v0.1-draft
+# KDSL Base Dev Prompt Template v1.1-sync
 
 目的: dev-prompt用途のKDSL_PROMPTで毎回重複する基本契約を提供する。
 
-status: template-draft
+status: template-draft-main-v1.1-sync
 scope: common dev-prompt base
+source_profile: spec/profiles/kdsl-profile-dev-prompt.md
 
 ## Header
 
