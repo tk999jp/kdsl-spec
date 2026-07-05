@@ -1,9 +1,10 @@
-# R1 Result Prompt Template v0.1-draft
+# R1 Result Prompt Template v1.1-sync
 
 目的: AI coding tool / Codex への報告要求として再利用できるR1/KDSL_RESULT templateを提供する。
 
-status: template-draft
+status: template-draft-main-v1.1-sync
 source_spec: spec/r1/r1-result-spec.md
+source_lint: spec/lint/kdsl-lint-checklist.md
 
 ## Required report
 
