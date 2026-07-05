@@ -36,6 +36,14 @@
   - `tools/validator/samples/expected_results.md`
 - Added validator first-slice verification record:
   - `tools/validator/verification/r1_required_blocks_verify.md`
+- Added RT basis checker phase:
+  - `tools/validator/r1_rt_basis.py`
+  - `tools/validator/samples/sample_rt_v_valid.md`
+  - `tools/validator/samples/sample_rt_v_invalid_basis.md`
+  - `tools/validator/samples/sample_rt_v_no_basis.md`
+  - `tools/validator/verification/r1_rt_basis_verify.md`
+- Added combined validator wrapper for required-block and RT-basis checks:
+  - `tools/validator/kdsl_validate.py`
 - Added v1.1 sync review document:
   - `docs/reviews/v1.1-sync-review.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
@@ -46,9 +54,11 @@
 - Existing tag/release/public status is unchanged.
 - No GitHub Release has been created.
 - Repository remains private.
-- Validator implementation has started only for the first R1 required-block slice.
-- First-slice verification is recorded for OK and missing-block samples.
-- Validator first slice does not check RT:v basis, NEXT/COMMIT authority confusion, template expansion, runtime verification, or approval validity.
+- Validator implementation has required-block and RT-basis slices.
+- Required-block verification is recorded for OK and missing-block samples.
+- RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
+- NEXT/COMMIT authority checker implementation was deferred because direct file creation was blocked by safety review.
+- Validator does not perform runtime verification, user approval, template expansion, release, or publicization decisions.
 
 ## v0.1.0-draft
 
@@ -138,4 +148,4 @@ public: not_yet
 - No GitHub Release has been created.
 - Release/publicization are still not recommended.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has started only for the first required-block slice.
+- Validator implementation has started with required-block and RT-basis slices.
