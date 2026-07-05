@@ -26,6 +26,8 @@
   - `tools/validator/README.md`
   - `tools/validator/r1-validator-design.md`
   - `tools/validator/mvp-design.md`
+- Added v1.1 sync review document:
+  - `docs/reviews/v1.1-sync-review.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
 
 ### Notes
@@ -35,6 +37,7 @@
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has not started.
+- Direct creation of the initial validator code file was blocked during this cleanup pass, so implementation remains `not_started`.
 - `tools/validator/kdsl-template-lint-design.md` remains functionally aligned but still carries its earlier header because direct update was blocked by safety review during this cleanup pass.
 
 ## v0.1.0-draft
