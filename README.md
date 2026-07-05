@@ -78,6 +78,7 @@ Validator design:
 Review / checklist:
   docs/reviews/v0.1.0-draft-review.md
   docs/reviews/v0.1.0-draft-checklist.md
+  docs/reviews/v1.1-sync-review.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
