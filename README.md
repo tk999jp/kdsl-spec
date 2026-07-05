@@ -158,8 +158,8 @@ validator: design only / implementation not started
 ## 次候補
 
 ```text
-Phase 11: v1.1 sync review
-A. spec/manifest.md と glossary を v1.1-ADPS-aware 表記へ追従
+Phase 12: validator/template follow-up
+A. tools/validator/kdsl-template-lint-design.md のheader/status追従を再試行
 B. validator-mvp-r1-only の実装設計または実装へ進む
 C. public-facing README / examples/public 設計へ進む
 release作成なし
