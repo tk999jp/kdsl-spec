@@ -125,15 +125,17 @@ Public readiness: 公開可否判断メモ。公開実行ではない
 ## 現在の状態
 
 ```text
-status: v0.1.0-draft tag recorded
-tag: v0.1.0-draft
-tag_type: annotated
-tag_object: 797c88ad176dde5286187984de945040ec5eb945
-tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
+status: main synced after v0.1.0-draft
+current_main_spec: v1.1-ADPS-aware sync
+base_tag: v0.1.0-draft
+base_tag_type: annotated
+base_tag_object: 797c88ad176dde5286187984de945040ec5eb945
+base_tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
 visibility: private
 stability: draft
 release: none
 public: not_yet
+validator: design only / implementation not started
 ```
 
 ## 運用方針
@@ -151,14 +153,16 @@ public: not_yet
 - KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
 - KDSL_RESULT の COMMIT は実行結果または推奨messageであり、自動commit許可ではない
 - unknown profile / alias / preset / template は推測しない
+- v0.1.0-draft tag は履歴として維持し、main の仕様整理とは分離する
 
 ## 次候補
 
 ```text
-Phase 10: choose next track
-A. validator-mvp-r1-only の実装設計または実装へ進む
-B. public-facing README / examples/public 設計へ進む
-C. v0.1.0-draft以降のspec整理へ進む
+Phase 11: v1.1 sync review
+A. spec/manifest.md と glossary を v1.1-ADPS-aware 表記へ追従
+B. validator-mvp-r1-only の実装設計または実装へ進む
+C. public-facing README / examples/public 設計へ進む
 release作成なし
 public化なし
+tag移動なし
 ```
