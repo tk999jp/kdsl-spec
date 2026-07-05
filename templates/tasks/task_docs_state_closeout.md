@@ -1,8 +1,8 @@
-# Task Template: Docs/State Closeout v0.1-draft
+# Task Template: Docs/State Closeout v1.1-sync
 
 目的: 実装済みPhaseを、確認済み根拠に基づき state/docs のみでcloseoutするためのtask template。
 
-status: template-draft
+status: template-draft-main-v1.1-sync
 requires:
 
 ```text
@@ -73,6 +73,8 @@ stage: target_only
 commit: propose_only
 push: forbid
 release: forbid
+public_repo: forbid
+destructive_ops: forbid
 ```
 
 commitを実行してよい場合はinstance側で明示する。
