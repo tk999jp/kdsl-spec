@@ -1,10 +1,11 @@
-# R1 Validator Design v0.1-draft
+# R1 Validator Design v1.1-sync
 
 目的: `KDSL_RESULT` / R1報告を機械検査し、未実行扱い・RT:v誤認・権限混同・証跡欠落を検出する。
 
-status: design-draft
+status: design-draft-main-v1.1-sync
 implementation: not_started
 source_spec: spec/r1/r1-result-spec.md
+source_lint: spec/lint/kdsl-lint-checklist.md
 
 ## Input
 
@@ -81,12 +82,14 @@ ERROR:
 ```text
 RT:v なのに basis がない
 RT:v basis が build/diff/lint/test passのみ
+RT:v basis がvalidator passのみ
 RT:v basis が推測のみ
 Runtime未確認なのにRT:v
 build pass == RT:v 扱い
 diff pass == RT:v 扱い
 lint pass == RT:v 扱い
 unit test pass == RT:v 扱い
+validator pass == RT:v 扱い
 ```
 
 WARN:
