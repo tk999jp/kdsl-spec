@@ -22,10 +22,15 @@
   - `templates/tasks/task_docs_state_closeout.md`
   - `templates/tasks/task_corrective_impl.md`
   - `templates/tasks/task_investigation_only.md`
-- Synced validator design status where direct update succeeded:
+- Synced validator design status:
   - `tools/validator/README.md`
   - `tools/validator/r1-validator-design.md`
+  - `tools/validator/kdsl-template-lint-design.md`
   - `tools/validator/mvp-design.md`
+- Added validator MVP implementation notes and samples:
+  - `tools/validator/r1-mvp-implementation-notes.md`
+  - `tools/validator/samples/sample_r1_ok.md`
+  - `tools/validator/samples/sample_r1_missing_block.md`
 - Added v1.1 sync review document:
   - `docs/reviews/v1.1-sync-review.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
@@ -38,7 +43,6 @@
 - Repository remains private.
 - Validator implementation has not started.
 - Direct creation of the initial validator code file was blocked during this cleanup pass, so implementation remains `not_started`.
-- `tools/validator/kdsl-template-lint-design.md` remains functionally aligned but still carries its earlier header because direct update was blocked by safety review during this cleanup pass.
 
 ## v0.1.0-draft
 
