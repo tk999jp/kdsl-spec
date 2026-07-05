@@ -1,6 +1,6 @@
-# KDSL / KDSL-DP / ADPS Bridge v0.1-draft
+# KDSL / KDSL-DP / ADPS Bridge v0.2
 
-目的: KDSL本体と KDSL-DP / ADPS / KDSL_PROMPT / KDSL_RESULT の境界を定義する。
+目的: KDSL本体とKDSL-DP / ADPS / KDSL_PROMPT / KDSL_RESULTの境界を定義する。
 
 ## 1. 位置づけ
 
@@ -33,12 +33,11 @@ KDSL-DP
 → normalize
 P1/P1L
 → runtime binding
-execute
+run
 → R1/KDSL_RESULT
 ```
 
 状態分離:
-
 ```text
 KDSL-DP valid != executable
 P1/P1L valid != executable
@@ -62,7 +61,6 @@ safety: lock-critical
 ```
 
 禁止:
-
 ```text
 KDSL_PROMPT前に自然文前置き
 D禁止時のKDSL_PROMPT出力
@@ -89,13 +87,11 @@ COMMIT:
 ```
 
 STATUS:
-
 ```text
 success/partial/blocked/noop/failed/needs_user
 ```
 
 RT:
-
 ```text
 p=runtime確認未完了
 u=U実機確認待ち
@@ -107,14 +103,11 @@ blk=runtime確認不能
 
 ## 6. KDSL本体への影響
 
-KDSL本体は汎用直投入記法のまま維持する。
-
-ADPS/KDSL-DP規則は、ADPS向けprofileまたはdev-prompt用途で適用する。
-
+KDSL本体は汎用直投入記法のまま維持する。  
+ADPS/KDSL-DP規則は、ADPS向けprofileまたはdev-prompt用途で適用する。  
 KDSL本体のmode/profile/safety変更は、KDSL-DPへ自動継承しない。
 
 互換方針:
-
 ```text
 KDSL operator意味変更→breaking
 profile名前空間変更→breaking
