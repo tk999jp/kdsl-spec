@@ -1,26 +1,16 @@
-# KDSL Profile: dev-prompt v0.1-draft
+# KDSL Profile: dev-prompt v1.1
 
-目的: ChatGPT / Codex / AI coding tool向け開発運用promptをKDSLで記述する。
-
-既定:
-
-```text
-format: KDSL
-profile: dev-prompt
-mode: min
-safety: lock-critical
-```
+目的: ChatGPT / Codex / AI coding tool向け開発運用promptをKDSLで記述する  
+既定: format:KDSL / profile:dev-prompt / mode:min / safety:lock-critical
 
 ## 基本契約
 
 優先:
-
 ```text
 要件保持 > 判断安定 > 誤実装防止 > safety gate保持 > 短文化
 ```
 
 言語:
-
 ```text
 日本語固定, UI/理由/計画/検証/報告含, 英語指定時のみ英語
 ```
@@ -35,7 +25,6 @@ safety: lock-critical
 ```
 
 共有材:
-
 ```text
 code/diff/log/screenshot/実機観測/GH connector source/repo state/docs
 ```
@@ -70,7 +59,6 @@ D禁含→AI coding prompt全文禁止
 ## KDSL_PROMPT
 
 AI coding prompt出力時:
-
 ```text
 KDSL_PROMPT:
 format: KDSL
@@ -80,7 +68,6 @@ safety: lock-critical
 ```
 
 規則:
-
 ```text
 KDSL_PROMPT先頭固定
 KDSL_PROMPT前の自然文禁止
@@ -91,7 +78,6 @@ D禁止時KDSL_PROMPT出力禁止
 ## KDSL_RESULT
 
 AI coding tool/Codexへの報告要求:
-
 ```text
 KDSL_RESULT先頭固定
 結論/変更点/検証だけで終了禁止
@@ -99,7 +85,6 @@ KDSL_RESULT先頭固定
 ```
 
 必須block:
-
 ```text
 KDSL_RESULT:
 STATUS:
@@ -116,7 +101,6 @@ COMMIT:
 ```
 
 制約:
-
 ```text
 未実行cmd→CMD記載禁止
 未実行verify→pass扱禁止
@@ -125,7 +109,7 @@ RT:v=対象環境runtime確認済のみ
 Runtime未確認→RT:u|RT:p + RISK:runtime_unverified
 docs/guidance only→理由明記でRT:na可
 NEXT:=提案, 実行許可扱禁止
-COMMIT:=推奨message/実行済commit, 自動commit許可扱禁止
+COMMIT:=推奨message, 自動commit許可扱禁止
 ```
 
 ## Rollback
@@ -163,4 +147,22 @@ LocalBuild/Runtime未実行→実行済扱禁止
 build/test/実機/WindowsRuntime→AI tool/U確認分離
 検索失敗→不存在断定禁止, 既知path/branch/個別取得/local grep
 public履歴改竄/公開済tag移動/Release Assets上書前提操作禁止
+```
+
+## 出力形式
+
+直接回答:
+```text
+結論 / 理由 / 必要な未確認点
+```
+
+分析/review:
+```text
+結論 / 観測 / 原因候補 / 主犯候補 / 改善済-未改善 / 次の安全な一手
+```
+
+実装指示:
+```text
+KDSL_PROMPT先頭固定
+Phase名 / 目的 / 前提 / 対象Slice / 非対象 / 変更対象 / 禁止 / 停止条件 / 検証 / 報告形式 / 必要時のみU実機確認
 ```
