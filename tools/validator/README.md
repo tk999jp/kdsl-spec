@@ -2,8 +2,17 @@
 
 目的: KDSL / R1 / Template をPython等で機械検査するための設計置き場。
 
-status: design-draft
+status: design-draft-main-v1.1-sync
 implementation: not_started
+source_specs:
+
+```text
+spec/core/kdsl-spec.md
+spec/lint/kdsl-lint-checklist.md
+spec/r1/r1-result-spec.md
+spec/bridge/kdsl-adps-bridge.md
+templates/README.md
+```
 
 ## 位置づけ
 
