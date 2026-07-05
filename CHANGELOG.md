@@ -14,6 +14,18 @@
   - `spec/lint/kdsl-lint-checklist.md` to `v1.1`
 - Synced ADPS bridge wording to `v0.2`:
   - `spec/bridge/kdsl-adps-bridge.md`
+- Synced glossary and reusable templates with main v1.1 alignment:
+  - `spec/glossary.md`
+  - `templates/README.md`
+  - `templates/base/kdsl_base_dev.md`
+  - `templates/result/r1_result_spec.md`
+  - `templates/tasks/task_docs_state_closeout.md`
+  - `templates/tasks/task_corrective_impl.md`
+  - `templates/tasks/task_investigation_only.md`
+- Synced validator design status where direct update succeeded:
+  - `tools/validator/README.md`
+  - `tools/validator/r1-validator-design.md`
+  - `tools/validator/mvp-design.md`
 - Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
 
 ### Notes
@@ -23,6 +35,7 @@
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has not started.
+- `tools/validator/kdsl-template-lint-design.md` remains functionally aligned but still carries its earlier header because direct update was blocked by safety review during this cleanup pass.
 
 ## v0.1.0-draft
 
