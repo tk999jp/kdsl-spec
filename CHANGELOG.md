@@ -2,9 +2,24 @@
 
 ## Unreleased
 
+### Changed
+
+- Synced Core KDSL specification files on `main` after `v0.1.0-draft`:
+  - `spec/core/kdsl-spec.md` to `v1.1-ADPS-aware`
+  - `spec/core/kdsl-core.md` to `v1.1`
+  - `spec/core/kdsl-modes.md` to `v1.1`
+- Synced profile and lint contracts:
+  - `spec/profiles/kdsl-profile-dev-prompt.md` to `v1.1`
+  - `spec/profiles/kdsl-converter-prompt.md` to `v1.1-ADPS-aware`
+  - `spec/lint/kdsl-lint-checklist.md` to `v1.1`
+- Synced ADPS bridge wording to `v0.2`:
+  - `spec/bridge/kdsl-adps-bridge.md`
+- Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
+
 ### Notes
 
 - Development continues after `v0.1.0-draft`.
+- Existing tag/release/public status is unchanged.
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has not started.
