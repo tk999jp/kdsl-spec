@@ -69,19 +69,36 @@ KDSL / KDSL-DP / ADPS bridge:
   examples/midfd/docs_state_closeout.after.md
   examples/midfd/r1_result.example.md
 
-Validator design:
+Validator:
   tools/validator/README.md
   tools/validator/r1-validator-design.md
   tools/validator/kdsl-template-lint-design.md
   tools/validator/mvp-design.md
   tools/validator/r1-mvp-implementation-notes.md
+  tools/validator/r1_required_blocks.py
+  tools/validator/r1_rt_basis.py
+  tools/validator/kdsl_template_refs.py
+  tools/validator/kdsl_validate.py
+  tools/validator/kdsl_validate_usage.md
+
+Validator samples / verification:
   tools/validator/samples/sample_r1_ok.md
   tools/validator/samples/sample_r1_missing_block.md
+  tools/validator/samples/sample_rt_v_valid.md
+  tools/validator/samples/sample_rt_v_invalid_basis.md
+  tools/validator/samples/sample_rt_v_no_basis.md
+  tools/validator/samples/sample_template_ref_ok.md
+  tools/validator/samples/sample_template_ref_missing_gate.md
+  tools/validator/verification/r1_required_blocks_verify.md
+  tools/validator/verification/r1_rt_basis_verify.md
+  tools/validator/verification/kdsl_template_refs_verify.md
+  tools/validator/verification/kdsl_validate_target_modes_verify.md
 
 Review / checklist:
   docs/reviews/v0.1.0-draft-review.md
   docs/reviews/v0.1.0-draft-checklist.md
   docs/reviews/v1.1-sync-review.md
+  docs/reviews/v1.1-release-readiness-checklist.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -103,7 +120,7 @@ spec/
 templates/      再利用prompt template置き場
 experimental/   Actor Model / Protocol Stack / HMI / Python Validator等の実験案
 examples/       変換例・運用例
-tools/          validator等の設計/将来実装置き場
+tools/          validator等の設計/実装候補置き場
 docs/           overview / review / release planning 等の運用文書
 ```
 
@@ -139,7 +156,9 @@ visibility: private
 stability: draft
 release: none
 public: not_yet
-validator: design only / implementation not started
+validator: required-block / RT-basis / template-reference slices implemented
+validator_wrapper: target modes r1 / prompt / all
+readiness: not_ready
 ```
 
 ## 運用方針
@@ -162,10 +181,10 @@ validator: design only / implementation not started
 ## 次候補
 
 ```text
-Phase 13: validator-mvp-r1-required-blocks
-A. validator実装本体をローカル/別経路で追加
-B. RT:v invalid basis check設計を次sliceへ分離
-C. public-facing README / examples/public 設計へ進む
+Phase 23: authority guard design
+A. authority guardを設計文書から再開
+B. full template expansion checker設計
+C. README/CHANGELOG/reviewの追加整理
 release作成なし
 public化なし
 tag移動なし
