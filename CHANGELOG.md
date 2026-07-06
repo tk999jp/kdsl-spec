@@ -58,10 +58,12 @@
   - `tools/validator/samples/sample_authority_warn.md`
   - `tools/validator/samples/sample_authority_fail.md`
   - `tools/validator/verification/r1_authority_guard_verify.md`
+- Added full template expansion checker design:
+  - `docs/reviews/v1.1-full-template-expansion-checker-design.md`
 - Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Updated README navigation and current status for validator slices, wrapper target modes, and authority guard implementation.
+- Updated README navigation and current status for validator slices, wrapper target modes, authority guard implementation, and full template expansion design.
 
 ### Notes
 
@@ -70,6 +72,7 @@
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has required-block, RT-basis, authority-guard, and template-reference slices.
+- Full template expansion checker is design-only; implementation is not started.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
