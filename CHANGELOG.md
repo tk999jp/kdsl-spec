@@ -51,10 +51,12 @@
   - `tools/validator/kdsl_validate.py`
   - `tools/validator/kdsl_validate_usage.md`
   - `tools/validator/verification/kdsl_validate_target_modes_verify.md`
+- Added authority guard design:
+  - `docs/reviews/v1.1-authority-guard-design.md`
 - Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Updated README navigation and current status for validator slices and wrapper target modes.
+- Updated README navigation and current status for validator slices, wrapper target modes, and authority guard design.
 
 ### Notes
 
@@ -64,10 +66,10 @@
 - Repository remains private.
 - Validator implementation has required-block, RT-basis, and template-reference slices.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
+- Authority guard is design-only; implementation is not started.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
 - Template-reference verification is recorded for OK and missing-gate samples.
-- NEXT/COMMIT authority checker implementation is still deferred.
 - Validator does not perform runtime verification, user approval, full template expansion, release, or publicization decisions.
 - v1.1 release readiness remains `not_ready`.
 
