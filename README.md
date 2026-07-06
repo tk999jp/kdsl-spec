@@ -99,6 +99,7 @@ Review / checklist:
   docs/reviews/v0.1.0-draft-checklist.md
   docs/reviews/v1.1-sync-review.md
   docs/reviews/v1.1-release-readiness-checklist.md
+  docs/reviews/v1.1-authority-guard-design.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -158,6 +159,7 @@ release: none
 public: not_yet
 validator: required-block / RT-basis / template-reference slices implemented
 validator_wrapper: target modes r1 / prompt / all
+authority_guard: design only / implementation not started
 readiness: not_ready
 ```
 
@@ -181,10 +183,10 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 23: authority guard design
-A. authority guardを設計文書から再開
-B. full template expansion checker設計
-C. README/CHANGELOG/reviewの追加整理
+Phase 24: authority guard implementation
+A. authority guard designに沿って最小実装
+B. authority guard sample作成
+C. wrapper r1 targetへ統合
 release作成なし
 public化なし
 tag移動なし
