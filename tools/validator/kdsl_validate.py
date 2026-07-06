@@ -10,12 +10,14 @@ CHECKER_SETS = {
     ],
     'prompt': [
         'kdsl_template_refs.py',
+        'kdsl_template_expansion.py',
     ],
     'all': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
         'r1_authority_guard.py',
         'kdsl_template_refs.py',
+        'kdsl_template_expansion.py',
     ],
 }
 
