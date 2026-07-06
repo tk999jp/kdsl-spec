@@ -105,6 +105,7 @@ Review / checklist:
   docs/reviews/v1.1-sync-review.md
   docs/reviews/v1.1-release-readiness-checklist.md
   docs/reviews/v1.1-authority-guard-design.md
+  docs/reviews/v1.1-full-template-expansion-checker-design.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -164,6 +165,7 @@ release: none
 public: not_yet
 validator: required-block / RT-basis / authority-guard / template-reference slices implemented
 validator_wrapper: target modes r1 / prompt / all
+full_template_expansion: design only / implementation not started
 readiness: not_ready
 ```
 
@@ -187,10 +189,10 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 25: full template expansion checker design
-A. full template expansion checker設計
-B. public-facing README / examples-public設計
-C. release candidate checklist review
+Phase 26: full template expansion checker implementation
+A. full template expansion checker最小実装
+B. expansion sample作成
+C. prompt targetへ統合
 release作成なし
 public化なし
 tag移動なし
