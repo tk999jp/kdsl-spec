@@ -111,6 +111,7 @@ Review / checklist:
   docs/reviews/v1.1-release-readiness-checklist.md
   docs/reviews/v1.1-authority-guard-design.md
   docs/reviews/v1.1-full-template-expansion-checker-design.md
+  docs/reviews/v1.1-public-facing-readme-examples-design.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -170,6 +171,7 @@ release: none
 public: not_yet
 validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
 validator_wrapper: target modes r1 / prompt / all
+public_facing_docs: design only / implementation not started
 readiness: not_ready
 ```
 
@@ -193,10 +195,10 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 27: public-facing README / examples-public design
-A. public-facing README設計
-B. examples/public設計
-C. release notes draft
+Phase 28: public-facing README / examples-public implementation
+A. public-facing README draft作成
+B. examples/public draft作成
+C. release notes draft作成
 release作成なし
 public化なし
 tag移動なし
