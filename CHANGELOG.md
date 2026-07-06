@@ -42,11 +42,19 @@
   - `tools/validator/samples/sample_rt_v_invalid_basis.md`
   - `tools/validator/samples/sample_rt_v_no_basis.md`
   - `tools/validator/verification/r1_rt_basis_verify.md`
-- Added combined validator wrapper for required-block and RT-basis checks:
+- Added template reference checker phase:
+  - `tools/validator/kdsl_template_refs.py`
+  - `tools/validator/samples/sample_template_ref_ok.md`
+  - `tools/validator/samples/sample_template_ref_missing_gate.md`
+  - `tools/validator/verification/kdsl_template_refs_verify.md`
+- Added combined validator wrapper and target-mode separation:
   - `tools/validator/kdsl_validate.py`
-- Added v1.1 sync review document:
+  - `tools/validator/kdsl_validate_usage.md`
+  - `tools/validator/verification/kdsl_validate_target_modes_verify.md`
+- Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
-- Updated README status to clarify that `v0.1.0-draft` remains a recorded base tag while `main` now contains a v1.1-oriented spec sync.
+  - `docs/reviews/v1.1-release-readiness-checklist.md`
+- Updated README navigation and current status for validator slices and wrapper target modes.
 
 ### Notes
 
@@ -54,11 +62,14 @@
 - Existing tag/release/public status is unchanged.
 - No GitHub Release has been created.
 - Repository remains private.
-- Validator implementation has required-block and RT-basis slices.
+- Validator implementation has required-block, RT-basis, and template-reference slices.
+- Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
-- NEXT/COMMIT authority checker implementation was deferred because direct file creation was blocked by safety review.
-- Validator does not perform runtime verification, user approval, template expansion, release, or publicization decisions.
+- Template-reference verification is recorded for OK and missing-gate samples.
+- NEXT/COMMIT authority checker implementation is still deferred.
+- Validator does not perform runtime verification, user approval, full template expansion, release, or publicization decisions.
+- v1.1 release readiness remains `not_ready`.
 
 ## v0.1.0-draft
 
@@ -148,4 +159,4 @@ public: not_yet
 - No GitHub Release has been created.
 - Release/publicization are still not recommended.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has started with required-block and RT-basis slices.
+- Validator implementation has started with required-block, RT-basis, and template-reference slices.
