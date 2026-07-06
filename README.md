@@ -79,6 +79,7 @@ Validator:
   tools/validator/r1_rt_basis.py
   tools/validator/r1_authority_guard.py
   tools/validator/kdsl_template_refs.py
+  tools/validator/kdsl_template_expansion.py
   tools/validator/kdsl_validate.py
   tools/validator/kdsl_validate_usage.md
 
@@ -93,10 +94,14 @@ Validator samples / verification:
   tools/validator/samples/sample_authority_fail.md
   tools/validator/samples/sample_template_ref_ok.md
   tools/validator/samples/sample_template_ref_missing_gate.md
+  tools/validator/samples/sample_template_expansion_ok.md
+  tools/validator/samples/sample_template_expansion_warn.md
+  tools/validator/samples/sample_template_expansion_fail.md
   tools/validator/verification/r1_required_blocks_verify.md
   tools/validator/verification/r1_rt_basis_verify.md
   tools/validator/verification/r1_authority_guard_verify.md
   tools/validator/verification/kdsl_template_refs_verify.md
+  tools/validator/verification/kdsl_template_expansion_verify.md
   tools/validator/verification/kdsl_validate_target_modes_verify.md
 
 Review / checklist:
@@ -163,9 +168,8 @@ visibility: private
 stability: draft
 release: none
 public: not_yet
-validator: required-block / RT-basis / authority-guard / template-reference slices implemented
+validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
 validator_wrapper: target modes r1 / prompt / all
-full_template_expansion: design only / implementation not started
 readiness: not_ready
 ```
 
@@ -189,10 +193,10 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 26: full template expansion checker implementation
-A. full template expansion checker最小実装
-B. expansion sample作成
-C. prompt targetへ統合
+Phase 27: public-facing README / examples-public design
+A. public-facing README設計
+B. examples/public設計
+C. release notes draft
 release作成なし
 public化なし
 tag移動なし
