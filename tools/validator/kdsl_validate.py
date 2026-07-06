@@ -6,6 +6,7 @@ CHECKER_SETS = {
     'r1': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
+        'r1_authority_guard.py',
     ],
     'prompt': [
         'kdsl_template_refs.py',
@@ -13,6 +14,7 @@ CHECKER_SETS = {
     'all': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
+        'r1_authority_guard.py',
         'kdsl_template_refs.py',
     ],
 }
