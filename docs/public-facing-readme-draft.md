@@ -6,6 +6,7 @@ release_class: experimental preview
 public: yes
 public_ready: no
 repository_visibility: public
+license: MIT
 project_status: docs/project-status.md
 
 ## Project status
@@ -20,7 +21,7 @@ public: yes
 public_ready: no
 tag_move: none
 Release Assets: none
-license: pending
+license: MIT
 ```
 
 This document is a public-facing README draft. It does not approve stable release creation, tag creation, tag movement, Release Assets operations, public-ready promotion, or broad public announcement.
@@ -159,6 +160,7 @@ Examples are not Core specification. They are understanding aids and must preser
 
 ```text
 docs/project-status.md  Current repository status
+LICENSE                 MIT license marker
 spec/core/              Core KDSL specification, core notation, modes
 spec/profiles/          Usage-specific profiles
 spec/r1/                R1 result-reporting contract
@@ -193,7 +195,7 @@ public: yes
 public_ready: no
 GitHub Release: v1.1.0-rc1 prerelease
 Release Assets: none
-license: pending
+license: MIT
 ```
 
-Stable v1.1.0, Release Assets, tag movement, license selection, and public-ready promotion require explicit U review and approval.
+Stable v1.1.0, Release Assets, tag movement, and public-ready promotion require explicit U review and approval.
