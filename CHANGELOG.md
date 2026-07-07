@@ -65,12 +65,20 @@
   - `tools/validator/kdsl_validate.py`
   - `tools/validator/kdsl_validate_usage.md`
   - `tools/validator/verification/kdsl_validate_target_modes_verify.md`
-- Added public-facing README / examples-public design:
+- Added public-facing README / examples-public design and drafts:
   - `docs/reviews/v1.1-public-facing-readme-examples-design.md`
+  - `docs/public-facing-readme-draft.md`
+  - `examples/public/README.md`
+  - `examples/public/kdsl_prompt_safe_fix.example.md`
+  - `examples/public/kdsl_prompt_template_inheritance.example.md`
+  - `examples/public/r1_result_valid.example.md`
+  - `examples/public/r1_result_authority_guard.example.md`
+  - `examples/public/kdsl_dp_boundary_warning.example.md`
+  - `docs/release/v1.1-release-notes-draft.md`
 - Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Updated README navigation and current status for validator slices, wrapper target modes, and public-facing docs design.
+- Updated README navigation and current status for validator slices, wrapper target modes, and public-facing draft files.
 
 ### Notes
 
@@ -79,7 +87,7 @@
 - No GitHub Release has been created.
 - Repository remains private.
 - Validator implementation has required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
-- Public-facing README / examples-public are design-only; files are not created yet.
+- Public-facing README / examples-public / release notes are draft files; U review is pending.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
