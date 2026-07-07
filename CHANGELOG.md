@@ -4,6 +4,33 @@
 
 ### Changed
 
+- Redefined current repository status as public experimental preview, not public-ready/stable:
+  - `docs/project-status.md`
+  - `README.md`
+  - `docs/overview.md`
+  - `docs/public-readiness.md`
+  - `spec/manifest.md`
+  - `docs/public-facing-readme-draft.md`
+  - `examples/public/README.md`
+  - `docs/release/v1.1-release-notes-draft.md`
+  - `docs/reviews/v1.1-release-readiness-checklist.md`
+- Clarified validator positioning as experimental heuristic lint helpers, not proof systems or release authorities:
+  - `tools/validator/README.md`
+  - `tools/validator/r1_rt_basis.py`
+  - `tools/validator/r1_authority_guard.py`
+  - `tools/validator/kdsl_validate_target_modes_verify.md`
+- Added sample expectation runner:
+  - `tools/validator/run_samples.py`
+- Recorded local sample validation evidence:
+  - command: `python tools/validator/run_samples.py`
+  - result: `total 16 / failed 0`
+  - repo status after: `clean / main...origin/main`
+- Reframed template expansion validation terminology:
+  - Current implementation is `template expansion evidence lint`
+  - It does not prove full template expansion or semantic equivalence
+
+### Previous v1.1.0-rc1 work
+
 - Synced Core KDSL specification files on `main` after `v0.1.0-draft`:
   - `spec/core/kdsl-spec.md` to `v1.1-ADPS-aware`
   - `spec/core/kdsl-core.md` to `v1.1`
@@ -54,7 +81,7 @@
   - `tools/validator/samples/sample_template_ref_ok.md`
   - `tools/validator/samples/sample_template_ref_missing_gate.md`
   - `tools/validator/verification/kdsl_template_refs_verify.md`
-- Added full template expansion checker design and implementation:
+- Added template expansion evidence checker design and implementation:
   - `docs/reviews/v1.1-full-template-expansion-checker-design.md`
   - `tools/validator/kdsl_template_expansion.py`
   - `tools/validator/samples/sample_template_expansion_ok.md`
@@ -86,7 +113,7 @@
   - release type: prerelease
   - repository visibility: public
   - Release Assets: none
-- Updated README navigation and current status for validator slices, wrapper target modes, public-facing draft files, and v1.1.0-rc1 prerelease status.
+- Updated README navigation and current status for validator helpers, wrapper target modes, public-facing draft files, and v1.1.0-rc1 experimental preview status.
 
 ### Notes
 
@@ -95,16 +122,17 @@
 - GitHub Release `v1.1.0-rc1` has been created as a prerelease.
 - Repository visibility is public.
 - Release Assets are not attached.
-- Validator implementation has required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
+- v1.1.0-rc1 is a public experimental preview, not a stable/public-ready release.
+- License selection is still pending.
+- Validator helpers cover required-block, RT-basis, authority-guard, template-reference, and template-expansion-evidence lint.
 - Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
 - Authority-guard verification is recorded for OK, warn, and fail samples.
 - Template-reference verification is recorded for OK and missing-gate samples.
-- Template-expansion verification is recorded for OK, warn, and fail samples.
-- Validator does not perform runtime verification, user approval, semantic equivalence, release, or publicization decisions.
-- v1.1.0-rc1 is not a stable production release.
+- Template-expansion-evidence verification is recorded for OK, warn, and fail samples.
+- Validator helpers do not perform runtime verification, user approval, semantic equivalence, full template expansion proof, release readiness, or public-ready decisions.
 
 ## v0.1.0-draft
 
@@ -193,4 +221,4 @@ public: not_yet
 - This repository is a draft specification workspace.
 - No GitHub Release has been created for `v0.1.0-draft`.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
+- Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, and template-expansion-evidence slices.
