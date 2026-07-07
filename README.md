@@ -22,6 +22,9 @@ KDSL/R1を、単なるプロンプト圧縮記法ではなく、Human-AI work in
 Overview:
   docs/overview.md
 
+Public-facing draft:
+  docs/public-facing-readme-draft.md
+
 KDSL全体仕様:
   spec/core/kdsl-spec.md
 
@@ -69,6 +72,14 @@ KDSL / KDSL-DP / ADPS bridge:
   examples/midfd/docs_state_closeout.after.md
   examples/midfd/r1_result.example.md
 
+Public examples:
+  examples/public/README.md
+  examples/public/kdsl_prompt_safe_fix.example.md
+  examples/public/kdsl_prompt_template_inheritance.example.md
+  examples/public/r1_result_valid.example.md
+  examples/public/r1_result_authority_guard.example.md
+  examples/public/kdsl_dp_boundary_warning.example.md
+
 Validator:
   tools/validator/README.md
   tools/validator/r1-validator-design.md
@@ -115,6 +126,7 @@ Review / checklist:
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
+  docs/release/v1.1-release-notes-draft.md
   docs/public-readiness.md
 ```
 
@@ -171,7 +183,7 @@ release: none
 public: not_yet
 validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
 validator_wrapper: target modes r1 / prompt / all
-public_facing_docs: design only / implementation not started
+public_facing_docs: draft files created / U review pending
 readiness: not_ready
 ```
 
@@ -195,10 +207,10 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 28: public-facing README / examples-public implementation
-A. public-facing README draft作成
-B. examples/public draft作成
-C. release notes draft作成
+Phase 29: release candidate checklist review
+A. release readiness checklist review
+B. local validation command review
+C. optional release/tag/public planning only after explicit U approval
 release作成なし
 public化なし
 tag移動なし
