@@ -4,6 +4,29 @@ KDSL / R1 specification repository.
 
 このリポジトリは、KDSL（安全gate保持型prompt記法）と R1 Result Specification（AI作業結果の証跡・検収仕様）を管理するための正本候補です。
 
+## 重要な現在状態
+
+```text
+status: v1.1.0-rc1 experimental preview published
+repository_visibility: public
+release: v1.1.0-rc1
+release_type: prerelease / experimental preview
+public: yes
+public_ready: no
+stable_release: none
+Release Assets: none
+license: pending
+validator: experimental heuristic lint helpers / partial implementation
+validator_authority: non_authoritative
+```
+
+現在の状態は「公開済み experimental preview」であり、「正式public-ready release」ではありません。
+状態正本は次を参照してください。
+
+```text
+docs/project-status.md
+```
+
 ## 目的
 
 KDSL/R1を、単なるプロンプト圧縮記法ではなく、Human-AI work interface / 作業契約・結果証跡仕様として整理します。
@@ -19,6 +42,9 @@ KDSL/R1を、単なるプロンプト圧縮記法ではなく、Human-AI work in
 ## Quick navigation
 
 ```text
+Project status:
+  docs/project-status.md
+
 Overview:
   docs/overview.md
 
@@ -80,7 +106,7 @@ Public examples:
   examples/public/r1_result_authority_guard.example.md
   examples/public/kdsl_dp_boundary_warning.example.md
 
-Validator:
+Validator helpers:
   tools/validator/README.md
   tools/validator/r1-validator-design.md
   tools/validator/kdsl-template-lint-design.md
@@ -92,38 +118,15 @@ Validator:
   tools/validator/kdsl_template_refs.py
   tools/validator/kdsl_template_expansion.py
   tools/validator/kdsl_validate.py
+  tools/validator/run_samples.py
   tools/validator/kdsl_validate_usage.md
 
 Validator samples / verification:
-  tools/validator/samples/sample_r1_ok.md
-  tools/validator/samples/sample_r1_missing_block.md
-  tools/validator/samples/sample_rt_v_valid.md
-  tools/validator/samples/sample_rt_v_invalid_basis.md
-  tools/validator/samples/sample_rt_v_no_basis.md
-  tools/validator/samples/sample_authority_ok.md
-  tools/validator/samples/sample_authority_warn.md
-  tools/validator/samples/sample_authority_fail.md
-  tools/validator/samples/sample_template_ref_ok.md
-  tools/validator/samples/sample_template_ref_missing_gate.md
-  tools/validator/samples/sample_template_expansion_ok.md
-  tools/validator/samples/sample_template_expansion_warn.md
-  tools/validator/samples/sample_template_expansion_fail.md
-  tools/validator/verification/r1_required_blocks_verify.md
-  tools/validator/verification/r1_rt_basis_verify.md
-  tools/validator/verification/r1_authority_guard_verify.md
-  tools/validator/verification/kdsl_template_refs_verify.md
-  tools/validator/verification/kdsl_template_expansion_verify.md
-  tools/validator/verification/kdsl_validate_target_modes_verify.md
+  tools/validator/samples/*
+  tools/validator/verification/*
 
 Review / checklist:
-  docs/reviews/v0.1.0-draft-review.md
-  docs/reviews/v0.1.0-draft-checklist.md
-  docs/reviews/v1.1-sync-review.md
-  docs/reviews/v1.1-release-readiness-checklist.md
-  docs/reviews/v1.1-authority-guard-design.md
-  docs/reviews/v1.1-full-template-expansion-checker-design.md
-  docs/reviews/v1.1-public-facing-readme-examples-design.md
-  docs/reviews/v1.1-release-candidate-checklist-review.md
+  docs/reviews/*
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -147,7 +150,7 @@ templates/      再利用prompt template置き場
 experimental/   Actor Model / Protocol Stack / HMI / Python Validator等の実験案
 examples/       変換例・運用例
 tools/          validator等の設計/実装候補置き場
-docs/           overview / review / release planning 等の運用文書
+docs/           project status / overview / review / release planning 等の運用文書
 ```
 
 ## 仕様レベル
@@ -163,32 +166,37 @@ Bridge: KDSL-DP / ADPS / R1境界
 Templates: 実運用向け再利用部品
 Experimental: 検証中の概念・拡張案
 Examples: 正本ではない理解補助
-Tools: 任意補助。validator passは承認/RT:vの代替ではない
+Tools: 任意補助。validator passは承認/RT:v/要件妥当性の代替ではない
 Reviews: tag/release前の判断記録
 Release planning: tag/release判断の準備文書。実行許可ではない
 Public readiness: 公開可否判断メモ。公開実行ではない
+Project status: repositoryの現在状態を示す運用上の状態正本
 ```
 
-## 現在の状態
+## Validator helpers
+
+現時点のvalidatorは、experimental heuristic lint helpersです。
 
 ```text
-status: v1.1.0-rc1 prerelease published
-current_main_spec: v1.1-ADPS-aware sync
-base_tag: v0.1.0-draft
-base_tag_type: annotated
-base_tag_object: 797c88ad176dde5286187984de945040ec5eb945
-base_tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
-visibility: public
-stability: release-candidate
-release: v1.1.0-rc1
-release_type: prerelease
-public: yes
-Release Assets: none
-validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
-validator_wrapper: target modes r1 / prompt / all
-public_facing_docs: draft files created
-release_candidate_review: local validation confirmed / rc1 published
-readiness: rc1_published
+checks:
+  required block presence
+  RT:v basis wording in evidence-related fields
+  NEXT/COMMIT authority shape
+  template reference gates
+  template expansion evidence markers
+
+not checks:
+  semantic equivalence proof
+  full template expansion proof
+  runtime execution
+  U approval
+  release readiness
+```
+
+サンプル期待値確認:
+
+```text
+python tools/validator/run_samples.py
 ```
 
 ## 運用方針
@@ -202,6 +210,7 @@ readiness: rc1_published
 - Templates は未読時に意味が消えるため、参照だけで読了扱いしない
 - Release planning は実行許可ではない
 - Public readiness は公開判断のメモであり、公開許可ではない
+- Project status は現在状態の同期元として扱う
 - KDSL-DP は P1/P1L へ正規化するまで実行指示扱いしない
 - KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
 - KDSL_RESULT の COMMIT は実行結果または推奨messageであり、自動commit許可ではない
@@ -211,11 +220,12 @@ readiness: rc1_published
 ## 次候補
 
 ```text
-Phase 31: quiet public observation
-A. Release本文を更新後、見え方を確認
-B. README / examples / validator導線を静かに確認
-C. 問題があればrc2で補正
-D. 問題がなければv1.1.0 stable化を検討
+Phase: rc1 correction / experimental preview hardening
+A. README / overview / public-readiness / manifest / validator README の状態同期
+B. validator helperの過大表現を補正
+C. sample expectation runnerでサンプル期待値を確認
+D. LICENSE判断
+E. 問題がなければv1.1.0 stable化を別途U承認後に検討
 Release Assets追加なし
 大々的告知なし
 ```
