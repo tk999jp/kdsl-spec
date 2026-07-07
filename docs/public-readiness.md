@@ -4,6 +4,7 @@ status: rc1-experimental-preview
 project_status: docs/project-status.md
 public_recommendation: experimental_preview_only
 stable_recommendation: not_yet
+license: MIT
 
 ## 1. Current decision
 
@@ -15,7 +16,7 @@ public_ready: no
 stable_release: none
 Release Assets: none
 tag: v1.1.0-rc1
-license: pending
+license: MIT
 ```
 
 現時点の判断は「公開済み experimental preview」とする。
@@ -29,7 +30,6 @@ validatorはpartial heuristic lint helpers
 外部向けREADME/導入ガイドがdraft
 用語が内部運用寄り
 MidFD実例が内部文脈を含む
-ライセンス未判断
 KDSL-DP/ADPS境界が公開説明にはまだ重い
 sample期待値はrunnerで固定中
 GitHub Actions未構成
@@ -51,7 +51,6 @@ validator passが承認/RT:v/release readinessの代替に見える
 stable化前に必要:
 
 ```text
-LICENSE判断
 public-facing READMEの確定
 introductory overviewの確定
 minimal examples without private/MidFD-specific context
@@ -85,22 +84,14 @@ tools/validator/README.md
 tools/validator/run_samples.py
 ```
 
-公開時に注意が必要な候補:
-
-```text
-examples/midfd/*
-private operational templates with repo-specific assumptions
-internal review notes
-validator helper scripts that may look stronger than their actual scope
-```
-
 ## 6. Public messaging draft
 
 ```text
 KDSL is a safety-gate-preserving semi-structured prompt notation for Human-AI work contracts.
 R1 is an evidence-oriented result specification for reviewing AI-assisted work.
-This project is an experimental preview and should not be used to bypass human approval, runtime verification, or release controls.
+This project is an experimental preview.
 Validator helpers are heuristic lint tools, not proof systems or release authorities.
+License: MIT.
 ```
 
 日本語案:
@@ -108,15 +99,16 @@ Validator helpers are heuristic lint tools, not proof systems or release authori
 ```text
 KDSLは、AIへの作業指示から禁止・承認・未確認・停止条件を落とさないための半構造化prompt記法です。
 R1は、AIの作業結果を人間が検収可能にするための結果証跡仕様です。
-この仕様はexperimental previewであり、承認・実機確認・release判断を代替するものではありません。
+この仕様はexperimental previewです。
 validator helperはヒューリスティックなlint補助であり、証明器や承認者ではありません。
+License: MIT。
 ```
 
 ## 7. Public readiness checklist
 
 | Check | Required for stable | Status |
 |---|---:|---|
-| LICENSE decided | yes | pending |
+| LICENSE decided | yes | MIT |
 | External README | yes | draft |
 | Private examples removed or separated | yes | partial |
 | KDSL-DP warning prominent | yes | partial |
@@ -134,5 +126,4 @@ Keep public experimental preview.
 Do not present as stable/public-ready.
 Do not attach Release Assets.
 Do not create stable v1.1.0 without U explicit approval.
-Decide LICENSE before stable promotion.
 ```
