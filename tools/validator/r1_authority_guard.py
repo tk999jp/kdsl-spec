@@ -1,3 +1,4 @@
+import re
 import sys
 from pathlib import Path
 
@@ -5,7 +6,11 @@ NEXT_MARKERS = [
     'none',
     'proposed:',
     'proposal:',
+    'proposed only',
+    'proposal only',
+    'proposal-only',
     '提案:',
+    '提案のみ',
     '次候補:',
 ]
 
@@ -14,6 +19,8 @@ COMMIT_MARKERS = [
     'proposed:',
     'none',
 ]
+
+FIELD_HEADER = re.compile(r'^[A-Z_]+:')
 
 
 def load_text(path):
@@ -24,10 +31,29 @@ def load_text(path):
 
 def find_field(text, name):
     marker = name + ':'
-    for line in text.splitlines():
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
         stripped = line.strip()
-        if stripped.startswith(marker):
-            return stripped[len(marker):].strip()
+        if not stripped.startswith(marker):
+            continue
+
+        value = stripped[len(marker):].strip()
+        block_lines = []
+        for following in lines[index + 1:]:
+            if not following.strip():
+                if block_lines:
+                    break
+                continue
+            if FIELD_HEADER.match(following.strip()) and not following.startswith((' ', '\t')):
+                break
+            if following.startswith((' ', '\t', '-', '*')):
+                block_lines.append(following.strip())
+                continue
+            break
+
+        if block_lines:
+            return (value + '\n' + '\n'.join(block_lines)).strip()
+        return value
     return ''
 
 
