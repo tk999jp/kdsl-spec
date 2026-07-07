@@ -1,23 +1,29 @@
-# KDSL / R1 Specification Draft
+# KDSL / R1 Specification Experimental Preview
 
-status: draft
-release: none
-public: not_yet
-repository_visibility: private
+status: public-facing-draft
+release: v1.1.0-rc1
+release_class: experimental preview
+public: yes
+public_ready: no
+repository_visibility: public
+project_status: docs/project-status.md
 
 ## Project status
 
-This repository is a draft specification workspace for KDSL and R1.
+This repository is a public experimental preview workspace for KDSL and R1.
 
 ```text
-stability: draft
-release: none
-public: not_yet
+stability: experimental preview
+release: v1.1.0-rc1
+release_type: prerelease
+public: yes
+public_ready: no
 tag_move: none
 Release Assets: none
+license: pending
 ```
 
-This document is a public-facing README draft. It does not approve repository publicization, release creation, tag creation, tag movement, Release Assets operations, or public announcement.
+This document is a public-facing README draft. It does not approve stable release creation, tag creation, tag movement, Release Assets operations, public-ready promotion, or broad public announcement.
 
 ## What is KDSL?
 
@@ -60,7 +66,7 @@ AI coding tool prompts
 KDSL_RESULT / R1 reports
 prompt compression rules
 safety-gate-preserving templates
-validator checks for KDSL/R1 drafts
+experimental heuristic lint helpers for KDSL/R1 drafts
 ```
 
 ## Safety principles
@@ -96,11 +102,11 @@ KDSL-DP must not be passed directly to Codex or another AI coding tool as implem
 
 Unknown profile, alias, preset, or template names must not be inferred from memory or similar names.
 
-## Validator overview
+## Validator helper overview
 
-Validator tools are optional aids. They do not replace human approval, runtime verification, semantic equivalence review, release judgment, or publicization judgment.
+Validator tools are experimental heuristic lint helpers. They are optional aids. They do not replace human approval, runtime verification, semantic equivalence review, release judgment, or public-ready judgment.
 
-Current validator slices include:
+Current helper slices include:
 
 ```text
 r1_required_blocks.py
@@ -109,9 +115,25 @@ r1_authority_guard.py
 kdsl_template_refs.py
 kdsl_template_expansion.py
 kdsl_validate.py
+run_samples.py
+```
+
+Important limitation:
+
+```text
+kdsl_template_expansion.py checks template expansion evidence markers.
+It does not prove full template expansion or semantic equivalence.
 ```
 
 ## Quick validation commands
+
+Preferred sample expectation check:
+
+```text
+python tools/validator/run_samples.py
+```
+
+Representative individual checks:
 
 ```text
 python tools/validator/r1_required_blocks.py tools/validator/samples/sample_r1_ok.md
@@ -125,7 +147,7 @@ python tools/validator/kdsl_validate.py --target prompt tools/validator/samples/
 
 ## Examples
 
-Public-facing examples are planned under:
+Public-facing examples are under:
 
 ```text
 examples/public/
@@ -136,36 +158,42 @@ Examples are not Core specification. They are understanding aids and must preser
 ## Specification map
 
 ```text
-spec/core/      Core KDSL specification, core notation, modes
-spec/profiles/  Usage-specific profiles
-spec/r1/        R1 result-reporting contract
-spec/lint/      Lint checklist
-spec/bridge/    KDSL / KDSL-DP / ADPS bridge
-templates/      Reusable prompt templates
-examples/       Non-normative examples
-tools/          Validator designs and slices
-docs/           Overview, review, release planning, public readiness
+docs/project-status.md  Current repository status
+spec/core/              Core KDSL specification, core notation, modes
+spec/profiles/          Usage-specific profiles
+spec/r1/                R1 result-reporting contract
+spec/lint/              Lint checklist
+spec/bridge/            KDSL / KDSL-DP / ADPS bridge
+templates/              Reusable prompt templates
+examples/               Non-normative examples
+tools/                  Experimental heuristic validator helpers
+docs/                   Overview, review, release planning, public readiness
 ```
 
 ## Non-goals
 
 ```text
-No release approval
-No publicization approval
+No stable release approval
+No public-ready approval
 No tag creation or tag movement approval
 No Release Assets operation approval
-No runtime verification by validator
-No U approval delegation to validator
-No full semantic equivalence proof by validator
+No runtime verification by validator helpers
+No U approval delegation to validator helpers
+No full semantic equivalence proof by validator helpers
+No full template expansion proof by validator helpers
 ```
 
 ## Release / publicization status
 
 ```text
-release: none
-public: not_yet
-GitHub Release: none
+release: v1.1.0-rc1
+release_type: prerelease
+release_class: experimental preview
+public: yes
+public_ready: no
+GitHub Release: v1.1.0-rc1 prerelease
 Release Assets: none
+license: pending
 ```
 
-A future public release candidate requires explicit U review and approval.
+Stable v1.1.0, Release Assets, tag movement, license selection, and public-ready promotion require explicit U review and approval.
