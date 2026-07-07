@@ -172,21 +172,23 @@ Public readiness: 公開可否判断メモ。公開実行ではない
 ## 現在の状態
 
 ```text
-status: main synced after v0.1.0-draft
+status: v1.1.0-rc1 prerelease published
 current_main_spec: v1.1-ADPS-aware sync
 base_tag: v0.1.0-draft
 base_tag_type: annotated
 base_tag_object: 797c88ad176dde5286187984de945040ec5eb945
 base_tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
-visibility: private
-stability: draft
-release: none
-public: not_yet
+visibility: public
+stability: release-candidate
+release: v1.1.0-rc1
+release_type: prerelease
+public: yes
+Release Assets: none
 validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
 validator_wrapper: target modes r1 / prompt / all
-public_facing_docs: draft files created / U review pending
-release_candidate_review: drafted / local validation and U explicit approval pending
-readiness: not_ready
+public_facing_docs: draft files created
+release_candidate_review: local validation confirmed / rc1 published
+readiness: rc1_published
 ```
 
 ## 運用方針
@@ -209,11 +211,11 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 30: U local validation confirmation
-A. U runs local validation commands
-B. U reviews release candidate checklist
-C. optional release/tag/public planning only after explicit U approval
-release作成なし
-public化なし
-tag移動なし
+Phase 31: quiet public observation
+A. Release本文を更新後、見え方を確認
+B. README / examples / validator導線を静かに確認
+C. 問題があればrc2で補正
+D. 問題がなければv1.1.0 stable化を検討
+Release Assets追加なし
+大々的告知なし
 ```
