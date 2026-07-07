@@ -123,6 +123,7 @@ Review / checklist:
   docs/reviews/v1.1-authority-guard-design.md
   docs/reviews/v1.1-full-template-expansion-checker-design.md
   docs/reviews/v1.1-public-facing-readme-examples-design.md
+  docs/reviews/v1.1-release-candidate-checklist-review.md
 
 Release / public planning:
   docs/release/v0.1.0-draft-tag-plan.md
@@ -184,6 +185,7 @@ public: not_yet
 validator: required-block / RT-basis / authority-guard / template-reference / template-expansion slices implemented
 validator_wrapper: target modes r1 / prompt / all
 public_facing_docs: draft files created / U review pending
+release_candidate_review: drafted / local validation and U explicit approval pending
 readiness: not_ready
 ```
 
@@ -207,9 +209,9 @@ readiness: not_ready
 ## 次候補
 
 ```text
-Phase 29: release candidate checklist review
-A. release readiness checklist review
-B. local validation command review
+Phase 30: U local validation confirmation
+A. U runs local validation commands
+B. U reviews release candidate checklist
 C. optional release/tag/public planning only after explicit U approval
 release作成なし
 public化なし
