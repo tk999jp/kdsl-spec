@@ -17,7 +17,7 @@ current_public_state:
   public_ready: no
   stable_release: none
   release_assets: none
-  license: pending
+  license: MIT
 ```
 
 補足:
@@ -25,11 +25,27 @@ current_public_state:
 ```text
 public: yes
 public-ready: no
+license: MIT
 ```
 
 この2つは分離して扱います。現在の状態は「公開済み experimental preview」であり、「正式public-ready release」ではありません。
 
-## 2. Validator maturity
+## 2. License state
+
+```yaml
+license:
+  type: MIT
+  file: LICENSE
+  approved_by_user: 2026-07-07
+  scope:
+    - specifications
+    - documentation
+    - examples
+    - templates
+    - validator helper code
+```
+
+## 3. Validator maturity
 
 ```yaml
 validator:
@@ -60,7 +76,7 @@ validator pass != semantic equivalence
 validator pass != release readiness
 ```
 
-## 3. Safety status
+## 4. Safety status
 
 保持対象:
 
@@ -74,7 +90,7 @@ KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱
 public履歴/公開済tag/Release Assets保護
 ```
 
-## 4. Local validation evidence
+## 5. Local validation evidence
 
 ```yaml
 local_sample_validation:
@@ -94,10 +110,9 @@ local_sample_validation:
     - full template expansion proof
 ```
 
-## 5. Known gaps before stable
+## 6. Known gaps before stable
 
 ```text
-LICENSE未決定
 GitHub Actions未構成
 validatorは文字列/軽量構造lint中心
 full parserなし
@@ -106,7 +121,7 @@ full template expansion照合なし
 ADPS/KDSL-DP説明は初見向けには重い
 ```
 
-## 6. Recommended positioning
+## 7. Recommended positioning
 
 ```text
 Use as:
@@ -122,12 +137,11 @@ Do not present as:
   approval/runtime/release substitute
 ```
 
-## 7. Next safe steps
+## 8. Next safe steps
 
 ```text
-P0: public-facing / examples / CHANGELOG を本状態へ同期
+P0: license表記をREADME / overview / public-readiness / manifest等へ同期
 P1: validator名称と説明を heuristic lint helpers で維持
-P2: LICENSE判断
-P3: GitHub Actionsでsample runner実行を検討
-P4: stable v1.1.0 はU明示承認後のみ検討
+P2: GitHub Actionsでsample runner実行を検討
+P3: stable v1.1.0 はU明示承認後のみ検討
 ```
