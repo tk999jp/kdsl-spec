@@ -1,10 +1,11 @@
 # KDSL / R1 Overview
 
 status: overview-draft
+project_status: docs/project-status.md
 
 ## 1. What this repository is
 
-`kdsl-spec` は、KDSL と R1 を管理するためのprivate draft specification repository。
+`kdsl-spec` は、KDSL と R1 を管理するための experimental preview specification repository。
 
 ```text
 KDSL:=LLM直投入可能な安全gate保持型半構造化prompt記法
@@ -12,6 +13,16 @@ R1:=AI作業結果のEvidence/検収仕様
 ```
 
 このrepositoryは、prompt圧縮だけではなく、Human-AI work interface / 作業契約 / 結果証跡 / 検収可能性を扱う。
+
+現在の状態:
+
+```text
+public: yes
+release: v1.1.0-rc1
+release_class: experimental preview
+public-ready: no
+stable_release: none
+```
 
 ## 2. Why KDSL exists
 
@@ -71,7 +82,10 @@ examples:
   before/after/R1例
 
 tools/validator:
-  機械検査の設計。実装なし
+  experimental heuristic lint helpers / partial implementation
+
+docs/project-status.md:
+  repository現在状態の運用上の状態正本
 ```
 
 ## 5. Safety principles
@@ -94,20 +108,25 @@ COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ## 6. Current maturity
 
 ```text
-state: private draft
-release: none
-public: not_yet
-tag: not_created
-validator implementation: not_started
+state: public experimental preview
+release: v1.1.0-rc1
+public: yes
+public_ready: no
+tag: v1.1.0-rc1
+Release Assets: none
+validator implementation: partial heuristic lint helpers
+license: pending
 ```
 
-現時点では、仕様・テンプレート・例・validator設計が揃った段階。
+現時点では、仕様・テンプレート・例・validator helperが揃った experimental preview 段階。
+validator helperは、承認・実機確認・release readiness・意味等価性の証明を代替しない。
 
 ## 7. Recommended use now
 
 ```text
 KDSL/R1の設計検討
 MidFD等のAI coding prompt運用改善
+external review / experimental previewとしての確認
 template分離の検証
 R1結果報告の検収観点確認
 ```
@@ -115,8 +134,9 @@ R1結果報告の検収観点確認
 非推奨:
 
 ```text
-public release
-外部標準として告知
+stable release扱い
+外部標準としての大々的告知
 validator passを承認/RT:v代替にすること
-tag作成の無承認実行
+Release Assets作成
+既存tag移動
 ```
