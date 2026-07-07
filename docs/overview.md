@@ -22,6 +22,7 @@ release: v1.1.0-rc1
 release_class: experimental preview
 public-ready: no
 stable_release: none
+license: MIT
 ```
 
 ## 2. Why KDSL exists
@@ -115,7 +116,7 @@ public_ready: no
 tag: v1.1.0-rc1
 Release Assets: none
 validator implementation: partial heuristic lint helpers
-license: pending
+license: MIT
 ```
 
 現時点では、仕様・テンプレート・例・validator helperが揃った experimental preview 段階。
