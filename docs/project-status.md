@@ -74,12 +74,31 @@ KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱
 public履歴/公開済tag/Release Assets保護
 ```
 
-## 4. Known gaps before stable
+## 4. Local validation evidence
+
+```yaml
+local_sample_validation:
+  date: 2026-07-07
+  command: python tools/validator/run_samples.py
+  result: pass
+  total: 16
+  failed: 0
+  repo_status_after: clean / main...origin/main
+  meaning: sample expectation runner passed locally
+  not_meaning:
+    - validator proof
+    - RT:v
+    - U approval
+    - release readiness
+    - semantic equivalence
+    - full template expansion proof
+```
+
+## 5. Known gaps before stable
 
 ```text
 LICENSE未決定
 GitHub Actions未構成
-sample expectation runnerは追加中/整備中
 validatorは文字列/軽量構造lint中心
 full parserなし
 full template expansion照合なし
@@ -87,7 +106,7 @@ full template expansion照合なし
 ADPS/KDSL-DP説明は初見向けには重い
 ```
 
-## 5. Recommended positioning
+## 6. Recommended positioning
 
 ```text
 Use as:
@@ -103,12 +122,12 @@ Do not present as:
   approval/runtime/release substitute
 ```
 
-## 6. Next safe steps
+## 7. Next safe steps
 
 ```text
-P0: README / overview / public-readiness / manifest / validator README を本状態へ同期
-P1: validator名称と説明を heuristic lint helpers へ補正
-P2: sample expectation runner を整備
-P3: LICENSE判断
+P0: public-facing / examples / CHANGELOG を本状態へ同期
+P1: validator名称と説明を heuristic lint helpers で維持
+P2: LICENSE判断
+P3: GitHub Actionsでsample runner実行を検討
 P4: stable v1.1.0 はU明示承認後のみ検討
 ```
