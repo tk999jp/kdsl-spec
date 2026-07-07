@@ -6,6 +6,7 @@ release: v1.1.0-rc1
 release_class: experimental preview
 public: yes
 public_ready: no
+license: MIT
 
 ## Purpose
 
@@ -32,19 +33,6 @@ examples must not imply KDSL-DP direct execution
 examples must not imply validator pass equals U approval
 examples must not imply validator pass equals RT:v
 examples must not imply validator pass equals release readiness
-examples must avoid project-private names unless intentionally anonymized
-examples must avoid Release Assets or public history operations
-```
-
-## Validator helper note
-
-```text
-validator helpers are experimental heuristic lint aids
-validator pass != U approval
-validator pass != RT:v
-validator pass != semantic equivalence
-validator pass != release readiness
-kdsl_template_expansion.py checks expansion evidence, not full template expansion proof
 ```
 
 ## Status
@@ -55,9 +43,6 @@ release_type: prerelease
 release_class: experimental preview
 public: yes
 public_ready: no
-GitHub Release: v1.1.0-rc1 prerelease
 Release Assets: none
-license: pending
+license: MIT
 ```
-
-Stable release, Release Assets, tag movement, and license selection require explicit U approval.
