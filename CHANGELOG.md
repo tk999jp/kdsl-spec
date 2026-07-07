@@ -75,10 +75,12 @@
   - `examples/public/r1_result_authority_guard.example.md`
   - `examples/public/kdsl_dp_boundary_warning.example.md`
   - `docs/release/v1.1-release-notes-draft.md`
+- Added release candidate checklist review draft:
+  - `docs/reviews/v1.1-release-candidate-checklist-review.md`
 - Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Updated README navigation and current status for validator slices, wrapper target modes, and public-facing draft files.
+- Updated README navigation and current status for validator slices, wrapper target modes, public-facing draft files, and release candidate review draft.
 
 ### Notes
 
@@ -88,6 +90,7 @@
 - Repository remains private.
 - Validator implementation has required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
 - Public-facing README / examples-public / release notes are draft files; U review is pending.
+- Release candidate checklist review is drafted; local validation confirmation and explicit U approval are pending.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
