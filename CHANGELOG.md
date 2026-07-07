@@ -80,17 +80,23 @@
 - Added v1.1 readiness documents:
   - `docs/reviews/v1.1-sync-review.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Updated README navigation and current status for validator slices, wrapper target modes, public-facing draft files, and release candidate review draft.
+- Published v1.1.0-rc1 prerelease:
+  - tag: `v1.1.0-rc1`
+  - GitHub Release: `v1.1.0-rc1`
+  - release type: prerelease
+  - repository visibility: public
+  - Release Assets: none
+- Updated README navigation and current status for validator slices, wrapper target modes, public-facing draft files, and v1.1.0-rc1 prerelease status.
 
 ### Notes
 
 - Development continues after `v0.1.0-draft`.
-- Existing tag/release/public status is unchanged.
-- No GitHub Release has been created.
-- Repository remains private.
+- Existing `v0.1.0-draft` tag is unchanged.
+- GitHub Release `v1.1.0-rc1` has been created as a prerelease.
+- Repository visibility is public.
+- Release Assets are not attached.
 - Validator implementation has required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
-- Public-facing README / examples-public / release notes are draft files; U review is pending.
-- Release candidate checklist review is drafted; local validation confirmation and explicit U approval are pending.
+- Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
@@ -98,7 +104,7 @@
 - Template-reference verification is recorded for OK and missing-gate samples.
 - Template-expansion verification is recorded for OK, warn, and fail samples.
 - Validator does not perform runtime verification, user approval, semantic equivalence, release, or publicization decisions.
-- v1.1 release readiness remains `not_ready`.
+- v1.1.0-rc1 is not a stable production release.
 
 ## v0.1.0-draft
 
@@ -185,7 +191,6 @@ public: not_yet
 ### Notes
 
 - This repository is a draft specification workspace.
-- No GitHub Release has been created.
-- Release/publicization are still not recommended.
+- No GitHub Release has been created for `v0.1.0-draft`.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
 - Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, and template-expansion slices.
