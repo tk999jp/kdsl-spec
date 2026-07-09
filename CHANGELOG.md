@@ -4,6 +4,14 @@
 
 ### Changed
 
+- Added KDSL CompactPrompt examples for v2 draft review:
+  - `examples/compact-prompt/README.md`
+  - `examples/compact-prompt/blog_meta.kdsl-cp.md`
+  - `examples/compact-prompt/blog_meta.kdsl-cp-kanji.md`
+  - `examples/compact-prompt/novel_review.kdsl-cp-kanji.md`
+  - `examples/compact-prompt/prompt_improver.kdsl-cp.md`
+  - `examples/compact-prompt/cp_lift_example.md`
+  - README navigation updates
 - Added v2 CompactPrompt draft direction and boundary documents without promoting v1.1.0-rc1 to stable:
   - `docs/design/kdsl-v2-direction.md`
   - `spec/profiles/kdsl-profile-compact-prompt.md`
