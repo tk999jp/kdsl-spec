@@ -51,6 +51,9 @@ Overview:
 Public-facing draft:
   docs/public-facing-readme-draft.md
 
+v2 draft direction:
+  docs/design/kdsl-v2-direction.md
+
 KDSL全体仕様:
   spec/core/kdsl-spec.md
 
@@ -69,6 +72,13 @@ dev-prompt運用:
 
 converter運用:
   spec/profiles/kdsl-converter-prompt.md
+
+CompactPrompt / KDSL-CP v2 draft:
+  spec/profiles/kdsl-profile-compact-prompt.md
+  spec/profiles/kdsl-compact-kanji-aliases.md
+
+CP / Packet bridge v2 draft:
+  spec/bridge/kdsl-cp-packet-bridge.md
 
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
@@ -141,16 +151,16 @@ spec/
   manifest.md  正本参照関係
   glossary.md  用語集
   core/         KDSLの正本・core記法・mode定義
-  profiles/     dev-prompt / converter など用途別profile
+  profiles/     dev-prompt / converter / compact-prompt など用途別profile
   r1/           R1 Result Specification / KDSL_RESULT
   lint/         KDSL/R1 lint checklist
-  bridge/       KDSL / KDSL-DP / ADPS / R1境界
+  bridge/       KDSL / KDSL-DP / ADPS / R1 / CP-Packet 境界
 
 templates/      再利用prompt template置き場
 experimental/   Actor Model / Protocol Stack / HMI / Python Validator等の実験案
 examples/       変換例・運用例
 tools/          validator等の設計/実装候補置き場
-docs/           project status / overview / review / release planning 等の運用文書
+docs/           project status / overview / review / release planning / design 等の運用文書
 ```
 
 ## 仕様レベル
@@ -162,7 +172,7 @@ Glossary: 用語定義
 Profile: 用途別の運用仕様
 R1: AI作業結果の証跡・検収仕様
 Lint: 意味欠落・safety gate欠落検査
-Bridge: KDSL-DP / ADPS / R1境界
+Bridge: KDSL-DP / ADPS / R1 / CP-Packet 境界
 Templates: 実運用向け再利用部品
 Experimental: 検証中の概念・拡張案
 Examples: 正本ではない理解補助
@@ -171,6 +181,7 @@ Reviews: tag/release前の判断記録
 Release planning: tag/release判断の準備文書。実行許可ではない
 Public readiness: 公開可否判断メモ。公開実行ではない
 Project status: repositoryの現在状態を示す運用上の状態正本
+Design docs: 仕様再編やv2 draft方針の判断記録。Core正本ではない
 ```
 
 ## Validator helpers
@@ -216,6 +227,31 @@ python tools/validator/run_samples.py
 - KDSL_RESULT の COMMIT は実行結果または推奨messageであり、自動commit許可ではない
 - unknown profile / alias / preset / template は推測しない
 - v0.1.0-draft tag は履歴として維持し、main の仕様整理とは分離する
+- v2-draft documents are design/proposal additions and do not by themselves replace Core/R1/Lint canonical rules
+
+## v2 draft candidates
+
+```text
+Status:
+  draft / not stable / not public-ready
+
+Initial scope:
+  KDSL-CP: CompactPrompt for general LLM / Project files / single prompts
+  KDSL-CP漢: dense-ja aliases for compact Japanese prompts
+  CP-Lift: boundary rule from KDSL-CP to KDSL-Packet / Full KDSL
+
+Files:
+  docs/design/kdsl-v2-direction.md
+  spec/profiles/kdsl-profile-compact-prompt.md
+  spec/profiles/kdsl-compact-kanji-aliases.md
+  spec/bridge/kdsl-cp-packet-bridge.md
+
+Non-goals:
+  Core正本の即置換
+  R1C/SG/Packet registryの同時導入
+  stable v2 release
+  tag/release/Release Assets操作
+```
 
 ## 次候補
 
@@ -228,4 +264,10 @@ D. LICENSE判断
 E. 問題がなければv1.1.0 stable化を別途U承認後に検討
 Release Assets追加なし
 大々的告知なし
+
+Phase: v2 CompactPrompt draft follow-up
+A. examples/compact-prompt/* の追加
+B. R1C compact schema検討
+C. Safety Gate registry / bitmask検討
+D. Packet registry検討
 ```
