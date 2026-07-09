@@ -44,6 +44,7 @@ Examples: 理解補助。正本ではない
 Tools: 任意補助。承認/RT:v/要件妥当性/release readinessの代替ではない
 Docs/Reviews: 判断記録。仕様正本ではない
 Project Status: repository現在状態の運用上の状態正本。仕様正本ではない
+Design: 仕様再編/次期draft方針の判断記録。仕様正本ではない
 ```
 
 ## 2. File responsibility map
@@ -51,14 +52,18 @@ Project Status: repository現在状態の運用上の状態正本。仕様正本
 | Path | Layer | Responsibility | Canonical? |
 |---|---|---|---|
 | `docs/project-status.md` | Status | repository現在状態 / public-ready / validator maturity / license状態 | Operational status canonical |
+| `docs/design/kdsl-v2-direction.md` | Design | v2 draft方向性 / KDSL-Core・KDSL-CP・KDSL-Packet分離方針 | No / design draft |
 | `spec/core/kdsl-spec.md` | Core | KDSL全体定義 / 設計単位 / KDSL_PROMPT / KDSL_RESULT入口 | Yes |
 | `spec/core/kdsl-core.md` | Core | operator / abbrev / 保護語 / 禁止文型 / 変換禁止 | Yes |
 | `spec/core/kdsl-modes.md` | Core | mode / safety / high-risk判定 | Yes |
 | `spec/profiles/kdsl-profile-dev-prompt.md` | Profile | dev-prompt用途の実運用規則 | Profile canonical |
 | `spec/profiles/kdsl-converter-prompt.md` | Profile | KDSL Converterの出力契約 | Profile canonical |
+| `spec/profiles/kdsl-profile-compact-prompt.md` | Profile draft | KDSL-CP / 一般LLM・Project files向け軽量サブセット | v2 draft |
+| `spec/profiles/kdsl-compact-kanji-aliases.md` | Profile draft | KDSL-CP dense-ja / 漢字alias | v2 draft |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / EVIDENCE / AUTHORITY / 検収仕様 | Yes |
 | `spec/lint/kdsl-lint-checklist.md` | Lint | KDSL/R1変換後lint/checklist | Yes |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
+| `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | KDSL-CPからKDSL-Packet/Full KDSLへの昇格境界 | v2 draft |
 | `templates/*` | Templates | 再利用部品 | No |
 | `experimental/*` | Experimental | 検証中案 | No |
 | `examples/*` | Examples | 理解補助/運用例 | No |
@@ -230,6 +235,40 @@ spec/lint/kdsl-lint-checklist.md
 tools/validator/kdsl-template-lint-design.md
 ```
 
+### KDSL-CP v2 draft
+
+v2 draft:
+
+```text
+spec/profiles/kdsl-profile-compact-prompt.md
+spec/profiles/kdsl-compact-kanji-aliases.md
+```
+
+位置づけ:
+
+```text
+KDSL-CPは一般LLM / Project files / 単体prompt向け軽量profile候補
+KDSL-CP漢はdense-ja alias候補
+Core正本の即置換ではない
+保護語弱化禁止
+```
+
+### CP / Packet bridge v2 draft
+
+v2 draft:
+
+```text
+spec/bridge/kdsl-cp-packet-bridge.md
+```
+
+位置づけ:
+
+```text
+KDSL-CPをAI coding tool向け実装契約として直接扱うことを防ぐ境界仕様候補
+CP-Lift条件を定義
+KDSL-DP/P1/P1L境界の正本変更ではない
+```
+
 ## 4. Duplication policy
 
 重複は以下の範囲で許容する。
@@ -242,6 +281,7 @@ Lint: 検査項目として再掲可
 Template: 実運用prompt部品として再掲可
 Validator design: 機械検査項目として再掲可
 Project Status: repository状態として再掲可
+Design/v2 draft: 採用前提案として再掲可
 ```
 
 ただし、正本と矛盾する再掲は禁止。
@@ -253,6 +293,9 @@ repository現在状態は `docs/project-status.md` と矛盾しないこと。
 Coreのoperator/保護語変更→breaking候補
 R1のRT:v/NEXT/COMMIT意味変更→breaking候補
 BridgeのKDSL-DP/P1/P1L境界変更→breaking候補
+KDSL-CP draft追加→compatible候補
+KDSL-CP漢 alias追加→compatible候補
+CP-Lift条件追加→compatible候補
 Lint項目追加→compatible候補
 Template追加→compatible候補
 Example追加→patch候補
@@ -272,6 +315,17 @@ ExperimentalからCore/R1/Lintへ昇格する場合:
 互換性: breaking/compatible/patch
 必要lint
 必要example
+```
+
+v2 draftから正本へ昇格する場合:
+
+```text
+v2 draft status確認
+Core/R1/Lint/Bridgeへの影響整理
+保護語弱化なし確認
+KDSL-DP/P1/P1L境界破損なし確認
+既存tag/release/Release Assets非操作確認
+U明示承認
 ```
 
 ## 7. Tag readiness dependency
