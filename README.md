@@ -108,6 +108,14 @@ KDSL / KDSL-DP / ADPS bridge:
   examples/midfd/docs_state_closeout.after.md
   examples/midfd/r1_result.example.md
 
+CompactPrompt examples:
+  examples/compact-prompt/README.md
+  examples/compact-prompt/blog_meta.kdsl-cp.md
+  examples/compact-prompt/blog_meta.kdsl-cp-kanji.md
+  examples/compact-prompt/novel_review.kdsl-cp-kanji.md
+  examples/compact-prompt/prompt_improver.kdsl-cp.md
+  examples/compact-prompt/cp_lift_example.md
+
 Public examples:
   examples/public/README.md
   examples/public/kdsl_prompt_safe_fix.example.md
@@ -245,6 +253,7 @@ Files:
   spec/profiles/kdsl-profile-compact-prompt.md
   spec/profiles/kdsl-compact-kanji-aliases.md
   spec/bridge/kdsl-cp-packet-bridge.md
+  examples/compact-prompt/*
 
 Non-goals:
   Core正本の即置換
@@ -266,8 +275,7 @@ Release Assets追加なし
 大々的告知なし
 
 Phase: v2 CompactPrompt draft follow-up
-A. examples/compact-prompt/* の追加
-B. R1C compact schema検討
-C. Safety Gate registry / bitmask検討
-D. Packet registry検討
+A. R1C compact schema検討
+B. Safety Gate registry / bitmask検討
+C. Packet registry検討
 ```
