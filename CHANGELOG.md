@@ -4,6 +4,12 @@
 
 ### Changed
 
+- Added v2 CompactPrompt draft direction and boundary documents without promoting v1.1.0-rc1 to stable:
+  - `docs/design/kdsl-v2-direction.md`
+  - `spec/profiles/kdsl-profile-compact-prompt.md`
+  - `spec/profiles/kdsl-compact-kanji-aliases.md`
+  - `spec/bridge/kdsl-cp-packet-bridge.md`
+  - README navigation and manifest draft references
 - Redefined current repository status as public experimental preview, not public-ready/stable:
   - `docs/project-status.md`
   - `README.md`
