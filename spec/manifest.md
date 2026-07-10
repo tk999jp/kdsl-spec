@@ -1,345 +1,320 @@
-# KDSL Spec Manifest v1.1-sync
+# KDSL Spec Manifest v2-draft-sync
 
-目的: kdsl-spec内の各ファイルの責務・正本性・参照関係を定義し、重複規則の更新不一致を防ぐ。
+目的: kdsl-spec内の各fileの責務・正本性・参照関係を定義し、重複規則の更新不一致を防ぐ。
 
-status: draft-main-v1.1-sync
+status: v2-draft-sync
 project_status: docs/project-status.md
+base_release: v1.1.0-rc1 experimental preview
+license: MIT
 
-## 0. Current main alignment
+## 0. Current alignment
 
 ```text
-main_spec_sync: v1.1-ADPS-aware oriented
-base_tag: v0.1.0-draft
-base_tag_status: recorded / unchanged
+repository_visibility: public
 release: v1.1.0-rc1
 release_class: experimental preview
-public: yes
 public_ready: no
 stable_release: none
 Release Assets: none
-license: pending
+license: MIT
 validator: partial heuristic lint helpers / non-authoritative
+v2_branch_direction: CompactPrompt / Lexicon / CP-Lift architecture correction
 ```
 
-注意:
-```text
-v0.1.0-draft tagは履歴として維持する
-v1.1.0-rc1はexperimental preview prerelease
-mainのv1.1同期はstable release/public-ready化を意味しない
-次stable tag/release/Release Assets追加は別途U承認必須
-docs/project-status.mdをrepository現在状態の運用上の状態正本とする
-```
-
-## 1. Spec layers
+Policy:
 
 ```text
-Core: KDSL本体/記法/保護語/mode/safetyの正本
-Profiles: 用途別運用仕様
-R1: 結果証跡/検収仕様の正本
-Lint: 保持/弱化/欠落検査の正本
-Bridge: KDSL-DP/ADPS/P1/P1L/R1境界の正本
-Templates: 実運用向け再利用部品。Core正本ではない
-Experimental: 検証中案。正本ではない
-Examples: 理解補助。正本ではない
-Tools: 任意補助。承認/RT:v/要件妥当性/release readinessの代替ではない
-Docs/Reviews: 判断記録。仕様正本ではない
-Project Status: repository現在状態の運用上の状態正本。仕様正本ではない
-Design: 仕様再編/次期draft方針の判断記録。仕様正本ではない
+v0.1.0-draft tagは履歴として維持
+v1.1.0-rc1:=experimental historical baseline
+v1.1.0 stable:=当面保留
+v2-draft設計を優先
+既存tag移動禁止
+Release Assets操作禁止
+stable/public-ready化→別途U明示承認必須
+docs/project-status.md:=repository現在状態の運用上の状態正本
 ```
 
-## 2. File responsibility map
+## 1. Architecture axes
+
+```text
+format:=記法系
+profile:=用途別運用仕様
+mode:=圧縮強度
+safety:=安全保持強度
+lexicon:=宣言済み語彙/alias集合
+envelope:=prompt/resultを包む契約形式
+```
+
+Allowed draft alignment:
+
+```text
+format: KDSL
+profile: compact-prompt|dev-prompt|converter|lint
+mode: readable|min|dense|lock
+safety: normal|lock-critical|lock-all
+lexicon: standard|kanji-v1
+envelope: plain|packet-draft|result
+```
+
+Rules:
+
+```text
+lexicon != mode
+lexicon != profile
+unknown profile/mode/safety/lexicon/envelope推測禁止
+Core保護語をLexiconで上書禁止
+```
+
+## 2. Specification layers
+
+```text
+Core:
+  KDSL本体/operator/保護語/変換禁止/mode/safetyの正本
+
+Profiles:
+  用途別運用仕様
+
+Lexicons:
+  profile内で使用する宣言済み語彙/alias集合
+  Core保護語を上書きしない
+
+R1:
+  結果証跡/検収仕様の正本
+
+Lint:
+  意味/safety gate/構造の保持・弱化・欠落検査
+
+Bridge:
+  KDSL-DP/ADPS/P1/P1L/R1/CP-Lift/Packet境界
+
+Templates:
+  実運用向け再利用部品。正本ではない
+
+Examples:
+  理解補助。正本ではない
+
+Tools:
+  heuristic lint補助。承認/RT:v/要件妥当性/release readinessの代替ではない
+
+Docs/Reviews/Design:
+  判断記録。仕様正本ではない
+
+Project Status:
+  repository現在状態の運用上の状態正本。仕様正本ではない
+```
+
+## 3. File responsibility map
 
 | Path | Layer | Responsibility | Canonical? |
 |---|---|---|---|
-| `docs/project-status.md` | Status | repository現在状態 / public-ready / validator maturity / license状態 | Operational status canonical |
-| `docs/design/kdsl-v2-direction.md` | Design | v2 draft方向性 / KDSL-Core・KDSL-CP・KDSL-Packet分離方針 | No / design draft |
-| `spec/core/kdsl-spec.md` | Core | KDSL全体定義 / 設計単位 / KDSL_PROMPT / KDSL_RESULT入口 | Yes |
-| `spec/core/kdsl-core.md` | Core | operator / abbrev / 保護語 / 禁止文型 / 変換禁止 | Yes |
-| `spec/core/kdsl-modes.md` | Core | mode / safety / high-risk判定 | Yes |
-| `spec/profiles/kdsl-profile-dev-prompt.md` | Profile | dev-prompt用途の実運用規則 | Profile canonical |
-| `spec/profiles/kdsl-converter-prompt.md` | Profile | KDSL Converterの出力契約 | Profile canonical |
-| `spec/profiles/kdsl-profile-compact-prompt.md` | Profile draft | KDSL-CP / 一般LLM・Project files向け軽量サブセット | v2 draft |
-| `spec/profiles/kdsl-compact-kanji-aliases.md` | Profile draft | KDSL-CP dense-ja / 漢字alias | v2 draft |
-| `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / EVIDENCE / AUTHORITY / 検収仕様 | Yes |
-| `spec/lint/kdsl-lint-checklist.md` | Lint | KDSL/R1変換後lint/checklist | Yes |
+| `docs/project-status.md` | Status | public/release/license/validator現在状態 | Operational status canonical |
+| `docs/design/kdsl-v2-direction.md` | Design | v2 architecture / orthogonal axes / release strategy | No / v2 draft |
+| `spec/core/kdsl-spec.md` | Core | KDSL全体定義 / KDSL_PROMPT / KDSL_RESULT入口 | Yes |
+| `spec/core/kdsl-core.md` | Core | operator / abbrev / 保護語 / 変換禁止 | Yes |
+| `spec/core/kdsl-modes.md` | Core | mode / safety / high-risk | Yes |
+| `spec/profiles/kdsl-profile-dev-prompt.md` | Profile | AI coding dev-prompt運用 | Profile canonical |
+| `spec/profiles/kdsl-converter-prompt.md` | Profile | KDSL Converter出力契約 | Profile canonical |
+| `spec/profiles/kdsl-profile-compact-prompt.md` | Profile draft | 一般LLM / Project files向けKDSL-CP | v2 draft |
+| `spec/lexicons/kdsl-lexicon-kanji-v1.md` | Lexicon draft | KDSL-CP構造漢字alias | v2 draft |
+| `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
+| `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |
+| `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
-| `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | KDSL-CPからKDSL-Packet/Full KDSLへの昇格境界 | v2 draft |
+| `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / future Packet境界 | v2 draft |
+| `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
+| `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/Packet draft terms | v2 draft |
 | `templates/*` | Templates | 再利用部品 | No |
-| `experimental/*` | Experimental | 検証中案 | No |
 | `examples/*` | Examples | 理解補助/運用例 | No |
-| `tools/validator/*` | Tools | experimental heuristic lint helpers / validator設計 | No |
+| `tools/validator/*` | Tools | experimental heuristic lint helpers | No |
 | `docs/reviews/*` | Review | 判断記録 | No |
 
-## 3. Canonical rule ownership
+## 4. Canonical ownership
 
-### KDSL syntax / operator
-
-正本:
+### Syntax / operator / protected words
 
 ```text
-spec/core/kdsl-core.md
+canonical:
+  spec/core/kdsl-core.md
+
+references:
+  spec/core/kdsl-spec.md
+  spec/lint/kdsl-lint-checklist.md
+  spec/lexicons/kdsl-lexicon-kanji-v1.md
 ```
 
-参照側:
+Lexicon rule:
 
 ```text
-spec/core/kdsl-spec.md
-spec/lint/kdsl-lint-checklist.md
+構造alias追加可
+保護語弱化禁止
+禁止→禁 短縮禁止
+未確認/未実行/承認待/断定禁止の弱化禁止
 ```
 
-### mode / safety / high-risk
-
-正本:
+### Mode / safety / high-risk
 
 ```text
-spec/core/kdsl-modes.md
+canonical:
+  spec/core/kdsl-modes.md
+
+allowed mode:
+  readable|min|dense|lock
+
+forbidden as formal mode:
+  dense-ja
+  CP:dense-ja
 ```
 
-参照側:
+Kanji selection:
 
 ```text
-spec/core/kdsl-spec.md
-spec/profiles/kdsl-converter-prompt.md
-spec/lint/kdsl-lint-checklist.md
+mode:dense + lexicon:kanji-v1
 ```
 
 ### KDSL-DP / ADPS boundary
 
-正本:
-
 ```text
-spec/bridge/kdsl-adps-bridge.md
+canonical:
+  spec/bridge/kdsl-adps-bridge.md
+
+required:
+  KDSL-DP直接実行禁止
+  P1/P1L正規化必須
 ```
 
-Core上の要約:
+### KDSL_RESULT / R1 / RT:v / NEXT / COMMIT
 
 ```text
-spec/core/kdsl-spec.md
-spec/core/kdsl-core.md
+canonical:
+  spec/r1/r1-result-spec.md
+
+required:
+  build/diff/lint/test pass != RT:v
+  RT:v=対象環境runtime確認済のみ
+  NEXT:=提案, 実行許可扱禁止
+  COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ```
 
-Lint上の検査:
+### KDSL-CP
 
 ```text
-spec/lint/kdsl-lint-checklist.md
+draft profile:
+  spec/profiles/kdsl-profile-compact-prompt.md
+
+required blocks:
+  Goal/Input/Output/Guard/Check
+
+kanji-v1 required keys:
+  目/材/出/守/確
 ```
 
-### KDSL_RESULT / R1
-
-正本:
+### kanji-v1
 
 ```text
-spec/r1/r1-result-spec.md
+draft lexicon:
+  spec/lexicons/kdsl-lexicon-kanji-v1.md
+
+structural key aliases:
+  役/目/材/出/則/守/調/確
+
+restricted free-text aliases:
+  禁/不/実/要
 ```
 
-参照側:
+### CP-Lift / Packet
 
 ```text
-spec/core/kdsl-spec.md
-spec/profiles/kdsl-profile-dev-prompt.md
-spec/lint/kdsl-lint-checklist.md
-templates/result/r1_result_spec.md
-tools/validator/r1-validator-design.md
+draft bridge:
+  spec/bridge/kdsl-cp-packet-bridge.md
+
+current lift target:
+  Full KDSL profile:dev-prompt
+
+future Packet:
+  draft-non-executable
+  PKT:v1使用禁止
+  registry未定義→実行禁止
 ```
 
-### RT:v
+## 5. Duplication policy
 
-正本:
+Allowed:
 
 ```text
-spec/r1/r1-result-spec.md
+Core:=正本定義
+Profile:=用途文脈で再掲
+Lexicon:=alias定義
+R1:=結果検収文脈で再掲
+Lint:=検査項目として再掲
+Bridge:=境界規則として再掲
+Template:=実運用部品として再掲
+Examples:=理解補助として再掲
+Design:=採用前提案として再掲
 ```
 
-Core上の保護:
+Restrictions:
 
 ```text
-spec/core/kdsl-spec.md
-spec/core/kdsl-core.md
+正本と矛盾する再掲禁止
+repository現在状態はdocs/project-status.mdと矛盾禁止
+example/template/designを正本扱禁止
 ```
 
-Profile/Template上の運用:
+## 6. Update policy
 
 ```text
-spec/profiles/kdsl-profile-dev-prompt.md
-templates/base/kdsl_base_dev.md
-templates/result/r1_result_spec.md
+Core operator/保護語変更→breaking候補
+mode/safety意味変更→breaking候補
+R1 RT:v/NEXT/COMMIT意味変更→breaking候補
+KDSL-DP/P1/P1L境界変更→breaking候補
+profile追加→compatible候補
+lexicon追加→compatible候補
+既存alias意味変更→breaking候補
+lint追加→compatible候補
+example追加→patch候補
+validator heuristic改善→patch/compatible候補
+validatorを承認者扱い→禁止
+未定義Packet実行許可→禁止
 ```
 
-Lint/Validator上の検査:
+## 7. Promotion policy
+
+v2 draftから正本へ昇格する場合:
 
 ```text
-spec/lint/kdsl-lint-checklist.md
-tools/validator/r1-validator-design.md
-tools/validator/kdsl-template-lint-design.md
-```
-
-注意:
-
-```text
-validator pass != RT:v
-RT:v判定は対象環境runtime確認の証跡が必要
-r1_rt_basis.pyはfield-scoped wording heuristicであり、完全証明ではない
-```
-
-### NEXT / COMMIT authority
-
-正本:
-
-```text
-spec/r1/r1-result-spec.md
-```
-
-運用参照:
-
-```text
-spec/profiles/kdsl-profile-dev-prompt.md
-templates/base/kdsl_base_dev.md
-templates/result/r1_result_spec.md
-```
-
-検査参照:
-
-```text
-spec/lint/kdsl-lint-checklist.md
-tools/validator/r1-validator-design.md
-tools/validator/kdsl-template-lint-design.md
-```
-
-注意:
-
-```text
-KDSL_RESULT NEXT:=提案, 実行許可扱禁止
-KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
-r1_authority_guard.pyはauthority shape heuristicであり、承認者ではない
-```
-
-### D禁止
-
-正本:
-
-```text
-spec/core/kdsl-core.md
-```
-
-運用拡張:
-
-```text
-spec/profiles/kdsl-profile-dev-prompt.md
-templates/base/kdsl_base_dev.md
-```
-
-検査:
-
-```text
-spec/lint/kdsl-lint-checklist.md
-tools/validator/kdsl-template-lint-design.md
-```
-
-### KDSL-CP v2 draft
-
-v2 draft:
-
-```text
-spec/profiles/kdsl-profile-compact-prompt.md
-spec/profiles/kdsl-compact-kanji-aliases.md
-```
-
-位置づけ:
-
-```text
-KDSL-CPは一般LLM / Project files / 単体prompt向け軽量profile候補
-KDSL-CP漢はdense-ja alias候補
-Core正本の即置換ではない
-保護語弱化禁止
-```
-
-### CP / Packet bridge v2 draft
-
-v2 draft:
-
-```text
-spec/bridge/kdsl-cp-packet-bridge.md
-```
-
-位置づけ:
-
-```text
-KDSL-CPをAI coding tool向け実装契約として直接扱うことを防ぐ境界仕様候補
-CP-Lift条件を定義
-KDSL-DP/P1/P1L境界の正本変更ではない
-```
-
-## 4. Duplication policy
-
-重複は以下の範囲で許容する。
-
-```text
-Core: 正本定義
-Profile: 運用文脈で再掲可
-R1: 結果検収文脈で再掲可
-Lint: 検査項目として再掲可
-Template: 実運用prompt部品として再掲可
-Validator design: 機械検査項目として再掲可
-Project Status: repository状態として再掲可
-Design/v2 draft: 採用前提案として再掲可
-```
-
-ただし、正本と矛盾する再掲は禁止。
-repository現在状態は `docs/project-status.md` と矛盾しないこと。
-
-## 5. Update policy
-
-```text
-Coreのoperator/保護語変更→breaking候補
-R1のRT:v/NEXT/COMMIT意味変更→breaking候補
-BridgeのKDSL-DP/P1/P1L境界変更→breaking候補
-KDSL-CP draft追加→compatible候補
-KDSL-CP漢 alias追加→compatible候補
-CP-Lift条件追加→compatible候補
-Lint項目追加→compatible候補
-Template追加→compatible候補
-Example追加→patch候補
-Validator helperのheuristic改善→patch/compatible候補
-Validator helperを承認者扱いする変更→禁止
-```
-
-## 6. Promotion policy
-
-ExperimentalからCore/R1/Lintへ昇格する場合:
-
-```text
-昇格元file
 採用理由
 不採用代替案
 影響範囲
 互換性: breaking/compatible/patch
 必要lint
 必要example
-```
-
-v2 draftから正本へ昇格する場合:
-
-```text
-v2 draft status確認
-Core/R1/Lint/Bridgeへの影響整理
-保護語弱化なし確認
-KDSL-DP/P1/P1L境界破損なし確認
-既存tag/release/Release Assets非操作確認
+Core/R1/Bridge整合
+保護語弱化なし
+KDSL-DP/P1/P1L境界破損なし
+public履歴/公開済tag/Release Assets非操作
 U明示承認
 ```
 
-## 7. Tag readiness dependency
+## 8. Stable/release dependency
 
-v0.1.0-draft tagは記録済み。以降のstable tag/release/public-ready化に必要:
+Stable/public-ready化に必要:
 
 ```text
-README status updated
-CHANGELOG updated
-manifest current alignment updated
-docs/project-status.md updated
-review/checklist added or updated
+README/status/manifest/glossary同期
+review/checklist更新
 validator maturity/limitations明記
 sample expectation runner確認
-LICENSE判断
-stable release/public判断はU承認
+public-facing guide確定
+R1 quickstart
+stable tag/release policy
+U明示承認
+```
+
+Current decision:
+
+```text
+v1.1.0 stable:=hold
+v2-draft:=continue
+Release Assets追加なし
+既存tag移動なし
 ```
