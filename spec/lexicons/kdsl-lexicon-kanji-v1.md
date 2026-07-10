@@ -1,4 +1,4 @@
-# KDSL Lexicon: kanji-v1 v0.1-draft
+# KDSL Lexicon: kanji-v1 v0.2-draft
 
 status: v2-draft
 lexicon: kanji-v1
@@ -35,7 +35,7 @@ KDSL-CP漢:
 
 ## 2. Structural key aliases
 
-The following aliases are allowed at block-key position.
+The following aliases are allowed at block-key position only.
 
 ```text
 役 = Role
@@ -65,17 +65,17 @@ Rules:
 
 ```text
 構造alias:=KEY位置のみ使用
+KEYをfree-text略語として自動解釈禁止
 KEY意味変更禁止
 unknown構造alias推測禁止
 ```
 
 ## 3. Minimal lexical aliases
 
-The following lexical aliases may be used when declared and unambiguous.
+The following optional lexical aliases may be used when declared and unambiguous.
 
 ```text
 U   = ユーザー
-材  = 入力材料/source
 型  = 出力形式/format
 推  = 推測
 危  = リスク
@@ -83,13 +83,19 @@ U   = ユーザー
 条  = 条件
 ```
 
-These aliases are optional. Full words are preferred when a one-character form could change safety meaning.
+Full words are preferred in safety-critical free text.
+
+`材` is not a free-text lexical alias. It is reserved for the `Input` structural key.
 
 ## 4. Reserved or restricted one-character forms
 
 The following are not standard free-text aliases in `kanji-v1`.
 
 ```text
+材
+出
+守
+確
 禁
 不
 実
@@ -99,6 +105,9 @@ The following are not standard free-text aliases in `kanji-v1`.
 Reasons:
 
 ```text
+材/出/守/確:
+  structural keyとfree-text意味の衝突防止
+
 禁:
   Coreで「禁止→禁」短縮禁止
 
