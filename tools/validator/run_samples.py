@@ -86,6 +86,41 @@ SAMPLES = [
         'command': ['kdsl_validate.py', '--target', 'prompt', 'samples/sample_template_ref_ok.md'],
         'expected': 2,
     },
+    {
+        'name': 'compact standard ok',
+        'command': ['kdsl_compact_prompt.py', 'samples/sample_cp_standard_ok.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'compact kanji ok',
+        'command': ['kdsl_compact_prompt.py', 'samples/sample_cp_kanji_ok.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'compact missing block',
+        'command': ['kdsl_compact_prompt.py', 'samples/sample_cp_missing_block.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'compact restricted alias',
+        'command': ['kdsl_compact_prompt.py', 'samples/sample_cp_restricted_alias.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'compact CP-Lift required',
+        'command': ['kdsl_compact_prompt.py', 'samples/sample_cp_lift_required.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'wrapper target compact valid',
+        'command': ['kdsl_validate.py', '--target', 'compact', 'samples/sample_cp_standard_ok.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target compact invalid',
+        'command': ['kdsl_validate.py', '--target', 'compact', 'samples/sample_cp_restricted_alias.md'],
+        'expected': 2,
+    },
 ]
 
 
