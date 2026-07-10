@@ -4,6 +4,7 @@ status: v2-draft example
 canonical: no
 profile: compact-prompt
 mode: min
+lexicon: standard
 
 ## Prompt
 
@@ -22,29 +23,33 @@ Output:
 Rules:
 - 目的/用途/制約/言語/安全境界を保持
 - 不足情報は仮定明記 or 確認質問
-- 特定model/platform指定時のみ公式/既知制約に寄せる
+- 特定model/platform指定時のみ適合
 - 冗長説明を削り、実行可能な指示へ整理
 Guard:
 - original_promptの目的変更禁止
-- 安全gate削除禁止
+- safety gate削除禁止
 - 未確認→断定禁止
-- 過剰なモデル依存化禁止
-- fmt外出力禁止
+- 過剰なmodel依存化禁止
+- 指定形式外出力禁止
 Style: 実務向け/簡潔/日本語
 Check:
 - 目的保持
 - safety gate保持
 - Output欠落なし
 - 意味変化risk明記
+- CP-Lift条件確認
 ```
 
 ## Notes
 
 ```text
 Use when:
-  the user wants a prompt improved for general LLM use
+  user wants a prompt improved for general LLM use
 
 Lift required when:
-  the improved prompt becomes an AI coding tool implementation contract
-  repo/path/branch/runtime/release/rollback terms appear
+  improved prompt becomes an AI coding implementation contract
+  repo/path/branch/commit/runtime/release/rollback terms appear
+
+Current lift target:
+  Full KDSL profile:dev-prompt
 ```
