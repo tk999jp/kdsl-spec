@@ -28,20 +28,23 @@ stable: no
 
 現在の状態は「公開済み experimental preview」であり、正式public-ready/stable releaseではありません。
 
-## 2. Current development workstream
+## 2. Current development integration
 
 ```yaml
-development_workstream:
-  branch: feature/kdsl-v2-compact-prompt
-  base: main
-  status: v2_architecture_draft
-  focus:
+v2_compact_prompt_integration:
+  source_branch: feature/kdsl-v2-compact-prompt
+  target_branch: main
+  pull_request: 1
+  merge_method: squash
+  merge_status: merged
+  squash_commit: ae55f845018c0e8208d9e07c9814bc48035b2ef8
+  merged_date: 2026-07-10
+  scope:
     - CompactPrompt profile
     - kanji-v1 lexicon
     - CompactPrompt lint
     - CP-Lift boundary
     - future Packet non-executable boundary
-  merge_status: not_merged
   stable_effect: none
 ```
 
@@ -50,8 +53,7 @@ Direction:
 ```text
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
-v2-draft設計を優先
-mainへのmerge:=別判断
+v2-draft設計をmainへ統合済み
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -136,7 +138,7 @@ Packet registry未定義→KDSL-Packet直接実行禁止
 PKT:v1使用禁止
 ```
 
-## 6. Local validation evidence
+## 6. Validation and integration evidence
 
 ```yaml
 local_sample_validation:
@@ -146,25 +148,29 @@ local_sample_validation:
   total: 16
   failed: 0
   repo_status_after: clean / main...origin/main
-  meaning: sample expectation runner passed locally
+  meaning: sample expectation runner passed locally before v2 integration
   not_meaning:
+    - v2 CompactPrompt automated validation
     - validator proof
     - RT:v
-    - U approval
     - release readiness
     - semantic equivalence
-    - full template expansion proof
 ```
 
-v2 branch review:
-
-```text
-method: GitHub connector file review / branch compare
-runtime: not applicable
-validator runner: not executed against v2 additions
+```yaml
+v2_integration_evidence:
+  method: GitHub pull request squash merge
+  pull_request: 1
+  source_head: 5195e7da73ee1db0cd5d0f22511193a19146740a
+  squash_commit: ae55f845018c0e8208d9e07c9814bc48035b2ef8
+  merged: true
+  changed_files: 18
+  pre_merge_branch_relation: ahead_36_behind_0
+  runtime: not_applicable
+  compact_prompt_validator: not_implemented
 ```
 
-## 7. Known gaps before merge or stable
+## 7. Known gaps before stable
 
 ```text
 KDSL-CP/kanji-v1はv2 draft
@@ -182,9 +188,9 @@ full template expansion照合なし
 ```text
 Use as:
   experimental preview
-  internal/public review candidate
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
+  internal/public review candidate
   R1 evidence-reporting draft
 
 Do not present as:
@@ -198,9 +204,9 @@ Do not present as:
 ## 9. Next safe steps
 
 ```text
-P0: v2 branch architecture review / lint review
-P1: merge可否判断
+P0: main上のv2 architecture/manual lint review
+P1: CompactPrompt validator実装可否検討
 P2: R1C / Safety Gate registry / Packet registryを別Phaseで検討
-P3: validatorへのCompactPrompt lint実装を別Phaseで検討
+P3: public-facing v2 overview検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
