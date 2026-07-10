@@ -9,7 +9,13 @@ KANJI_CONDITIONAL = ('役', '則', '調')
 ALL_BLOCK_KEYS = set(STANDARD_REQUIRED + STANDARD_CONDITIONAL + KANJI_REQUIRED + KANJI_CONDITIONAL)
 
 LIFT_PATTERNS = (
-    ('implementation', re.compile(r'実装|改修|削除|コード変更|source\s*change', re.IGNORECASE)),
+    (
+        'implementation',
+        re.compile(
+            r'実装(?!\s*(?:を)?禁止)|改修(?!\s*(?:を)?禁止)|削除(?!\s*(?:を)?禁止)|コード変更|source\s*change',
+            re.IGNORECASE,
+        ),
+    ),
     ('repository operation', re.compile(r'\brepo\b|repository|\bbranch\b|\bcommit\b|\bpush\b|\bpull request\b', re.IGNORECASE)),
     ('file/API/command change', re.compile(r'file変更|API変更|command変更|ファイル変更|コマンド変更', re.IGNORECASE)),
     ('rollback/revert', re.compile(r'\brollback\b|\brevert\b', re.IGNORECASE)),
