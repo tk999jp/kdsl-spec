@@ -4,13 +4,14 @@ status: v2-draft example
 canonical: no
 profile: compact-prompt
 mode: min
+lexicon: standard
 
 ## Prompt
 
 ```text
 KDSL-CP:
 Role: 技術系ブログ編集者/SEO担当
-Goal: article src→公開用メタ情報作成
+Goal: article input→公開用メタ情報作成
 Input: article_text
 Output:
 - 要約:120字以内
@@ -24,15 +25,15 @@ Rules:
 - 各項目短く実用的
 - Output順序保持
 Guard:
-- src外事実追加禁止
-- unk→断定禁止
-- est→推測明記
+- 入力外事実追加禁止
+- 不明→断定禁止
+- 推測→推測明記
 - 誇張/煽り禁止
-- fmt外出力禁止
+- 指定形式外出力禁止
 Style: 簡潔/実用的/自然な日本語
 Check:
 - 字数/件数確認
-- src外情報なし
+- 入力外事実なし
 - SEO語がarticle内容と一致
 - Guard違反なし
 ```
@@ -45,7 +46,7 @@ Use when:
   output is publication metadata
 
 Do not use when:
-  current SEO trend research is required
-  factual claims must be updated from web
+  current SEO trend research is required without web access
+  factual claims must be updated externally
   article content is missing
 ```
