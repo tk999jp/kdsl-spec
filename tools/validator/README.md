@@ -1,6 +1,6 @@
 # Experimental Validator Helpers
 
-目的: KDSL / R1 / Template をPython等で機械検査するための experimental heuristic lint helper 置き場。
+目的: KDSL / R1 / Template / CompactPrompt をPython等で機械検査するための experimental heuristic lint helper 置き場。
 
 status: experimental-heuristic-helpers
 implementation: partial
@@ -12,6 +12,10 @@ spec/core/kdsl-spec.md
 spec/lint/kdsl-lint-checklist.md
 spec/r1/r1-result-spec.md
 spec/bridge/kdsl-adps-bridge.md
+spec/profiles/kdsl-profile-compact-prompt.md
+spec/lexicons/kdsl-lexicon-kanji-v1.md
+spec/lint/kdsl-compact-prompt-lint.md
+spec/bridge/kdsl-cp-packet-bridge.md
 templates/README.md
 ```
 
@@ -36,11 +40,9 @@ r1_required_blocks.py:
 r1_rt_basis.py:
   RT:v basis wording heuristic lint
   RT/VERIFY/S field scoped
-  文書全体の説明語だけではRT:v根拠扱いしない
 
 r1_authority_guard.py:
   NEXT/COMMIT authority-shape heuristic lint
-  同一行key-valueと簡易複数行blockを対象
 
 kdsl_template_refs.py:
   known template reference and safety gate lint
@@ -49,8 +51,16 @@ kdsl_template_expansion.py:
   template expansion evidence lint
   実際のtemplate全文展開照合ではない
 
+kdsl_compact_prompt.py:
+  KDSL-CP / KDSL-CP漢 detection
+  mode/safety/lexicon value lint
+  required block lint
+  kanji-v1 restricted free-text alias lint
+  CP-Lift representative trigger lint
+  Packet draft boundary lint
+
 kdsl_validate.py:
-  target wrapper: r1 / prompt / all
+  target wrapper: r1 / prompt / compact / all
 
 run_samples.py:
   sample expectation runner
@@ -64,8 +74,10 @@ Template参照の未読/未定義検出
 R1/KDSL_RESULTの必須block欠落検出
 RT:v根拠語のfield-scoped検出
 NEXT/COMMIT権限混同のshape検出
-EVIDENCEの観測/推論/未観測/未確認分離検査設計
-AUTHORITYのcommit/push/release衝突検査設計
+KDSL-CP required block欠落検出
+kanji-v1 restricted alias検出
+CP-Lift漏れの代表形検出
+未定義Packetの実行可能表示検出
 ```
 
 ## 非目的
@@ -79,23 +91,28 @@ D禁止を解除しない
 曖昧ログの意味を断定しない
 template全文展開を証明しない
 自然言語の意味等価性を証明しない
+CP-Lift自然言語を完全解析しない
 release readinessを判定しない
 ```
 
-## 想定構成
+## 構成
 
 ```text
 tools/validator/
   README.md
   r1-validator-design.md
   kdsl-template-lint-design.md
+  kdsl-compact-prompt-implementation-notes.md
   r1_required_blocks.py
   r1_rt_basis.py
   r1_authority_guard.py
   kdsl_template_refs.py
   kdsl_template_expansion.py
+  kdsl_compact_prompt.py
   kdsl_validate.py
   run_samples.py
+  samples/*
+  verification/*
 ```
 
 ## 設計方針
@@ -103,29 +120,47 @@ tools/validator/
 ```text
 軽量lint helperとして扱う
 検査項目を仕様として固定しすぎない
-R1 validatorを優先
-Template lintは未読/未定義/権限衝突を優先
 KDSL parserは過剰に厳密化しない
 Markdown + code block + key-value風blockの軽量検査から始める
+CompactPrompt shorthandからclosing code fenceまでをprompt scopeとして扱う
 validator passの過信を避ける
 ```
 
 ## 検査レベル
 
 ```text
-ERROR: safety gate破損/権限事故/RT:v誤認/必須block欠落
-WARN: 曖昧/弱化/推奨block欠落
-INFO: 任意改善/表記揺れ
+ERROR: safety gate破損/権限事故/RT:v誤認/必須block欠落/CP-Lift漏れ
+WARN: 曖昧/混在key/duplicate block
+INFO: 対象外profile/検出形式/任意改善
+```
+
+## Usage
+
+```text
+python tools/validator/kdsl_compact_prompt.py <file>
+python tools/validator/kdsl_validate.py --target compact <file>
+python tools/validator/run_samples.py
+```
+
+Exit codes:
+
+```text
+0:=pass
+1:=warn
+2:=fail
 ```
 
 ## Sample expectation runner
 
+`run_samples.py` はサンプルファイルと期待exit codeのズレを検出する補助です。
+
+CompactPrompt追加後の期待件数:
+
 ```text
-python tools/validator/run_samples.py
+total: 23
 ```
 
-このrunnerは、サンプルファイルと期待exit codeのズレを検出するための補助です。
-runner passも、承認/RT:v/release readinessを意味しません。
+この件数はbranch上の期待値であり、repository checkoutでrunnerを実行するまで実行済扱禁止。
 
 ## Known limitations
 
@@ -133,6 +168,7 @@ runner passも、承認/RT:v/release readinessを意味しません。
 文字列/軽量構造lint中心
 full parserなし
 full natural-language semantic parserなし
+full negation parserなし
 full template expansion proofなし
 GitHub Actions未構成
 runtime実行なし
@@ -144,6 +180,7 @@ approval delegationなし
 
 ```text
 validator未実行→pass扱禁止
+isolated test pass != full sample runner pass
 validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
