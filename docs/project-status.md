@@ -1,7 +1,7 @@
 # KDSL / R1 Project Status
 
 status: canonical-project-status
-last_updated: 2026-07-07
+last_updated: 2026-07-10
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本は `spec/manifest.md` と `spec/core/*` / `spec/r1/*` / `spec/lint/*` / `spec/bridge/*` を参照します。
@@ -20,17 +20,42 @@ current_public_state:
   license: MIT
 ```
 
-補足:
-
 ```text
 public: yes
 public-ready: no
-license: MIT
+stable: no
 ```
 
-この2つは分離して扱います。現在の状態は「公開済み experimental preview」であり、「正式public-ready release」ではありません。
+現在の状態は「公開済み experimental preview」であり、正式public-ready/stable releaseではありません。
 
-## 2. License state
+## 2. Current development workstream
+
+```yaml
+development_workstream:
+  branch: feature/kdsl-v2-compact-prompt
+  base: main
+  status: v2_architecture_draft
+  focus:
+    - CompactPrompt profile
+    - kanji-v1 lexicon
+    - CompactPrompt lint
+    - CP-Lift boundary
+    - future Packet non-executable boundary
+  merge_status: not_merged
+  stable_effect: none
+```
+
+Direction:
+
+```text
+v1.1.0-rc1:=experimental historical baseline
+v1.1.0 stable:=当面保留
+v2-draft設計を優先
+mainへのmerge:=別判断
+stable/tag/release/Release Assets操作:=別途U明示承認必須
+```
+
+## 3. License state
 
 ```yaml
 license:
@@ -45,7 +70,7 @@ license:
     - validator helper code
 ```
 
-## 3. Validator maturity
+## 4. Validator maturity
 
 ```yaml
 validator:
@@ -66,7 +91,7 @@ validator:
     - release readiness judgment
 ```
 
-制約:
+Constraints:
 
 ```text
 validator pass != U承認
@@ -76,11 +101,20 @@ validator pass != semantic equivalence
 validator pass != release readiness
 ```
 
-## 4. Safety status
+CompactPrompt lint status:
+
+```text
+spec/lint/kdsl-compact-prompt-lint.md:=v2 draft checklist
+validator implementation:=未実装
+lint document existence != automated validation
+```
+
+## 5. Safety status
 
 保持対象:
 
 ```text
+意味保持 > safety gate保持
 KDSL-DP直接実行禁止
 P1/P1L正規化必須
 RT:v=対象環境runtime確認済のみ
@@ -90,7 +124,19 @@ KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱
 public履歴/公開済tag/Release Assets保護
 ```
 
-## 5. Local validation evidence
+v2 additional boundaries:
+
+```text
+lexicon != mode/profile
+unknown lexicon/alias推測禁止
+構造aliasはKEY位置のみ
+保護語の一字短縮禁止
+KDSL-CP実装指示禁止
+Packet registry未定義→KDSL-Packet直接実行禁止
+PKT:v1使用禁止
+```
+
+## 6. Local validation evidence
 
 ```yaml
 local_sample_validation:
@@ -110,24 +156,35 @@ local_sample_validation:
     - full template expansion proof
 ```
 
-## 6. Known gaps before stable
+v2 branch review:
 
 ```text
-GitHub Actions未構成
-validatorは文字列/軽量構造lint中心
-full parserなし
-full template expansion照合なし
-外部向け導入導線はdraft
-ADPS/KDSL-DP説明は初見向けには重い
+method: GitHub connector file review / branch compare
+runtime: not applicable
+validator runner: not executed against v2 additions
 ```
 
-## 7. Recommended positioning
+## 7. Known gaps before merge or stable
+
+```text
+KDSL-CP/kanji-v1はv2 draft
+CompactPrompt validator未実装
+Packet schema/BASE/TASK/FLOW/SG/R1C registry未定義
+KDSL-Packetはdraft-non-executable
+v2 public-facing overview未確定
+GitHub Actions未構成
+full parserなし
+full template expansion照合なし
+```
+
+## 8. Recommended positioning
 
 ```text
 Use as:
   experimental preview
   internal/public review candidate
   safety-gate-preserving prompt notation draft
+  CompactPrompt architecture draft
   R1 evidence-reporting draft
 
 Do not present as:
@@ -135,13 +192,15 @@ Do not present as:
   production-ready validator suite
   proof system
   approval/runtime/release substitute
+  executable Packet specification
 ```
 
-## 8. Next safe steps
+## 9. Next safe steps
 
 ```text
-P0: license表記をREADME / overview / public-readiness / manifest等へ同期
-P1: validator名称と説明を heuristic lint helpers で維持
-P2: GitHub Actionsでsample runner実行を検討
-P3: stable v1.1.0 はU明示承認後のみ検討
+P0: v2 branch architecture review / lint review
+P1: merge可否判断
+P2: R1C / Safety Gate registry / Packet registryを別Phaseで検討
+P3: validatorへのCompactPrompt lint実装を別Phaseで検討
+Hold: v1.1.0 stable / tag / release / Release Assets
 ```

@@ -4,6 +4,43 @@
 
 ### Changed
 
+- Corrected the KDSL v2 draft architecture from parallel product families to orthogonal axes:
+  - `profile`: compact-prompt / dev-prompt / converter / lint
+  - `mode`: readable / min / dense / lock
+  - `safety`: normal / lock-critical / lock-all
+  - `lexicon`: standard / kanji-v1
+  - `envelope`: plain / packet-draft / result
+- Aligned v2 priority with Core:
+  - meaning retention before safety-gate retention
+  - safety gates remain non-removable
+- Replaced the former CompactPrompt kanji profile alias file with a lexicon layer:
+  - added `spec/lexicons/kdsl-lexicon-kanji-v1.md`
+  - removed `spec/profiles/kdsl-compact-kanji-aliases.md`
+- Restricted kanji aliases:
+  - `役/目/材/出/則/守/調/確` are structural key aliases
+  - `禁/不/実/要` are not standard free-text aliases
+  - protected/safety-critical words remain explicit
+- Added CompactPrompt lint:
+  - `spec/lint/kdsl-compact-prompt-lint.md`
+- Added v2 draft glossary supplement:
+  - `spec/glossary-v2-draft.md`
+- Hardened CP-Lift and Packet boundaries:
+  - current executable lift target is Full KDSL `profile:dev-prompt`
+  - KDSL-Packet remains draft-non-executable
+  - `PKT:v1` is prohibited until canonical schema/registry adoption
+- Corrected CompactPrompt examples and separated general LLM examples from AI coding examples.
+- Synced README and manifest with MIT license, v2 architecture, lexicon, lint, and v1.1 stable hold policy.
+- Added KDSL CompactPrompt examples for v2 draft review:
+  - `examples/compact-prompt/README.md`
+  - `examples/compact-prompt/blog_meta.kdsl-cp.md`
+  - `examples/compact-prompt/blog_meta.kdsl-cp-kanji.md`
+  - `examples/compact-prompt/novel_review.kdsl-cp-kanji.md`
+  - `examples/compact-prompt/prompt_improver.kdsl-cp.md`
+  - `examples/compact-prompt/cp_lift_example.md`
+- Added v2 CompactPrompt draft direction and boundary documents without promoting v1.1.0-rc1 to stable:
+  - `docs/design/kdsl-v2-direction.md`
+  - `spec/profiles/kdsl-profile-compact-prompt.md`
+  - `spec/bridge/kdsl-cp-packet-bridge.md`
 - Redefined current repository status as public experimental preview, not public-ready/stable:
   - `docs/project-status.md`
   - `README.md`
@@ -14,11 +51,7 @@
   - `examples/public/README.md`
   - `docs/release/v1.1-release-notes-draft.md`
   - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Clarified validator positioning as experimental heuristic lint helpers, not proof systems or release authorities:
-  - `tools/validator/README.md`
-  - `tools/validator/r1_rt_basis.py`
-  - `tools/validator/r1_authority_guard.py`
-  - `tools/validator/kdsl_validate_target_modes_verify.md`
+- Clarified validator positioning as experimental heuristic lint helpers, not proof systems or release authorities.
 - Added sample expectation runner:
   - `tools/validator/run_samples.py`
 - Recorded local sample validation evidence:
@@ -123,7 +156,7 @@
 - Repository visibility is public.
 - Release Assets are not attached.
 - v1.1.0-rc1 is a public experimental preview, not a stable/public-ready release.
-- License selection is still pending.
+- License is MIT; see `LICENSE` and `docs/project-status.md`.
 - Validator helpers cover required-block, RT-basis, authority-guard, template-reference, and template-expansion-evidence lint.
 - Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
 - Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
