@@ -1,14 +1,19 @@
 # KDSL v2 Architecture Correction Review
 
-status: reviewed-draft
+status: reviewed-and-merged
 review_date: 2026-07-10
-branch: feature/kdsl-v2-compact-prompt
+integration_date: 2026-07-10
+source_branch: feature/kdsl-v2-compact-prompt
 base: main
-merge_status: not_merged
+pull_request: 1
+merge_method: squash
+merge_status: merged
+squash_commit: ae55f845018c0e8208d9e07c9814bc48035b2ef8
+status_sync_commit: c25c618b335e39d7ed9f14ffb988ff89fcee1907
 
 ## 1. Review purpose
 
-Re-evaluate the CompactPrompt draft after the model transition and correct structural issues before merge.
+Re-evaluate the CompactPrompt draft after the model transition, correct structural issues, and verify the result before integration into `main`.
 
 ## 2. Initial findings
 
@@ -89,7 +94,7 @@ CP-Lift条件該当→KDSL-CP単体使用禁止
 license:=MIT
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=hold
-v2-draft:=continue
+v2-draft:=mainへ統合
 ```
 
 ## 4. Files added
@@ -138,7 +143,50 @@ KDSL-DP/P1/P1L境界変更なし
 public履歴/tag/Release Assets操作なし
 ```
 
-## 7. Remaining gaps
+## 7. Integration result
+
+```text
+PR:#1
+source:feature/kdsl-v2-compact-prompt
+base:main
+source commits:36
+merge method:squash
+squash commit:ae55f845018c0e8208d9e07c9814bc48035b2ef8
+status sync commit:c25c618b335e39d7ed9f14ffb988ff89fcee1907
+merged:true
+```
+
+Notes:
+
+```text
+36 branch commits→1 squash commitへ統合
+merge後状態正本同期→別commit
+main履歴rewrite/force pushなし
+```
+
+## 8. Post-merge lint result
+
+Checked:
+
+```text
+old alias path reference
+dense-ja formal-mode usage
+license pending state
+not_merged state
+PKT:v1 execution-like usage
+```
+
+Judgment:
+
+```text
+old alias path:=CHANGELOG/review履歴記録のみ
+mode:dense-ja:=禁止例/lint説明のみ
+license:pending:=current filesなし
+PKT:v1:=禁止規則/履歴説明のみ
+not_merged:=this review metadata was stale and is corrected here
+```
+
+## 9. Remaining gaps
 
 ```text
 CompactPrompt validator実装なし
@@ -146,37 +194,32 @@ Packet schema未定義
 BASE/TASK/FLOW/SG registry未定義
 R1C schema未定義
 v2 public-facing introduction未確定
-main merge未実施
+GitHub Actions未構成
+full parserなし
 ```
 
-## 8. Review judgment
+## 10. Final review judgment
 
 ```text
 direction: pass
 architecture correction: pass
 safety boundary: pass with draft limitations
 examples: pass
+manual post-merge lint: pass
 validator implementation: not_run / not_implemented
-merge readiness: conditional
+integration: completed
+stable readiness: not_ready
 ```
 
-Merge conditions:
+## 11. Explicit non-actions
 
 ```text
-branch diff最終確認
-old path/reference残存確認
-CompactPrompt lint手動確認
-U merge承認
-```
-
-## 9. Explicit non-actions
-
-```text
-main mergeなし
 tag操作なし
 release操作なし
 Release Assets操作なし
 stable化なし
 validator pass扱いなし
 RT:v扱いなし
+source branch削除なし
+public履歴rewriteなし
 ```
