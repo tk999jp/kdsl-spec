@@ -1,4 +1,4 @@
-# KDSL CompactPrompt Lint v0.1-draft
+# KDSL CompactPrompt Lint v0.2-draft
 
 status: v2-draft
 scope: KDSL-CP / kanji-v1 / CP-Lift
@@ -105,15 +105,25 @@ Checkが抽象的な「確認する」のみ
 
 ## 6. Lexicon: kanji-v1
 
-Structural aliases allowed at key position:
+Structural aliases allowed at key position only:
 
 ```text
 役/目/材/出/則/守/調/確
 ```
 
+Optional lexical aliases:
+
+```text
+U/型/推/危/代/条
+```
+
 Restricted free-text aliases:
 
 ```text
+材
+出
+守
+確
 禁
 不
 実
@@ -125,6 +135,7 @@ Check:
 ```text
 lexicon:kanji-v1宣言あり or KDSL-CP漢 shorthand使用
 構造aliasはKEY位置のみ
+構造KEYをfree-text略語として自動解釈しない
 unknown aliasなし
 保護語を全文保持
 ```
@@ -136,6 +147,8 @@ Fail examples:
 材外実追加禁止
 禁: <禁止内容>
 要:=必須/要約を文脈推測
+出順序保持
+確済扱
 ```
 
 Pass examples:
@@ -234,7 +247,7 @@ PASS:
 
 CONDITIONAL:
   軽微な語彙/可読性問題のみ
-  安全gate弱化なし
+  safety gate弱化なし
 
 FAIL:
   意味変化
