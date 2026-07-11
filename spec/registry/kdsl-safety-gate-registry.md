@@ -1,14 +1,15 @@
 # KDSL Safety Gate Registry v0.1-draft
 
-status: review-candidate
+status: v2-draft adopted
 registry: kdsl-sg
 version: 0.1-draft
-canonical: no
+canonical: v2-draft
 intended_layer: Registry
+manifest: spec/manifest.md
 
 ## 1. Purpose
 
-This registry defines stable candidate IDs for safety gates already expressed in KDSL Core, dev-prompt, R1, Lint, and Bridge specifications.
+This registry defines stable v2-draft IDs for safety gates already expressed in KDSL Core, dev-prompt, R1, Lint, and Bridge specifications.
 
 ```text
 Registry:=既存safety gate意味の参照ID/状態/継承規則
@@ -28,23 +29,24 @@ Core/R1/Bridge safety meaning > Registry mapping > Profile usage > Example/Tool
 Conflict:
 
 ```text
-Registry候補×既存正本→既存正本優先
+Registry×既存正本→既存正本優先
 意味衝突→blocked / 同期修正必須
 ```
 
 ## 2. Current boundary
 
-Until adoption in `spec/manifest.md`:
+`kdsl-sg@0.1-draft` is adopted in `spec/manifest.md` as a v2-draft registry.
 
 ```text
-kdsl-sg@0.1-draft:=review candidate
+kdsl-sg@0.1-draft:=v2-draft adopted
+stable/public-ready:=no
 SG ID単独使用→実行契約扱禁止
 unknown SG ID推測禁止
 KDSL-Packet直接実行禁止
 R1C compact schema扱禁止
 ```
 
-Even after registry adoption, current Full KDSL prompts must retain critical natural-language wording.
+Current Full KDSL prompts must retain critical natural-language wording.
 
 ```text
 SG ID:=補助参照
@@ -81,7 +83,7 @@ Conditional fields:
 
 ```text
 evidence:=satisfied根拠またはblocked原因の観測
- authority:=操作/設計変更/公開操作等で権限が必要な場合
+authority:=操作/設計変更/公開操作等で権限が必要な場合
 ```
 
 Restrictions:
@@ -696,7 +698,7 @@ satisfied gate != unrelated gate satisfaction
 
 ```text
 registry name: kdsl-sg
-candidate version: 0.1-draft
+version: 0.1-draft
 ID format: SG-[A-Z0-9-]+
 ID semantics immutable within adopted major version
 semantic breaking change→new major or new ID
@@ -708,13 +710,13 @@ No aliases are defined in v0.1-draft.
 
 ## 10. Packet/R1C boundary
 
-This registry candidate does not make KDSL-Packet executable.
+This v2-draft registry does not make KDSL-Packet executable.
 
 ```text
-SG registry候補あり != Packet schema完成
-SG registry候補あり != BASE/TASK/FLOW registry完成
-SG registry候補あり != R1C schema完成
-SG registry候補あり != Packet lint完成
+SG registry adopted != Packet schema完成
+SG registry adopted != BASE/TASK/FLOW registry完成
+SG registry adopted != R1C schema完成
+SG registry adopted != Packet lint完成
 ```
 
 Therefore:
@@ -726,19 +728,18 @@ unknown BASE/TASK/FLOW/R1C推測禁止保持
 AI coding tool直接投入禁止保持
 ```
 
-## 11. Promotion requirements
+## 11. Promotion and implementation requirements
 
-Before adoption in `spec/manifest.md`:
+Before stable/public-ready promotion or Packet dependency satisfaction:
 
 ```text
 Core/R1/Bridge意味との整合review
-ID/状態遷移lint
+ID/状態遷移lint implementation
 Full KDSL example
-CP-Lift/Packet bridge更新
-v2 glossary更新
 unknown ID handling確認
 CI sample runner pass
+public-facing guide
 U明示承認
 ```
 
-Promotion does not authorize stable/tag/release/Release Assets operations.
+Current adoption does not authorize stable/tag/release/Release Assets operations.
