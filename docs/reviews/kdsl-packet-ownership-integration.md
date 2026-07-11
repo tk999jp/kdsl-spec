@@ -1,10 +1,13 @@
 # KDSL Packet Ownership Integration
 
-status: merge-pending
+status: completed / merged
 review_date: 2026-07-11
 branch: agent/kdsl-packet-ownership
 target: main
 pull_request: 11
+source_head: ac0b7a1f68eadbf3f96d3531660eebb8f1ca7809
+squash_commit: 60f9d59f2adc2f45de56a275fa5d8c349b023942
+closeout_pull_request: 12
 
 ## Adopted ownership
 
@@ -42,13 +45,29 @@ stable/canonical execution dependency
 explicit executable promotion review/U承認
 ```
 
+## Integration result
+
+```text
+PR #10 design candidate squash: 49cfdc665b4bf74e5324df019073aefbf786c383
+PR #11 ownership source head: ac0b7a1f68eadbf3f96d3531660eebb8f1ca7809
+PR #11 ownership squash: 60f9d59f2adc2f45de56a275fa5d8c349b023942
+alignment run #80: success
+alignment job 86531301164: success
+sample job 86531301166: success / existing 49 expectations / failed 0
+cleanup job 86531648145: success
+cleanup sample job 86531648375: success
+final-head run #83: action_required / jobs none / workflow-history approval state
+final workflow: contents read / Sample expectations only
+final PR #11 changed files: 13 ownership/specification documents
+post-merge closeout: PR #12
+```
+
 ## Verification boundary
 
 ```text
-PR #10 run #78 success / existing 49 expectations / failed 0
 Packet validator not implemented
 CI pass != Packet lint pass
-CI pass != semantic equivalence/safety proof/RT:v/authority/release readiness
+CI pass != semantic equivalence/safety proof/RT:v/authority/normalization proof/release readiness
 ```
 
 ## Non-actions

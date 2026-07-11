@@ -223,9 +223,24 @@ stable_effect: none
 
 ```yaml
 pull_request: 11
-merge_status: pending
+merge_status: merged
+merge_method: squash
 source_branch: agent/kdsl-packet-ownership
+source_head: ac0b7a1f68eadbf3f96d3531660eebb8f1ca7809
+squash_commit: 60f9d59f2adc2f45de56a275fa5d8c349b023942
+closeout_pull_request: 12
 target_status: v2_draft_adopted_non_executable
+alignment_workflow_run_id: 29147445839
+alignment_workflow_run_number: 80
+alignment_job_id: 86531301164
+cleanup_job_id: 86531648145
+sample_total: 49
+sample_failed: 0
+final_head_ci_run_id: 29147582358
+final_head_ci_run_number: 83
+final_head_ci_conclusion: action_required
+final_head_ci_jobs: none
+final_head_ci_note: workflow-history approval state; not a sample failure
 canonical_effect: none
 execution_effect: none
 stable_effect: none
@@ -514,7 +529,7 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #11 CI確認 / squash merge / ownership closeout
+P0: PR #12 CI確認 / squash merge / Packet ownership closeout
 P1: Packet validator first slice / sample matrix
 P2: Packet normalization round-trip tooling/tests
 P3: Safety Gate protected wording/inheritance validator拡張
