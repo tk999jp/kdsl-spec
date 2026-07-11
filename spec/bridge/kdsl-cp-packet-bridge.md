@@ -1,15 +1,16 @@
-# KDSL-CP / KDSL-Packet Bridge v0.2-draft
+# KDSL-CP / KDSL-Packet Bridge v0.3-draft
 
 status: v2-draft
-scope: CompactPrompt lift / Full KDSL boundary / future Packet boundary
+scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / future Packet boundary
 
 ## 1. Purpose
 
-This bridge defines when KDSL-CP must be lifted to Full KDSL and how a future KDSL-Packet may fit after its schema and registry become canonical.
+This bridge defines when KDSL-CP must be lifted to Full KDSL and how the v2-draft Safety Gate Registry may be referenced without making a future KDSL-Packet executable.
 
 ```text
 KDSL-CP:=一般LLM / Project files / 単体prompt向け軽量profile
 Full KDSL dev-prompt:=現行のAI coding tool向け実行可能契約
+kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry
 KDSL-Packet:=将来のpacket envelope候補
 ```
 
@@ -35,7 +36,7 @@ If any trigger is present:
 ```text
 KDSL-CP単体実装指示禁止
 現行: Full KDSL profile:dev-promptへ昇格
-将来: canonical Packet registry完成後のみKDSL-Packet使用可
+将来: canonical Packet schema/registry完成後のみKDSL-Packet使用可
 必要safety gate明示必須
 ```
 
@@ -69,14 +70,70 @@ KDSL-CP Goal    → goal / target
 KDSL-CP Input   → source / read / observed
 KDSL-CP Output  → required output
 KDSL-CP Rules   → flow / verify / task rules
-KDSL-CP Guard   → safety gate / stop conditions
+KDSL-CP Guard   → safety gate / stop conditions / SG references
 KDSL-CP Style   → response style / human render
 KDSL-CP Check   → verify / lint / result requirements
 ```
 
 Mapping does not grant edit/commit/push/release authority.
 
-## 5. KDSL-Packet draft boundary
+## 5. Safety Gate Registry alignment
+
+Current v2-draft registry:
+
+```text
+registry: kdsl-sg@0.1-draft
+source: spec/registry/kdsl-safety-gate-registry.md
+composition: spec/registry/kdsl-safety-gate-composition.md
+lint: spec/lint/kdsl-safety-gate-registry-lint.md
+```
+
+Candidate IDs adopted in the v2-draft manifest:
+
+```text
+SG-DESIGN
+SG-SCOPE
+SG-EVIDENCE
+SG-RUNTIME
+SG-AUTHORITY
+SG-ROLLBACK
+SG-PUBLIC
+SG-DATA
+SG-KDSL-DP
+SG-STOP
+```
+
+State model:
+
+```text
+hold|satisfied|blocked|na
+```
+
+Usage boundary:
+
+```text
+SG ID:=補助参照
+SG ID != permission
+state:satisfied != unrelated authority
+unknown registry/SG ID推測禁止
+blocked/hold gate削除禁止
+specialized gate != broader gate解除
+current Full KDSL:=SG ID + complete protected wording
+SG IDのみで禁止/未確認/承認/RT:v条件を置換禁止
+```
+
+Typed non-substitution:
+
+```text
+U承認 != runtime evidence
+runtime evidence != commit/push/release authority
+CI/validator pass != semantic equivalence
+CI/validator pass != U承認
+NEXT != execution authority
+COMMIT.proposed != commit authority
+```
+
+## 6. KDSL-Packet draft boundary
 
 KDSL-Packet is not executable in this repository state because the following canonical specifications do not yet exist.
 
@@ -85,9 +142,17 @@ Packet schema
 BASE registry
 TASK registry
 FLOW opcode registry
-SG registry
+canonical/stable SG registry
 R1C schema
 Packet lint
+```
+
+Current SG status:
+
+```text
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+stable/canonical Packet dependency:=not satisfied
+Safety Gate validator:=not implemented
 ```
 
 Therefore:
@@ -110,7 +175,7 @@ schema: undefined
 
 This notation is for design discussion only and must not be passed to an AI coding tool as an implementation contract.
 
-## 6. Packet-Summary
+## 7. Packet-Summary
 
 Packet-Summary may summarize a future canonical Packet to KDSL-CP for human-facing or Project file use.
 
@@ -122,7 +187,7 @@ OUT/R1C → Output/Checkへ要約
 
 Packet-Summary is a view, not the original execution contract.
 
-## 7. Summary restrictions
+## 8. Summary restrictions
 
 ```text
 D禁止削除禁止
@@ -131,11 +196,13 @@ NEXT/COMMIT権限分離削除禁止
 rollback/revert条件削除禁止
 public履歴/公開済tag/Release Assets保護削除禁止
 repo安全条件の過剰要約禁止
+hold/blocked Safety Gate削除禁止
+SG ID-only compression禁止
 ```
 
-## 8. Boundary examples
+## 9. Boundary examples
 
-### 8.1 KDSL-CP is enough
+### 9.1 KDSL-CP is enough
 
 ```text
 KDSL-CP漢:
@@ -155,7 +222,7 @@ repo操作なし
 runtime/R1不要
 ```
 
-### 8.2 CP-Lift required
+### 9.2 CP-Lift required
 
 ```text
 KDSL-CP:
@@ -172,7 +239,28 @@ AI coding toolへ渡す
 → Full KDSL profile:dev-promptへ昇格
 ```
 
-### 8.3 Packet design draft only
+Full KDSL safety reference example:
+
+```text
+SAFETY_GATES:
+  registry: kdsl-sg@0.1-draft
+  entries:
+    - id: SG-SCOPE
+      state: hold
+      scope: target Phase
+      reason: preflight確認待ち
+    - id: SG-AUTHORITY
+      state: hold
+      scope: edit/commit/push
+      reason: operation別authority確認待ち
+
+Guard:
+- 原因未確→広域修正禁止
+- 未帰属差分へ上乗せ禁止
+- authority未確認→実行禁止
+```
+
+### 9.3 Packet design draft only
 
 ```text
 PACKET_DRAFT:
@@ -183,15 +271,17 @@ fields: BASE/TASK/SRC/READ/TGT/OBS/GOAL/NON/STOP/FLOW/VERIFY/OUT
 
 ```text
 AI coding tool直接投入禁止
-canonical registry完成後に再評価
+canonical Packet schema/registry完成後に再評価
 ```
 
-## 9. Non-goals
+## 10. Non-goals
 
 ```text
 KDSL-DP/P1/P1L境界変更
 R1/KDSL_RESULT意味変更
 RT:v条件緩和
 KDSL-CPをAI coding tool実装契約として扱うこと
+SG IDによる保護語置換
+Registryによる実行権限付与
 未定義Packet直接実行
 ```
