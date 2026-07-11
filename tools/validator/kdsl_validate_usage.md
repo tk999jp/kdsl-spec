@@ -203,6 +203,25 @@ executable KDSL_PROMPT/P1/P1L generation
 Packet state normalized transition
 ```
 
+## Structural round-trip helper
+
+```text
+python tools/validator/kdsl_packet_roundtrip.py <packet-file>
+python tools/validator/kdsl_packet_roundtrip.py <packet-file> <normalization-file>
+```
+
+Output:
+
+```text
+STRUCTURAL_ROUND_TRIP_RESULT
+STATUS: structural_pass|blocked|fail
+EXECUTABLE:no
+SEMANTIC_EQUIVALENCE:not_proven
+EXECUTION_AUTHORITY:none
+```
+
+This helper is outside the combined validator target set. It does not create executable targets or prove semantic equivalence.
+
 ## Sample verification
 
 Historical checkpoints:
@@ -226,6 +245,9 @@ Packet normalization first slice integrated:
   total: 93 / failed: 0
   pull_request: 23
   workflow_run: 150 / success
+
+Packet normalization round-trip first slice candidate:
+  expected total: 108 / branch validation pending
 ```
 
 The current suite includes actual repository examples:

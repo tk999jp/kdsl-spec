@@ -144,6 +144,9 @@ Packet normalization first slice integrated:
   total: 93 / failed: 0
   pull_request: 23
   workflow_run: 150 / success
+
+Packet normalization round-trip first slice candidate:
+  expected total: 108 / branch validation pending
 ```
 
 Repository examples included in the suite:
@@ -167,6 +170,7 @@ tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
+tools/validator/verification/kdsl_packet_roundtrip_verify.md
 ```
 
 ## 目的
@@ -236,7 +240,9 @@ tools/validator/
   kdsl-packet-implementation-notes.md
   kdsl_packet_normalization.py
   kdsl_packet_normalize.py
+  kdsl_packet_roundtrip.py
   kdsl-packet-normalization-implementation-notes.md
+  kdsl-packet-roundtrip-implementation-notes.md
   kdsl_validate.py
   kdsl_validate_usage.md
   run_samples.py
@@ -393,7 +399,8 @@ parent-child inheritance lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
 Normalization full YAML/semantic parserなし
-Normalization round-trip proofなし
+Normalization semantic round-trip proofなし
+Structural round-trip first slice:=integration pending
 runtime実行なし
 source authenticity判断なし
 approval delegationなし
