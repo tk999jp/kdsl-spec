@@ -71,6 +71,29 @@ compact_prompt_validator_integration:
     - sample expectation integration
 ```
 
+## 4. Integrated validator CI baseline
+
+```yaml
+validator_ci_integration:
+  source_branch: agent/kdsl-validator-ci
+  target_branch: main
+  pull_request: 3
+  merge_method: squash
+  merge_status: merged
+  squash_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
+  review_close_commit: eea2f9f3f3f15062ef24820f0efdc3fc85868146
+  workflow: .github/workflows/validator.yml
+  runner: ubuntu-latest
+  python: "3.11"
+  permissions: contents-read
+  timeout_minutes: 5
+  triggers:
+    - pull_request -> main
+    - push -> main
+    - workflow_dispatch
+  command: python tools/validator/run_samples.py
+```
+
 Direction:
 
 ```text
@@ -78,10 +101,11 @@ v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
 CompactPrompt validator first slice:=main統合済み
+Validator CI baseline:=main統合済み
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
-## 4. License state
+## 5. License state
 
 ```yaml
 license:
@@ -96,7 +120,7 @@ license:
     - validator helper code
 ```
 
-## 5. Validator maturity
+## 6. Validator maturity
 
 ```yaml
 validator:
@@ -114,6 +138,11 @@ validator:
     - kanji-v1 restricted alias lint
     - representative CP-Lift lint
     - Packet draft boundary lint
+  ci:
+    status: integrated
+    workflow: .github/workflows/validator.yml
+    command: python tools/validator/run_samples.py
+    expected_sample_total: 23
   not_scope:
     - semantic equivalence proof
     - full template expansion proof
@@ -133,16 +162,22 @@ validator pass != RT:v
 validator pass != 実装妥当性保証
 validator pass != semantic equivalence
 validator pass != release readiness
+CI pass != U承認
+CI pass != RT:v
+CI pass != semantic equivalence
+CI pass != safety proof
+CI pass != stable/public-ready判断
+CI pass != tag/release/Release Assets許可
 ```
 
-## 6. Safety status
+## 7. Safety status
 
 ```text
 意味保持 > safety gate保持
 KDSL-DP直接実行禁止
 P1/P1L正規化必須
 RT:v=対象環境runtime確認済のみ
-build/diff/lint/test pass != RT:v
+build/diff/lint/test/CI pass != RT:v
 KDSL_RESULT NEXT:=提案, 実行許可扱禁止
 KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 public履歴/公開済tag/Release Assets保護
@@ -155,7 +190,7 @@ Packet registry未定義→KDSL-Packet直接実行禁止
 PKT:v1使用禁止
 ```
 
-## 7. Validation and integration evidence
+## 8. Validation and integration evidence
 
 ```yaml
 main_sample_validation:
@@ -197,15 +232,29 @@ compact_prompt_validator_merge:
   stable_effect: none
 ```
 
+```yaml
+validator_ci_pr_validation:
+  date: 2026-07-11
+  pull_request: 3
+  source_head: dff75994c818e8a103bd2c94646c26ec8f8209d1
+  workflow: Validator CI
+  workflow_run_id: 29137196847
+  run_number: 1
+  status: completed
+  conclusion: success
+  expected_sample_summary: total 23 / failed 0
+  squash_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
+```
+
 ```text
 verification details:
   tools/validator/verification/kdsl_compact_prompt_verify.md
+  docs/reviews/kdsl-validator-ci-baseline.md
 ```
 
-## 8. Known gaps before stable
+## 9. Known gaps before stable
 
 ```text
-GitHub Actions未構成
 full parserなし
 full natural-language semantic parserなし
 full negation parserなし
@@ -214,7 +263,7 @@ KDSL-Packetはdraft-non-executable
 v2 public-facing overview未確定
 ```
 
-## 9. Recommended positioning
+## 10. Recommended positioning
 
 ```text
 Use as:
@@ -222,6 +271,7 @@ Use as:
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
   heuristic validator helper
+  validator sample CI baseline
   internal/public review candidate
 
 Do not present as:
@@ -232,13 +282,12 @@ Do not present as:
   executable Packet specification
 ```
 
-## 10. Next safe steps
+## 11. Next safe steps
 
 ```text
 P0: local mainをorigin/mainへ同期
-P1: main上でpython tools/validator/run_samples.py再確認
-P2: GitHub Actionsでsample runner実行を検討
-P3: R1C / Safety Gate registry / Packet registryを別Phaseで検討
-P4: public-facing v2 overview検討
+P1: R1C / Safety Gate registry / Packet registryを別Phaseで設計
+P2: public-facing v2 overview検討
+P3: CI required check / branch protection化は別途U明示承認後に検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
