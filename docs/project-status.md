@@ -345,6 +345,22 @@ normalization_effect: none
 stable_effect: none
 ```
 
+### PR #22 — Packet normalization validator / mapper work branch
+
+```yaml
+pull_request: 22
+merge_status: pending
+source_branch: agent/kdsl-packet-normalization-validator
+checker: tools/validator/kdsl_packet_normalization.py
+mapper: tools/validator/kdsl_packet_normalize.py
+wrapper_target: normalization
+expected_sample_total: 93
+validator_authority: non_authoritative
+executable_output: no
+normalization_effect: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -361,7 +377,7 @@ Packet design candidate:=main統合済み
 Packet ownership:=v2-draft adopted authoring schema/registries/lint
 Packet validator first slice:=main統合済み / 69 expectations verified
 Packet normalization contract/lint:=v2-draft adopted / non-executable
-Packet normalization validator/mapper:=未実装
+Packet normalization validator/mapper first slice:=integration pending
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -412,7 +428,7 @@ packet:
   normalization_schema: kdsl-packet-normalization@0.1-draft
   normalization_status: v2_draft_adopted_non_executable
   normalization_lint: adopted
-  normalization_validator_mapper: not_implemented
+  normalization_validator_mapper: first_slice_integration_pending
   semantic_equivalence: not_proven
   normalize_required: true
   packet_state: not_normalized
@@ -440,6 +456,7 @@ validator:
     - safety-gate
     - r1c
     - packet
+    - normalization
     - all
   current_main_scope:
     - KDSL_RESULT required block presence lint
@@ -455,10 +472,12 @@ validator:
     - Packet envelope/field/order lint
     - Packet registry/ID/gate/flow/authority/normalization lint
     - Packet out-of-scope separation
+    - Normalization envelope/source/target/map/loss/authority/output lint
+    - Non-executable structural mapper
   ci:
     workflow: .github/workflows/validator.yml
     command: python tools/validator/run_samples.py
-    expected_sample_total: 69
+    expected_sample_total: 93
     latest_pr_validation:
       pull_request: 14
       run_id: 29148894965
@@ -480,7 +499,7 @@ R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
-Normalization validator/mapper未実装
+Normalization validator/mapper first slice:=integration pending
 Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
@@ -560,6 +579,16 @@ conclusion: success
 sample_total: 34
 failed: 0
 meaning: design-only regression evidence; not R1C lint pass
+```
+
+### Packet normalization validator / mapper candidate
+
+```yaml
+pull_request: 22
+branch: agent/kdsl-packet-normalization-validator
+expected_sample_total: 93
+status: branch_validation_pending
+meaning: first-slice heuristic/preview candidate; not semantic-equivalence/round-trip/execution proof
 ```
 
 ### Packet normalization ownership
@@ -666,7 +695,7 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Normalization validator/mapper未実装
+Normalization validator/mapper first slice:=integration pending
 Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
@@ -700,7 +729,7 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: normalization validator/structural mapper first slice
+P0: PR #23 CI確認 / squash merge / normalization validator closeout
 P1: normalization round-trip/property tests
 P2: Safety Gate protected wording/inheritance validator拡張
 P3: R1C round-trip/property-based validator検討

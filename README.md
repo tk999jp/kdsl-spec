@@ -27,8 +27,8 @@ Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries: v2-draft adopted
 Packet validator: first heuristic slice integrated
 Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
-Packet normalization validator/mapper: not implemented
-validator sample suite: 69 expectations / failed 0
+Packet normalization validator/mapper: first-slice integration pending
+validator sample suite: 93 expectations candidate
 validator_authority: non_authoritative
 ```
 
@@ -145,6 +145,8 @@ Validator:
   tools/validator/kdsl_safety_gate.py
   tools/validator/kdsl_r1c.py
   tools/validator/kdsl_packet.py
+  tools/validator/kdsl_packet_normalization.py
+  tools/validator/kdsl_packet_normalize.py
   tools/validator/run_samples.py
   tools/validator/samples/*
   tools/validator/verification/*
@@ -369,6 +371,8 @@ python tools/validator/kdsl_validate.py --target compact <file>
 python tools/validator/kdsl_validate.py --target safety-gate <file>
 python tools/validator/kdsl_validate.py --target r1c <file>
 python tools/validator/kdsl_validate.py --target packet <file>
+python tools/validator/kdsl_validate.py --target normalization <file>
+python tools/validator/kdsl_packet_normalize.py <packet-file>
 python tools/validator/kdsl_validate.py --target all <file>
 ```
 
@@ -437,7 +441,8 @@ R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
 Packet full YAML/semantic parserなし
-Packet normalization validator/mapper/round-trip proofなし
+Packet normalization validator/mapper first slice:=integration pending
+Packet normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packet:=v2-draft adopted / non-executable
 ```
@@ -460,7 +465,7 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  normalization validator/structural mapper first slice
+  PR #23 CI確認 / squash merge / normalization validator closeout
 
 P1:
   normalization round-trip/property tests

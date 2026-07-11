@@ -1,6 +1,6 @@
 # Experimental Validator Helpers
 
-目的: KDSL / R1 / R1C / Packet / Template / CompactPrompt / Safety Gate Registry をPython等で機械検査するための experimental heuristic lint helper 置き場。
+目的: KDSL / R1 / R1C / Packet / Packet Normalization / Template / CompactPrompt / Safety Gate Registry をPython等で機械検査するための experimental heuristic lint helper 置き場。
 
 status: experimental-heuristic-helpers
 implementation: partial
@@ -14,7 +14,9 @@ spec/lint/kdsl-compact-prompt-lint.md
 spec/lint/kdsl-safety-gate-registry-lint.md
 spec/lint/kdsl-r1c-lint.md
 spec/lint/kdsl-packet-lint.md
+spec/lint/kdsl-packet-normalization-lint.md
 spec/packet/kdsl-packet-schema.md
+spec/packet/kdsl-packet-normalization-contract.md
 spec/r1/r1-result-spec.md
 spec/r1/r1c-compact-result-schema.md
 spec/bridge/kdsl-adps-bridge.md
@@ -100,8 +102,20 @@ kdsl_packet.py:
   AUTHORITY/NORMALIZE/OUT boundary checks
   PKT:v1 and representative trigger checks
 
+kdsl_packet_normalization.py:
+  NORMALIZATION_DRAFT schema/field/order checks
+  source/target/map/preserve/loss/round-trip checks
+  authority/output/non-execution checks
+  P1/P1L blocked target enforcement
+
+kdsl_packet_normalize.py:
+  source Packet pre-validation
+  non-executable Full KDSL/design preview generation
+  P1/P1L blocked evidence generation
+  no executable KDSL_PROMPT/P1/P1L generation
+
 kdsl_validate.py:
-  target wrapper: r1 / prompt / compact / safety-gate / r1c / packet / all
+  target wrapper: r1 / prompt / compact / safety-gate / r1c / packet / normalization / all
 
 run_samples.py:
   sample expectation runner
@@ -125,6 +139,9 @@ Packet first slice integrated:
   total: 69 / failed: 0
   pull_request: 14
   workflow_run: 116 / success
+
+Packet normalization first slice candidate:
+  expected total: 93 / branch validation pending
 ```
 
 Repository examples included in the suite:
@@ -135,6 +152,9 @@ examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
 examples/packet/packet-design.example.md
+examples/packet/normalization-full-kdsl.example.md
+examples/packet/normalization-p1-blocked.example.md
+examples/packet/normalization-lossy-blocked.example.md
 ```
 
 Evidence:
@@ -144,6 +164,7 @@ tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
+tools/validator/verification/kdsl_packet_normalization_verify.md
 ```
 
 ## 目的
@@ -164,6 +185,8 @@ R1C schema/field/type/order欠落検出
 R1C RT/NEXT/COMMIT境界検出
 R1C Full R1 fallback分離
 Packet envelope/registry/gate/flow/authority/normalization境界検出
+Normalization mapping/loss/authority/output境界検出
+Non-executable structural preview生成
 EVIDENCEの観測/推論/未観測/未確認分離検査設計
 AUTHORITYのcommit/push/release衝突検査設計
 ```
@@ -209,6 +232,9 @@ tools/validator/
   kdsl-r1c-implementation-notes.md
   kdsl_packet.py
   kdsl-packet-implementation-notes.md
+  kdsl_packet_normalization.py
+  kdsl_packet_normalize.py
+  kdsl-packet-normalization-implementation-notes.md
   kdsl_validate.py
   kdsl_validate_usage.md
   run_samples.py
@@ -364,7 +390,8 @@ protected wording semantic lintなし
 parent-child inheritance lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Packet normalization round-trip proofなし
+Normalization full YAML/semantic parserなし
+Normalization round-trip proofなし
 runtime実行なし
 source authenticity判断なし
 approval delegationなし
@@ -385,5 +412,6 @@ Safety Gate validator pass != Packet readiness
 R1C validator pass != canonical/stable promotion
 R1C validator pass != Packet readiness
 Packet validator pass != Packet executable/normalized/authority
+Normalization validator/mapper pass != executable target/semantic equivalence/round-trip proof
 validator failure時→該当箇所を修正またはU確認
 ```
