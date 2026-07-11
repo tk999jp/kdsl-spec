@@ -29,6 +29,10 @@ def load_text(path):
     return Path(path).read_text(encoding='utf-8')
 
 
+def has_result_envelope(text):
+    return any(line.strip().startswith('KDSL_RESULT:') for line in text.splitlines())
+
+
 def find_field(text, name):
     marker = name + ':'
     lines = text.splitlines()
@@ -69,30 +73,7 @@ def has_commit_shape(value):
     return 'actual:' in lower and 'proposed:' in lower
 
 
-def main(argv):
-    path = argv[1] if len(argv) > 1 else '-'
-    text = load_text(path)
-    next_value = find_field(text, 'NEXT')
-    commit_value = find_field(text, 'COMMIT')
-
-    errors = []
-    warnings = []
-    info = []
-
-    if not next_value:
-        errors.append('NEXT field missing')
-    elif not has_next_marker(next_value):
-        warnings.append('NEXT field is not clearly proposal-only')
-    else:
-        info.append('NEXT proposal-only shape detected')
-
-    if not commit_value:
-        errors.append('COMMIT field missing')
-    elif not has_commit_shape(commit_value):
-        warnings.append('COMMIT field is not clearly actual/proposed separated')
-    else:
-        info.append('COMMIT actual/proposed/none shape detected')
-
+def emit(errors, warnings, info):
     status = 'fail' if errors else ('warn' if warnings else 'pass')
     print('VALIDATION_RESULT:')
     print('STATUS: ' + status)
@@ -115,6 +96,37 @@ def main(argv):
     else:
         print('  - none')
     return 2 if errors else (1 if warnings else 0)
+
+
+def main(argv):
+    path = argv[1] if len(argv) > 1 else '-'
+    text = load_text(path)
+
+    if not has_result_envelope(text):
+        return emit([], [], ['no KDSL_RESULT envelope detected; R1 authority target not applicable'])
+
+    next_value = find_field(text, 'NEXT')
+    commit_value = find_field(text, 'COMMIT')
+
+    errors = []
+    warnings = []
+    info = []
+
+    if not next_value:
+        errors.append('NEXT field missing')
+    elif not has_next_marker(next_value):
+        warnings.append('NEXT field is not clearly proposal-only')
+    else:
+        info.append('NEXT proposal-only shape detected')
+
+    if not commit_value:
+        errors.append('COMMIT field missing')
+    elif not has_commit_shape(commit_value):
+        warnings.append('COMMIT field is not clearly actual/proposed separated')
+    else:
+        info.append('COMMIT actual/proposed/none shape detected')
+
+    return emit(errors, warnings, info)
 
 
 if __name__ == '__main__':

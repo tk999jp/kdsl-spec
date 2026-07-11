@@ -251,6 +251,106 @@ SAMPLES = [
         'command': ['kdsl_validate.py', '--target', 'r1c', 'samples/sample_r1c_invalid_rt.md'],
         'expected': 2,
     },
+    {
+        'name': 'packet repository design example valid',
+        'command': ['kdsl_packet.py', 'examples/packet/packet-design.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'packet baseline valid',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'packet unknown schema',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_unknown_schema.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet executable status rejected',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_executable_status.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet missing required READ field',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_missing_read.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet unknown BASE ID',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_unknown_base.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet BASE target mismatch',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_target_mismatch.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet unknown TASK ID',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_unknown_task.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet unknown SG registry',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_unknown_sg_registry.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet TASK minimum gate missing',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_missing_gate.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet unknown FLOW opcode',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_unknown_flow.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet FLOW-CHANGE before FLOW-GATE',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_flow_order.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet missing authority rail',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_missing_authority.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet normalized state rejected',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_normalized.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet PKT v1 rejected',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_pkt_v1.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'packet broad push authority warning',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_authority_warn.md'],
+        'expected': 1,
+    },
+    {
+        'name': 'packet out of scope document',
+        'command': ['kdsl_packet.py', 'samples/sample_packet_out_of_scope.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target packet valid',
+        'command': ['kdsl_validate.py', '--target', 'packet', 'samples/sample_packet_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target packet invalid',
+        'command': ['kdsl_validate.py', '--target', 'packet', 'samples/sample_packet_normalized.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'wrapper target all Packet valid',
+        'command': ['kdsl_validate.py', '--target', 'all', 'samples/sample_packet_valid.md'],
+        'expected': 0,
+    },
 ]
 
 

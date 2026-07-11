@@ -1,6 +1,6 @@
 # Experimental Validator Helpers
 
-目的: KDSL / R1 / R1C / Template / CompactPrompt / Safety Gate Registry をPython等で機械検査するための experimental heuristic lint helper 置き場。
+目的: KDSL / R1 / R1C / Packet / Template / CompactPrompt / Safety Gate Registry をPython等で機械検査するための experimental heuristic lint helper 置き場。
 
 status: experimental-heuristic-helpers
 implementation: partial
@@ -13,12 +13,17 @@ spec/lint/kdsl-lint-checklist.md
 spec/lint/kdsl-compact-prompt-lint.md
 spec/lint/kdsl-safety-gate-registry-lint.md
 spec/lint/kdsl-r1c-lint.md
+spec/lint/kdsl-packet-lint.md
+spec/packet/kdsl-packet-schema.md
 spec/r1/r1-result-spec.md
 spec/r1/r1c-compact-result-schema.md
 spec/bridge/kdsl-adps-bridge.md
 spec/bridge/kdsl-cp-packet-bridge.md
 spec/registry/kdsl-safety-gate-registry.md
 spec/registry/kdsl-safety-gate-composition.md
+spec/registry/kdsl-packet-base-registry.md
+spec/registry/kdsl-packet-task-registry.md
+spec/registry/kdsl-packet-flow-registry.md
 templates/README.md
 ```
 
@@ -87,8 +92,16 @@ kdsl_r1c.py:
   NEXT proposal_only lint
   COMMIT actual/proposed/permission basis lint
 
+kdsl_packet.py:
+  PACKET_DRAFT + kdsl-packet@0.1-draft detection
+  required field presence/order
+  BASE/TASK/FLOW/SG registry and known ID checks
+  TASK minimum gate/flow checks
+  AUTHORITY/NORMALIZE/OUT boundary checks
+  PKT:v1 and representative trigger checks
+
 kdsl_validate.py:
-  target wrapper: r1 / prompt / compact / safety-gate / r1c / all
+  target wrapper: r1 / prompt / compact / safety-gate / r1c / packet / all
 
 run_samples.py:
   sample expectation runner
@@ -107,6 +120,9 @@ Safety Gate first slice:
 
 R1C first slice candidate:
   total: 49 / failed: 0
+
+Packet first slice candidate:
+  expected total: 69 / branch validation pending
 ```
 
 Repository examples included in the suite:
@@ -116,6 +132,7 @@ examples/safety-gates/dev-prompt-safety-gates.example.md
 examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
+examples/packet/packet-design.example.md
 ```
 
 Evidence:
@@ -124,6 +141,7 @@ Evidence:
 tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
+tools/validator/verification/kdsl_packet_verify.md
 ```
 
 ## 目的
@@ -143,6 +161,7 @@ Safety Gate baseline/compositionの代表的欠落検出
 R1C schema/field/type/order欠落検出
 R1C RT/NEXT/COMMIT境界検出
 R1C Full R1 fallback分離
+Packet envelope/registry/gate/flow/authority/normalization境界検出
 EVIDENCEの観測/推論/未観測/未確認分離検査設計
 AUTHORITYのcommit/push/release衝突検査設計
 ```
@@ -165,7 +184,7 @@ full YAML/JSON parserとして扱わない
 full negation parserとして扱わない
 release readinessを判定しない
 R1C canonical/stable promotionを判定しない
-Packet readinessを判定しない
+Packet execution/normalization readinessを判定しない
 ```
 
 ## 想定構成
@@ -186,6 +205,8 @@ tools/validator/
   kdsl-safety-gate-implementation-notes.md
   kdsl_r1c.py
   kdsl-r1c-implementation-notes.md
+  kdsl_packet.py
+  kdsl-packet-implementation-notes.md
   kdsl_validate.py
   kdsl_validate_usage.md
   run_samples.py
@@ -240,6 +261,31 @@ multi-line structured value未実装
 Full R1 semantic validationの代替ではない
 R1C validator pass != R1C canonical/stable promotion
 R1C validator pass != Packet readiness
+```
+
+## Packet first-slice checks
+
+```text
+schema:=kdsl-packet@0.1-draft
+envelope:=PACKET_DRAFT
+status:=non-executable
+required fields/order:=SCHEMA..NORMALIZE
+registries:=BASE/TASK/FLOW/SG
+TASK minimum flow/gate matrix
+AUTHORITY rails:=read/edit/stage/commit/push/release
+NORMALIZE:=required true / state not_normalized / BASE target match
+PKT:v1:=error
+out-of-scope document:=pass/info
+```
+
+Boundary:
+
+```text
+first PACKET_DRAFT block only
+line-based YAML-like parsing
+full Safety Gate state/evidence validationなし
+normalization transformer/round-trip proofなし
+Packet validator pass != executable/normalized/authority/safety proof
 ```
 
 ## 設計方針
@@ -304,6 +350,7 @@ command: python tools/validator/run_samples.py
 文字列/軽量構造lint中心
 single SAFETY_GATES blockのみ解析
 first KDSL_RESULT blockのみ解析
+first PACKET_DRAFT blockのみ解析
 R1C multi-line JSON未対応
 full parserなし
 full YAML/JSON parserなし
@@ -314,6 +361,8 @@ Safety Gate triggerの例示/実操作完全識別なし
 protected wording semantic lintなし
 parent-child inheritance lintなし
 R1C round-trip semantic proofなし
+Packet full YAML/semantic parserなし
+Packet normalization round-trip proofなし
 runtime実行なし
 source authenticity判断なし
 approval delegationなし
@@ -333,5 +382,6 @@ validator pass != release readiness
 Safety Gate validator pass != Packet readiness
 R1C validator pass != canonical/stable promotion
 R1C validator pass != Packet readiness
+Packet validator pass != Packet executable/normalized/authority
 validator failure時→該当箇所を修正またはU確認
 ```

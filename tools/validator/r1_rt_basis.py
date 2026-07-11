@@ -38,6 +38,10 @@ def load_text(path):
     return Path(path).read_text(encoding='utf-8')
 
 
+def has_result_envelope(text):
+    return any(line.strip().startswith('KDSL_RESULT:') for line in text.splitlines())
+
+
 def find_field(text, name):
     marker = name + ':'
     for line in text.splitlines():
@@ -66,9 +70,38 @@ def hits(text, words):
     return [word for word in words if word.lower() in lower]
 
 
+def emit(errors, warnings, info):
+    status = 'fail' if errors else ('warn' if warnings else 'pass')
+    print('VALIDATION_RESULT:')
+    print('STATUS: ' + status)
+    print('ERRORS:')
+    if errors:
+        for item in errors:
+            print('  - ' + item)
+    else:
+        print('  - none')
+    print('WARNINGS:')
+    if warnings:
+        for item in warnings:
+            print('  - ' + item)
+    else:
+        print('  - none')
+    print('INFO:')
+    if info:
+        for item in info:
+            print('  - ' + item)
+    else:
+        print('  - none')
+    return 2 if errors else (1 if warnings else 0)
+
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
+
+    if not has_result_envelope(text):
+        return emit([], [], ['no KDSL_RESULT envelope detected; R1 RT-basis target not applicable'])
+
     rt_value = find_field(text, 'RT')
     rt_v = is_rt_v(rt_value)
     scoped_text = field_scope_text(text)
@@ -93,28 +126,7 @@ def main(argv):
         if valid:
             info.append('accepted runtime basis from RT/VERIFY/S fields: ' + ', '.join(valid))
 
-    status = 'fail' if errors else ('warn' if warnings else 'pass')
-    print('VALIDATION_RESULT:')
-    print('STATUS: ' + status)
-    print('ERRORS:')
-    if errors:
-        for item in errors:
-            print('  - ' + item)
-    else:
-        print('  - none')
-    print('WARNINGS:')
-    if warnings:
-        for item in warnings:
-            print('  - ' + item)
-    else:
-        print('  - none')
-    print('INFO:')
-    if info:
-        for item in info:
-            print('  - ' + item)
-    else:
-        print('  - none')
-    return 2 if errors else (1 if warnings else 0)
+    return emit(errors, warnings, info)
 
 
 if __name__ == '__main__':
