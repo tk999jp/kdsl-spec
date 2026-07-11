@@ -1,0 +1,537 @@
+name: R1C Ownership Alignment Apply
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'agent/kdsl-r1c-ownership'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out ownership branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-r1c-ownership
+          fetch-depth: 0
+
+      - name: Apply exact R1C ownership alignment
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_exact(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected exactly one match, got {count}: {old!r}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          # spec/manifest.md
+          replace_exact(
+              'spec/manifest.md',
+              'v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry architecture',
+              'v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / R1C architecture',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              '| `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |\n| `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |',
+              '| `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |\n| `spec/r1/r1c-compact-result-schema.md` | R1 serialization draft | canonical R1のcompact serialization profile | v2 draft adopted / canonical R1 subordinate |\n| `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              '| `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |\n| `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |',
+              '| `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |\n| `spec/lint/kdsl-r1c-lint.md` | Lint draft | R1C field/order/RT/NEXT/COMMIT/round-trip boundary lint | v2 draft adopted |\n| `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              '''### KDSL_RESULT / R1 / RT:v / NEXT / COMMIT
+
+```text
+canonical:
+  spec/r1/r1-result-spec.md
+
+required:
+  build/diff/lint/test pass != RT:v
+  RT:v=対象環境runtime確認済のみ
+  NEXT:=提案, 実行許可扱禁止
+  COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
+```
+
+### KDSL-CP''',
+              '''### KDSL_RESULT / R1 / RT:v / NEXT / COMMIT
+
+```text
+canonical:
+  spec/r1/r1-result-spec.md
+
+required:
+  build/diff/lint/test pass != RT:v
+  RT:v=対象環境runtime確認済のみ
+  NEXT:=提案, 実行許可扱禁止
+  COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
+```
+
+### R1C compact serialization profile
+
+```text
+v2-draft adopted profile:
+  spec/r1/r1c-compact-result-schema.md
+
+lint:
+  spec/lint/kdsl-r1c-lint.md
+
+schema/version:
+  kdsl-r1c@0.1-draft
+```
+
+Ownership rules:
+
+```text
+canonical R1 > R1C serialization profile > R1C lint > validator/example
+R1C:=canonical R1/KDSL_RESULTのcompact serialization profile
+R1C != 独立canonical結果仕様
+R1CでRT:v/NEXT/COMMIT意味変更禁止
+11必須field省略禁止
+short field alias禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback必須
+R1C validator pass != canonical R1適合証明
+```
+
+### KDSL-CP''',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              'SG registry v2-draft採用 != R1C schema完成',
+              'R1C v2-draft採用 != Packet schema/registry完成',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              'BASE/TASK/FLOW/R1C/Packet lint未定義→実行禁止',
+              'BASE/TASK/FLOW/Packet schema/lint未定義→実行禁止',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              'lint追加→compatible候補\nexample追加→patch候補',
+              'lint追加→compatible候補\nR1C serialization profile追加→compatible v2-draft候補\nR1C RT:v/NEXT/COMMIT意味変更→breaking候補\nR1C required field削除/alias置換/default追加→breaking候補\nexample追加→patch候補',
+          )
+          replace_exact(
+              'spec/manifest.md',
+              '''v1.1.0 stable:=hold
+v2-draft:=continue
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+Safety Gate validator:=未実装
+KDSL-Packet:=draft-non-executable
+Release Assets追加なし
+既存tag移動なし''',
+              '''v1.1.0 stable:=hold
+v2-draft:=continue
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+Safety Gate validator:=first heuristic slice integrated
+kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
+R1C validator:=first heuristic slice integrated
+canonical R1 replacement:=none
+KDSL-Packet:=draft-non-executable
+Release Assets追加なし
+既存tag移動なし''',
+          )
+
+          # spec/bridge/kdsl-cp-packet-bridge.md
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '# KDSL-CP / KDSL-Packet Bridge v0.3-draft', '# KDSL-CP / KDSL-Packet Bridge v0.4-draft')
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / future Packet boundary',
+              'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary',
+          )
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              'This bridge defines when KDSL-CP must be lifted to Full KDSL and how the v2-draft Safety Gate Registry may be referenced without making a future KDSL-Packet executable.',
+              'This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.',
+          )
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nKDSL-Packet:=将来のpacket envelope候補',
+              'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nkdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile\nKDSL-Packet:=将来のpacket envelope候補',
+          )
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              '## 6. KDSL-Packet draft boundary',
+              '''## 6. R1C alignment
+
+Current v2-draft serialization profile:
+
+```text
+schema: kdsl-r1c@0.1-draft
+source: spec/r1/r1c-compact-result-schema.md
+canonical parent: spec/r1/r1-result-spec.md
+lint: spec/lint/kdsl-r1c-lint.md
+validator: tools/validator/kdsl_r1c.py
+```
+
+Ownership boundary:
+
+```text
+canonical R1 > R1C serialization profile
+R1C != 独立canonical結果仕様
+R1C envelope:=KDSL_RESULT
+canonical 11 required field名保持
+short field alias禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback
+RT:v/NEXT/COMMIT意味変更禁止
+R1C validator pass != semantic equivalence/canonical R1適合証明
+```
+
+Packet effect:
+
+```text
+R1C v2-draft採用 != Packet executable
+R1C validator実装 != Packet executable
+OUT/R1C mappingはfuture Packet設計入力であり実行許可ではない
+```
+
+## 7. KDSL-Packet draft boundary''',
+          )
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              '''Packet schema
+BASE registry
+TASK registry
+FLOW opcode registry
+canonical/stable SG registry
+R1C schema
+Packet lint''',
+              '''Packet schema
+BASE registry
+TASK registry
+FLOW opcode registry
+canonical/stable SG registry
+Packet lint''',
+          )
+          replace_exact(
+              'spec/bridge/kdsl-cp-packet-bridge.md',
+              '''Current SG status:
+
+```text
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+stable/canonical Packet dependency:=not satisfied
+Safety Gate validator:=not implemented
+```''',
+              '''Current dependency status:
+
+```text
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+Safety Gate validator:=first heuristic slice integrated
+kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
+R1C validator:=first heuristic slice integrated
+stable/canonical Packet dependency:=not satisfied
+```''',
+          )
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '## 7. Packet-Summary', '## 8. Packet-Summary')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '## 8. Summary restrictions', '## 9. Summary restrictions')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '## 9. Boundary examples', '## 10. Boundary examples')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '### 9.1 KDSL-CP is enough', '### 10.1 KDSL-CP is enough')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '### 9.2 CP-Lift required', '### 10.2 CP-Lift required')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '### 9.3 Packet design draft only', '### 10.3 Packet design draft only')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '## 10. Non-goals', '## 11. Non-goals')
+
+          # spec/glossary-v2-draft.md
+          replace_exact(
+              'spec/glossary-v2-draft.md',
+              'Safety Gate validator: not implemented',
+              'Safety Gate validator: first heuristic slice integrated',
+          )
+          replace_exact(
+              'spec/glossary-v2-draft.md',
+              '''Packet schema未定義
+BASE/TASK/FLOW registry未定義
+SG registryはv2-draftのみでstable/canonical Packet dependency未充足
+R1C schema未定義
+Packet lint未定義''',
+              '''Packet schema未定義
+BASE/TASK/FLOW registry未定義
+SG registryはv2-draftのみでstable/canonical Packet dependency未充足
+R1Cはv2-draft adoptedだがPacket全体の実行条件未充足
+Packet lint未定義''',
+          )
+          replace_exact(
+              'spec/glossary-v2-draft.md',
+              '''### R1C
+
+```text
+R1C:=R1/KDSL_RESULTのcompact schema候補
+```
+
+Current status:
+
+```text
+not canonical
+not executable contract
+```''',
+              '''### R1C
+
+```text
+R1C:=canonical R1/KDSL_RESULTのcompact serialization profile
+schema: kdsl-r1c@0.1-draft
+```
+
+Current status:
+
+```text
+v2-draft adopted
+canonical R1 replacement: no
+stable/public-ready: no
+validator: first heuristic slice integrated
+```
+
+Ownership:
+
+```text
+spec/r1/r1-result-spec.md > spec/r1/r1c-compact-result-schema.md
+canonical R1と競合→canonical R1優先
+R1C != 独立canonical結果仕様
+```
+
+Required boundary:
+
+```text
+KDSL_RESULT envelope保持
+STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
+short field alias禁止
+required field省略禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback
+RT:v/NEXT/COMMIT意味変更禁止
+validator pass != semantic equivalence/canonical R1適合証明
+```''',
+          )
+
+          # docs/project-status.md
+          replace_exact(
+              'docs/project-status.md',
+              '''### PR #7 — R1C design-candidate validator first slice
+
+```yaml
+pull_request: 7
+merge_status: merged
+merge_method: squash
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+squash_commit: 49957fe530d028738cea94d3b6ab1f473f8b176d
+workflow: Validator CI
+workflow_run_id: 29144196401
+workflow_run_number: 50
+workflow_status: completed
+workflow_conclusion: success
+sample_total: 49
+sample_failed: 0
+status: design_candidate_validator_integrated
+canonical_effect: none
+```
+
+## 3. Current architecture direction''',
+              '''### PR #7 — R1C design-candidate validator first slice
+
+```yaml
+pull_request: 7
+merge_status: merged
+merge_method: squash
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+squash_commit: 49957fe530d028738cea94d3b6ab1f473f8b176d
+workflow: Validator CI
+workflow_run_id: 29144196401
+workflow_run_number: 50
+workflow_status: completed
+workflow_conclusion: success
+sample_total: 49
+sample_failed: 0
+status: design_candidate_validator_integrated
+canonical_effect: none
+```
+
+### PR #8 — R1C v2-draft ownership alignment
+
+```yaml
+pull_request: 8
+merge_status: pending
+source_branch: agent/kdsl-r1c-ownership
+base_commit: 4011599a5f3bbd81a97ac87fb3e2e6f0e90fe585
+schema_id: kdsl-r1c@0.1-draft
+target_status: v2_draft_adopted_serialization_profile
+canonical_parent: spec/r1/r1-result-spec.md
+canonical_r1_replacement: none
+packet_execution_effect: none
+stable_effect: none
+```
+
+## 3. Current architecture direction''',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '''R1C design candidate:=main統合済み
+R1C design-candidate validator first slice:=main統合済み
+R1C canonical adoption:=未実施
+KDSL-Packet:=draft-non-executable''',
+              '''R1C design candidate:=main統合済み
+R1C design-candidate validator first slice:=main統合済み
+R1C ownership:=v2-draft adopted serialization profile
+R1C canonical R1 replacement:=なし
+KDSL-Packet:=draft-non-executable''',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '''  design_candidate: integrated
+  canonical: no
+  stable: no''',
+              '''  design_candidate: integrated
+  v2_draft_adopted_serialization_profile: yes
+  canonical_parent: spec/r1/r1-result-spec.md
+  independent_canonical_spec: no
+  stable: no''',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '  manifest_bridge_glossary_promotion: pending',
+              '  manifest_bridge_glossary_alignment: integrated by PR #8',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              'canonical R1 > R1C design candidate\nR1C validator pass != R1C canonical adoption',
+              'canonical R1 > R1C v2-draft serialization profile\nR1C validator pass != canonical R1適合証明',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              'R1C canonical ownership alignment未実施\nR1C round-trip semantic proofなし',
+              'R1C round-trip semantic proofなし',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '  R1C compact-result design candidate',
+              '  R1C v2-draft adopted compact serialization profile',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '  canonical R1C standard',
+              '  independent canonical R1C standard',
+          )
+          replace_exact(
+              'docs/project-status.md',
+              '''P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
+P1: R1C canonical-ownership review
+    - manifest/Bridge/glossary alignment可否
+    - design candidate→v2-draft adopted候補
+    - validator resultsはapproval代替禁止
+P2: Packet BASE/TASK/FLOW registry/schema/lint設計
+P3: Safety Gate protected wording/inheritance validator拡張
+P4: public-facing v2 overview / CI required check検討''',
+              '''P0: PR #8 CI確認 / squash merge / ownership closeout
+P1: Packet BASE/TASK/FLOW registry/schema/lint設計
+P2: Safety Gate protected wording/inheritance validator拡張
+P3: R1C round-trip/property-based validator検討
+P4: public-facing v2 overview / CI required check検討''',
+          )
+
+          # README.md
+          replace_exact(
+              'README.md',
+              '''R1C design candidate: kdsl-r1c@0.1-draft / main integrated
+R1C validator: design-candidate first heuristic slice integrated
+R1C canonical/stable adoption: no''',
+              '''R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
+R1C validator: first heuristic slice integrated
+R1C independent canonical/stable status: no''',
+          )
+          replace_exact('README.md', '## R1C compact-result design candidate', '## R1C compact-result serialization profile')
+          replace_exact(
+              'README.md',
+              '''status: design candidate integrated
+canonical: no
+stable: no''',
+              '''status: v2-draft adopted serialization profile
+canonical parent: spec/r1/r1-result-spec.md
+independent canonical spec: no
+stable: no''',
+          )
+          replace_exact(
+              'README.md',
+              'canonical R1 > R1C design candidate',
+              'canonical R1 > R1C v2-draft serialization profile',
+          )
+          replace_exact(
+              'README.md',
+              '''canonical/stable SG dependency
+canonical R1C dependency
+Packet lint''',
+              '''canonical/stable SG dependency
+Packet lint''',
+          )
+          replace_exact(
+              'README.md',
+              'R1C canonical ownership alignment未実施\nPacket schema/BASE/TASK/FLOW registry未定義',
+              'Packet schema/BASE/TASK/FLOW registry未定義',
+          )
+
+          # CHANGELOG.md
+          replace_exact(
+              'CHANGELOG.md',
+              '### Added\n\n#### Safety Gate Registry validator first slice',
+              '''### Added
+
+#### R1C v2-draft ownership alignment
+
+- Adopted `kdsl-r1c@0.1-draft` as a v2-draft compact serialization profile subordinate to canonical R1.
+- Kept `spec/r1/r1-result-spec.md` as the canonical R1 authority.
+- Added manifest, CP-Packet Bridge, glossary, README, and project-status ownership alignment.
+- Kept all canonical R1 field names and RT/NEXT/COMMIT meanings unchanged.
+- Kept short aliases, required-field omission, and implicit defaults prohibited.
+- Kept Full R1 fallback required when reversible expansion cannot be guaranteed.
+- R1C adoption does not make KDSL-Packet executable.
+
+#### R1C design and validator first slices
+
+- Added `kdsl-r1c@0.1-draft` design files, lint specification, examples, and round-trip matrix.
+- Added `tools/validator/kdsl_r1c.py` and wrapper target `--target r1c`.
+- Extended the validator sample suite to 49 expectations with `failed: 0` in PR CI run #50.
+- Kept R1C validator non-authoritative and non-semantic.
+
+#### Safety Gate Registry validator first slice''',
+          )
+          replace_exact(
+              'CHANGELOG.md',
+              'R1C schema:=undefined\nPacket schema/BASE/TASK/FLOW registry/Packet lint:=undefined',
+              'R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile\nPacket schema/BASE/TASK/FLOW registry/Packet lint:=undefined',
+          )
+
+          Path('docs/reviews/kdsl-r1c-ownership-integration.md').write_text(
+              '''# KDSL R1C Ownership Integration\n\nstatus: merge-pending\nreview_date: 2026-07-11\nbranch: agent/kdsl-r1c-ownership\ntarget: main\npull_request: 8\n\n## Scope\n\n```text\nspec/manifest.md\nspec/bridge/kdsl-cp-packet-bridge.md\nspec/glossary-v2-draft.md\ndocs/project-status.md\nREADME.md\nCHANGELOG.md\n```\n\n## Adopted ownership\n\n```text\ncanonical R1:=spec/r1/r1-result-spec.md\nR1C:=kdsl-r1c@0.1-draft v2-draft serialization profile\ncanonical R1 > R1C > lint > validator/example\nR1C independent canonical status:=no\n```\n\n## Packet boundary\n\n```text\nR1C dependency:=v2-draft adopted\nPacket schema/BASE/TASK/FLOW/Packet lint:=未定義\nKDSL-Packet:=draft-non-executable\nPKT:v1使用禁止\n```\n\n## Merge gate\n\n```text\nexact replacement assertions: pass\nValidator CI: required\n49 sample expectations: required / failed 0\nPR ready for review\nsquash merge\npost-merge closeout\n```\n\n## Non-actions\n\n```text\ncanonical R1本文変更なし\nRT:v/NEXT/COMMIT意味変更なし\nPacket executable化なし\ntag/release/Release Assets操作なし\nstable/public-ready化なし\n```\n''',
+              encoding='utf-8',
+          )
+
+          Path('.github/workflows/r1c-ownership-apply.yml').unlink()
+          PY
+
+      - name: Commit aligned documents
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add spec/manifest.md \
+                  spec/bridge/kdsl-cp-packet-bridge.md \
+                  spec/glossary-v2-draft.md \
+                  docs/project-status.md \
+                  README.md \
+                  CHANGELOG.md \
+                  docs/reviews/kdsl-r1c-ownership-integration.md \
+                  .github/workflows/r1c-ownership-apply.yml
+          git commit -m "Spec: adopt R1C v2-draft ownership alignment"
+          git push origin HEAD:agent/kdsl-r1c-ownership
