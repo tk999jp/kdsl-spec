@@ -121,8 +121,10 @@ Safety Gate first slice:
 R1C first slice candidate:
   total: 49 / failed: 0
 
-Packet first slice candidate:
-  expected total: 69 / branch validation pending
+Packet first slice integrated:
+  total: 69 / failed: 0
+  pull_request: 14
+  workflow_run: 116 / success
 ```
 
 Repository examples included in the suite:

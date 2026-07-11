@@ -1,6 +1,6 @@
 # KDSL Packet Validator First Slice
 
-status: implementation-candidate
+status: first-slice integrated
 schema: kdsl-packet@0.1-draft
 checker: tools/validator/kdsl_packet.py
 validator_authority: non-authoritative
@@ -19,6 +19,18 @@ NORMALIZE.required/target/state and BASE target compatibility
 OUT.result_schema representative values
 PKT:v1 rejection
 representative rollback/runtime/public/data/KDSL-DP trigger gates
+```
+
+## Integration evidence
+
+```text
+pull_request: 14
+source_head: 9cde7e5a13861a9f7c6f1c05b20d23d023f66025
+squash_commit: f1bba2206d28f0ce3cbc1643738d306c940537f6
+workflow_run_id: 29148894965
+run_number: 116
+sample_total: 69
+failed: 0
 ```
 
 ## Boundaries

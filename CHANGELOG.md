@@ -19,6 +19,26 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 - Added actual `examples/packet/packet-design.example.md` coverage.
 - Packet execution/normalization readiness remains explicitly out of scope.
 
+Verification:
+
+```text
+pull_request: 14
+source_head: 9cde7e5a13861a9f7c6f1c05b20d23d023f66025
+squash_commit: f1bba2206d28f0ce3cbc1643738d306c940537f6
+workflow_run_id: 29148894965
+run_number: 116
+sample_total: 69
+failed: 0
+```
+
+Integration note:
+
+```text
+PR #13:=closed without merge / superseded by clean PR #14
+Packet scope correction:=integrated
+R1 checker envelope separation:=integrated
+```
+
 #### Packet v2-draft ownership alignment
 
 - Adopted `kdsl-packet@0.1-draft` as a v2-draft non-executable authoring schema.
@@ -205,8 +225,8 @@ R1C independent canonical/stable status:=no
 R1C manifest/Bridge/glossary alignment:=integrated
 KDSL-Packet:=kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries:=v2-draft adopted
-Packet lint:=v2-draft adopted / validator first slice integration pending
-Packet sample suite:=69 expectations candidate
+Packet lint:=v2-draft adopted / validator first slice integrated
+Packet sample suite:=69 expectations / failed 0
 normalization transformer/round-trip proof:=not implemented
 PKT:v1:=prohibited
 ```

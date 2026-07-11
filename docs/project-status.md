@@ -246,17 +246,40 @@ execution_effect: none
 stable_effect: none
 ```
 
-### PR #13 — Packet validator first slice
+### PR #13 — Packet validator integration work branch
 
 ```yaml
 pull_request: 13
-merge_status: pending
+merge_status: closed_unmerged
 source_branch: agent/kdsl-packet-validator
+superseded_by: 14
+reason: temporary workflow integration history / clean replacement
+checker: tools/validator/kdsl_packet.py
+packet_execution_effect: none
+stable_effect: none
+```
+
+### PR #14 — Packet validator first slice
+
+```yaml
+pull_request: 14
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-packet-validator-clean
+source_head: 9cde7e5a13861a9f7c6f1c05b20d23d023f66025
+squash_commit: f1bba2206d28f0ce3cbc1643738d306c940537f6
+closeout_pull_request: 16
 checker: tools/validator/kdsl_packet.py
 wrapper_target: packet
-expected_sample_total: 69
+workflow_run_id: 29148894965
+workflow_run_number: 116
+job_id: 86535040415
+workflow_conclusion: success
+sample_total: 69
+sample_failed: 0
 validator_authority: non_authoritative
 packet_execution_effect: none
+normalization_effect: none
 stable_effect: none
 ```
 
@@ -274,7 +297,7 @@ R1C ownership:=v2-draft adopted serialization profile
 R1C canonical R1 replacement:=なし
 Packet design candidate:=main統合済み
 Packet ownership:=v2-draft adopted authoring schema/registries/lint
-Packet validator first slice:=integration pending
+Packet validator first slice:=main統合済み / 69 expectations verified
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -321,7 +344,7 @@ packet:
   task_registry: kdsl-packet-task@0.1-draft
   flow_registry: kdsl-packet-flow@0.1-draft
   lint: adopted
-  validator: first_slice_integration_pending
+  validator: first_slice_integrated
   normalize_required: true
   packet_state: not_normalized
   pkt_v1: prohibited
@@ -368,10 +391,12 @@ validator:
     command: python tools/validator/run_samples.py
     expected_sample_total: 69
     latest_pr_validation:
-      pull_request: 7
-      run_id: 29144196401
-      run_number: 50
+      pull_request: 14
+      run_id: 29148894965
+      run_number: 116
       conclusion: success
+      sample_total: 69
+      sample_failed: 0
 ```
 
 Specified or designed but not fully implemented:
@@ -480,14 +505,23 @@ failed: 0
 meaning: existing validator regression evidence; not Packet lint pass
 ```
 
-### Packet validator candidate
+### Packet validator first slice
 
 ```yaml
-pull_request: 13
-branch: agent/kdsl-packet-validator
-expected_sample_total: 69
-status: branch_validation_pending
-meaning: Packet first-slice heuristic candidate; not Packet execution/normalization proof
+pull_request: 14
+source_branch: agent/kdsl-packet-validator-clean
+source_head: 9cde7e5a13861a9f7c6f1c05b20d23d023f66025
+squash_commit: f1bba2206d28f0ce3cbc1643738d306c940537f6
+workflow_run_id: 29148894965
+run_number: 116
+job_id: 86535040415
+conclusion: success
+sample_total: 69
+failed: 0
+repository_example: pass
+wrapper_packet_valid_invalid: expected exits
+wrapper_all_valid_packet: pass
+meaning: first-slice heuristic evidence; not Packet execution/normalization proof
 ```
 
 ### R1C validator
@@ -512,6 +546,8 @@ Verification records:
 tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
+tools/validator/verification/kdsl_packet_verify.md
+docs/reviews/kdsl-packet-validator-first-slice.md
 docs/reviews/kdsl-r1c-design-integration.md
 docs/reviews/kdsl-r1c-validator-first-slice.md
 ```
@@ -526,7 +562,6 @@ protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
-Packet validator first slice:=integration pending
 Packet full YAML/semantic parserなし
 Packet normalization transformer/round-trip proofなし
 Packet Safety Gate completeness/inheritance proofなし
@@ -560,7 +595,7 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #13 CI確認 / squash merge / Packet validator closeout
+P0: PR #16 CI確認 / squash merge / Packet validator closeout
 P1: Packet normalization round-trip tooling/tests
 P2: Safety Gate protected wording/inheritance validator拡張
 P3: R1C round-trip/property-based validator検討

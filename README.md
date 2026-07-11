@@ -25,8 +25,8 @@ R1C validator: first heuristic slice integrated
 R1C independent canonical/stable status: no
 Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries: v2-draft adopted
-Packet validator: first heuristic slice integration pending
-validator sample suite: 69 expectations candidate
+Packet validator: first heuristic slice integrated
+validator sample suite: 69 expectations / failed 0
 validator_authority: non_authoritative
 ```
 
@@ -375,10 +375,11 @@ python tools/validator/run_samples.py
 Latest CI evidence:
 
 ```text
-sample expectations: 49
+sample expectations: 69
 failed: 0
 workflow: .github/workflows/validator.yml
-latest R1C PR run: #50 / success
+latest Packet PR: #14
+latest Packet run: #116 / success
 ```
 
 Repository examples included:
@@ -428,7 +429,7 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
-Packet validator first slice:=integration pending
+Packet validator first slice:=main integrated / 69 expectations verified
 Packet full YAML/semantic parserなし
 Packet normalization transformer/round-trip proofなし
 Packet Safety Gate completeness/inheritance proofなし
@@ -453,7 +454,7 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  PR #13 CI確認 / squash merge / Packet validator closeout
+  PR #16 CI確認 / squash merge / Packet validator closeout
 
 P1:
   Packet normalization round-trip tooling/tests

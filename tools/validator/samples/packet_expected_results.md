@@ -1,6 +1,6 @@
 # Packet Validator Expected Results
 
-status: first-slice candidate
+status: first-slice verified
 
 ```text
 repository example: pass
@@ -19,4 +19,14 @@ broad push/release authority: warn
 out-of-scope document: pass/info
 wrapper packet valid/invalid: expected exit preserved
 wrapper all valid Packet: pass
+```
+
+Verification:
+
+```text
+pull_request: 14
+workflow_run_id: 29148894965
+run_number: 116
+sample_total: 69
+failed: 0
 ```
