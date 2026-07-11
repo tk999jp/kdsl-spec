@@ -28,7 +28,8 @@ Packet BASE/TASK/FLOW registries: v2-draft adopted
 Packet validator: first heuristic slice integrated
 Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
 Packet normalization validator/mapper: first-slice integrated / non-executable preview only
-validator sample suite: 93 expectations / failed 0
+Packet normalization structural round-trip: first-slice integration pending
+validator sample suite: 108 expectations candidate
 validator_authority: non_authoritative
 ```
 
@@ -147,6 +148,7 @@ Validator:
   tools/validator/kdsl_packet.py
   tools/validator/kdsl_packet_normalization.py
   tools/validator/kdsl_packet_normalize.py
+  tools/validator/kdsl_packet_roundtrip.py
   tools/validator/run_samples.py
   tools/validator/samples/*
   tools/validator/verification/*
@@ -373,6 +375,7 @@ python tools/validator/kdsl_validate.py --target r1c <file>
 python tools/validator/kdsl_validate.py --target packet <file>
 python tools/validator/kdsl_validate.py --target normalization <file>
 python tools/validator/kdsl_packet_normalize.py <packet-file>
+python tools/validator/kdsl_packet_roundtrip.py <packet-file> [normalization-file]
 python tools/validator/kdsl_validate.py --target all <file>
 ```
 
@@ -442,7 +445,8 @@ R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
 Packet full YAML/semantic parserなし
 Packet normalization validator/mapper first slice:=main integrated / 93 expectations verified
-Packet normalization round-trip/property proofなし
+Packet normalization structural round-trip first slice:=integration pending
+Packet normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packet:=v2-draft adopted / non-executable
 ```
@@ -465,7 +469,7 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  normalization round-trip/property tests
+  PR #27 CI確認 / squash merge / round-trip closeout
 
 P1:
   Safety Gate protected wording/inheritance validator拡張

@@ -490,6 +490,159 @@ SAMPLES = [
         'expected': 2,
         'stdout_not_contains': ['NORMALIZATION_DRAFT:', 'KDSL_PROMPT_PREVIEW:'],
     },
+    {
+        'name': 'round-trip generated Full KDSL structural pass',
+        'command': ['kdsl_packet_roundtrip.py', 'examples/packet/normalization-source.example.md'],
+        'expected': 0,
+        'stdout_contains': [
+            'STRUCTURAL_ROUND_TRIP_RESULT:',
+            'STATUS: structural_pass',
+            'EXECUTABLE: no',
+            'SEMANTIC_EQUIVALENCE: not_proven',
+            'EXECUTION_AUTHORITY: none',
+        ],
+        'stdout_not_contains': ['\nKDSL_PROMPT:', '\nP1:', '\nP1L:'],
+    },
+    {
+        'name': 'round-trip generated P1 blocked',
+        'command': ['kdsl_packet_roundtrip.py', 'examples/packet/normalization-p1-source.example.md'],
+        'expected': 1,
+        'stdout_contains': [
+            'STATUS: blocked',
+            'EXECUTABLE: no',
+            'SEMANTIC_EQUIVALENCE: not_proven',
+            'P1/P1L unresolved target remains blocked',
+        ],
+        'stdout_not_contains': ['\nKDSL_PROMPT:', '\nP1:'],
+    },
+    {
+        'name': 'round-trip invalid Packet rejected',
+        'command': ['kdsl_packet_roundtrip.py', 'tools/validator/samples/sample_packet_normalized.md'],
+        'expected': 2,
+        'stdout_contains': ['STATUS: fail'],
+        'stdout_not_contains': ['STATUS: structural_pass'],
+    },
+    {
+        'name': 'round-trip provided normalization structural pass',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_normalization_valid.md',
+        ],
+        'expected': 0,
+        'stdout_contains': ['STATUS: structural_pass', 'all Packet fields accounted in MAP'],
+    },
+    {
+        'name': 'round-trip source mutation detects digest mismatch',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'samples/sample_roundtrip_source_mutated.md',
+            'samples/sample_roundtrip_normalization_valid.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['source digest mismatch'],
+    },
+    {
+        'name': 'round-trip malformed digest rejected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_bad_digest.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['normalization artifact failed checker'],
+    },
+    {
+        'name': 'round-trip exact string loss detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_missing_exact.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['exact strings missing from PRESERVE'],
+    },
+    {
+        'name': 'round-trip protected wording loss detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_missing_protected.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['protected wording missing from PRESERVE'],
+    },
+    {
+        'name': 'round-trip preserved order mutation detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_order_changed.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['ordered fields missing or changed'],
+    },
+    {
+        'name': 'round-trip preview FLOW order mutation detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_preview_order_changed.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['FLOW order changed in preview'],
+    },
+    {
+        'name': 'round-trip authority widening detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_authority_widened.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['authority rail missing or widened in preview: push'],
+    },
+    {
+        'name': 'round-trip MAP omission rejected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_map_omission.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['normalization artifact failed checker'],
+    },
+    {
+        'name': 'round-trip result schema loss detected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_result_schema_lost.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['result schema missing from preview'],
+    },
+    {
+        'name': 'round-trip semantic equivalence claim rejected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_semantic_claim.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['normalization artifact failed checker'],
+    },
+    {
+        'name': 'round-trip executable marker rejected',
+        'command': [
+            'kdsl_packet_roundtrip.py',
+            'examples/packet/normalization-source.example.md',
+            'samples/sample_roundtrip_executable_marker.md',
+        ],
+        'expected': 2,
+        'stdout_contains': ['normalization artifact failed checker'],
+        'stdout_not_contains': ['STATUS: structural_pass'],
+    },
 ]
 
 

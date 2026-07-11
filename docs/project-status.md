@@ -388,6 +388,20 @@ semantic_equivalence: not_proven
 stable_effect: none
 ```
 
+### PR #26 — Packet normalization structural round-trip work branch
+
+```yaml
+pull_request: 26
+merge_status: pending
+source_branch: agent/kdsl-packet-normalization-roundtrip
+tool: tools/validator/kdsl_packet_roundtrip.py
+expected_sample_total: 108
+status_model: structural_pass|blocked|fail
+semantic_equivalence: not_proven
+execution_authority: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -405,6 +419,7 @@ Packet ownership:=v2-draft adopted authoring schema/registries/lint
 Packet validator first slice:=main統合済み / 69 expectations verified
 Packet normalization contract/lint:=v2-draft adopted / non-executable
 Packet normalization validator/mapper first slice:=main統合済み / 93 expectations verified
+Packet normalization structural round-trip first slice:=integration pending
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -504,7 +519,7 @@ validator:
   ci:
     workflow: .github/workflows/validator.yml
     command: python tools/validator/run_samples.py
-    expected_sample_total: 93
+    expected_sample_total: 108
     latest_pr_validation:
       pull_request: 23
       run_id: 29151175762
@@ -526,7 +541,8 @@ R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
-Normalization round-trip/property proofなし
+Normalization structural round-trip first slice:=integration pending
+Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
 ```
@@ -605,6 +621,16 @@ conclusion: success
 sample_total: 34
 failed: 0
 meaning: design-only regression evidence; not R1C lint pass
+```
+
+### Packet normalization structural round-trip candidate
+
+```yaml
+pull_request: 26
+branch: agent/kdsl-packet-normalization-roundtrip
+expected_sample_total: 108
+status: branch_validation_pending
+meaning: selected structural properties only; not semantic-equivalence/safety/normalization proof
 ```
 
 ### Packet normalization validator / mapper first slice
@@ -732,7 +758,8 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Normalization round-trip/property proofなし
+Normalization structural round-trip first slice:=integration pending
+Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
 v2 public-facing overview未確定
@@ -765,7 +792,7 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: normalization round-trip/property tests
+P0: PR #27 CI確認 / squash merge / round-trip closeout
 P1: Safety Gate protected wording/inheritance validator拡張
 P2: R1C round-trip/property-based validator検討
 P3: public-facing v2 overview / CI required check検討

@@ -6,6 +6,15 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Packet normalization structural round-trip first slice
+
+- Added `tools/validator/kdsl_packet_roundtrip.py`.
+- Added source digest, MAP accounting, exact-string, protected-wording, ordering, authority, and result-schema comparisons.
+- Added Full KDSL structural-pass and P1/P1L blocked status handling.
+- Added mutation tests for loss, widening, order changes, semantic claims, and executable markers.
+- Expanded the candidate suite from 93 to 108 expectations.
+- Kept `semantic_equivalence:not_proven`, `execution_authority:none`, and non-executable output fixed.
+
 #### Packet normalization validator / mapper first slice
 
 - Added `tools/validator/kdsl_packet_normalization.py`.
