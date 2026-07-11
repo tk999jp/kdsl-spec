@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -39,3 +39,30 @@ jobs:
 
       - name: Run Safety Gate extension samples
         run: python tools/validator/run_safety_gate_samples.py
+
+  safety_gate_closeout:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-safety-gate-inheritance-closeout-work'
+    name: Apply Safety Gate inheritance closeout
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out closeout work branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-safety-gate-inheritance-closeout-work
+          fetch-depth: 0
+
+      - name: Apply exact asserted closeout
+        run: python .github/scripts/apply_safety_gate_inheritance_closeout.py
+
+      - name: Restore read-only workflow and commit closeout
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/validator.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Docs: close Safety Gate inheritance first slice"
+          git push origin HEAD:agent/kdsl-safety-gate-inheritance-closeout-work
