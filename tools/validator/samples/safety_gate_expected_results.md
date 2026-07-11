@@ -6,6 +6,7 @@ validator: `tools/validator/kdsl_safety_gate.py`
 | Sample | Expected exit | Expected classification |
 |---|---:|---|
 | `sample_sg_valid.md` | 0 | pass |
+| `examples/safety-gates/dev-prompt-safety-gates.example.md` | 0 | pass: repository example |
 | `sample_sg_unknown_registry.md` | 2 | fail: unknown registry |
 | `sample_sg_unknown_id_state.md` | 2 | fail: unknown ID/state |
 | `sample_sg_missing_field.md` | 2 | fail: required field missing |
@@ -25,7 +26,7 @@ Sample runner total after this slice:
 
 ```text
 SUMMARY:
-  total: 33
+  total: 34
   failed: 0
 ```
 
