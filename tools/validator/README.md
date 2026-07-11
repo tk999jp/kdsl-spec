@@ -140,8 +140,10 @@ Packet first slice integrated:
   pull_request: 14
   workflow_run: 116 / success
 
-Packet normalization first slice candidate:
-  expected total: 93 / branch validation pending
+Packet normalization first slice integrated:
+  total: 93 / failed: 0
+  pull_request: 23
+  workflow_run: 150 / success
 ```
 
 Repository examples included in the suite:

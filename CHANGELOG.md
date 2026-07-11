@@ -17,6 +17,20 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 - Kept executable `KDSL_PROMPT:`, P1, and P1L generation prohibited.
 - Kept Packet state `not_normalized`, `semantic_equivalence:not_proven`, and `execution_authority:none`.
 
+Verification:
+
+```text
+work_pull_request: 22
+work_head: bd74e883f01b3ae5888c4327f29765521dfcd2fb
+pull_request: 23
+source_head: 40598b400d5a59d42b25ef05d8d280ae09182045
+squash_commit: b3b95ee21f6a7829477185bcb5f4cd8fc0abe7a3
+workflow_run_id: 29151175762
+run_number: 150
+sample_total: 93
+failed: 0
+```
+
 #### Packet normalization v2-draft ownership alignment
 
 - Adopted `kdsl-packet-normalization@0.1-draft` as a non-executable mapping/loss/round-trip evidence contract.
