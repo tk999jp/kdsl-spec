@@ -15,6 +15,9 @@ CHECKER_SETS = {
     'compact': [
         'kdsl_compact_prompt.py',
     ],
+    'safety-gate': [
+        'kdsl_safety_gate.py',
+    ],
     'all': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
@@ -22,6 +25,7 @@ CHECKER_SETS = {
         'kdsl_template_refs.py',
         'kdsl_template_expansion.py',
         'kdsl_compact_prompt.py',
+        'kdsl_safety_gate.py',
     ],
 }
 
@@ -34,7 +38,7 @@ def parse_args(argv):
         arg = argv[index]
         if arg == '--target':
             if index + 1 >= len(argv):
-                raise ValueError('--target requires one of: r1, prompt, compact, all')
+                raise ValueError('--target requires one of: r1, prompt, compact, safety-gate, all')
             target_mode = argv[index + 1]
             index += 2
             continue
@@ -44,7 +48,9 @@ def parse_args(argv):
             continue
         raise ValueError('unexpected argument: ' + arg)
     if path is None:
-        raise ValueError('usage: python kdsl_validate.py [--target r1|prompt|compact|all] <file>')
+        raise ValueError(
+            'usage: python kdsl_validate.py [--target r1|prompt|compact|safety-gate|all] <file>'
+        )
     if target_mode not in CHECKER_SETS:
         raise ValueError('unknown target: ' + target_mode)
     return target_mode, path
