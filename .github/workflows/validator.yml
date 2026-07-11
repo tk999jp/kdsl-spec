@@ -57,9 +57,19 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           import traceback
 
           workflow = Path('.github/workflows/r1c-ownership-apply.yml')
+
+          def replace_exact(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected exactly one match, got {count}: {old!r}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
           try:
               for target in (
                   'spec/manifest.md',
@@ -80,7 +90,48 @@ jobs:
               end = text.index(end_marker, start)
               lines = text[start:end].splitlines()
               code = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines)
+
+              code, removed = re.subn(
+                  r"\n# CHANGELOG\.md\n.*?(?=\nPath\('docs/reviews/kdsl-r1c-ownership-integration\.md'\))",
+                  '',
+                  code,
+                  flags=re.S,
+              )
+              if removed != 1:
+                  raise SystemExit(f'embedded CHANGELOG block removal count: {removed}')
+
               exec(compile(code, str(workflow), 'exec'), {'__name__': '__main__'})
+
+              replace_exact(
+                  'CHANGELOG.md',
+                  '### Added\n\n#### R1C compact-result design candidate',
+                  '''### Added
+
+#### R1C v2-draft ownership alignment
+
+- Adopted `kdsl-r1c@0.1-draft` as a v2-draft compact serialization profile subordinate to canonical R1.
+- Kept `spec/r1/r1-result-spec.md` as the canonical R1 authority.
+- Aligned manifest, CP-Packet Bridge, v2 glossary, README, and project status.
+- Kept all canonical R1 field names and RT/NEXT/COMMIT meanings unchanged.
+- Kept short aliases, required-field omission, and implicit defaults prohibited.
+- Kept Full R1 fallback required when reversible expansion cannot be guaranteed.
+- R1C adoption does not make KDSL-Packet executable.
+
+#### R1C compact-result design candidate''',
+              )
+              replace_exact(
+                  'CHANGELOG.md',
+                  '''R1C schema:=kdsl-r1c@0.1-draft design candidate
+R1C canonical/stable adoption:=no
+R1C manifest/Bridge/glossary promotion:=pending
+KDSL-Packet:=draft-non-executable
+Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined''',
+                  '''R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
+R1C independent canonical/stable status:=no
+R1C manifest/Bridge/glossary alignment:=integrated
+KDSL-Packet:=draft-non-executable
+Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined''',
+              )
           except BaseException:
               Path('/tmp/r1c-ownership-error.txt').write_text(traceback.format_exc(), encoding='utf-8')
               raise
