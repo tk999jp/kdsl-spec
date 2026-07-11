@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -25,33 +25,14 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
+
+      - name: Show Python version
+        run: python --version
+
       - name: Run validator samples
         run: python tools/validator/run_samples.py
-
-  closeout_apply:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-packet-normalization-closeout-work'
-    name: Apply Packet normalization closeout
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Check out work branch
-        uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-packet-normalization-closeout-work
-          fetch-depth: 0
-      - name: Apply exact closeout
-        run: python .github/scripts/apply_packet_normalization_closeout.py
-      - name: Restore read-only workflow and commit
-        shell: bash
-        run: |
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/validator.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Docs: close Packet normalization ownership integration"
-          git push origin HEAD:agent/kdsl-packet-normalization-closeout-work

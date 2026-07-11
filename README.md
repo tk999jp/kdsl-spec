@@ -460,21 +460,18 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  PR #19 CI確認 / squash merge / normalization ownership closeout
-
-P1:
   normalization validator/structural mapper first slice
 
-P2:
+P1:
   normalization round-trip/property tests
 
-P3:
+P2:
   Safety Gate protected wording/inheritance validator拡張
 
-P4:
+P3:
   R1C round-trip/property-based validator検討
 
-P5:
+P4:
   public-facing v2 overview
   CI required check / branch protection検討
 

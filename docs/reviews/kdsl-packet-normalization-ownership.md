@@ -1,9 +1,12 @@
 # KDSL Packet Normalization Ownership Integration
 
-status: merge-pending
+status: completed / merged
 review_date: 2026-07-11
 work_pull_request: 18
 pull_request: 19
+source_head: 7e938b603fe0edbe79306485804a1e09f98ed76d
+squash_commit: 070b651a8d1088dd9698d0d9bd613fec3be84ef6
+closeout_pull_request: 21
 target: main
 
 ## Adopted ownership
@@ -48,6 +51,11 @@ normalization validator/mapper未実装→normalized扱禁止
 PR #17 design source: b11eac3b55853b240e850af5bc2f43bf5c7048b2
 PR #17 squash: e27f130f64f0f0e9c3c6ac005adffc9476860f6f
 Validator CI run #127: success / 69 expectations / failed 0
+PR #18 work head: 817762bfcdf3abb803d192eec4d12f2f366a7f07
+PR #18 run #135: alignment success / sample 69 / failed 0
+PR #19 source: 7e938b603fe0edbe79306485804a1e09f98ed76d
+PR #19 squash: 070b651a8d1088dd9698d0d9bd613fec3be84ef6
+PR #19 run #137: success / sample 69 / failed 0
 normalization source digests fixed
 P1/P1L blocked examples reviewed
 ```
