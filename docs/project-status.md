@@ -48,15 +48,16 @@ v2_compact_prompt_integration:
   stable_effect: none
 ```
 
-## 3. Current validator workstream
+## 3. Integrated CompactPrompt validator
 
 ```yaml
-compact_prompt_validator_workstream:
-  branch: agent/kdsl-compact-validator
+compact_prompt_validator_integration:
+  source_branch: agent/kdsl-compact-validator
   target_branch: main
   pull_request: 2
-  status: validation_passed
-  merge_status: ready_for_merge
+  merge_method: squash
+  merge_status: merged
+  squash_commit: c9e6dc5d8aaf4f5860fe2bab9d69247b41fc3b82
   verified_implementation_head: 2b50ed1
   verification_record_commit: 8edc0c2
   scope:
@@ -76,7 +77,7 @@ Direction:
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
-CompactPrompt validator:=Windows validation pass / ready for squash merge
+CompactPrompt validator first slice:=main統合済み
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -108,7 +109,6 @@ validator:
     - NEXT/COMMIT authority-shape heuristic lint
     - template reference lint
     - template expansion evidence lint
-  merge_candidate_scope:
     - CompactPrompt required block lint
     - CompactPrompt mode/safety/lexicon lint
     - kanji-v1 restricted alias lint
@@ -188,6 +188,15 @@ compact_prompt_windows_validation:
     diff_check: pass
 ```
 
+```yaml
+compact_prompt_validator_merge:
+  pull_request: 2
+  source_head: 45a526b52ac403169eca59d02af8e7b77f0e5d6e
+  squash_commit: c9e6dc5d8aaf4f5860fe2bab9d69247b41fc3b82
+  merged: true
+  stable_effect: none
+```
+
 ```text
 verification details:
   tools/validator/verification/kdsl_compact_prompt_verify.md
@@ -226,8 +235,8 @@ Do not present as:
 ## 10. Next safe steps
 
 ```text
-P0: PR #2 ready化 / squash merge
-P1: merge後main状態正本同期
+P0: local mainをorigin/mainへ同期
+P1: main上でpython tools/validator/run_samples.py再確認
 P2: GitHub Actionsでsample runner実行を検討
 P3: R1C / Safety Gate registry / Packet registryを別Phaseで検討
 P4: public-facing v2 overview検討
