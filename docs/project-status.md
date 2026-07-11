@@ -392,13 +392,38 @@ stable_effect: none
 
 ```yaml
 pull_request: 26
-merge_status: pending
+merge_status: closed_unmerged
 source_branch: agent/kdsl-packet-normalization-roundtrip
+source_head: edbfa65c5672f90e2c084c83289c2aeffc95ed1d
+superseded_by: 27
 tool: tools/validator/kdsl_packet_roundtrip.py
-expected_sample_total: 108
 status_model: structural_pass|blocked|fail
 semantic_equivalence: not_proven
 execution_authority: none
+stable_effect: none
+```
+
+### PR #27 — Packet normalization structural round-trip first slice
+
+```yaml
+pull_request: 27
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-packet-normalization-roundtrip-clean
+source_head: 478157b5059aac0304a8bdde1be6cae192c367c0
+squash_commit: 82397678cf939df80df35d5e075be9556dae0fc3
+closeout_pull_request: 29
+tool: tools/validator/kdsl_packet_roundtrip.py
+workflow_run_id: 29151860435
+workflow_run_number: 163
+job_id: 86542493448
+workflow_conclusion: success
+sample_total: 108
+sample_failed: 0
+status_model: structural_pass|blocked|fail
+semantic_equivalence: not_proven
+execution_authority: none
+normalization_effect: none
 stable_effect: none
 ```
 
@@ -419,7 +444,7 @@ Packet ownership:=v2-draft adopted authoring schema/registries/lint
 Packet validator first slice:=main統合済み / 69 expectations verified
 Packet normalization contract/lint:=v2-draft adopted / non-executable
 Packet normalization validator/mapper first slice:=main統合済み / 93 expectations verified
-Packet normalization structural round-trip first slice:=integration pending
+Packet normalization structural round-trip first slice:=main統合済み / 108 expectations verified
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -521,11 +546,11 @@ validator:
     command: python tools/validator/run_samples.py
     expected_sample_total: 108
     latest_pr_validation:
-      pull_request: 23
-      run_id: 29151175762
-      run_number: 150
+      pull_request: 27
+      run_id: 29151860435
+      run_number: 163
       conclusion: success
-      sample_total: 93
+      sample_total: 108
       sample_failed: 0
 ```
 
@@ -541,7 +566,6 @@ R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
-Normalization structural round-trip first slice:=integration pending
 Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
@@ -623,13 +647,22 @@ failed: 0
 meaning: design-only regression evidence; not R1C lint pass
 ```
 
-### Packet normalization structural round-trip candidate
+### Packet normalization structural round-trip first slice
 
 ```yaml
-pull_request: 26
-branch: agent/kdsl-packet-normalization-roundtrip
-expected_sample_total: 108
-status: branch_validation_pending
+work_pull_request: 26
+pull_request: 27
+source_branch: agent/kdsl-packet-normalization-roundtrip-clean
+source_head: 478157b5059aac0304a8bdde1be6cae192c367c0
+squash_commit: 82397678cf939df80df35d5e075be9556dae0fc3
+workflow_run_id: 29151860435
+run_number: 163
+job_id: 86542493448
+conclusion: success
+sample_total: 108
+failed: 0
+full_kdsl: structural_pass
+p1_p1l: blocked
 meaning: selected structural properties only; not semantic-equivalence/safety/normalization proof
 ```
 
@@ -739,7 +772,9 @@ tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
+tools/validator/verification/kdsl_packet_roundtrip_verify.md
 docs/reviews/kdsl-packet-validator-first-slice.md
+docs/reviews/kdsl-packet-roundtrip-first-slice.md
 docs/reviews/kdsl-packet-normalization-validator-first-slice.md
 docs/reviews/kdsl-packet-normalization-design.md
 docs/reviews/kdsl-packet-normalization-ownership.md
@@ -758,7 +793,6 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Normalization structural round-trip first slice:=integration pending
 Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
@@ -792,9 +826,8 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #27 CI確認 / squash merge / round-trip closeout
-P1: Safety Gate protected wording/inheritance validator拡張
-P2: R1C round-trip/property-based validator検討
-P3: public-facing v2 overview / CI required check検討
+P0: Safety Gate protected wording/inheritance validator拡張
+P1: R1C round-trip/property-based validator検討
+P2: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

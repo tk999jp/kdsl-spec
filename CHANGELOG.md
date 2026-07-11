@@ -15,6 +15,20 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 - Expanded the candidate suite from 93 to 108 expectations.
 - Kept `semantic_equivalence:not_proven`, `execution_authority:none`, and non-executable output fixed.
 
+Verification:
+
+```text
+work_pull_request: 26
+work_head: edbfa65c5672f90e2c084c83289c2aeffc95ed1d
+pull_request: 27
+source_head: 478157b5059aac0304a8bdde1be6cae192c367c0
+squash_commit: 82397678cf939df80df35d5e075be9556dae0fc3
+workflow_run_id: 29151860435
+run_number: 163
+sample_total: 108
+failed: 0
+```
+
 #### Packet normalization validator / mapper first slice
 
 - Added `tools/validator/kdsl_packet_normalization.py`.
