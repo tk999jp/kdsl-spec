@@ -176,6 +176,81 @@ SAMPLES = [
         'command': ['kdsl_validate.py', '--target', 'safety-gate', 'samples/sample_sg_composition_missing.md'],
         'expected': 2,
     },
+    {
+        'name': 'r1c repository success example valid',
+        'command': ['kdsl_r1c.py', 'examples/r1c/r1c-success.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'r1c repository blocked example valid',
+        'command': ['kdsl_r1c.py', 'examples/r1c/r1c-blocked.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'r1c repository needs-user example valid',
+        'command': ['kdsl_r1c.py', 'examples/r1c/r1c-needs-user.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'r1c unknown schema',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_unknown_schema.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c missing required field',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_missing_field.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c short alias rejected',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_alias.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c invalid structured JSON',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_invalid_json.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c invalid RT v basis',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_invalid_rt.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c invalid NEXT authority',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_invalid_next.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c invalid COMMIT authority',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_invalid_commit.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c VERIFY contradiction',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_verify_contradiction.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c required field order mismatch',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1c_order_mismatch.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'r1c Full R1 fallback out of scope',
+        'command': ['kdsl_r1c.py', 'samples/sample_r1_ok.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target r1c valid',
+        'command': ['kdsl_validate.py', '--target', 'r1c', 'examples/r1c/r1c-success.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target r1c invalid',
+        'command': ['kdsl_validate.py', '--target', 'r1c', 'samples/sample_r1c_invalid_rt.md'],
+        'expected': 2,
+    },
 ]
 
 
