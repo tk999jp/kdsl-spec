@@ -1,53 +1,83 @@
 # Changelog
 
-Detailed implementation decisions and verification evidence are retained in `docs/reviews/*`, `tools/validator/verification/*`, and Git history.
+Detailed decisions and verification evidence are retained in `docs/reviews/*`, `tools/validator/verification/*`, and Git history.
 
 ## Unreleased
 
 ### Added
 
-#### Safety Gate Registry validator first slice
+#### R1C compact-result design candidate
 
-- Added `tools/validator/kdsl_safety_gate.py`.
-- Added explicit `SAFETY_GATES:` block detection.
-- Added `kdsl-sg@0.1-draft` registry validation.
-- Added known-ID validation for:
-  - `SG-DESIGN`
-  - `SG-SCOPE`
-  - `SG-EVIDENCE`
-  - `SG-RUNTIME`
-  - `SG-AUTHORITY`
-  - `SG-ROLLBACK`
-  - `SG-PUBLIC`
-  - `SG-DATA`
-  - `SG-KDSL-DP`
-  - `SG-STOP`
-- Added known-state validation for `hold|satisfied|blocked|na`.
-- Added required-field checks for `id/state/scope/reason`.
-- Added `state:satisfied` evidence/authority checks.
-- Added `state:blocked` evidence warning.
-- Added dev-prompt baseline checks for:
-  - `SG-SCOPE`
-  - `SG-EVIDENCE`
-  - `SG-AUTHORITY`
-  - `SG-STOP`
-- Added representative additive-composition checks for rollback, data, public, runtime, and KDSL-DP triggers.
-- Added `--target safety-gate` to `tools/validator/kdsl_validate.py`.
-- Added Safety Gate checking to `--target all`; documents without `SAFETY_GATES:` are treated as out-of-scope pass/info.
-- Added Safety Gate samples, expected results, implementation notes, verification record, and design review.
-- Added the actual repository example to the sample runner:
-  - `examples/safety-gates/dev-prompt-safety-gates.example.md`
+- Added `kdsl-r1c@0.1-draft` as a design candidate for compact serialization of canonical R1 / `KDSL_RESULT`.
+- Retained the `KDSL_RESULT:` envelope and all 11 canonical required field names.
+- Added JSON-compatible inline structures for `FILES`, `CMD`, `VERIFY`, `RT`, `RISK`, `NEXT`, and `COMMIT`.
+- Prohibited:
+  - short field aliases
+  - required-field omission
+  - implicit defaults
+  - `R1C:` as a replacement top-level envelope
+- Required reversible expansion to Full R1 and Full R1 fallback when round-trip cannot be guaranteed.
+- Added:
+  - `spec/r1/r1c-compact-result-schema.md`
+  - `spec/lint/kdsl-r1c-lint.md`
+  - `examples/r1c/README.md`
+  - success / blocked / needs-user examples
+  - design, approval, round-trip, and integration records
+
+Design integration:
+
+```text
+pull_request: 6
+source_head: d2460fa656d017963c34e382dddf4faa0248b68e
+squash_commit: 34d95a78aa1012662b3f2f68aac678686c95bdf0
+workflow_run_id: 29143936842
+run_number: 41
+existing_sample_total: 34
+failed: 0
+```
+
+Status:
+
+```text
+R1C design candidate: main integrated
+R1C canonical/stable adoption: no
+canonical R1 change: none
+```
+
+#### R1C validator first slice
+
+- Added `tools/validator/kdsl_r1c.py`.
+- Added exact detection for `KDSL_RESULT:` + `SCHEMA:kdsl-r1c@0.1-draft`.
+- Added Full R1 fallback/out-of-scope handling when no R1C schema marker exists.
+- Added required-field presence and order checks.
+- Added short-alias rejection.
+- Added JSON-compatible shape checks for:
+  - `FILES`
+  - `CMD`
+  - `VERIFY`
+  - `RT`
+  - `RISK`
+  - `NEXT`
+  - `COMMIT`
+- Added representative boundary checks:
+  - `RT:v` requires runtime evidence wording
+  - `RT:p|u` requires runtime-unverified risk
+  - `NEXT.authority=proposal_only`
+  - automatic commit authority prohibited
+  - contradictory VERIFY classes prohibited
+- Added `--target r1c` and included R1C checking in `--target all`.
+- Expanded the sample runner from 34 to 49 expectations.
+- Added the three repository R1C examples to CI coverage.
 
 Verification:
 
 ```text
-pull_request: 5
-source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
-squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
-workflow: Validator CI
-workflow_run_id: 29143048337
-run_number: 33
-sample_total: 34
+pull_request: 7
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+squash_commit: 49957fe530d028738cea94d3b6ab1f473f8b176d
+workflow_run_id: 29144196401
+run_number: 50
+sample_total: 49
 failed: 0
 ```
 
@@ -55,12 +85,34 @@ Boundaries:
 
 ```text
 line-based heuristic parser
-full YAML parserなし
-full natural-language/negation parserなし
-protected wording semantic equivalence proofなし
-parent-child inheritance lintなし
-validator pass != safety proof/RT:v/U承認/execution authority/release readiness
-Safety Gate validator implementation != Packet/R1C readiness
+inline JSON-compatible values only
+full JSON/YAML/KDSL parserなし
+semantic equivalence proofなし
+validator pass != RT:v/U承認/execution authority/release readiness
+validator pass != R1C canonical/stable promotion
+R1C design/validator implementation != Packet executable
+```
+
+#### Safety Gate Registry validator first slice
+
+- Added `tools/validator/kdsl_safety_gate.py`.
+- Added explicit `SAFETY_GATES:` block detection.
+- Added `kdsl-sg@0.1-draft` registry, known-ID, known-state, and required-field checks.
+- Added `state:satisfied` evidence/authority checks and `state:blocked` evidence warning.
+- Added dev-prompt baseline and representative additive-composition checks.
+- Added `--target safety-gate` and Safety Gate checking to `--target all`.
+- Added Safety Gate samples and the actual repository example to the sample runner.
+
+Verification:
+
+```text
+pull_request: 5
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
+workflow_run_id: 29143048337
+run_number: 33
+sample_total: 34
+failed: 0
 ```
 
 #### Safety Gate Registry v0.1 draft
@@ -68,15 +120,8 @@ Safety Gate validator implementation != Packet/R1C readiness
 - Added and adopted `kdsl-sg@0.1-draft` as a v2-draft registry.
 - Added states `hold|satisfied|blocked|na`.
 - Added ten semantic Safety Gate IDs.
-- Added additive multi-gate composition rules.
-- Added typed non-substitution between approval, evidence, runtime, and authority.
-- Added:
-  - `spec/registry/README.md`
-  - `spec/registry/kdsl-safety-gate-registry.md`
-  - `spec/registry/kdsl-safety-gate-composition.md`
-  - `spec/lint/kdsl-safety-gate-registry-lint.md`
-  - `examples/safety-gates/dev-prompt-safety-gates.example.md`
-  - design/integration review records
+- Added additive multi-gate composition and typed non-substitution rules.
+- Added Registry, composition, lint, example, and design/integration files.
 - Aligned manifest, CP-Packet bridge, v2 glossary, README, and project status.
 - Registry adoption does not make KDSL-Packet executable.
 
@@ -84,23 +129,15 @@ Safety Gate validator implementation != Packet/R1C readiness
 
 - Added `.github/workflows/validator.yml`.
 - Runs on pull requests to `main`, pushes to `main`, and manual dispatch.
-- Uses `ubuntu-latest`, Python 3.11, `contents: read`, and a 5-minute timeout.
-- Runs:
-
-```text
-python tools/validator/run_samples.py
-```
+- Uses `ubuntu-latest`, Python 3.11, `contents: read`, and a five-minute timeout.
+- Runs `python tools/validator/run_samples.py`.
 
 #### CompactPrompt validator first slice
 
 - Added `tools/validator/kdsl_compact_prompt.py`.
-- Added CompactPrompt profile/shorthand detection.
-- Added mode/safety/lexicon checks.
-- Added standard and kanji-v1 required-block checks.
-- Added representative restricted-alias and CP-Lift checks.
-- Added Packet draft-boundary checks.
+- Added CompactPrompt profile/shorthand, value, required-block, alias, CP-Lift, and Packet-boundary checks.
 - Added `--target compact`.
-- Extended the sample runner from 16 to 23 cases.
+- Expanded the sample runner from 16 to 23 cases.
 - Recorded Windows PowerShell 5.1 verification with `total 23 / failed 0` and four repository examples passing.
 
 #### KDSL v2 draft architecture
@@ -111,11 +148,9 @@ python tools/validator/run_samples.py
   - `safety`: normal / lock-critical / lock-all
   - `lexicon`: standard / kanji-v1
   - `envelope`: plain / packet-draft / result
-- Added `profile:compact-prompt`.
-- Added `lexicon:kanji-v1` with structural-key-only aliases.
+- Added `profile:compact-prompt` and `lexicon:kanji-v1`.
 - Added CompactPrompt lint and CP-Lift boundary.
-- Kept KDSL-Packet draft-non-executable.
-- Kept `PKT:v1` prohibited.
+- Kept KDSL-Packet draft-non-executable and `PKT:v1` prohibited.
 - Kept v1.1 stable promotion on hold.
 
 ### Current unreleased boundaries
@@ -125,9 +160,12 @@ v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=hold
 public_ready: no
 Release Assets: none
+R1C schema:=kdsl-r1c@0.1-draft design candidate
+R1C canonical/stable adoption:=no
+R1C manifest/Bridge/glossary promotion:=pending
 KDSL-Packet:=draft-non-executable
-R1C schema:=undefined
 Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined
+PKT:v1:=prohibited
 ```
 
 ## v1.1.0-rc1
@@ -151,14 +189,9 @@ license: MIT
 - Synchronized dev-prompt, converter, lint, ADPS bridge, glossary, and templates.
 - Defined KDSL-DP / P1 / P1L / R1 boundaries.
 - Defined KDSL_PROMPT and KDSL_RESULT contracts.
-- Added R1 required-block validator.
-- Added RT:v basis validator.
-- Added NEXT/COMMIT authority guard.
-- Added template reference and template expansion-evidence validators.
-- Added combined validator wrapper target separation.
-- Added sample expectation runner.
-- Added public-facing README/examples/release-note drafts.
-- Added release-readiness and synchronization review documents.
+- Added R1 required-block, RT:v basis, NEXT/COMMIT authority, template-reference, and template-expansion-evidence validators.
+- Added combined validator wrapper target separation and sample expectation runner.
+- Added public-facing draft material and release-readiness review documents.
 
 ### Safety boundaries
 
