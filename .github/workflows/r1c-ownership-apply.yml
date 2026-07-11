@@ -1,43 +1,14 @@
-name: R1C Ownership Alignment Apply
-
-on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-
-permissions:
-  contents: write
-
-jobs:
-  apply:
-    if: github.head_ref == 'agent/kdsl-r1c-ownership'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Check out ownership branch
-        uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-r1c-ownership
-          fetch-depth: 0
-
-      - name: Apply exact R1C ownership alignment
-        shell: bash
-        run: |
           python - <<'PY'
           from pathlib import Path
 
           def replace_exact(path: str, old: str, new: str) -> None:
               p = Path(path)
-              text = p.read_text(encoding='utf-8')
+              text = p.read_text(encoding='utf-8').replace('\r\n', '\n')
               count = text.count(old)
               if count != 1:
                   raise SystemExit(f'{path}: expected exactly one match, got {count}: {old!r}')
               p.write_text(text.replace(old, new), encoding='utf-8')
 
-          # spec/manifest.md
           replace_exact(
               'spec/manifest.md',
               'v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry architecture',
@@ -111,16 +82,8 @@ R1C validator pass != canonical R1適合証明
 
 ### KDSL-CP''',
           )
-          replace_exact(
-              'spec/manifest.md',
-              'SG registry v2-draft採用 != R1C schema完成',
-              'R1C v2-draft採用 != Packet schema/registry完成',
-          )
-          replace_exact(
-              'spec/manifest.md',
-              'BASE/TASK/FLOW/R1C/Packet lint未定義→実行禁止',
-              'BASE/TASK/FLOW/Packet schema/lint未定義→実行禁止',
-          )
+          replace_exact('spec/manifest.md', 'SG registry v2-draft採用 != R1C schema完成', 'R1C v2-draft採用 != Packet schema/registry完成')
+          replace_exact('spec/manifest.md', 'BASE/TASK/FLOW/R1C/Packet lint未定義→実行禁止', 'BASE/TASK/FLOW/Packet schema/lint未定義→実行禁止')
           replace_exact(
               'spec/manifest.md',
               'lint追加→compatible候補\nexample追加→patch候補',
@@ -147,23 +110,10 @@ Release Assets追加なし
 既存tag移動なし''',
           )
 
-          # spec/bridge/kdsl-cp-packet-bridge.md
           replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '# KDSL-CP / KDSL-Packet Bridge v0.3-draft', '# KDSL-CP / KDSL-Packet Bridge v0.4-draft')
-          replace_exact(
-              'spec/bridge/kdsl-cp-packet-bridge.md',
-              'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / future Packet boundary',
-              'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary',
-          )
-          replace_exact(
-              'spec/bridge/kdsl-cp-packet-bridge.md',
-              'This bridge defines when KDSL-CP must be lifted to Full KDSL and how the v2-draft Safety Gate Registry may be referenced without making a future KDSL-Packet executable.',
-              'This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.',
-          )
-          replace_exact(
-              'spec/bridge/kdsl-cp-packet-bridge.md',
-              'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nKDSL-Packet:=将来のpacket envelope候補',
-              'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nkdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile\nKDSL-Packet:=将来のpacket envelope候補',
-          )
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', 'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / future Packet boundary', 'scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', 'This bridge defines when KDSL-CP must be lifted to Full KDSL and how the v2-draft Safety Gate Registry may be referenced without making a future KDSL-Packet executable.', 'This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.')
+          replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', 'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nKDSL-Packet:=将来のpacket envelope候補', 'kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry\nkdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile\nKDSL-Packet:=将来のpacket envelope候補')
           replace_exact(
               'spec/bridge/kdsl-cp-packet-bridge.md',
               '## 6. KDSL-Packet draft boundary',
@@ -246,12 +196,7 @@ stable/canonical Packet dependency:=not satisfied
           replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '### 9.3 Packet design draft only', '### 10.3 Packet design draft only')
           replace_exact('spec/bridge/kdsl-cp-packet-bridge.md', '## 10. Non-goals', '## 11. Non-goals')
 
-          # spec/glossary-v2-draft.md
-          replace_exact(
-              'spec/glossary-v2-draft.md',
-              'Safety Gate validator: not implemented',
-              'Safety Gate validator: first heuristic slice integrated',
-          )
+          replace_exact('spec/glossary-v2-draft.md', 'Safety Gate validator: not implemented', 'Safety Gate validator: first heuristic slice integrated')
           replace_exact(
               'spec/glossary-v2-draft.md',
               '''Packet schema未定義
@@ -317,7 +262,6 @@ validator pass != semantic equivalence/canonical R1適合証明
 ```''',
           )
 
-          # docs/project-status.md
           replace_exact(
               'docs/project-status.md',
               '''### PR #7 — R1C design-candidate validator first slice
@@ -376,54 +320,13 @@ stable_effect: none
 
 ## 3. Current architecture direction''',
           )
-          replace_exact(
-              'docs/project-status.md',
-              '''R1C design candidate:=main統合済み
-R1C design-candidate validator first slice:=main統合済み
-R1C canonical adoption:=未実施
-KDSL-Packet:=draft-non-executable''',
-              '''R1C design candidate:=main統合済み
-R1C design-candidate validator first slice:=main統合済み
-R1C ownership:=v2-draft adopted serialization profile
-R1C canonical R1 replacement:=なし
-KDSL-Packet:=draft-non-executable''',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              '''  design_candidate: integrated
-  canonical: no
-  stable: no''',
-              '''  design_candidate: integrated
-  v2_draft_adopted_serialization_profile: yes
-  canonical_parent: spec/r1/r1-result-spec.md
-  independent_canonical_spec: no
-  stable: no''',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              '  manifest_bridge_glossary_promotion: pending',
-              '  manifest_bridge_glossary_alignment: integrated by PR #8',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              'canonical R1 > R1C design candidate\nR1C validator pass != R1C canonical adoption',
-              'canonical R1 > R1C v2-draft serialization profile\nR1C validator pass != canonical R1適合証明',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              'R1C canonical ownership alignment未実施\nR1C round-trip semantic proofなし',
-              'R1C round-trip semantic proofなし',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              '  R1C compact-result design candidate',
-              '  R1C v2-draft adopted compact serialization profile',
-          )
-          replace_exact(
-              'docs/project-status.md',
-              '  canonical R1C standard',
-              '  independent canonical R1C standard',
-          )
+          replace_exact('docs/project-status.md', 'R1C design candidate:=main統合済み\nR1C design-candidate validator first slice:=main統合済み\nR1C canonical adoption:=未実施\nKDSL-Packet:=draft-non-executable', 'R1C design candidate:=main統合済み\nR1C design-candidate validator first slice:=main統合済み\nR1C ownership:=v2-draft adopted serialization profile\nR1C canonical R1 replacement:=なし\nKDSL-Packet:=draft-non-executable')
+          replace_exact('docs/project-status.md', '  design_candidate: integrated\n  canonical: no\n  stable: no', '  design_candidate: integrated\n  v2_draft_adopted_serialization_profile: yes\n  canonical_parent: spec/r1/r1-result-spec.md\n  independent_canonical_spec: no\n  stable: no')
+          replace_exact('docs/project-status.md', '  manifest_bridge_glossary_promotion: pending', '  manifest_bridge_glossary_alignment: integrated by PR #8')
+          replace_exact('docs/project-status.md', 'canonical R1 > R1C design candidate\nR1C validator pass != R1C canonical adoption', 'canonical R1 > R1C v2-draft serialization profile\nR1C validator pass != canonical R1適合証明')
+          replace_exact('docs/project-status.md', 'R1C canonical ownership alignment未実施\nR1C round-trip semantic proofなし', 'R1C round-trip semantic proofなし')
+          replace_exact('docs/project-status.md', '  R1C compact-result design candidate', '  R1C v2-draft adopted compact serialization profile')
+          replace_exact('docs/project-status.md', '  canonical R1C standard', '  independent canonical R1C standard')
           replace_exact(
               'docs/project-status.md',
               '''P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
@@ -441,75 +344,42 @@ P3: R1C round-trip/property-based validator検討
 P4: public-facing v2 overview / CI required check検討''',
           )
 
-          # README.md
-          replace_exact(
-              'README.md',
-              '''R1C design candidate: kdsl-r1c@0.1-draft / main integrated
-R1C validator: design-candidate first heuristic slice integrated
-R1C canonical/stable adoption: no''',
-              '''R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
-R1C validator: first heuristic slice integrated
-R1C independent canonical/stable status: no''',
-          )
+          replace_exact('README.md', 'R1C design candidate: kdsl-r1c@0.1-draft / main integrated\nR1C validator: design-candidate first heuristic slice integrated\nR1C canonical/stable adoption: no', 'R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile\nR1C validator: first heuristic slice integrated\nR1C independent canonical/stable status: no')
           replace_exact('README.md', '## R1C compact-result design candidate', '## R1C compact-result serialization profile')
-          replace_exact(
-              'README.md',
-              '''status: design candidate integrated
-canonical: no
-stable: no''',
-              '''status: v2-draft adopted serialization profile
-canonical parent: spec/r1/r1-result-spec.md
-independent canonical spec: no
-stable: no''',
-          )
-          replace_exact(
-              'README.md',
-              'canonical R1 > R1C design candidate',
-              'canonical R1 > R1C v2-draft serialization profile',
-          )
-          replace_exact(
-              'README.md',
-              '''canonical/stable SG dependency
-canonical R1C dependency
-Packet lint''',
-              '''canonical/stable SG dependency
-Packet lint''',
-          )
-          replace_exact(
-              'README.md',
-              'R1C canonical ownership alignment未実施\nPacket schema/BASE/TASK/FLOW registry未定義',
-              'Packet schema/BASE/TASK/FLOW registry未定義',
-          )
+          replace_exact('README.md', 'status: design candidate integrated\ncanonical: no\nstable: no', 'status: v2-draft adopted serialization profile\ncanonical parent: spec/r1/r1-result-spec.md\nindependent canonical spec: no\nstable: no')
+          replace_exact('README.md', 'canonical R1 > R1C design candidate', 'canonical R1 > R1C v2-draft serialization profile')
+          replace_exact('README.md', 'canonical/stable SG dependency\ncanonical R1C dependency\nPacket lint', 'canonical/stable SG dependency\nPacket lint')
+          replace_exact('README.md', 'R1C canonical ownership alignment未実施\nPacket schema/BASE/TASK/FLOW registry未定義', 'Packet schema/BASE/TASK/FLOW registry未定義')
 
-          # CHANGELOG.md
           replace_exact(
               'CHANGELOG.md',
-              '### Added\n\n#### Safety Gate Registry validator first slice',
+              '### Added\n\n#### R1C compact-result design candidate',
               '''### Added
 
 #### R1C v2-draft ownership alignment
 
 - Adopted `kdsl-r1c@0.1-draft` as a v2-draft compact serialization profile subordinate to canonical R1.
 - Kept `spec/r1/r1-result-spec.md` as the canonical R1 authority.
-- Added manifest, CP-Packet Bridge, glossary, README, and project-status ownership alignment.
+- Aligned manifest, CP-Packet Bridge, v2 glossary, README, and project status.
 - Kept all canonical R1 field names and RT/NEXT/COMMIT meanings unchanged.
 - Kept short aliases, required-field omission, and implicit defaults prohibited.
 - Kept Full R1 fallback required when reversible expansion cannot be guaranteed.
 - R1C adoption does not make KDSL-Packet executable.
 
-#### R1C design and validator first slices
-
-- Added `kdsl-r1c@0.1-draft` design files, lint specification, examples, and round-trip matrix.
-- Added `tools/validator/kdsl_r1c.py` and wrapper target `--target r1c`.
-- Extended the validator sample suite to 49 expectations with `failed: 0` in PR CI run #50.
-- Kept R1C validator non-authoritative and non-semantic.
-
-#### Safety Gate Registry validator first slice''',
+#### R1C compact-result design candidate''',
           )
           replace_exact(
               'CHANGELOG.md',
-              'R1C schema:=undefined\nPacket schema/BASE/TASK/FLOW registry/Packet lint:=undefined',
-              'R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile\nPacket schema/BASE/TASK/FLOW registry/Packet lint:=undefined',
+              '''R1C schema:=kdsl-r1c@0.1-draft design candidate
+R1C canonical/stable adoption:=no
+R1C manifest/Bridge/glossary promotion:=pending
+KDSL-Packet:=draft-non-executable
+Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined''',
+              '''R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
+R1C independent canonical/stable status:=no
+R1C manifest/Bridge/glossary alignment:=integrated
+KDSL-Packet:=draft-non-executable
+Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined''',
           )
 
           Path('docs/reviews/kdsl-r1c-ownership-integration.md').write_text(
@@ -518,20 +388,7 @@ Packet lint''',
           )
 
           Path('.github/workflows/r1c-ownership-apply.yml').unlink()
+          Path('.github/r1c-ownership-trigger.txt').unlink(missing_ok=True)
           PY
 
       - name: Commit aligned documents
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add spec/manifest.md \
-                  spec/bridge/kdsl-cp-packet-bridge.md \
-                  spec/glossary-v2-draft.md \
-                  docs/project-status.md \
-                  README.md \
-                  CHANGELOG.md \
-                  docs/reviews/kdsl-r1c-ownership-integration.md \
-                  .github/workflows/r1c-ownership-apply.yml
-          git commit -m "Spec: adopt R1C v2-draft ownership alignment"
-          git push origin HEAD:agent/kdsl-r1c-ownership
