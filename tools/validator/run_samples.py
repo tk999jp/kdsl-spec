@@ -351,6 +351,145 @@ SAMPLES = [
         'command': ['kdsl_validate.py', '--target', 'all', 'samples/sample_packet_valid.md'],
         'expected': 0,
     },
+    {
+        'name': 'normalization repository Full KDSL preview valid',
+        'command': ['kdsl_packet_normalization.py', 'examples/packet/normalization-full-kdsl.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'normalization repository P1 blocked valid',
+        'command': ['kdsl_packet_normalization.py', 'examples/packet/normalization-p1-blocked.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'normalization repository critical-loss blocked valid',
+        'command': ['kdsl_packet_normalization.py', 'examples/packet/normalization-lossy-blocked.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'normalization baseline valid',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'normalization unknown schema',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_unknown_schema.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization executable status rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_executable_status.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization target executable rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_target_executable.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization semantic equivalence claim rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_semantic_claim.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization execution authority rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_authority.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization P1 resolved rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_p1_resolved.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization executable KDSL prompt marker rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_executable_marker.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization source normalized state rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_source_normalized.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization missing digest rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_missing_digest.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization critical loss with resolved target rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_critical_resolved.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization authority rails false without blocked critical loss rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_rails_false.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization malformed digest rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_bad_digest.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization blocked target with preview rejected',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_blocked_preview.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'normalization out of scope document',
+        'command': ['kdsl_packet_normalization.py', 'samples/sample_normalization_out_of_scope.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target normalization valid',
+        'command': ['kdsl_validate.py', '--target', 'normalization', 'samples/sample_normalization_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target normalization invalid',
+        'command': ['kdsl_validate.py', '--target', 'normalization', 'samples/sample_normalization_semantic_claim.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'wrapper target all normalization valid',
+        'command': ['kdsl_validate.py', '--target', 'all', 'samples/sample_normalization_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'normalization mapper Full KDSL preview',
+        'command': ['kdsl_packet_normalize.py', 'examples/packet/normalization-source.example.md'],
+        'expected': 0,
+        'stdout_contains': [
+            'NORMALIZATION_DRAFT:',
+            'SCHEMA: kdsl-packet-normalization@0.1-draft',
+            'KDSL_PROMPT_PREVIEW:',
+            'semantic_equivalence: not_proven',
+            'execution_authority: none',
+            'TARGET:',
+            '  executable: false',
+        ],
+        'stdout_not_contains': ['\nKDSL_PROMPT:', '\nSTATUS: executable'],
+    },
+    {
+        'name': 'normalization mapper P1 blocked',
+        'command': ['kdsl_packet_normalize.py', 'examples/packet/normalization-p1-source.example.md'],
+        'expected': 1,
+        'stdout_contains': [
+            'NORMALIZATION_DRAFT:',
+            '  kind: P1',
+            '  resolution: blocked',
+            '  marker: none',
+            'execution_authority: none',
+        ],
+        'stdout_not_contains': ['\nP1:', '\nKDSL_PROMPT:'],
+    },
+    {
+        'name': 'normalization mapper invalid Packet rejected',
+        'command': ['kdsl_packet_normalize.py', 'samples/sample_packet_normalized.md'],
+        'expected': 2,
+        'stdout_not_contains': ['NORMALIZATION_DRAFT:', 'KDSL_PROMPT_PREVIEW:'],
+    },
 ]
 
 
@@ -374,14 +513,29 @@ def run_sample(sample):
         text=True,
         capture_output=True,
     )
-    ok = proc.returncode == sample['expected']
+    expected_code = proc.returncode == sample['expected']
+    contains = sample.get('stdout_contains', [])
+    excludes = sample.get('stdout_not_contains', [])
+    contains_ok = all(value in proc.stdout for value in contains)
+    excludes_ok = all(value not in proc.stdout for value in excludes)
+    ok = expected_code and contains_ok and excludes_ok
     status = 'PASS' if ok else 'FAIL'
     command_text = 'python tools/validator/' + ' '.join(sample['command'])
     print(f"{status}: {sample['name']}")
     print(f"  cmd: {command_text}")
     print(f"  expected: {sample['expected']}")
     print(f"  actual: {proc.returncode}")
+    if contains:
+        print(f"  stdout_contains: {contains}")
+    if excludes:
+        print(f"  stdout_not_contains: {excludes}")
     if not ok:
+        missing = [value for value in contains if value not in proc.stdout]
+        present = [value for value in excludes if value in proc.stdout]
+        if missing:
+            print(f"  missing stdout values: {missing}")
+        if present:
+            print(f"  prohibited stdout values: {present}")
         if proc.stdout:
             print('  stdout:')
             print(indent(proc.stdout.rstrip()))

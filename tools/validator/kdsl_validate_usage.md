@@ -37,6 +37,10 @@ Run validator checks by target type so unrelated checks do not run against the w
   runs:
     kdsl_packet.py
 
+--target normalization
+  runs:
+    kdsl_packet_normalization.py
+
 --target all
   runs:
     r1_required_blocks.py
@@ -48,6 +52,7 @@ Run validator checks by target type so unrelated checks do not run against the w
     kdsl_safety_gate.py
     kdsl_r1c.py
     kdsl_packet.py
+    kdsl_packet_normalization.py
 ```
 
 ## Default
@@ -73,6 +78,11 @@ Packet checker:
   PACKET_DRAFTなし→pass/info
   Packet SCHEMAのみ + PACKET_DRAFTなし→fail
   unknown SCHEMA/registry/ID/opcode→fail
+
+Normalization checker:
+  NORMALIZATION_DRAFTなし→pass/info
+  normalization SCHEMAのみ + envelopeなし→fail
+  executable target/P1/P1L marker→fail
 ```
 
 These behaviors allow the checkers to participate in `--target all` without forcing every document into every profile.
@@ -86,6 +96,7 @@ python tools/validator/kdsl_validate.py --target compact examples/compact-prompt
 python tools/validator/kdsl_validate.py --target safety-gate examples/safety-gates/dev-prompt-safety-gates.example.md
 python tools/validator/kdsl_validate.py --target r1c examples/r1c/r1c-success.example.md
 python tools/validator/kdsl_validate.py --target packet examples/packet/packet-design.example.md
+python tools/validator/kdsl_validate.py --target normalization examples/packet/normalization-full-kdsl.example.md
 python tools/validator/kdsl_validate.py --target all tools/validator/samples/sample_rt_v_valid.md
 ```
 
@@ -166,6 +177,32 @@ normalization transformer/round-trip proof
 execution authority/readiness
 ```
 
+## Packet normalization first-slice scope
+
+```text
+NORMALIZATION_DRAFT/schema/status/order
+SOURCE digest/non-executable/not_normalized
+TARGET kind/schema/resolution/executable
+MAP accounting/mode/evidence
+PRESERVE/UNRESOLVED/LOSS
+ROUND_TRIP semantic boundary
+AUTHORITY.execution_authority:none
+OUTPUT marker/preview/non-execution
+P1/P1L blocked enforcement
+non-executable structural mapper
+```
+
+Not covered:
+
+```text
+full YAML parser
+semantic equivalence proof
+round-trip reconstruction/property proof
+Safety Gate completeness proof
+executable KDSL_PROMPT/P1/P1L generation
+Packet state normalized transition
+```
+
 ## Sample verification
 
 Historical checkpoints:
@@ -184,6 +221,9 @@ Packet first slice integrated:
   total: 69 / failed: 0
   pull_request: 14
   workflow_run: 116 / success
+
+Packet normalization first slice candidate:
+  expected total: 93 / branch validation pending
 ```
 
 The current suite includes actual repository examples:
@@ -194,6 +234,9 @@ examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
 examples/packet/packet-design.example.md
+examples/packet/normalization-full-kdsl.example.md
+examples/packet/normalization-p1-blocked.example.md
+examples/packet/normalization-lossy-blocked.example.md
 ```
 
 Evidence:
@@ -203,6 +246,7 @@ tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
+tools/validator/verification/kdsl_packet_normalization_verify.md
 ```
 
 ## Exit codes
@@ -231,9 +275,11 @@ validator pass != execution authority
 --target safety-gate does not validate R1/CompactPrompt/template expansion/R1C
 --target r1c does not validate Full R1 Evidence/Authority semantics beyond first-slice shape
 --target packet does not prove Packet normalization/execution/authority semantics
+--target normalization does not prove semantic equivalence/round-trip/execution readiness
 --target all may report errors for intentionally single-target documents
 Safety Gate validator implementation != Packet readiness
 R1C validator implementation != R1C canonical/stable promotion
 R1C validator implementation != Packet readiness
 Packet validator implementation != Packet executable/normalized/readiness
+Normalization validator/mapper implementation != executable target/normalized state
 ```
