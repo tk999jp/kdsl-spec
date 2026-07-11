@@ -74,17 +74,18 @@ jobs:
               raise
           PY
 
-      - name: Publish diagnostic branch on failure
+      - name: Upload failure diagnostic
         if: steps.apply.outcome == 'failure'
-        shell: bash
-        run: |
-          cp /tmp/r1c-ownership-error.txt r1c-ownership-error.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add r1c-ownership-error.txt
-          git commit -m "Diagnostics: capture R1C ownership alignment failure"
-          git push origin HEAD:refs/heads/agent/kdsl-r1c-ownership-diagnostic-${GITHUB_RUN_ID}
-          exit 1
+        uses: actions/upload-artifact@v4
+        with:
+          name: r1c-ownership-error-${{ github.run_id }}
+          path: /tmp/r1c-ownership-error.txt
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Fail after diagnostic upload
+        if: steps.apply.outcome == 'failure'
+        run: exit 1
 
       - name: Commit aligned documents
         if: steps.apply.outcome == 'success'
