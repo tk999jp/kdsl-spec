@@ -103,6 +103,13 @@ kdsl_r1c.py:
   NEXT proposal_only lint
   COMMIT actual/proposed/permission basis lint
 
+kdsl_r1c_roundtrip.py:
+  canonical Full R1 structural projection/reconstruction
+  scalar/array/class/order preservation
+  optional EVIDENCE/AUTHORITY/ANNUNCIATOR preservation
+  optional SAFETY_GATES safe block
+  no semantic-equivalence/authority claim
+
 kdsl_packet.py:
   PACKET_DRAFT + kdsl-packet@0.1-draft detection
   required field presence/order
@@ -164,6 +171,13 @@ Safety Gate protected-wording/inheritance first slice integrated:
   extension suite: 14 / failed: 0
   pull_request: 31
   workflow_run: 173 / success
+
+R1C structural round-trip first slice integrated:
+  existing suite: 108 / failed: 0
+  Safety Gate suite: 14 / failed: 0
+  R1C round-trip suite: 14 / failed: 0
+  pull_request: 34
+  workflow_run: 179 / success
 ```
 
 Repository examples included in the suite:
@@ -254,7 +268,10 @@ tools/validator/
   run_safety_gate_samples.py
   kdsl-safety-gate-implementation-notes.md
   kdsl_r1c.py
+  kdsl_r1c_roundtrip.py
+  run_r1c_roundtrip_samples.py
   kdsl-r1c-implementation-notes.md
+  kdsl-r1c-roundtrip-implementation-notes.md
   kdsl_packet.py
   kdsl-packet-implementation-notes.md
   kdsl_packet_normalization.py
@@ -392,6 +409,7 @@ INFO:
 ```text
 python tools/validator/run_samples.py
 python tools/validator/run_safety_gate_samples.py
+python tools/validator/run_r1c_roundtrip_samples.py
 ```
 
 このrunnerは、サンプルファイルと期待exit codeのズレを検出するための補助です。
