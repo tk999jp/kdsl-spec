@@ -145,8 +145,10 @@ Packet normalization first slice integrated:
   pull_request: 23
   workflow_run: 150 / success
 
-Packet normalization round-trip first slice candidate:
-  expected total: 108 / branch validation pending
+Packet normalization round-trip first slice integrated:
+  total: 108 / failed: 0
+  pull_request: 27
+  workflow_run: 163 / success
 ```
 
 Repository examples included in the suite:

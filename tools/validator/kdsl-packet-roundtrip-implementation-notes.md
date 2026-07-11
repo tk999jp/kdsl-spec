@@ -1,6 +1,6 @@
 # KDSL Packet Normalization Structural Round-Trip First Slice
 
-status: integration-candidate
+status: first-slice integrated
 tool: tools/validator/kdsl_packet_roundtrip.py
 output: STRUCTURAL_ROUND_TRIP_RESULT
 validator_authority: non-authoritative
@@ -25,6 +25,19 @@ P1/P1L blocked target evidence
 structural_pass: selected structural properties match
 blocked: canonical P1/P1L target schema unresolved
 fail: loss/mismatch/checker failure
+```
+
+## Integration evidence
+
+```text
+work_pull_request: 26
+pull_request: 27
+source_head: 478157b5059aac0304a8bdde1be6cae192c367c0
+squash_commit: 82397678cf939df80df35d5e075be9556dae0fc3
+workflow_run_id: 29151860435
+run_number: 163
+sample_total: 108
+failed: 0
 ```
 
 ## Boundaries
