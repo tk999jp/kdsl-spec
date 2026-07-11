@@ -36,3 +36,6 @@ jobs:
 
       - name: Run validator samples
         run: python tools/validator/run_samples.py
+
+      - name: Run Safety Gate extension samples
+        run: python tools/validator/run_safety_gate_samples.py
