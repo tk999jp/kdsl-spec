@@ -5,7 +5,8 @@ verification_date: 2026-07-11
 script: tools/validator/kdsl_compact_prompt.py
 wrapper: tools/validator/kdsl_validate.py --target compact
 branch: agent/kdsl-compact-validator
-verified_head: 2b50ed1
+verified_implementation_head: 2b50ed1
+verification_evidence_commit: 8edc0c2
 
 ## 1. Environment
 
@@ -93,6 +94,8 @@ git rev-parse --short origin/agent/kdsl-compact-validator:
 git diff --check:
   no output / pass
 ```
+
+The verification above applies to implementation head `2b50ed1`. Later commits only record verification, project status, and changelog metadata.
 
 ## 7. Corrective finding
 
