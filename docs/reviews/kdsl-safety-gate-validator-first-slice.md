@@ -1,10 +1,12 @@
 # KDSL Safety Gate Validator First Slice Review
 
-status: implementation-review / merge-pending
+status: completed / merged
 review_date: 2026-07-11
 branch: agent/kdsl-safety-gate-validator
 target: main
 pull_request: 5
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
 
 ## 1. Goal
 
@@ -63,18 +65,19 @@ direct cases: 8
 unexpected exits: 0
 ```
 
-Pull-request CI before final review record:
+Final pull-request CI:
 
 ```text
 workflow: Validator CI
-run_number: 32
-run_id: 29142996226
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+run_number: 33
+run_id: 29143048337
 status: completed
 conclusion: success
 expected runner summary: total 34 / failed 0
 ```
 
-The final immutable branch-head CI evidence is recorded in the PR body after this document is committed.
+The `Sample expectations` job and `Run validator samples` step completed successfully. Because `run_samples.py` returns non-zero when any expected exit differs, this confirms all 34 expectations matched on the pull-request merge candidate.
 
 ## 5. Accepted design choices
 
@@ -141,16 +144,29 @@ R1 meaning change: none
 Bridge meaning change: none
 Registry ID/state meaning change: none
 existing 23 sample expectations: retained
+new Safety Gate expectations: 11
 ```
 
-## 9. Merge gate
+## 9. Integration result
 
 ```text
-final Validator CI success
-PR ready for review
-squash merge
-post-merge project-status/README/CHANGELOG synchronization
+pull_request: 5
+state: closed
+merged: true
+merge_method: squash
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
 ```
+
+Post-merge synchronization commits:
+
+```text
+38db0f9 Docs: record Safety Gate validator integration
+1493f92 Docs: align README with Safety Gate validator
+36e9cea Docs: record Safety Gate validator first slice
+e0f9391 Docs: close Safety Gate validator verification
+```
+
+This review closeout commit follows those synchronization commits.
 
 ## 10. Non-actions
 
