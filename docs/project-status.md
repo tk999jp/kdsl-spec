@@ -107,6 +107,11 @@ safety_gate_registry_workstream:
   merge_method: squash
   merge_status: ready_for_merge
   specification_status: v2_draft_adopted_on_branch
+  latest_source_head: a7db9a92723b933c481894287044fb56a801ff61
+  latest_ci_run_id: 29141314905
+  latest_ci_run_number: 20
+  latest_ci_status: completed
+  latest_ci_conclusion: success
   stable_effect: none
   states:
     - hold
@@ -302,10 +307,10 @@ validator_ci_pr_validation:
 safety_gate_registry_candidate_validation:
   date: 2026-07-11
   pull_request: 4
-  reviewed_head_before_alignment: 085f18fc5234e2ae4333139c7f7f004680d28960
+  source_head: a7db9a92723b933c481894287044fb56a801ff61
   workflow: Validator CI
-  workflow_run_id: 29140629991
-  run_number: 6
+  workflow_run_id: 29141314905
+  run_number: 20
   status: completed
   conclusion: success
   sample_suite: existing 23 expectations
@@ -318,6 +323,7 @@ verification details:
   tools/validator/verification/kdsl_compact_prompt_verify.md
   docs/reviews/kdsl-validator-ci-baseline.md
   docs/reviews/kdsl-safety-gate-registry-design.md
+  docs/reviews/kdsl-safety-gate-registry-integration.md
 ```
 
 ## 10. Known gaps before stable
@@ -358,7 +364,7 @@ Do not present as:
 ## 12. Next safe steps
 
 ```text
-P0: PR #4 Validator CI再確認 / squash merge / main status closeout
+P0: PR #4 ready化 / squash merge / main status closeout
 P1: Safety Gate Registry validator first slice
 P2: R1C compact schema設計
 P3: Packet BASE/TASK/FLOW registry・schema・lint設計
