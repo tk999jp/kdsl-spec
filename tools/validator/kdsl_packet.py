@@ -398,12 +398,13 @@ def main(argv):
     if scope is None:
         if schema_marker and schema_marker.group(1) == SCHEMA_ID:
             errors.append('Packet SCHEMA marker requires PACKET_DRAFT top-level envelope')
-        elif 'PKT:v1' in text:
+        elif re.search(r'^\s*PKT\s*:\s*v1\s*$', text, re.IGNORECASE | re.MULTILINE):
             errors.append('PKT:v1 is prohibited')
         else:
             info.append('no PACKET_DRAFT block detected; Packet target not applicable')
         return emit(errors, warnings, info)
 
+    packet_text = '\n'.join(scope)
     entries, duplicates = parse_top_level(scope)
     values = {key: value for key, value, _ in entries}
     blocks = blocks_from_entries(scope, entries)
@@ -433,7 +434,7 @@ def main(argv):
     status = values.get('STATUS')
     if status != 'non-executable':
         errors.append('Packet STATUS must be non-executable')
-    if 'PKT:v1' in text:
+    if re.search(r'^\s*PKT\s*:\s*v1\s*$', packet_text, re.IGNORECASE | re.MULTILINE):
         errors.append('PKT:v1 is prohibited')
 
     goal = unquote(values.get('GOAL', '')).strip().lower()
@@ -442,7 +443,7 @@ def main(argv):
 
     base_id = require_registry_and_id('BASE', blocks.get('BASE', {}), BASE_REGISTRY, KNOWN_BASE_IDS, errors)
     task_id = require_registry_and_id('TASK', blocks.get('TASK', {}), TASK_REGISTRY, KNOWN_TASK_IDS, errors)
-    gate_ids = validate_sg(blocks.get('SG', {}), task_id, text, errors)
+    gate_ids = validate_sg(blocks.get('SG', {}), task_id, packet_text, errors)
     ops = validate_flow(blocks.get('FLOW', {}), task_id, errors, warnings)
     authority = validate_authority(blocks.get('AUTHORITY', {}), errors)
     normalize = validate_normalize(blocks.get('NORMALIZE', {}), base_id, errors)
