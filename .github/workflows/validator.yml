@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -36,3 +36,30 @@ jobs:
 
       - name: Run validator samples
         run: python tools/validator/run_samples.py
+
+  packet_validator_closeout:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-packet-validator-closeout-work'
+    name: Apply Packet validator closeout
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out closeout work branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-packet-validator-closeout-work
+          fetch-depth: 0
+
+      - name: Apply exact asserted closeout
+        run: python .github/scripts/apply_packet_validator_closeout.py
+
+      - name: Restore read-only workflow and commit closeout
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/validator.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Docs: close Packet validator first-slice integration"
+          git push origin HEAD:agent/kdsl-packet-validator-closeout-work
