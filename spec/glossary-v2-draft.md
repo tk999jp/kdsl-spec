@@ -186,7 +186,7 @@ Status:
 ```text
 v2-draft adopted
 stable/public-ready: no
-Safety Gate validator: not implemented
+Safety Gate validator: first heuristic slice integrated
 ```
 
 Priority:
@@ -337,7 +337,7 @@ Reason:
 Packet schema未定義
 BASE/TASK/FLOW registry未定義
 SG registryはv2-draftのみでstable/canonical Packet dependency未充足
-R1C schema未定義
+R1Cはv2-draft adoptedだがPacket全体の実行条件未充足
 Packet lint未定義
 ```
 
@@ -368,14 +368,38 @@ unknown registry推測禁止
 ### R1C
 
 ```text
-R1C:=R1/KDSL_RESULTのcompact schema候補
+R1C:=canonical R1/KDSL_RESULTのcompact serialization profile
+schema: kdsl-r1c@0.1-draft
 ```
 
 Current status:
 
 ```text
-not canonical
-not executable contract
+v2-draft adopted
+canonical R1 replacement: no
+stable/public-ready: no
+validator: first heuristic slice integrated
+```
+
+Ownership:
+
+```text
+spec/r1/r1-result-spec.md > spec/r1/r1c-compact-result-schema.md
+canonical R1と競合→canonical R1優先
+R1C != 独立canonical結果仕様
+```
+
+Required boundary:
+
+```text
+KDSL_RESULT envelope保持
+STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
+short field alias禁止
+required field省略禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback
+RT:v/NEXT/COMMIT意味変更禁止
+validator pass != semantic equivalence/canonical R1適合証明
 ```
 
 ## Release strategy

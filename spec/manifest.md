@@ -18,7 +18,7 @@ stable_release: none
 Release Assets: none
 license: MIT
 validator: partial heuristic lint helpers / non-authoritative
-v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry architecture
+v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / R1C architecture
 ```
 
 Policy:
@@ -126,9 +126,11 @@ Project Status:
 | `spec/registry/kdsl-safety-gate-registry.md` | Registry draft | Safety Gate ID/state/inheritance | v2 draft adopted |
 | `spec/registry/kdsl-safety-gate-composition.md` | Registry draft | additive multi-gate composition | v2 draft adopted |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
+| `spec/r1/r1c-compact-result-schema.md` | R1 serialization draft | canonical R1のcompact serialization profile | v2 draft adopted / canonical R1 subordinate |
 | `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |
 | `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
 | `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
+| `spec/lint/kdsl-r1c-lint.md` | Lint draft | R1C field/order/RT/NEXT/COMMIT/round-trip boundary lint | v2 draft adopted |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
 | `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / future Packet境界 | v2 draft |
 | `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
@@ -221,7 +223,7 @@ Packet boundary:
 ```text
 SG registry v2-draft採用 != Packet schema完成
 SG registry v2-draft採用 != BASE/TASK/FLOW registry完成
-SG registry v2-draft採用 != R1C schema完成
+R1C v2-draft採用 != Packet schema/registry完成
 SG registry v2-draft採用 != Packet lint完成
 KDSL-Packet:=draft-non-executable保持
 PKT:v1使用禁止保持
@@ -249,6 +251,33 @@ required:
   RT:v=対象環境runtime確認済のみ
   NEXT:=提案, 実行許可扱禁止
   COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
+```
+
+### R1C compact serialization profile
+
+```text
+v2-draft adopted profile:
+  spec/r1/r1c-compact-result-schema.md
+
+lint:
+  spec/lint/kdsl-r1c-lint.md
+
+schema/version:
+  kdsl-r1c@0.1-draft
+```
+
+Ownership rules:
+
+```text
+canonical R1 > R1C serialization profile > R1C lint > validator/example
+R1C:=canonical R1/KDSL_RESULTのcompact serialization profile
+R1C != 独立canonical結果仕様
+R1CでRT:v/NEXT/COMMIT意味変更禁止
+11必須field省略禁止
+short field alias禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback必須
+R1C validator pass != canonical R1適合証明
 ```
 
 ### KDSL-CP
@@ -289,7 +318,7 @@ current lift target:
 future Packet:
   draft-non-executable
   PKT:v1使用禁止
-  BASE/TASK/FLOW/R1C/Packet lint未定義→実行禁止
+  BASE/TASK/FLOW/Packet schema/lint未定義→実行禁止
 ```
 
 ## 5. Duplication policy
@@ -333,6 +362,9 @@ registry追加→compatible draft候補
 adopted registry ID意味変更→breaking候補または新ID必須
 registry state意味変更→breaking候補
 lint追加→compatible候補
+R1C serialization profile追加→compatible v2-draft候補
+R1C RT:v/NEXT/COMMIT意味変更→breaking候補
+R1C required field削除/alias置換/default追加→breaking候補
 example追加→patch候補
 validator heuristic改善→patch/compatible候補
 validatorを承認者扱い→禁止
@@ -391,7 +423,10 @@ Current decision:
 v1.1.0 stable:=hold
 v2-draft:=continue
 kdsl-sg@0.1-draft:=v2-draft registry adopted
-Safety Gate validator:=未実装
+Safety Gate validator:=first heuristic slice integrated
+kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
+R1C validator:=first heuristic slice integrated
+canonical R1 replacement:=none
 KDSL-Packet:=draft-non-executable
 Release Assets追加なし
 既存tag移動なし

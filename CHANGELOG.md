@@ -6,6 +6,16 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### R1C v2-draft ownership alignment
+
+- Adopted `kdsl-r1c@0.1-draft` as a v2-draft compact serialization profile subordinate to canonical R1.
+- Kept `spec/r1/r1-result-spec.md` as the canonical R1 authority.
+- Aligned manifest, CP-Packet Bridge, v2 glossary, README, and project status.
+- Kept all canonical R1 field names and RT/NEXT/COMMIT meanings unchanged.
+- Kept short aliases, required-field omission, and implicit defaults prohibited.
+- Kept Full R1 fallback required when reversible expansion cannot be guaranteed.
+- R1C adoption does not make KDSL-Packet executable.
+
 #### R1C compact-result design candidate
 
 - Added `kdsl-r1c@0.1-draft` as a design candidate for compact serialization of canonical R1 / `KDSL_RESULT`.
@@ -160,9 +170,9 @@ v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=hold
 public_ready: no
 Release Assets: none
-R1C schema:=kdsl-r1c@0.1-draft design candidate
-R1C canonical/stable adoption:=no
-R1C manifest/Bridge/glossary promotion:=pending
+R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
+R1C independent canonical/stable status:=no
+R1C manifest/Bridge/glossary alignment:=integrated
 KDSL-Packet:=draft-non-executable
 Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined
 PKT:v1:=prohibited
