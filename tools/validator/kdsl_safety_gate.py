@@ -50,6 +50,95 @@ COMPOSITION_RULES = (
     ),
 )
 
+PROTECTED_WORDING_RULES = {
+    'SG-SCOPE': (
+        (
+            re.compile(r'原因未確.*広域修正禁止', re.IGNORECASE),
+            re.compile(r'target/non-target', re.IGNORECASE),
+            re.compile(r'exact target and non-target', re.IGNORECASE),
+            re.compile(r'対象/非対象', re.IGNORECASE),
+            re.compile(r'TGT外変更禁止', re.IGNORECASE),
+        ),
+    ),
+    'SG-EVIDENCE': (
+        (
+            re.compile(r'未確認.*確認済扱禁止', re.IGNORECASE),
+            re.compile(r'未実行.*実行済扱禁止', re.IGNORECASE),
+            re.compile(r'observed/inferred/unverified', re.IGNORECASE),
+            re.compile(r'executed evidence separated from inference', re.IGNORECASE),
+            re.compile(r'観測/推論', re.IGNORECASE),
+        ),
+    ),
+    'SG-STOP': (
+        (
+            re.compile(r'停止条件', re.IGNORECASE),
+            re.compile(r'stop condition', re.IGNORECASE),
+            re.compile(r'preflight stop', re.IGNORECASE),
+            re.compile(r'no mismatch observed', re.IGNORECASE),
+            re.compile(r'preflight mismatch', re.IGNORECASE),
+        ),
+    ),
+    'SG-DESIGN': (
+        (
+            re.compile(r'D禁止', re.IGNORECASE),
+            re.compile(r'未承認.*実装指示禁止', re.IGNORECASE),
+            re.compile(r'未承認.*方針', re.IGNORECASE),
+            re.compile(r'設計変更.*承認', re.IGNORECASE),
+            re.compile(r'design change.*approval', re.IGNORECASE),
+        ),
+    ),
+    'SG-RUNTIME': (
+        (re.compile(r'RT:v', re.IGNORECASE),),
+        (
+            re.compile(r'build/diff/lint/test/CI pass != RT:v', re.IGNORECASE),
+            re.compile(r'Runtime未確認', re.IGNORECASE),
+            re.compile(r'runtime verification has not', re.IGNORECASE),
+            re.compile(r'実機確認未', re.IGNORECASE),
+            re.compile(r'RT:p|RT:u', re.IGNORECASE),
+        ),
+    ),
+    'SG-ROLLBACK': (
+        (re.compile(r'\brollback\b|\brevert\b|未push破棄', re.IGNORECASE),),
+        (
+            re.compile(r'status/diff/退避', re.IGNORECASE),
+            re.compile(r'rollback前', re.IGNORECASE),
+            re.compile(r'全体破棄', re.IGNORECASE),
+            re.compile(r'git status', re.IGNORECASE),
+            re.compile(r'patch/status/stat', re.IGNORECASE),
+        ),
+    ),
+    'SG-PUBLIC': (
+        (re.compile(r'public履歴|public history|公開済tag|Release Assets|GitHub Release', re.IGNORECASE),),
+        (re.compile(r'承認|approval|改竄|上書|non-rewrite|non-overwrite', re.IGNORECASE),),
+    ),
+    'SG-DATA': (
+        (re.compile(r'data保護|backup|rollback|復旧', re.IGNORECASE),),
+    ),
+    'SG-KDSL-DP': (
+        (
+            re.compile(r'KDSL-DP直接実行禁止', re.IGNORECASE),
+            re.compile(r'KDSL-DP.*直接.*禁止', re.IGNORECASE),
+        ),
+        (
+            re.compile(r'P1/P1L正規化必須', re.IGNORECASE),
+            re.compile(r'P1/P1L.*正規化', re.IGNORECASE),
+        ),
+    ),
+}
+
+AUTHORITY_TRIGGER = re.compile(
+    r'\bcommit\b|\bpush\b|\brelease\b|NEXT|COMMIT|public|destructive|破壊操作',
+    re.IGNORECASE,
+)
+AUTHORITY_WORDING = (
+    re.compile(r'実行許可扱禁止', re.IGNORECASE),
+    re.compile(r'自動commit許可扱禁止', re.IGNORECASE),
+    re.compile(r'commit/push/release authority', re.IGNORECASE),
+    re.compile(r'propose_only', re.IGNORECASE),
+    re.compile(r'\bforbid\b', re.IGNORECASE),
+    re.compile(r'別操作の許可', re.IGNORECASE),
+)
+
 
 def load_text(path):
     if path == '-':
@@ -122,6 +211,39 @@ def dev_prompt_context(text):
     )
 
 
+def aggregate_state(entries):
+    states = [entry.get('state', '').strip().lower() for entry in entries]
+    states = [state for state in states if state in KNOWN_STATES]
+    applicable = [state for state in states if state != 'na']
+    if 'blocked' in applicable:
+        return 'blocked'
+    if 'hold' in applicable:
+        return 'hold'
+    if applicable and all(state == 'satisfied' for state in applicable):
+        return 'satisfied'
+    if states and all(state == 'na' for state in states):
+        return 'na'
+    return 'unknown'
+
+
+def wording_group_present(text, patterns):
+    return any(pattern.search(text) for pattern in patterns)
+
+
+def check_protected_wording(text, entry_by_id, errors):
+    if not dev_prompt_context(text):
+        return
+    for gate_id, groups in PROTECTED_WORDING_RULES.items():
+        if gate_id not in entry_by_id:
+            continue
+        for group_index, group in enumerate(groups, start=1):
+            if not wording_group_present(text, group):
+                errors.append(f'{gate_id}: protected wording group missing: {group_index}')
+    if 'SG-AUTHORITY' in entry_by_id and AUTHORITY_TRIGGER.search(text):
+        if not wording_group_present(text, AUTHORITY_WORDING):
+            errors.append('SG-AUTHORITY: operation-specific protected authority wording missing')
+
+
 def emit(errors, warnings, info):
     status = 'fail' if errors else ('warn' if warnings else 'pass')
     print('VALIDATION_RESULT:')
@@ -162,6 +284,7 @@ def main(argv):
 
     seen = set()
     valid_ids = set()
+    entry_by_id = {}
     for index, entry in enumerate(entries, start=1):
         label = entry.get('id') or f'entry#{index}'
         for field in REQUIRED_FIELDS:
@@ -176,6 +299,7 @@ def main(argv):
                 errors.append('unknown Safety Gate ID: ' + gate_id)
             else:
                 valid_ids.add(gate_id)
+                entry_by_id[gate_id] = entry
             if gate_id in seen:
                 errors.append('duplicate Safety Gate ID: ' + gate_id)
             seen.add(gate_id)
@@ -197,21 +321,32 @@ def main(argv):
             if is_blank(entry.get('reason')):
                 errors.append(f'{label}: state:na requires a non-applicability reason')
 
-    if dev_prompt_context(text):
+    is_dev_prompt = dev_prompt_context(text)
+    if is_dev_prompt:
         missing = sorted(BASELINE_IDS - valid_ids)
         if missing:
             errors.append('dev-prompt baseline Safety Gates missing: ' + ', '.join(missing))
+        for gate_id in sorted(BASELINE_IDS & valid_ids):
+            if entry_by_id[gate_id].get('state', '').strip().lower() == 'na':
+                errors.append(f'{gate_id}: dev-prompt baseline gate cannot use state:na')
 
     for rule_name, pattern, required_ids in COMPOSITION_RULES:
         if pattern.search(text):
             missing = sorted(required_ids - valid_ids)
             if missing:
                 errors.append(rule_name + ' composition missing: ' + ', '.join(missing))
+            for gate_id in sorted(required_ids & valid_ids):
+                if entry_by_id[gate_id].get('state', '').strip().lower() == 'na':
+                    errors.append(f'{rule_name}: trigger-present gate cannot use state:na: {gate_id}')
+
+    check_protected_wording(text, entry_by_id, errors)
 
     info.append('Safety Gate registry checked: ' + (registry or 'missing'))
     info.append('entries checked: ' + str(len(entries)))
-    if dev_prompt_context(text):
+    info.append('aggregate state: ' + aggregate_state(entries))
+    if is_dev_prompt:
         info.append('dev-prompt baseline checked')
+        info.append('protected wording checked')
     return emit(errors, warnings, info)
 
 
