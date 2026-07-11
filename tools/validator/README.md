@@ -82,6 +82,15 @@ kdsl_safety_gate.py:
   satisfied evidence/authority check
   dev-prompt baseline gate check
   representative additive composition check
+  representative protected wording check
+  trigger-present state:na rejection
+  aggregate state reporting
+
+kdsl_safety_gate_inheritance.py:
+  parent hold/blocked gate preservation
+  blocked/hold unsafe transition check
+  parent na re-evaluation warning
+  satisfied scope-change warning
 
 kdsl_r1c.py:
   KDSL_RESULT + kdsl-r1c@0.1-draft detection
@@ -149,6 +158,12 @@ Packet normalization round-trip first slice integrated:
   total: 108 / failed: 0
   pull_request: 27
   workflow_run: 163 / success
+
+Safety Gate protected-wording/inheritance first slice integrated:
+  existing suite: 108 / failed: 0
+  extension suite: 14 / failed: 0
+  pull_request: 31
+  workflow_run: 173 / success
 ```
 
 Repository examples included in the suite:
@@ -235,6 +250,8 @@ tools/validator/
   kdsl_compact_prompt.py
   kdsl-compact-prompt-implementation-notes.md
   kdsl_safety_gate.py
+  kdsl_safety_gate_inheritance.py
+  run_safety_gate_samples.py
   kdsl-safety-gate-implementation-notes.md
   kdsl_r1c.py
   kdsl-r1c-implementation-notes.md
@@ -264,15 +281,20 @@ state:blocked→evidence欠落warn
 state:na→reason必須
 dev-prompt baseline:=SG-SCOPE/SG-EVIDENCE/SG-AUTHORITY/SG-STOP
 representative composition:=rollback/data/public/runtime/KDSL-DP
+representative protected wording:=baseline + design/runtime/authority/rollback/public/data/KDSL-DP/stop
+trigger-present required gate state:na:=error
+aggregate state:=blocked > hold > satisfied / na outside severity
+parent-child inheritance:=pairwise first slice
 ```
 
 Boundary:
 
 ```text
 SAFETY_GATES blockなし→対象外pass/info
-current Full KDSL protected wording検査→未実装
-parent-child inheritance lint→未実装
-aggregate state calculation→未実装
+protected wording検査:=representative pattern heuristic
+inheritance lint:=one parent/one child pair
+multi-generation graph/full semantic scope analysis未実装
+aggregate satisfied != execution authority
 ```
 
 ## R1C first-slice checks
@@ -369,6 +391,7 @@ INFO:
 
 ```text
 python tools/validator/run_samples.py
+python tools/validator/run_safety_gate_samples.py
 ```
 
 このrunnerは、サンプルファイルと期待exit codeのズレを検出するための補助です。

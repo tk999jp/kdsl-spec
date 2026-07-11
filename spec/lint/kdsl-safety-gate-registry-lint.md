@@ -1,9 +1,9 @@
 # KDSL Safety Gate Registry Lint v0.1-draft
 
-status: v2-draft adopted / specification-only
+status: v2-draft adopted / first-slice implemented
 source: spec/registry/kdsl-safety-gate-registry.md
 composition: spec/registry/kdsl-safety-gate-composition.md
-validator: not_implemented
+validator: first_slice_integrated
 
 ## 1. Purpose
 
@@ -314,10 +314,31 @@ Packet直接実行化
 
 ## 12. Validator boundary
 
+Implemented first slice:
+
 ```text
-validator未実装→自動pass扱禁止
-future validator pass != semantic equivalence
-future validator pass != U承認
-future validator pass != RT:v
-future validator pass != release readiness
+tools/validator/kdsl_safety_gate.py
+  registry/ID/state/field/composition
+  representative protected wording
+  trigger-present na rejection
+  aggregate state reporting
+
+tools/validator/kdsl_safety_gate_inheritance.py
+  parent hold/blocked preservation
+  unsafe transition rejection
+  parent na copied-reason warning
+  satisfied scope-change warning
+```
+
+Remaining boundary:
+
+```text
+representative wording check != full semantic equivalence
+pairwise parent/child check != complete inheritance graph proof
+aggregate state report != execution permission
+validator pass != semantic equivalence
+validator pass != U承認
+validator pass != RT:v
+validator pass != execution authority
+validator pass != release readiness
 ```
