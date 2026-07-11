@@ -31,9 +31,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Show Python version
-        run: python --version
-
       - name: Run validator samples
         run: python tools/validator/run_samples.py
 
@@ -51,9 +48,27 @@ jobs:
           fetch-depth: 0
 
       - name: Apply exact asserted closeout
-        run: python .github/scripts/apply_packet_validator_closeout.py
+        id: apply
+        continue-on-error: true
+        shell: bash
+        run: |
+          python .github/scripts/apply_packet_validator_closeout.py > /tmp/packet-validator-closeout.log 2>&1
+
+      - name: Upload closeout diagnostic
+        if: steps.apply.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: packet-validator-closeout-error-${{ github.run_id }}
+          path: /tmp/packet-validator-closeout.log
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Fail after diagnostic upload
+        if: steps.apply.outcome == 'failure'
+        run: exit 1
 
       - name: Restore read-only workflow and commit closeout
+        if: steps.apply.outcome == 'success'
         shell: bash
         run: |
           git fetch origin main
