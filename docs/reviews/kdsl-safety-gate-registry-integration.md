@@ -114,19 +114,7 @@ CI pass != execution authority
 CI pass != stable/public-ready judgment
 ```
 
-Pre-close validation evidence:
-
-```text
-workflow: Validator CI
-source_head: a1f771aed1ea1721ece414e8e0ac0c763f240dec
-workflow_run_id: 29141251171
-run_number: 18
-status: completed
-conclusion: success
-expected_sample_suite: total 23 / failed 0
-```
-
-The PR body and post-merge project status are the authoritative location for the final head/run evidence, avoiding a self-referential documentation commit loop.
+Final pull-request validation is recorded in the PR body and post-merge project status to avoid a self-referential documentation commit loop.
 
 ## 7. Merge gate
 
