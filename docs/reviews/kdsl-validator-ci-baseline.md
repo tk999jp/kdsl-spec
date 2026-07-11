@@ -1,9 +1,12 @@
 # KDSL Validator CI Baseline Review
 
-status: implementation-candidate
+status: merged-ci-pass
 review_date: 2026-07-11
 branch: agent/kdsl-validator-ci
 target: main
+pull_request: 3
+merge_method: squash
+merge_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
 
 ## 1. Purpose
 
@@ -52,7 +55,32 @@ CompactPrompt required-block/restricted-alias/CP-Lift samples
 combined wrapper target samples
 ```
 
-## 4. Safety boundary
+## 4. Pull request verification
+
+```yaml
+validator_ci_pr_run:
+  pull_request: 3
+  head: dff75994c818e8a103bd2c94646c26ec8f8209d1
+  workflow: Validator CI
+  workflow_run_id: 29137196847
+  run_number: 1
+  status: completed
+  conclusion: success
+  expected_sample_summary: total 23 / failed 0
+```
+
+## 5. Integration judgment
+
+```text
+workflow file recognized: pass
+PR-triggered run exists: pass
+workflow conclusion success: pass
+PR mergeable: pass
+squash merge: completed
+main integration commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
+```
+
+## 6. Safety boundary
 
 ```text
 CI pass != RT:v
@@ -66,17 +94,7 @@ CI pass != tag/release/Release Assets permission
 
 The workflow has read-only repository contents permission and does not commit, push, create releases, modify tags, or upload Release Assets.
 
-## 5. Merge gate
-
-```text
-PR workflow run exists
-workflow conclusion: success
-sample summary: total 23 / failed 0
-PR mergeable
-U continuation authorization exists
-```
-
-## 6. Explicit non-actions
+## 7. Explicit non-actions
 
 ```text
 Core specification changeなし
