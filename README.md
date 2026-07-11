@@ -20,7 +20,10 @@ CompactPrompt validator: first slice integrated
 Validator CI: integrated
 Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft integrated
 Safety Gate validator: first heuristic slice integrated
-validator sample suite: 34 expectations
+R1C design candidate: kdsl-r1c@0.1-draft / main integrated
+R1C validator: design-candidate first heuristic slice integrated
+R1C canonical/stable adoption: no
+validator sample suite: 49 expectations
 validator_authority: non_authoritative
 ```
 
@@ -63,8 +66,7 @@ Main goals:
 - D禁止 / rollback / 未確認 / 未実行 / 承認gate / 実機確認分離の保持
 - KDSL_PROMPT / KDSL_RESULT の入出力契約整理
 - R1による結果報告の検収可能化
-- Profile / Mode / Safety / Lexicon / Envelope の責務分離
-- Safety Gateの参照ID / state / composition整理
+- CompactPrompt / Lexicon / Safety Gate / R1C の責務分離
 - heuristic validatorによる形式・欠落・代表的衝突検査
 
 ## Quick navigation
@@ -102,11 +104,13 @@ Registries:
 
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
+  spec/r1/r1c-compact-result-schema.md
 
 Lint:
   spec/lint/kdsl-lint-checklist.md
   spec/lint/kdsl-compact-prompt-lint.md
   spec/lint/kdsl-safety-gate-registry-lint.md
+  spec/lint/kdsl-r1c-lint.md
 
 Bridge:
   spec/bridge/kdsl-adps-bridge.md
@@ -115,6 +119,7 @@ Bridge:
 Examples:
   examples/compact-prompt/*
   examples/safety-gates/dev-prompt-safety-gates.example.md
+  examples/r1c/*
   examples/midfd/*
   examples/public/*
 
@@ -123,6 +128,7 @@ Validator:
   tools/validator/kdsl_validate.py
   tools/validator/kdsl_compact_prompt.py
   tools/validator/kdsl_safety_gate.py
+  tools/validator/kdsl_r1c.py
   tools/validator/run_samples.py
   tools/validator/samples/*
   tools/validator/verification/*
@@ -185,44 +191,13 @@ Kanji-v1 required keys:
 目 / 材 / 出 / 守 / 確
 ```
 
-Kanji aliases are structural keys, not permission to reduce protected words.
+Boundary:
 
 ```text
 構造aliasはKEY位置のみ
 禁止/未確認/未実行/承認待/断定禁止等の保護語弱化禁止
-```
-
-## CP-Lift / Packet boundary
-
-KDSL-CP must lift when implementation or repository operations appear.
-
-```text
-CP-Lift triggers:
-  実装/改修/削除
-  repo/path/branch/commit操作
-  file/API/command変更
-  rollback/revert
-  RT:v/実機確認
-  public履歴/tag/Release Assets
-  data migration
-  正本変更
-  AI coding toolへ渡す場合
-```
-
-Current executable lift target:
-
-```text
-Full KDSL profile:dev-prompt
-```
-
-Packet boundary:
-
-```text
-KDSL-Packet未正規化→実行指示扱禁止
-PKT:v1使用禁止
-Packet schema/BASE/TASK/FLOW/R1C/Packet lint未定義→停止
-unknown BASE/TASK/FLOW/SG/R1C推測禁止
-Safety Gate Registry/validator実装 != Packet executable
+実装/repo/runtime/public操作を含む→CP-Lift必須
+current lift target:=Full KDSL profile:dev-prompt
 ```
 
 ## Safety Gate Registry
@@ -262,14 +237,94 @@ current Full KDSL:=SG ID + complete protected wording
 SG ID-only compression禁止
 ```
 
-Typed non-substitution:
+## R1C compact-result design candidate
+
+Current design candidate:
 
 ```text
-U承認 != runtime evidence
-runtime evidence != commit/push/release authority
-CI/validator pass != semantic equivalence
-NEXT != execution authority
+schema: kdsl-r1c@0.1-draft
+status: design candidate integrated
+canonical: no
+stable: no
+envelope: KDSL_RESULT
+```
+
+Selected model:
+
+```text
+canonical 11 required field names保持
+structured values:=JSON-compatible inline arrays/objects
+short field aliases:=未定義/禁止
+required field省略禁止
+implicit defaults禁止
+Full R1へのround-trip必須
+round-trip不成立→Full R1 fallback
+```
+
+Required R1C order:
+
+```text
+KDSL_RESULT
+SCHEMA
+STATUS
+PHASE
+S
+FILES
+WHY
+CMD
+VERIFY
+RT
+RISK
+NEXT
+COMMIT
+```
+
+Critical boundaries:
+
+```text
+canonical R1 > R1C design candidate
+RT:v=対象環境runtime確認済のみ
+build/diff/lint/test/CI pass != RT:v
+NEXT.authority:=proposal_only
+NEXT実行許可扱禁止
 COMMIT.proposed != commit authority
+COMMIT自動commit許可扱禁止
+path/command exact strings保持
+R1C validator pass != canonical/stable promotion
+```
+
+R1C examples:
+
+```text
+examples/r1c/r1c-success.example.md
+examples/r1c/r1c-blocked.example.md
+examples/r1c/r1c-needs-user.example.md
+```
+
+## CP-Lift / Packet boundary
+
+```text
+KDSL-CP単体実装指示禁止
+KDSL-Packet未正規化→実行指示扱禁止
+PKT:v1使用禁止
+unknown BASE/TASK/FLOW/SG/R1C推測禁止
+```
+
+Current unresolved Packet dependencies:
+
+```text
+Packet schema
+BASE registry
+TASK registry
+FLOW opcode registry
+canonical/stable SG dependency
+canonical R1C dependency
+Packet lint
+```
+
+```text
+Safety Gate Registry/validator実装 != Packet executable
+R1C design/validator実装 != Packet executable
 ```
 
 ## Validator helpers
@@ -283,39 +338,38 @@ python tools/validator/kdsl_validate.py --target r1 <file>
 python tools/validator/kdsl_validate.py --target prompt <file>
 python tools/validator/kdsl_validate.py --target compact <file>
 python tools/validator/kdsl_validate.py --target safety-gate <file>
+python tools/validator/kdsl_validate.py --target r1c <file>
 python tools/validator/kdsl_validate.py --target all <file>
 ```
 
-Safety Gate first slice checks:
-
-```text
-known registry / known ID / known state
-id/state/scope/reason required fields
-state:satisfied evidence/authority
-state:blocked evidence warning
-state:na reason
-dev-prompt baseline gates
-representative rollback/data/public/runtime/KDSL-DP composition
-```
-
-Sample runner:
+Current sample runner:
 
 ```text
 python tools/validator/run_samples.py
 ```
 
-Current CI evidence:
+Latest CI evidence:
 
 ```text
-sample expectations: 34
+sample expectations: 49
 failed: 0
-actual Safety Gate repository example: included
 workflow: .github/workflows/validator.yml
+latest R1C PR run: #50 / success
+```
+
+Repository examples included:
+
+```text
+examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/r1c/r1c-success.example.md
+examples/r1c/r1c-blocked.example.md
+examples/r1c/r1c-needs-user.example.md
 ```
 
 Validator boundaries:
 
 ```text
+validator未実行→pass扱禁止
 validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
@@ -323,6 +377,7 @@ validator pass != semantic equivalence
 validator pass != safety proof
 validator pass != execution authority
 validator pass != release readiness
+validator pass != canonical/stable promotion
 CI pass != stable/public-ready判断
 ```
 
@@ -340,13 +395,15 @@ experimental/  正本ではない実験案
 ## Known limitations
 
 ```text
-full YAML parserなし
+full YAML/JSON/KDSL parserなし
 full natural-language semantic parserなし
 full negation parserなし
 protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
-R1C schema未定義
+R1C multi-line JSON lintなし
+R1C round-trip semantic proofなし
+R1C canonical ownership alignment未実施
 Packet schema/BASE/TASK/FLOW registry未定義
 Packet lint未定義
 KDSL-Packet:=draft-non-executable
@@ -362,6 +419,7 @@ KDSL-Packet:=draft-non-executable
 - KDSL-DPはP1/P1Lへ正規化するまで実行指示扱いしない
 - KDSL_RESULT NEXTは提案であり実行許可ではない
 - KDSL_RESULT COMMITは実行結果または推奨messageであり自動commit許可ではない
+- R1Cはcanonical R1を置換しない
 - Examples / Templates / Design docs は正本扱いしない
 - public履歴 / 公開済tag / Release Assets を保護する
 
@@ -370,10 +428,11 @@ KDSL-Packet:=draft-non-executable
 ```text
 P0:
   local mainをorigin/mainへ同期
-  34 sample runner再確認
+  49 sample runner再確認
 
 P1:
-  R1C compact schema設計
+  R1C canonical-ownership review
+  manifest/Bridge/glossary alignment可否
 
 P2:
   Packet BASE/TASK/FLOW registry
