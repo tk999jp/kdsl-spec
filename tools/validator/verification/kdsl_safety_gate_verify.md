@@ -1,8 +1,11 @@
 # Safety Gate Validator Verification
 
-status: candidate verification / final repository CI pending
+status: completed / merged
 branch: agent/kdsl-safety-gate-validator
+pull_request: 5
 source: `tools/validator/kdsl_safety_gate.py`
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
 
 ## 1. Isolated candidate verification
 
@@ -36,15 +39,15 @@ unexpected exits: 0
 
 This verification exercised the candidate script and equivalent sample contents before repository integration.
 
-## 2. Repository verification gate
+## 2. Repository sample suite
 
-Required after all branch files are committed:
+Command:
 
 ```text
 python tools/validator/run_samples.py
 ```
 
-Expected:
+Expected and CI-confirmed result:
 
 ```text
 SUMMARY:
@@ -64,26 +67,49 @@ Equivalent direct command:
 python tools/validator/kdsl_validate.py --target safety-gate examples/safety-gates/dev-prompt-safety-gates.example.md
 ```
 
-Expected:
+Expected classification:
 
 ```text
 VALIDATION_RESULT:
 STATUS: pass
 ```
 
-## 3. CI gate
-
-Required:
+## 3. Pull-request CI evidence
 
 ```text
 workflow: Validator CI
 trigger: pull_request -> main
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+workflow_run_id: 29143048337
+run_number: 33
+status: completed
 conclusion: success
+job: Sample expectations
+step: Run validator samples
+step conclusion: success
 ```
 
-The final CI run ID/head/result is recorded in the pull request after the branch head is fixed. This avoids a self-referential documentation commit loop.
+`run_samples.py` returns non-zero if any expected exit differs. The successful job therefore confirms all 34 expectations matched on the pull-request merge candidate.
 
-## 4. Verification boundary
+## 4. Integration
+
+```text
+pull_request: 5
+merge_method: squash
+merged: true
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
+```
+
+Post-merge documentation synchronization:
+
+```text
+docs/project-status.md
+README.md
+CHANGELOG.md
+docs/reviews/kdsl-safety-gate-validator-first-slice.md
+```
+
+## 5. Verification boundary
 
 ```text
 isolated test != full repository regression check
@@ -93,4 +119,5 @@ CI pass != RT:v
 CI pass != U承認
 validator pass != execution authority
 validator pass != Packet/R1C readiness
+main上のlocal Windows再確認は別証跡
 ```
