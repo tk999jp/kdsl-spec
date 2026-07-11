@@ -1,6 +1,6 @@
 # Safety Gate Validator Verification
 
-status: candidate verification / repository CI pending
+status: candidate verification / final repository CI pending
 branch: agent/kdsl-safety-gate-validator
 source: `tools/validator/kdsl_safety_gate.py`
 
@@ -48,11 +48,17 @@ Expected:
 
 ```text
 SUMMARY:
-  total: 33
+  total: 34
   failed: 0
 ```
 
-Direct repository example check:
+The runner includes the actual repository example:
+
+```text
+examples/safety-gates/dev-prompt-safety-gates.example.md
+```
+
+Equivalent direct command:
 
 ```text
 python tools/validator/kdsl_validate.py --target safety-gate examples/safety-gates/dev-prompt-safety-gates.example.md
@@ -75,7 +81,7 @@ trigger: pull_request -> main
 conclusion: success
 ```
 
-CI run evidence is recorded in the pull request after the final branch head is fixed.
+The final CI run ID/head/result is recorded in the pull request after the branch head is fixed. This avoids a self-referential documentation commit loop.
 
 ## 4. Verification boundary
 
