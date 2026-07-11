@@ -239,7 +239,7 @@ SG ID-only compression禁止
 
 ## R1C compact-result serialization profile
 
-Current design candidate:
+Current v2-draft serialization profile:
 
 ```text
 schema: kdsl-r1c@0.1-draft
@@ -324,7 +324,7 @@ Packet lint
 
 ```text
 Safety Gate Registry/validator実装 != Packet executable
-R1C design/validator実装 != Packet executable
+R1C adoption/validator実装 != Packet executable
 ```
 
 ## Validator helpers
@@ -430,15 +430,14 @@ P0:
   49 sample runner再確認
 
 P1:
-  R1C canonical-ownership review
-  manifest/Bridge/glossary alignment可否
-
-P2:
   Packet BASE/TASK/FLOW registry
   Packet schema/lint
 
-P3:
+P2:
   Safety Gate protected wording/inheritance validator拡張
+
+P3:
+  R1C round-trip/property-based validator検討
 
 P4:
   public-facing v2 overview

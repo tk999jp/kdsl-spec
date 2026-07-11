@@ -363,7 +363,7 @@ PKT:v1使用禁止
 unknown registry推測禁止
 ```
 
-## Result candidates
+## Result serialization profiles
 
 ### R1C
 

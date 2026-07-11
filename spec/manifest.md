@@ -132,9 +132,9 @@ Project Status:
 | `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
 | `spec/lint/kdsl-r1c-lint.md` | Lint draft | R1C field/order/RT/NEXT/COMMIT/round-trip boundary lint | v2 draft adopted |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
-| `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / future Packet境界 | v2 draft |
+| `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / Safety Gate / R1C / future Packet境界 | v2 draft |
 | `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
-| `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/SG/Packet draft terms | v2 draft |
+| `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/SG/R1C/Packet draft terms | v2 draft |
 | `templates/*` | Templates | 再利用部品 | No |
 | `examples/*` | Examples | 理解補助/運用例 | No |
 | `tools/validator/*` | Tools | experimental heuristic lint helpers | No |

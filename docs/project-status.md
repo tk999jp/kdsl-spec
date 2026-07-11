@@ -221,7 +221,7 @@ R1Cは現時点で、canonical R1を置換しません。
 ```text
 canonical R1 > R1C v2-draft serialization profile
 R1C validator pass != canonical R1適合証明
-R1C design/validator存在 != Packet executable
+R1C adoption/validator存在 != Packet executable
 ```
 
 ## 5. Validator maturity
