@@ -39,3 +39,6 @@ jobs:
 
       - name: Run Safety Gate extension samples
         run: python tools/validator/run_safety_gate_samples.py
+
+      - name: Run R1C round-trip property samples
+        run: python tools/validator/run_r1c_roundtrip_samples.py
