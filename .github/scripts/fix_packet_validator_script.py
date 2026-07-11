@@ -41,8 +41,23 @@ old_example = '''replace_once(
 )'''
 new_example = '''replace_once(
     'README.md',
-    'examples/r1c/r1c-blocked.example.md\\nexamples/r1c/r1c-needs-user.example.md\\n```',
-    'examples/r1c/r1c-blocked.example.md\\nexamples/r1c/r1c-needs-user.example.md\\nexamples/packet/packet-design.example.md\\n```',
+    """Repository examples included:
+
+```text
+examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/r1c/r1c-success.example.md
+examples/r1c/r1c-blocked.example.md
+examples/r1c/r1c-needs-user.example.md
+```""",
+    """Repository examples included:
+
+```text
+examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/r1c/r1c-success.example.md
+examples/r1c/r1c-blocked.example.md
+examples/r1c/r1c-needs-user.example.md
+examples/packet/packet-design.example.md
+```""",
 )'''
 count = text.count(old_example)
 if count != 1:
