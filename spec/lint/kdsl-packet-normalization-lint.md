@@ -380,7 +380,7 @@ Current state:
 ```text
 normalization validator: first-slice integrated
 normalization mapper: first-slice integrated / non-executable preview only
-round-trip property tests: not implemented
+round-trip property tests: first-slice integration pending
 lint pass claim: prohibited until implementation/execution evidence
 ```
 
