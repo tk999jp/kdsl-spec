@@ -1,7 +1,8 @@
 # Packet Normalization Expected Results
 
-status: first-slice candidate
-expected_total_suite: 93
+status: first-slice verified
+verified_total_suite: 93
+failed: 0
 
 ```text
 repository Full KDSL preview: pass
@@ -19,4 +20,14 @@ wrapper all valid normalization: pass
 mapper Full KDSL: non-executable preview / exit 0
 mapper P1: blocked / no preview / exit 1
 mapper invalid Packet: no normalization output / exit 2
+```
+
+Verification:
+
+```text
+pull_request: 23
+workflow_run_id: 29151175762
+run_number: 150
+sample_total: 93
+failed: 0
 ```

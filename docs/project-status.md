@@ -349,15 +349,42 @@ stable_effect: none
 
 ```yaml
 pull_request: 22
-merge_status: pending
+merge_status: closed_unmerged
 source_branch: agent/kdsl-packet-normalization-validator
+source_head: bd74e883f01b3ae5888c4327f29765521dfcd2fb
+superseded_by: 23
 checker: tools/validator/kdsl_packet_normalization.py
 mapper: tools/validator/kdsl_packet_normalize.py
 wrapper_target: normalization
-expected_sample_total: 93
 validator_authority: non_authoritative
 executable_output: no
 normalization_effect: none
+stable_effect: none
+```
+
+### PR #23 — Packet normalization validator / mapper first slice
+
+```yaml
+pull_request: 23
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-packet-normalization-validator-clean
+source_head: 40598b400d5a59d42b25ef05d8d280ae09182045
+squash_commit: b3b95ee21f6a7829477185bcb5f4cd8fc0abe7a3
+closeout_pull_request: 25
+checker: tools/validator/kdsl_packet_normalization.py
+mapper: tools/validator/kdsl_packet_normalize.py
+wrapper_target: normalization
+workflow_run_id: 29151175762
+workflow_run_number: 150
+job_id: 86540808942
+workflow_conclusion: success
+sample_total: 93
+sample_failed: 0
+validator_authority: non_authoritative
+executable_output: no
+normalization_effect: none
+semantic_equivalence: not_proven
 stable_effect: none
 ```
 
@@ -377,7 +404,7 @@ Packet design candidate:=main統合済み
 Packet ownership:=v2-draft adopted authoring schema/registries/lint
 Packet validator first slice:=main統合済み / 69 expectations verified
 Packet normalization contract/lint:=v2-draft adopted / non-executable
-Packet normalization validator/mapper first slice:=integration pending
+Packet normalization validator/mapper first slice:=main統合済み / 93 expectations verified
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -428,7 +455,7 @@ packet:
   normalization_schema: kdsl-packet-normalization@0.1-draft
   normalization_status: v2_draft_adopted_non_executable
   normalization_lint: adopted
-  normalization_validator_mapper: first_slice_integration_pending
+  normalization_validator_mapper: first_slice_integrated_non_executable
   semantic_equivalence: not_proven
   normalize_required: true
   packet_state: not_normalized
@@ -479,11 +506,11 @@ validator:
     command: python tools/validator/run_samples.py
     expected_sample_total: 93
     latest_pr_validation:
-      pull_request: 14
-      run_id: 29148894965
-      run_number: 116
+      pull_request: 23
+      run_id: 29151175762
+      run_number: 150
       conclusion: success
-      sample_total: 69
+      sample_total: 93
       sample_failed: 0
 ```
 
@@ -499,7 +526,6 @@ R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
-Normalization validator/mapper first slice:=integration pending
 Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
@@ -581,14 +607,23 @@ failed: 0
 meaning: design-only regression evidence; not R1C lint pass
 ```
 
-### Packet normalization validator / mapper candidate
+### Packet normalization validator / mapper first slice
 
 ```yaml
-pull_request: 22
-branch: agent/kdsl-packet-normalization-validator
-expected_sample_total: 93
-status: branch_validation_pending
-meaning: first-slice heuristic/preview candidate; not semantic-equivalence/round-trip/execution proof
+work_pull_request: 22
+pull_request: 23
+source_branch: agent/kdsl-packet-normalization-validator-clean
+source_head: 40598b400d5a59d42b25ef05d8d280ae09182045
+squash_commit: b3b95ee21f6a7829477185bcb5f4cd8fc0abe7a3
+workflow_run_id: 29151175762
+run_number: 150
+job_id: 86540808942
+conclusion: success
+sample_total: 93
+failed: 0
+mapper_full_kdsl: non_executable_preview
+mapper_p1: blocked_no_preview
+meaning: first-slice heuristic/preview evidence; not semantic-equivalence/round-trip/execution proof
 ```
 
 ### Packet normalization ownership
@@ -677,7 +712,9 @@ tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
+tools/validator/verification/kdsl_packet_normalization_verify.md
 docs/reviews/kdsl-packet-validator-first-slice.md
+docs/reviews/kdsl-packet-normalization-validator-first-slice.md
 docs/reviews/kdsl-packet-normalization-design.md
 docs/reviews/kdsl-packet-normalization-ownership.md
 docs/reviews/kdsl-r1c-design-integration.md
@@ -695,7 +732,6 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Normalization validator/mapper first slice:=integration pending
 Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
@@ -729,10 +765,9 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #23 CI確認 / squash merge / normalization validator closeout
-P1: normalization round-trip/property tests
-P2: Safety Gate protected wording/inheritance validator拡張
-P3: R1C round-trip/property-based validator検討
-P4: public-facing v2 overview / CI required check検討
+P0: normalization round-trip/property tests
+P1: Safety Gate protected wording/inheritance validator拡張
+P2: R1C round-trip/property-based validator検討
+P3: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
