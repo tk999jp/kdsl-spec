@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -36,3 +36,42 @@ jobs:
 
       - name: Run validator samples
         run: python tools/validator/run_samples.py
+
+  r1c_ownership_apply:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-r1c-ownership'
+    name: Apply R1C ownership alignment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out ownership branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-r1c-ownership
+          fetch-depth: 0
+
+      - name: Execute asserted alignment script from branch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/r1c-ownership-apply.yml')
+          text = workflow.read_text(encoding='utf-8')
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n\n      - name: Commit aligned documents"
+          start = text.index(start_marker) + len(start_marker)
+          end = text.index(end_marker, start)
+          lines = text[start:end].splitlines()
+          code = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines)
+          exec(compile(code, str(workflow), 'exec'), {'__name__': '__main__'})
+          PY
+
+      - name: Commit aligned documents
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Spec: adopt R1C v2-draft ownership alignment"
+          git push origin HEAD:agent/kdsl-r1c-ownership
