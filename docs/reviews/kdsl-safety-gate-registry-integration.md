@@ -1,6 +1,6 @@
 # KDSL Safety Gate Registry Integration Record
 
-status: approved / merge-pending
+status: approved / merge-ready
 record_date: 2026-07-11
 branch: agent/kdsl-safety-gate-registry
 target: main
@@ -50,12 +50,15 @@ spec/manifest.md
 spec/bridge/kdsl-cp-packet-bridge.md
 spec/glossary-v2-draft.md
 spec/registry/README.md
+spec/registry/kdsl-safety-gate-registry.md
+spec/registry/kdsl-safety-gate-composition.md
+spec/lint/kdsl-safety-gate-registry-lint.md
 README.md
 CHANGELOG.md
 docs/project-status.md
 ```
 
-The original design review remains at:
+The design decision record remains at:
 
 ```text
 docs/reviews/kdsl-safety-gate-registry-design.md
@@ -102,7 +105,7 @@ KDSL-Packet:=draft-non-executable
 Existing Validator CI checks the current 23 sample expectations only.
 
 ```text
-Safety Gate Registry lint specification: added
+Safety Gate Registry lint specification: v2-draft adopted
 Safety Gate Registry validator implementation: not implemented
 CI pass != Safety Gate semantic proof
 CI pass != RT:v
@@ -111,14 +114,26 @@ CI pass != execution authority
 CI pass != stable/public-ready judgment
 ```
 
+Final pull-request validation:
+
+```text
+workflow: Validator CI
+source_head: a1f771aed1ea1721ece414e8e0ac0c763f240dec
+workflow_run_id: 29141251171
+run_number: 18
+status: completed
+conclusion: success
+expected_sample_suite: total 23 / failed 0
+```
+
 ## 7. Merge gate
 
 ```text
 cross-file alignment complete
 PR mergeable
 latest Validator CI success
-squash merge
-post-merge project-status closeout
+squash merge authorized
+post-merge project-status closeout required
 ```
 
 ## 8. Non-actions
