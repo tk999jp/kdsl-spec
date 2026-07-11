@@ -29,6 +29,10 @@ Run validator checks by target type so unrelated checks do not run against the w
   runs:
     kdsl_safety_gate.py
 
+--target r1c
+  runs:
+    kdsl_r1c.py
+
 --target all
   runs:
     r1_required_blocks.py
@@ -38,6 +42,7 @@ Run validator checks by target type so unrelated checks do not run against the w
     kdsl_template_expansion.py
     kdsl_compact_prompt.py
     kdsl_safety_gate.py
+    kdsl_r1c.py
 ```
 
 ## Default
@@ -48,7 +53,19 @@ python tools/validator/kdsl_validate.py <file>
 
 This uses `--target all` for backward compatibility.
 
-The Safety Gate checker returns pass/info when no `SAFETY_GATES:` block is detected, so it can participate in `--target all` without requiring every document to declare registry records.
+Out-of-scope behavior:
+
+```text
+Safety Gate checker:
+  SAFETY_GATES blockなし→pass/info
+
+R1C checker:
+  KDSL_RESULTなし→pass/info
+  KDSL_RESULTあり + SCHEMAなし→Full R1 fallback / pass/info
+  unknown SCHEMA→fail
+```
+
+These behaviors allow the checkers to participate in `--target all` without forcing every document into every profile.
 
 ## Examples
 
@@ -57,6 +74,7 @@ python tools/validator/kdsl_validate.py --target r1 tools/validator/samples/samp
 python tools/validator/kdsl_validate.py --target prompt tools/validator/samples/sample_template_expansion_ok.md
 python tools/validator/kdsl_validate.py --target compact examples/compact-prompt/blog_meta.kdsl-cp.md
 python tools/validator/kdsl_validate.py --target safety-gate examples/safety-gates/dev-prompt-safety-gates.example.md
+python tools/validator/kdsl_validate.py --target r1c examples/r1c/r1c-success.example.md
 python tools/validator/kdsl_validate.py --target all tools/validator/samples/sample_rt_v_valid.md
 ```
 
@@ -83,26 +101,56 @@ parent-child inheritance across documents
 execution authority judgment
 ```
 
+## R1C first-slice scope
+
+```text
+schema: kdsl-r1c@0.1-draft
+envelope: KDSL_RESULT
+canonical required field presence/order
+short field alias rejection
+JSON-compatible structured values
+STATUS values
+VERIFY pass/fail/not_run separation
+RT state/basis
+NEXT.authority=proposal_only
+COMMIT actual/proposed/permission_basis
+Full R1 fallback/out-of-scope
+```
+
+Not covered:
+
+```text
+full JSON/YAML/KDSL parser
+multi-line JSON objects
+semantic equivalence proof
+execution evidence authenticity
+runtime evidence authenticity
+R1C canonical/stable promotion
+Packet OUT/R1C integration
+```
+
 ## Sample verification
 
-CompactPrompt Windows verification completed on 2026-07-11:
+Historical checkpoints:
 
 ```text
-python tools/validator/run_samples.py
-→ total: 23 / failed: 0
+CompactPrompt first slice:
+  total: 23 / failed: 0
+
+Safety Gate first slice:
+  total: 34 / failed: 0
+
+R1C first slice candidate:
+  total: 49 / failed: 0
 ```
 
-After the Safety Gate validator first slice, the expected repository suite is:
-
-```text
-python tools/validator/run_samples.py
-→ total: 34 / failed: 0
-```
-
-The suite includes the actual repository example:
+The current suite includes actual repository examples:
 
 ```text
 examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/r1c/r1c-success.example.md
+examples/r1c/r1c-blocked.example.md
+examples/r1c/r1c-needs-user.example.md
 ```
 
 Evidence:
@@ -110,6 +158,7 @@ Evidence:
 ```text
 tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
+tools/validator/verification/kdsl_r1c_verify.md
 ```
 
 ## Exit codes
@@ -133,9 +182,12 @@ validator pass != safety proof
 validator pass != release readiness
 validator pass != execution authority
 --target prompt does not validate KDSL_RESULT fields
---target r1 does not validate CompactPrompt or Safety Gate structure
---target compact does not validate R1/template expansion/Safety Gate records
---target safety-gate does not validate R1/CompactPrompt/template expansion
+--target r1 does not validate CompactPrompt/Safety Gate/R1C serialization
+--target compact does not validate R1/template expansion/Safety Gate/R1C
+--target safety-gate does not validate R1/CompactPrompt/template expansion/R1C
+--target r1c does not validate Full R1 Evidence/Authority semantics beyond first-slice shape
 --target all may report errors for intentionally single-target documents
-Safety Gate validator implementation != Packet/R1C readiness
+Safety Gate validator implementation != Packet readiness
+R1C validator implementation != R1C canonical/stable promotion
+R1C validator implementation != Packet readiness
 ```
