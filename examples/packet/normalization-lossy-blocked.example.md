@@ -3,6 +3,7 @@
 status: design-candidate example
 canonical: no
 executable: no
+source: examples/packet/normalization-source.example.md
 
 ```yaml
 NORMALIZATION_DRAFT:
@@ -10,7 +11,7 @@ SCHEMA: kdsl-packet-normalization@0.1-draft
 STATUS: non-executable
 SOURCE:
   schema: kdsl-packet@0.1-draft
-  digest: "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  digest: "sha256:b464944da1a3e080b08166e0b0eaa13327c4daa8974c3c56f6a22428dd81daed"
   packet_status: non-executable
   normalize_state: not_normalized
 TARGET:
@@ -28,6 +29,10 @@ MAP:
       target: safety gates
       mode: blocked
       evidence: "critical protected wording unavailable"
+    - source: AUTHORITY
+      target: authority rails
+      mode: blocked
+      evidence: "operation-specific rail values unavailable"
 PRESERVE:
   exact_strings:
     - "src/Example.cs"
@@ -36,6 +41,9 @@ PRESERVE:
 UNRESOLVED:
   - source: SG
     reason: "only SG IDs remain; complete hold/reason wording missing"
+    impact: blocked
+  - source: AUTHORITY
+    reason: "source authority values are unavailable to the target mapping"
     impact: blocked
 LOSS:
   - class: critical

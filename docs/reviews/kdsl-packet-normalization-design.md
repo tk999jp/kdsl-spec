@@ -14,6 +14,7 @@ spec/packet/kdsl-packet-normalization-contract.md
 spec/lint/kdsl-packet-normalization-lint.md
 spec/packet/README.md
 examples/packet/normalization-source.example.md
+examples/packet/normalization-p1-source.example.md
 examples/packet/normalization-full-kdsl.example.md
 examples/packet/normalization-p1-blocked.example.md
 examples/packet/normalization-lossy-blocked.example.md
@@ -91,6 +92,7 @@ Decision:
 P1/P1L target resolution:=blocked
 schema inference:=prohibited
 preview generation:=prohibited
+source authority rails remain evidence only
 ```
 
 This is stricter than treating Bridge labels as a complete target schema.
@@ -132,16 +134,32 @@ Critical loss cannot be downgraded to warning merely to produce a preview.
 
 ## 8. Source identity
 
-The dedicated source example has exact UTF-8 SHA-256:
+Dedicated exact UTF-8 sources:
 
 ```text
-file: examples/packet/normalization-source.example.md
+examples/packet/normalization-source.example.md
 sha256:b464944da1a3e080b08166e0b0eaa13327c4daa8974c3c56f6a22428dd81daed
+
+examples/packet/normalization-p1-source.example.md
+sha256:b37951d0a8c30afef865a64f0e29566136b6c2dace51810c9ef328a6615df9f1
 ```
 
 Digest identity does not prove semantics.
 
-## 9. Rejected alternatives
+## 9. Self-consistency corrections
+
+During review:
+
+```text
+P1 example gained an exact source/digest
+P1 source authority rails changed to preserved:true
+critical-loss example linked to the actual Full KDSL source digest
+AUTHORITY loss is explicitly critical and unresolved
+```
+
+These corrections keep examples compliant with the candidate lint rules.
+
+## 10. Rejected alternatives
 
 ### `KDSL_PROMPT:` inside normalization output
 
@@ -159,11 +177,11 @@ Rejected because the current repository has no semantic proof system.
 
 Rejected because SG ID-only compression is prohibited.
 
-### Authority inherited from source allow rails
+### Authority inherited as target permission
 
 Rejected because a normalizer is not an executor or approver.
 
-## 10. Compatibility classification
+## 11. Compatibility classification
 
 ```text
 new normalization contract candidate: compatible experimental addition
@@ -173,7 +191,7 @@ normalization state change: none
 stable/public-ready change: none
 ```
 
-## 11. Split-phase plan
+## 12. Split-phase plan
 
 ```text
 P1: design candidate integration
@@ -185,19 +203,20 @@ P5: executable target promotion review only after explicit approval
 
 The transformer and adoption are separated so a design document cannot self-authorize execution.
 
-## 12. Merge gate
+## 13. Merge gate
 
 ```text
 existing Validator CI regression: total 69 / failed 0
-source digest independently fixed
+source digests independently fixed
 P1/P1L blocked boundary reviewed
+example self-consistency reviewed
 no workflow changes
 no validator/tool implementation
 squash merge
 post-merge design closeout
 ```
 
-## 13. Non-actions
+## 14. Non-actions
 
 ```text
 KDSL_PROMPT executable生成なし
