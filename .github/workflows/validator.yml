@@ -51,23 +51,43 @@ jobs:
           fetch-depth: 0
 
       - name: Execute asserted alignment script from branch
+        id: apply
+        continue-on-error: true
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+          import traceback
 
           workflow = Path('.github/workflows/r1c-ownership-apply.yml')
-          text = workflow.read_text(encoding='utf-8')
-          start_marker = "          python - <<'PY'\n"
-          end_marker = "\n          PY\n\n      - name: Commit aligned documents"
-          start = text.index(start_marker) + len(start_marker)
-          end = text.index(end_marker, start)
-          lines = text[start:end].splitlines()
-          code = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines)
-          exec(compile(code, str(workflow), 'exec'), {'__name__': '__main__'})
+          try:
+              text = workflow.read_text(encoding='utf-8')
+              start_marker = "          python - <<'PY'\n"
+              end_marker = "\n          PY\n\n      - name: Commit aligned documents"
+              start = text.index(start_marker) + len(start_marker)
+              end = text.index(end_marker, start)
+              lines = text[start:end].splitlines()
+              code = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines)
+              exec(compile(code, str(workflow), 'exec'), {'__name__': '__main__'})
+          except BaseException:
+              Path('/tmp/r1c-ownership-error.txt').write_text(traceback.format_exc(), encoding='utf-8')
+              raise
           PY
 
+      - name: Publish diagnostic branch on failure
+        if: steps.apply.outcome == 'failure'
+        shell: bash
+        run: |
+          cp /tmp/r1c-ownership-error.txt r1c-ownership-error.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add r1c-ownership-error.txt
+          git commit -m "Diagnostics: capture R1C ownership alignment failure"
+          git push origin HEAD:refs/heads/agent/kdsl-r1c-ownership-diagnostic-${GITHUB_RUN_ID}
+          exit 1
+
       - name: Commit aligned documents
+        if: steps.apply.outcome == 'success'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
