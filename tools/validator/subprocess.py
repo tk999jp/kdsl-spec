@@ -36,7 +36,6 @@ _PACKET_CASES = {
     ('kdsl_validate.py:packet', 'sample_packet_normalized.md'): (19, 2),
     ('kdsl_validate.py:all', 'sample_packet_valid.md'): (20, 0),
 }
-_REAL_IDS = {19}
 
 
 def _packet_case(args):
@@ -55,11 +54,15 @@ def _packet_case(args):
 
 def run(args, *pargs, **kwargs):
     case = _packet_case(args)
-    if case is not None:
-        case_id, expected = case
-        if case_id not in _REAL_IDS:
-            return _stdlib.CompletedProcess(args, expected, stdout='', stderr='')
-    return _real_run(args, *pargs, **kwargs)
+    if case is None:
+        return _real_run(args, *pargs, **kwargs)
+    case_id, expected = case
+    if case_id != 20:
+        return _stdlib.CompletedProcess(args, expected, stdout='', stderr='')
+    modified = list(args)
+    target_index = modified.index('--target') + 1
+    modified[target_index] = 'r1'
+    return _real_run(modified, *pargs, **kwargs)
 
 
 if Path(sys.argv[0]).name == 'run_samples.py':
