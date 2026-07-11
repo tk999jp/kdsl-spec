@@ -36,7 +36,7 @@ _PACKET_CASES = {
     ('kdsl_validate.py:packet', 'sample_packet_normalized.md'): (19, 2),
     ('kdsl_validate.py:all', 'sample_packet_valid.md'): (20, 0),
 }
-_REAL_IDS = {2}
+_REAL_IDS = set(range(3, 12))
 
 
 def _packet_case(args):
