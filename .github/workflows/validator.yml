@@ -47,6 +47,9 @@ jobs:
           ref: agent/kdsl-packet-normalization-ownership-work
           fetch-depth: 0
 
+      - name: Fix ownership carrier
+        run: python .github/scripts/fix_packet_normalization_ownership.py
+
       - name: Apply exact asserted alignment
         id: apply
         continue-on-error: true
