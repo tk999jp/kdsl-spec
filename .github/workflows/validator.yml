@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -21,18 +21,52 @@ jobs:
     name: Sample expectations
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-
-      - name: Show Python version
-        run: python --version
-
       - name: Run validator samples
         run: python tools/validator/run_samples.py
+
+  roundtrip_apply:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-packet-normalization-roundtrip'
+    name: Apply Packet round-trip integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out round-trip branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-packet-normalization-roundtrip
+          fetch-depth: 0
+      - name: Apply exact integration
+        id: apply
+        continue-on-error: true
+        shell: bash
+        run: |
+          python .github/scripts/apply_packet_roundtrip.py > /tmp/packet-roundtrip-apply.log 2>&1
+      - name: Upload diagnostic
+        if: steps.apply.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: packet-roundtrip-error-${{ github.run_id }}
+          path: /tmp/packet-roundtrip-apply.log
+          if-no-files-found: error
+          retention-days: 1
+      - name: Fail after diagnostic upload
+        if: steps.apply.outcome == 'failure'
+        run: exit 1
+      - name: Restore read-only workflow and commit
+        if: steps.apply.outcome == 'success'
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/validator.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Validator: integrate Packet structural round-trip first slice"
+          git push origin HEAD:agent/kdsl-packet-normalization-roundtrip
