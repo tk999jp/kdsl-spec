@@ -1,217 +1,176 @@
 # Changelog
 
+Detailed implementation decisions and verification evidence are retained in `docs/reviews/*`, `tools/validator/verification/*`, and Git history.
+
 ## Unreleased
 
-### Changed
+### Added
 
-- Added the KDSL Validator CI baseline:
-  - workflow: `.github/workflows/validator.yml`
-  - pull requests to `main`, pushes to `main`, and manual dispatch
-  - `ubuntu-latest` / Python 3.11 / `contents: read`
-  - command: `python tools/validator/run_samples.py`
-  - first pull-request run completed successfully with `total 23 / failed 0`
-- Added and adopted the v2-draft Safety Gate Registry candidate:
-  - registry: `kdsl-sg@0.1-draft`
-  - states: `hold|satisfied|blocked|na`
-  - ten semantic IDs from `SG-DESIGN` through `SG-STOP`
-  - additive multi-gate composition rules
-  - typed non-substitution between approval, evidence, runtime, and authority
-  - current Full KDSL keeps complete protected wording alongside SG references
-- Added Safety Gate Registry files:
+#### Safety Gate Registry validator first slice
+
+- Added `tools/validator/kdsl_safety_gate.py`.
+- Added explicit `SAFETY_GATES:` block detection.
+- Added `kdsl-sg@0.1-draft` registry validation.
+- Added known-ID validation for:
+  - `SG-DESIGN`
+  - `SG-SCOPE`
+  - `SG-EVIDENCE`
+  - `SG-RUNTIME`
+  - `SG-AUTHORITY`
+  - `SG-ROLLBACK`
+  - `SG-PUBLIC`
+  - `SG-DATA`
+  - `SG-KDSL-DP`
+  - `SG-STOP`
+- Added known-state validation for `hold|satisfied|blocked|na`.
+- Added required-field checks for `id/state/scope/reason`.
+- Added `state:satisfied` evidence/authority checks.
+- Added `state:blocked` evidence warning.
+- Added dev-prompt baseline checks for:
+  - `SG-SCOPE`
+  - `SG-EVIDENCE`
+  - `SG-AUTHORITY`
+  - `SG-STOP`
+- Added representative additive-composition checks for rollback, data, public, runtime, and KDSL-DP triggers.
+- Added `--target safety-gate` to `tools/validator/kdsl_validate.py`.
+- Added Safety Gate checking to `--target all`; documents without `SAFETY_GATES:` are treated as out-of-scope pass/info.
+- Added Safety Gate samples, expected results, implementation notes, verification record, and design review.
+- Added the actual repository example to the sample runner:
+  - `examples/safety-gates/dev-prompt-safety-gates.example.md`
+
+Verification:
+
+```text
+pull_request: 5
+source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
+workflow: Validator CI
+workflow_run_id: 29143048337
+run_number: 33
+sample_total: 34
+failed: 0
+```
+
+Boundaries:
+
+```text
+line-based heuristic parser
+full YAML parserなし
+full natural-language/negation parserなし
+protected wording semantic equivalence proofなし
+parent-child inheritance lintなし
+validator pass != safety proof/RT:v/U承認/execution authority/release readiness
+Safety Gate validator implementation != Packet/R1C readiness
+```
+
+#### Safety Gate Registry v0.1 draft
+
+- Added and adopted `kdsl-sg@0.1-draft` as a v2-draft registry.
+- Added states `hold|satisfied|blocked|na`.
+- Added ten semantic Safety Gate IDs.
+- Added additive multi-gate composition rules.
+- Added typed non-substitution between approval, evidence, runtime, and authority.
+- Added:
   - `spec/registry/README.md`
   - `spec/registry/kdsl-safety-gate-registry.md`
   - `spec/registry/kdsl-safety-gate-composition.md`
   - `spec/lint/kdsl-safety-gate-registry-lint.md`
   - `examples/safety-gates/dev-prompt-safety-gates.example.md`
-  - `docs/reviews/kdsl-safety-gate-registry-design.md`
-- Aligned `spec/manifest.md`, the CP-Packet bridge, v2 glossary, README, and project status with the Safety Gate Registry draft.
-- Safety Gate Registry adoption does not make KDSL-Packet executable:
-  - Packet schema / BASE / TASK / FLOW / R1C / Packet lint remain undefined
-  - `PKT:v1` remains prohibited
-  - Safety Gate validator implementation remains pending
-- Added the first CompactPrompt validator heuristic slice:
-  - `tools/validator/kdsl_compact_prompt.py`
-  - detects `profile:compact-prompt`, `KDSL-CP:`, and `KDSL-CP漢:`
-  - validates mode/safety/lexicon values
-  - checks required blocks for standard and kanji-v1 forms
-  - detects representative restricted one-character aliases
-  - detects representative CP-Lift triggers
-  - enforces draft Packet boundaries
-- Added `--target compact` to `tools/validator/kdsl_validate.py`.
-- Extended sample expectation runner from 16 to 23 cases.
-- Added CompactPrompt validator samples, expected results, implementation notes, and verification record.
-- Recorded Windows PowerShell 5.1 repository verification:
-  - `python tools/validator/run_samples.py`
-  - result: `total 23 / failed 0`
-  - CompactPrompt examples: 4/4 pass
-  - branch tracking synchronized
-  - `git diff --check`: pass
-- Corrected free-text structural alias use in two kanji-v1 examples:
-  - `守違反なし` → `安全規則違反なし`
-- Corrected the KDSL v2 draft architecture from parallel product families to orthogonal axes:
+  - design/integration review records
+- Aligned manifest, CP-Packet bridge, v2 glossary, README, and project status.
+- Registry adoption does not make KDSL-Packet executable.
+
+#### Validator CI baseline
+
+- Added `.github/workflows/validator.yml`.
+- Runs on pull requests to `main`, pushes to `main`, and manual dispatch.
+- Uses `ubuntu-latest`, Python 3.11, `contents: read`, and a 5-minute timeout.
+- Runs:
+
+```text
+python tools/validator/run_samples.py
+```
+
+#### CompactPrompt validator first slice
+
+- Added `tools/validator/kdsl_compact_prompt.py`.
+- Added CompactPrompt profile/shorthand detection.
+- Added mode/safety/lexicon checks.
+- Added standard and kanji-v1 required-block checks.
+- Added representative restricted-alias and CP-Lift checks.
+- Added Packet draft-boundary checks.
+- Added `--target compact`.
+- Extended the sample runner from 16 to 23 cases.
+- Recorded Windows PowerShell 5.1 verification with `total 23 / failed 0` and four repository examples passing.
+
+#### KDSL v2 draft architecture
+
+- Corrected the architecture to orthogonal axes:
   - `profile`: compact-prompt / dev-prompt / converter / lint
   - `mode`: readable / min / dense / lock
   - `safety`: normal / lock-critical / lock-all
   - `lexicon`: standard / kanji-v1
   - `envelope`: plain / packet-draft / result
-- Aligned v2 priority with Core:
-  - meaning retention before safety-gate retention
-  - safety gates remain non-removable
-- Replaced the former CompactPrompt kanji profile alias file with a lexicon layer:
-  - added `spec/lexicons/kdsl-lexicon-kanji-v1.md`
-  - removed `spec/profiles/kdsl-compact-kanji-aliases.md`
-- Restricted kanji aliases:
-  - `役/目/材/出/則/守/調/確` are structural key aliases
-  - `禁/不/実/要` are not standard free-text aliases
-  - protected/safety-critical words remain explicit
-- Added CompactPrompt lint:
-  - `spec/lint/kdsl-compact-prompt-lint.md`
-- Added v2 draft glossary supplement:
-  - `spec/glossary-v2-draft.md`
-- Hardened CP-Lift and Packet boundaries:
-  - current executable lift target is Full KDSL `profile:dev-prompt`
-  - KDSL-Packet remains draft-non-executable
-  - `PKT:v1` is prohibited until canonical schema/registry adoption
-- Corrected CompactPrompt examples and separated general LLM examples from AI coding examples.
-- Synced README and manifest with MIT license, v2 architecture, lexicon, lint, and v1.1 stable hold policy.
-- Added KDSL CompactPrompt examples for v2 draft review:
-  - `examples/compact-prompt/README.md`
-  - `examples/compact-prompt/blog_meta.kdsl-cp.md`
-  - `examples/compact-prompt/blog_meta.kdsl-cp-kanji.md`
-  - `examples/compact-prompt/novel_review.kdsl-cp-kanji.md`
-  - `examples/compact-prompt/prompt_improver.kdsl-cp.md`
-  - `examples/compact-prompt/cp_lift_example.md`
-- Added v2 CompactPrompt draft direction and boundary documents without promoting v1.1.0-rc1 to stable:
-  - `docs/design/kdsl-v2-direction.md`
-  - `spec/profiles/kdsl-profile-compact-prompt.md`
-  - `spec/bridge/kdsl-cp-packet-bridge.md`
-- Redefined current repository status as public experimental preview, not public-ready/stable:
-  - `docs/project-status.md`
-  - `README.md`
-  - `docs/overview.md`
-  - `docs/public-readiness.md`
-  - `spec/manifest.md`
-  - `docs/public-facing-readme-draft.md`
-  - `examples/public/README.md`
-  - `docs/release/v1.1-release-notes-draft.md`
-  - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Clarified validator positioning as experimental heuristic lint helpers, not proof systems or release authorities.
-- Added sample expectation runner:
-  - `tools/validator/run_samples.py`
-- Recorded local sample validation evidence:
-  - command: `python tools/validator/run_samples.py`
-  - result: `total 16 / failed 0`
-  - repo status after: `clean / main...origin/main`
-- Reframed template expansion validation terminology:
-  - Current implementation is `template expansion evidence lint`
-  - It does not prove full template expansion or semantic equivalence
+- Added `profile:compact-prompt`.
+- Added `lexicon:kanji-v1` with structural-key-only aliases.
+- Added CompactPrompt lint and CP-Lift boundary.
+- Kept KDSL-Packet draft-non-executable.
+- Kept `PKT:v1` prohibited.
+- Kept v1.1 stable promotion on hold.
 
-### Previous v1.1.0-rc1 work
+### Current unreleased boundaries
 
-- Synced Core KDSL specification files on `main` after `v0.1.0-draft`:
-  - `spec/core/kdsl-spec.md` to `v1.1-ADPS-aware`
-  - `spec/core/kdsl-core.md` to `v1.1`
-  - `spec/core/kdsl-modes.md` to `v1.1`
-- Synced profile and lint contracts:
-  - `spec/profiles/kdsl-profile-dev-prompt.md` to `v1.1`
-  - `spec/profiles/kdsl-converter-prompt.md` to `v1.1-ADPS-aware`
-  - `spec/lint/kdsl-lint-checklist.md` to `v1.1`
-- Synced ADPS bridge wording to `v0.2`:
-  - `spec/bridge/kdsl-adps-bridge.md`
-- Synced glossary and reusable templates with main v1.1 alignment:
-  - `spec/glossary.md`
-  - `templates/README.md`
-  - `templates/base/kdsl_base_dev.md`
-  - `templates/result/r1_result_spec.md`
-  - `templates/tasks/task_docs_state_closeout.md`
-  - `templates/tasks/task_corrective_impl.md`
-  - `templates/tasks/task_investigation_only.md`
-- Synced validator design status:
-  - `tools/validator/README.md`
-  - `tools/validator/r1-validator-design.md`
-  - `tools/validator/kdsl-template-lint-design.md`
-  - `tools/validator/mvp-design.md`
-- Added validator MVP first implementation slice and samples:
-  - `tools/validator/r1_required_blocks.py`
-  - `tools/validator/r1_required_blocks_usage.md`
-  - `tools/validator/r1-mvp-implementation-notes.md`
-  - `tools/validator/samples/sample_r1_ok.md`
-  - `tools/validator/samples/sample_r1_missing_block.md`
-  - `tools/validator/samples/expected_results.md`
-- Added validator first-slice verification record:
-  - `tools/validator/verification/r1_required_blocks_verify.md`
-- Added RT basis checker phase:
-  - `tools/validator/r1_rt_basis.py`
-  - `tools/validator/samples/sample_rt_v_valid.md`
-  - `tools/validator/samples/sample_rt_v_invalid_basis.md`
-  - `tools/validator/samples/sample_rt_v_no_basis.md`
-  - `tools/validator/verification/r1_rt_basis_verify.md`
-- Added authority guard design and implementation:
-  - `docs/reviews/v1.1-authority-guard-design.md`
-  - `tools/validator/r1_authority_guard.py`
-  - `tools/validator/samples/sample_authority_ok.md`
-  - `tools/validator/samples/sample_authority_warn.md`
-  - `tools/validator/samples/sample_authority_fail.md`
-  - `tools/validator/verification/r1_authority_guard_verify.md`
-- Added template reference checker phase:
-  - `tools/validator/kdsl_template_refs.py`
-  - `tools/validator/samples/sample_template_ref_ok.md`
-  - `tools/validator/samples/sample_template_ref_missing_gate.md`
-  - `tools/validator/verification/kdsl_template_refs_verify.md`
-- Added template expansion evidence checker design and implementation:
-  - `docs/reviews/v1.1-full-template-expansion-checker-design.md`
-  - `tools/validator/kdsl_template_expansion.py`
-  - `tools/validator/samples/sample_template_expansion_ok.md`
-  - `tools/validator/samples/sample_template_expansion_warn.md`
-  - `tools/validator/samples/sample_template_expansion_fail.md`
-  - `tools/validator/verification/kdsl_template_expansion_verify.md`
-- Added combined validator wrapper and target-mode separation:
-  - `tools/validator/kdsl_validate.py`
-  - `tools/validator/kdsl_validate_usage.md`
-  - `tools/validator/verification/kdsl_validate_target_modes_verify.md`
-- Added public-facing README / examples-public design and drafts:
-  - `docs/reviews/v1.1-public-facing-readme-examples-design.md`
-  - `docs/public-facing-readme-draft.md`
-  - `examples/public/README.md`
-  - `examples/public/kdsl_prompt_safe_fix.example.md`
-  - `examples/public/kdsl_prompt_template_inheritance.example.md`
-  - `examples/public/r1_result_valid.example.md`
-  - `examples/public/r1_result_authority_guard.example.md`
-  - `examples/public/kdsl_dp_boundary_warning.example.md`
-  - `docs/release/v1.1-release-notes-draft.md`
-- Added release candidate checklist review draft:
-  - `docs/reviews/v1.1-release-candidate-checklist-review.md`
-- Added v1.1 readiness documents:
-  - `docs/reviews/v1.1-sync-review.md`
-  - `docs/reviews/v1.1-release-readiness-checklist.md`
-- Published v1.1.0-rc1 prerelease:
-  - tag: `v1.1.0-rc1`
-  - GitHub Release: `v1.1.0-rc1`
-  - release type: prerelease
-  - repository visibility: public
-  - Release Assets: none
-- Updated README navigation and current status for validator helpers, wrapper target modes, public-facing draft files, and v1.1.0-rc1 experimental preview status.
+```text
+v1.1.0-rc1:=experimental historical baseline
+v1.1.0 stable:=hold
+public_ready: no
+Release Assets: none
+KDSL-Packet:=draft-non-executable
+R1C schema:=undefined
+Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined
+```
 
-### Notes
+## v1.1.0-rc1
 
-- Development continues after `v0.1.0-draft`.
-- Existing `v0.1.0-draft` tag is unchanged.
-- GitHub Release `v1.1.0-rc1` has been created as a prerelease.
-- Repository visibility is public.
-- Release Assets are not attached.
-- v1.1.0-rc1 is a public experimental preview, not a stable/public-ready release.
-- License is MIT; see `LICENSE` and `docs/project-status.md`.
-- Validator helpers cover required-block, RT-basis, authority-guard, template-reference, template-expansion-evidence, and CompactPrompt lint.
-- Safety Gate Registry lint is specified but its validator implementation is not included yet.
-- Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
-- Combined validator wrapper supports target modes `r1`, `prompt`, `compact`, and `all`.
-- Required-block verification is recorded for OK and missing-block samples.
-- RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
-- Authority-guard verification is recorded for OK, warn, and fail samples.
-- Template-reference verification is recorded for OK and missing-gate samples.
-- Template-expansion-evidence verification is recorded for OK, warn, and fail samples.
-- CompactPrompt verification is recorded for valid, required-block, restricted-alias, and CP-Lift cases.
-- Validator helpers and CI do not perform runtime verification, user approval, semantic equivalence, full template expansion proof, release readiness, or public-ready decisions.
+### Release
+
+```text
+tag: v1.1.0-rc1
+release: GitHub prerelease
+release_class: experimental preview
+repository_visibility: public
+Release Assets: none
+stable: no
+public_ready: no
+license: MIT
+```
+
+### Major changes
+
+- Synchronized Core KDSL specification to v1.1/ADPS-aware wording.
+- Synchronized dev-prompt, converter, lint, ADPS bridge, glossary, and templates.
+- Defined KDSL-DP / P1 / P1L / R1 boundaries.
+- Defined KDSL_PROMPT and KDSL_RESULT contracts.
+- Added R1 required-block validator.
+- Added RT:v basis validator.
+- Added NEXT/COMMIT authority guard.
+- Added template reference and template expansion-evidence validators.
+- Added combined validator wrapper target separation.
+- Added sample expectation runner.
+- Added public-facing README/examples/release-note drafts.
+- Added release-readiness and synchronization review documents.
+
+### Safety boundaries
+
+```text
+KDSL-DP直接実行禁止
+P1/P1L正規化必須
+build/diff/lint/test pass != RT:v
+NEXT:=提案, 実行許可扱禁止
+COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
+validator pass != U承認/RT:v/release readiness
+public履歴/公開済tag/Release Assets保護
+```
 
 ## v0.1.0-draft
 
@@ -226,78 +185,13 @@ release: none
 public: not_yet
 ```
 
-### Added
+### Initial scope
 
-- Initial private repository structure for KDSL / R1 specification management.
-- README defining repository purpose, navigation, structure, draft status, and next candidate phase.
-- Overview and planning documents:
-  - `docs/overview.md`
-  - `docs/public-readiness.md`
-- Manifest and glossary:
-  - `spec/manifest.md`
-  - `spec/glossary.md`
-- Core specification drafts:
-  - `spec/core/kdsl-spec.md`
-  - `spec/core/kdsl-core.md`
-  - `spec/core/kdsl-modes.md`
-- Profile drafts:
-  - `spec/profiles/kdsl-profile-dev-prompt.md`
-  - `spec/profiles/kdsl-converter-prompt.md`
-- R1 draft:
-  - `spec/r1/r1-result-spec.md`
-- Lint draft:
-  - `spec/lint/kdsl-lint-checklist.md`
-- Bridge draft:
-  - `spec/bridge/kdsl-adps-bridge.md`
-- Workspace READMEs:
-  - `templates/README.md`
-  - `experimental/README.md`
-  - `examples/README.md`
-- Experimental drafts:
-  - `experimental/actor-model.md`
-  - `experimental/protocol-stack.md`
-- Template baseline drafts:
-  - `templates/base/kdsl_base_dev.md`
-  - `templates/result/r1_result_spec.md`
-  - `templates/tasks/task_docs_state_closeout.md`
-  - `templates/tasks/task_corrective_impl.md`
-  - `templates/tasks/task_investigation_only.md`
-- MidFD example drafts:
-  - `examples/midfd/docs_state_closeout.before.md`
-  - `examples/midfd/docs_state_closeout.after.md`
-  - `examples/midfd/r1_result.example.md`
-- Validator design drafts:
-  - `tools/validator/README.md`
-  - `tools/validator/r1-validator-design.md`
-  - `tools/validator/kdsl-template-lint-design.md`
-  - `tools/validator/mvp-design.md`
-- Review documents:
-  - `docs/reviews/v0.1.0-draft-review.md`
-  - `docs/reviews/v0.1.0-draft-checklist.md`
-- Release planning:
-  - `docs/release/v0.1.0-draft-tag-plan.md`
-
-### Consolidated
-
-- `docs/overview.md` summarizes KDSL/R1 purpose, components, safety principles, and current maturity.
-- `docs/public-readiness.md` records that public release is not recommended yet.
-- `tools/validator/mvp-design.md` defines a limited R1-first MVP scope and explicitly excludes approval/RT:v substitution.
-- `docs/release/v0.1.0-draft-tag-plan.md` separates work continuation from explicit tag creation approval.
-- `spec/manifest.md` defines source-of-truth ownership and reference relationships.
-- `spec/glossary.md` defines key terms such as KDSL, KDSL-DP, P1/P1L, R1, KDSL_PROMPT, KDSL_RESULT, RT:v, D禁止, Evidence, Authority, Template, and Validator.
-- `docs/reviews/v0.1.0-draft-checklist.md` records tag readiness checks and keeps tag creation under U approval.
-- Experimental concepts are explicitly not Core specification.
-- Examples are explicitly not Core specification.
-- Tools are optional aids; validator pass is not approval, RT:v, or requirement validity.
-- Template references require actual reading; unreadable templates must not be assumed.
-- R1 is separated as an evidence / result-verification specification.
-- Base dev prompt, R1 result, docs/state closeout, corrective implementation, and investigation-only templates are available as draft reusable parts.
-- MidFD docs/state closeout example demonstrates before/after compression and R1 verification format.
-- Validator design separates R1 validation from KDSL template lint.
-
-### Notes
-
-- This repository is a draft specification workspace.
-- No GitHub Release has been created for `v0.1.0-draft`.
-- Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, template-expansion-evidence, and CompactPrompt slices.
+- Created the initial KDSL / R1 specification workspace.
+- Added Core, profile, R1, lint, bridge, template, example, validator-design, review, and release-planning directories.
+- Added initial manifest and glossary.
+- Added base dev-prompt and R1 templates.
+- Added MidFD examples.
+- Defined tools as non-authoritative aids.
+- Defined examples, templates, and experimental concepts as non-canonical.
+- Kept tag creation and public operations under explicit user approval.
