@@ -17,6 +17,8 @@ Release Assets: none
 license: MIT
 validator: experimental heuristic lint helpers / partial implementation
 validator_authority: non_authoritative
+Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft adopted
+Safety Gate validator: not implemented
 ```
 
 状態正本:
@@ -52,6 +54,7 @@ Main goals:
 - KDSL_PROMPT / KDSL_RESULT の入出力契約整理
 - R1による結果報告の検収可能化
 - Profile / Mode / Safety / Lexicon / Envelope の責務分離
+- Safety Gateの参照ID/state/composition整理
 
 ## Quick navigation
 
@@ -83,12 +86,18 @@ Profiles:
 Lexicons:
   spec/lexicons/kdsl-lexicon-kanji-v1.md
 
+Registries:
+  spec/registry/README.md
+  spec/registry/kdsl-safety-gate-registry.md
+  spec/registry/kdsl-safety-gate-composition.md
+
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
 
 Lint:
   spec/lint/kdsl-lint-checklist.md
   spec/lint/kdsl-compact-prompt-lint.md
+  spec/lint/kdsl-safety-gate-registry-lint.md
 
 Bridge:
   spec/bridge/kdsl-adps-bridge.md
@@ -107,6 +116,9 @@ CompactPrompt examples:
   examples/compact-prompt/novel_review.kdsl-cp-kanji.md
   examples/compact-prompt/prompt_improver.kdsl-cp.md
   examples/compact-prompt/cp_lift_example.md
+
+Safety Gate examples:
+  examples/safety-gates/dev-prompt-safety-gates.example.md
 
 AI coding / R1 examples:
   examples/midfd/*
@@ -174,8 +186,9 @@ spec/
   core/         KDSL Core正本
   profiles/     用途別運用仕様
   lexicons/     宣言済み語彙/alias集合
+  registry/     Safety Gate等の参照ID/state/composition
   r1/           R1 Result Specification
-  lint/         KDSL/R1/CompactPrompt lint
+  lint/         KDSL/R1/CompactPrompt/Registry lint
   bridge/       KDSL-DP/ADPS/CP-Lift/Packet境界
 
 templates/      再利用部品
@@ -191,6 +204,7 @@ docs/           status/design/review/release planning
 Core: operator/保護語/変換禁止/mode/safetyの正本
 Profile: 用途別の運用仕様
 Lexicon: profile内で使用する宣言済み語彙。Core保護語を上書きしない
+Registry: 既存正本意味を参照するID/state/composition。権限付与や保護語置換をしない
 R1: AI作業結果の証跡/検収仕様
 Lint: 意味/safety gate/構造欠落検査
 Bridge: KDSL-DP/ADPS/P1/P1L/CP-Lift/Packet境界
@@ -260,9 +274,59 @@ Future Packet:
 ```text
 KDSL-Packet未正規化→実行指示扱禁止
 PKT:v1使用禁止
-Packet registry未定義→停止
+Packet schema/BASE/TASK/FLOW/R1C/Packet lint未定義→停止
 unknown BASE/TASK/FLOW/SG/R1C推測禁止
 ```
+
+## Safety Gate Registry
+
+Current v2-draft registry:
+
+```text
+registry: kdsl-sg@0.1-draft
+states: hold|satisfied|blocked|na
+validator: not implemented
+```
+
+IDs:
+
+```text
+SG-DESIGN
+SG-SCOPE
+SG-EVIDENCE
+SG-RUNTIME
+SG-AUTHORITY
+SG-ROLLBACK
+SG-PUBLIC
+SG-DATA
+SG-KDSL-DP
+SG-STOP
+```
+
+Core boundary:
+
+```text
+Core/R1/Bridge safety meaning > Registry mapping
+Registry ID != permission
+state:satisfied != unrelated authority
+unknown registry/SG ID推測禁止
+hold/blocked gate削除禁止
+specialized gate != broader gate解除
+current Full KDSL:=SG ID + complete protected wording
+SG ID-only compression禁止
+```
+
+Typed non-substitution:
+
+```text
+U承認 != runtime evidence
+runtime evidence != commit/push/release authority
+CI/validator pass != semantic equivalence
+NEXT != execution authority
+COMMIT.proposed != commit authority
+```
+
+Registry adoption does not make KDSL-Packet executable.
 
 ## Validator helpers
 
@@ -284,6 +348,7 @@ not checks:
   semantic equivalence proof
   full parser
   full negation parser
+  Safety Gate Registry lint implementation
   runtime execution
   U approval
   release readiness
@@ -308,6 +373,7 @@ validator pass != U承認
 validator pass != 実装妥当性保証
 validator pass != semantic equivalence
 validator pass != release readiness
+CI pass != RT:v/U承認/safety proof/release readiness
 ```
 
 ## Operational rules
@@ -315,7 +381,8 @@ validator pass != release readiness
 - Core / R1 / canonical Bridge は慎重に変更する
 - Manifest は正本参照関係を示す
 - LexiconはCore保護語を上書きしない
-- unknown profile / lexicon / alias / preset / template / schema は推測しない
+- RegistryはCore/R1/Bridge意味を変更せず、権限を付与しない
+- unknown profile / lexicon / alias / preset / template / schema / registry / ID は推測しない
 - KDSL-DPはP1/P1Lへ正規化するまで実行指示扱いしない
 - KDSL_RESULT NEXTは提案であり実行許可ではない
 - KDSL_RESULT COMMITは実行結果または推奨messageであり自動commit許可ではない
@@ -326,13 +393,16 @@ validator pass != release readiness
 
 ```text
 P0:
-  CompactPrompt validator first slice review/merge
-  GitHub Actionsでsample runner実行を検討
+  Safety Gate Registry validator first slice
 
 P1:
   R1C compact schema検討
-  Safety Gate registry検討
-  Packet registry検討
+  Packet BASE/TASK/FLOW registry検討
+  Packet schema/lint検討
+
+P2:
+  public-facing v2 overview
+  CI required check / branch protection検討
 
 Hold:
   v1.1.0 stable release
