@@ -1,16 +1,17 @@
-# KDSL-CP / KDSL-Packet Bridge v0.3-draft
+# KDSL-CP / KDSL-Packet Bridge v0.4-draft
 
 status: v2-draft
-scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / future Packet boundary
+scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary
 
 ## 1. Purpose
 
-This bridge defines when KDSL-CP must be lifted to Full KDSL and how the v2-draft Safety Gate Registry may be referenced without making a future KDSL-Packet executable.
+This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.
 
 ```text
 KDSL-CP:=一般LLM / Project files / 単体prompt向け軽量profile
 Full KDSL dev-prompt:=現行のAI coding tool向け実行可能契約
 kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry
+kdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile
 KDSL-Packet:=将来のpacket envelope候補
 ```
 
@@ -133,7 +134,41 @@ NEXT != execution authority
 COMMIT.proposed != commit authority
 ```
 
-## 6. KDSL-Packet draft boundary
+## 6. R1C alignment
+
+Current v2-draft serialization profile:
+
+```text
+schema: kdsl-r1c@0.1-draft
+source: spec/r1/r1c-compact-result-schema.md
+canonical parent: spec/r1/r1-result-spec.md
+lint: spec/lint/kdsl-r1c-lint.md
+validator: tools/validator/kdsl_r1c.py
+```
+
+Ownership boundary:
+
+```text
+canonical R1 > R1C serialization profile
+R1C != 独立canonical結果仕様
+R1C envelope:=KDSL_RESULT
+canonical 11 required field名保持
+short field alias禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback
+RT:v/NEXT/COMMIT意味変更禁止
+R1C validator pass != semantic equivalence/canonical R1適合証明
+```
+
+Packet effect:
+
+```text
+R1C v2-draft採用 != Packet executable
+R1C validator実装 != Packet executable
+OUT/R1C mappingはfuture Packet設計入力であり実行許可ではない
+```
+
+## 7. KDSL-Packet draft boundary
 
 KDSL-Packet is not executable in this repository state because the following canonical specifications do not yet exist.
 
@@ -143,16 +178,17 @@ BASE registry
 TASK registry
 FLOW opcode registry
 canonical/stable SG registry
-R1C schema
 Packet lint
 ```
 
-Current SG status:
+Current dependency status:
 
 ```text
 kdsl-sg@0.1-draft:=v2-draft registry adopted
+Safety Gate validator:=first heuristic slice integrated
+kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
+R1C validator:=first heuristic slice integrated
 stable/canonical Packet dependency:=not satisfied
-Safety Gate validator:=not implemented
 ```
 
 Therefore:
@@ -175,7 +211,7 @@ schema: undefined
 
 This notation is for design discussion only and must not be passed to an AI coding tool as an implementation contract.
 
-## 7. Packet-Summary
+## 8. Packet-Summary
 
 Packet-Summary may summarize a future canonical Packet to KDSL-CP for human-facing or Project file use.
 
@@ -187,7 +223,7 @@ OUT/R1C → Output/Checkへ要約
 
 Packet-Summary is a view, not the original execution contract.
 
-## 8. Summary restrictions
+## 9. Summary restrictions
 
 ```text
 D禁止削除禁止
@@ -200,9 +236,9 @@ hold/blocked Safety Gate削除禁止
 SG ID-only compression禁止
 ```
 
-## 9. Boundary examples
+## 10. Boundary examples
 
-### 9.1 KDSL-CP is enough
+### 10.1 KDSL-CP is enough
 
 ```text
 KDSL-CP漢:
@@ -222,7 +258,7 @@ repo操作なし
 runtime/R1不要
 ```
 
-### 9.2 CP-Lift required
+### 10.2 CP-Lift required
 
 ```text
 KDSL-CP:
@@ -260,7 +296,7 @@ Guard:
 - authority未確認→実行禁止
 ```
 
-### 9.3 Packet design draft only
+### 10.3 Packet design draft only
 
 ```text
 PACKET_DRAFT:
@@ -274,7 +310,7 @@ AI coding tool直接投入禁止
 canonical Packet schema/registry完成後に再評価
 ```
 
-## 10. Non-goals
+## 11. Non-goals
 
 ```text
 KDSL-DP/P1/P1L境界変更

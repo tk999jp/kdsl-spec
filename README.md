@@ -20,9 +20,9 @@ CompactPrompt validator: first slice integrated
 Validator CI: integrated
 Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft integrated
 Safety Gate validator: first heuristic slice integrated
-R1C design candidate: kdsl-r1c@0.1-draft / main integrated
-R1C validator: design-candidate first heuristic slice integrated
-R1C canonical/stable adoption: no
+R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
+R1C validator: first heuristic slice integrated
+R1C independent canonical/stable status: no
 validator sample suite: 49 expectations
 validator_authority: non_authoritative
 ```
@@ -237,14 +237,15 @@ current Full KDSL:=SG ID + complete protected wording
 SG ID-only compression禁止
 ```
 
-## R1C compact-result design candidate
+## R1C compact-result serialization profile
 
-Current design candidate:
+Current v2-draft serialization profile:
 
 ```text
 schema: kdsl-r1c@0.1-draft
-status: design candidate integrated
-canonical: no
+status: v2-draft adopted serialization profile
+canonical parent: spec/r1/r1-result-spec.md
+independent canonical spec: no
 stable: no
 envelope: KDSL_RESULT
 ```
@@ -282,7 +283,7 @@ COMMIT
 Critical boundaries:
 
 ```text
-canonical R1 > R1C design candidate
+canonical R1 > R1C v2-draft serialization profile
 RT:v=対象環境runtime確認済のみ
 build/diff/lint/test/CI pass != RT:v
 NEXT.authority:=proposal_only
@@ -318,13 +319,12 @@ BASE registry
 TASK registry
 FLOW opcode registry
 canonical/stable SG dependency
-canonical R1C dependency
 Packet lint
 ```
 
 ```text
 Safety Gate Registry/validator実装 != Packet executable
-R1C design/validator実装 != Packet executable
+R1C adoption/validator実装 != Packet executable
 ```
 
 ## Validator helpers
@@ -403,7 +403,6 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
-R1C canonical ownership alignment未実施
 Packet schema/BASE/TASK/FLOW registry未定義
 Packet lint未定義
 KDSL-Packet:=draft-non-executable
@@ -431,15 +430,14 @@ P0:
   49 sample runner再確認
 
 P1:
-  R1C canonical-ownership review
-  manifest/Bridge/glossary alignment可否
-
-P2:
   Packet BASE/TASK/FLOW registry
   Packet schema/lint
 
-P3:
+P2:
   Safety Gate protected wording/inheritance validator拡張
+
+P3:
+  R1C round-trip/property-based validator検討
 
 P4:
   public-facing v2 overview

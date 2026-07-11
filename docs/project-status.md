@@ -164,6 +164,21 @@ status: design_candidate_validator_integrated
 canonical_effect: none
 ```
 
+### PR #8 — R1C v2-draft ownership alignment
+
+```yaml
+pull_request: 8
+merge_status: pending
+source_branch: agent/kdsl-r1c-ownership
+base_commit: 4011599a5f3bbd81a97ac87fb3e2e6f0e90fe585
+schema_id: kdsl-r1c@0.1-draft
+target_status: v2_draft_adopted_serialization_profile
+canonical_parent: spec/r1/r1-result-spec.md
+canonical_r1_replacement: none
+packet_execution_effect: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -174,7 +189,8 @@ Safety Gate Registry:=v2-draft integrated
 Safety Gate validator first slice:=main統合済み
 R1C design candidate:=main統合済み
 R1C design-candidate validator first slice:=main統合済み
-R1C canonical adoption:=未実施
+R1C ownership:=v2-draft adopted serialization profile
+R1C canonical R1 replacement:=なし
 KDSL-Packet:=draft-non-executable
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -185,7 +201,9 @@ stable/tag/release/Release Assets操作:=別途U明示承認必須
 r1c:
   schema_id: kdsl-r1c@0.1-draft
   design_candidate: integrated
-  canonical: no
+  v2_draft_adopted_serialization_profile: yes
+  canonical_parent: spec/r1/r1-result-spec.md
+  independent_canonical_spec: no
   stable: no
   envelope: KDSL_RESULT
   required_field_names: canonical R1 names retained
@@ -195,15 +213,15 @@ r1c:
   round_trip_to_full_r1: required by candidate
   full_r1_fallback: required by candidate
   validator: first heuristic slice integrated
-  manifest_bridge_glossary_promotion: pending
+  manifest_bridge_glossary_alignment: integrated by PR #8
 ```
 
 R1Cは現時点で、canonical R1を置換しません。
 
 ```text
-canonical R1 > R1C design candidate
-R1C validator pass != R1C canonical adoption
-R1C design/validator存在 != Packet executable
+canonical R1 > R1C v2-draft serialization profile
+R1C validator pass != canonical R1適合証明
+R1C adoption/validator存在 != Packet executable
 ```
 
 ## 5. Validator maturity
@@ -366,7 +384,6 @@ full negation parserなし
 protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
-R1C canonical ownership alignment未実施
 R1C round-trip semantic proofなし
 Packet schema未定義
 BASE/TASK/FLOW registry未定義
@@ -384,7 +401,7 @@ Use as:
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
   Safety Gate Registry v2-draft
-  R1C compact-result design candidate
+  R1C v2-draft adopted compact serialization profile
   experimental heuristic validator helpers
   validator sample CI baseline
 
@@ -393,20 +410,17 @@ Do not present as:
   production-ready validator suite
   proof system
   approval/runtime/release substitute
-  canonical R1C standard
+  independent canonical R1C standard
   executable Packet specification
 ```
 
 ## 10. Next safe steps
 
 ```text
-P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
-P1: R1C canonical-ownership review
-    - manifest/Bridge/glossary alignment可否
-    - design candidate→v2-draft adopted候補
-    - validator resultsはapproval代替禁止
-P2: Packet BASE/TASK/FLOW registry/schema/lint設計
-P3: Safety Gate protected wording/inheritance validator拡張
+P0: PR #8 CI確認 / squash merge / ownership closeout
+P1: Packet BASE/TASK/FLOW registry/schema/lint設計
+P2: Safety Gate protected wording/inheritance validator拡張
+P3: R1C round-trip/property-based validator検討
 P4: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
