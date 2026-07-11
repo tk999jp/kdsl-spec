@@ -2,23 +2,26 @@
 
 KDSL / R1 specification repository.
 
-KDSL（安全gate保持型prompt記法）と R1 Result Specification（AI作業結果の証跡・検収仕様）を管理するexperimental preview repositoryです。
+KDSL（安全gate保持型prompt記法）とR1 Result Specification（AI作業結果の証跡・検収仕様）を管理するexperimental preview repositoryです。
 
 ## Current status
 
 ```text
-status: v1.1.0-rc1 experimental preview published
 repository_visibility: public
-release: v1.1.0-rc1
+published_release: v1.1.0-rc1
 release_type: prerelease / experimental preview
 public_ready: no
 stable_release: none
 Release Assets: none
 license: MIT
-validator: experimental heuristic lint helpers / partial implementation
+
+v2 architecture: main integrated
+CompactPrompt validator: first slice integrated
+Validator CI: integrated
+Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft integrated
+Safety Gate validator: first heuristic slice integrated
+validator sample suite: 34 expectations
 validator_authority: non_authoritative
-Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft adopted
-Safety Gate validator: not implemented
 ```
 
 状態正本:
@@ -27,12 +30,19 @@ Safety Gate validator: not implemented
 docs/project-status.md
 ```
 
+仕様参照関係:
+
+```text
+spec/manifest.md
+```
+
 Policy:
 
 ```text
+v0.1.0-draft tag:=履歴として維持
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
-v2-draft設計を優先
+v2-draft設計/validator改善:=継続
 既存tag移動禁止
 Release Assets操作禁止
 stable/public-ready化→別途U明示承認必須
@@ -54,7 +64,8 @@ Main goals:
 - KDSL_PROMPT / KDSL_RESULT の入出力契約整理
 - R1による結果報告の検収可能化
 - Profile / Mode / Safety / Lexicon / Envelope の責務分離
-- Safety Gateの参照ID/state/composition整理
+- Safety Gateの参照ID / state / composition整理
+- heuristic validatorによる形式・欠落・代表的衝突検査
 
 ## Quick navigation
 
@@ -62,21 +73,19 @@ Main goals:
 Project status:
   docs/project-status.md
 
-Overview:
+Overview / direction:
   docs/overview.md
-
-v2 draft direction:
   docs/design/kdsl-v2-direction.md
-
-Core:
-  spec/core/kdsl-spec.md
-  spec/core/kdsl-core.md
-  spec/core/kdsl-modes.md
 
 Manifest / glossary:
   spec/manifest.md
   spec/glossary.md
   spec/glossary-v2-draft.md
+
+Core:
+  spec/core/kdsl-spec.md
+  spec/core/kdsl-core.md
+  spec/core/kdsl-modes.md
 
 Profiles:
   spec/profiles/kdsl-profile-dev-prompt.md
@@ -103,38 +112,25 @@ Bridge:
   spec/bridge/kdsl-adps-bridge.md
   spec/bridge/kdsl-cp-packet-bridge.md
 
-Templates:
-  templates/README.md
-  templates/base/kdsl_base_dev.md
-  templates/result/r1_result_spec.md
-  templates/tasks/*
-
-CompactPrompt examples:
-  examples/compact-prompt/README.md
-  examples/compact-prompt/blog_meta.kdsl-cp.md
-  examples/compact-prompt/blog_meta.kdsl-cp-kanji.md
-  examples/compact-prompt/novel_review.kdsl-cp-kanji.md
-  examples/compact-prompt/prompt_improver.kdsl-cp.md
-  examples/compact-prompt/cp_lift_example.md
-
-Safety Gate examples:
+Examples:
+  examples/compact-prompt/*
   examples/safety-gates/dev-prompt-safety-gates.example.md
-
-AI coding / R1 examples:
   examples/midfd/*
   examples/public/*
 
-Validator helpers:
+Validator:
   tools/validator/README.md
   tools/validator/kdsl_validate.py
   tools/validator/kdsl_compact_prompt.py
+  tools/validator/kdsl_safety_gate.py
   tools/validator/run_samples.py
-  tools/validator/*
+  tools/validator/samples/*
+  tools/validator/verification/*
 
-Public/release planning:
+Review / release planning:
+  docs/reviews/*
   docs/public-readiness.md
   docs/release/*
-  docs/reviews/*
 ```
 
 ## Architecture
@@ -168,51 +164,9 @@ Named compositions:
 
 ```text
 KDSL-CP:=profile:compact-prompt
-
 KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
-
-KDSL-Packet:=future packet envelope candidate
-  current status: draft-non-executable
-
 KDSL-R1:=result envelope / KDSL_RESULT / Evidence / RT / Authority
-```
-
-## Repository structure
-
-```text
-spec/
-  manifest.md   正本参照関係
-  glossary*.md 用語定義
-  core/         KDSL Core正本
-  profiles/     用途別運用仕様
-  lexicons/     宣言済み語彙/alias集合
-  registry/     Safety Gate等の参照ID/state/composition
-  r1/           R1 Result Specification
-  lint/         KDSL/R1/CompactPrompt/Registry lint
-  bridge/       KDSL-DP/ADPS/CP-Lift/Packet境界
-
-templates/      再利用部品
-experimental/   正本ではない実験案
-examples/       正本ではない理解補助
-tools/          validator helper
-docs/           status/design/review/release planning
-```
-
-## Specification levels
-
-```text
-Core: operator/保護語/変換禁止/mode/safetyの正本
-Profile: 用途別の運用仕様
-Lexicon: profile内で使用する宣言済み語彙。Core保護語を上書きしない
-Registry: 既存正本意味を参照するID/state/composition。権限付与や保護語置換をしない
-R1: AI作業結果の証跡/検収仕様
-Lint: 意味/safety gate/構造欠落検査
-Bridge: KDSL-DP/ADPS/P1/P1L/CP-Lift/Packet境界
-Templates: 実運用向け再利用部品。正本ではない
-Examples: 理解補助。正本ではない
-Tools: heuristic lint補助。承認/RT:v/release readinessの代替ではない
-Design docs: 次期仕様の判断記録。正本ではない
-Project status: repository現在状態の運用上の状態正本
+KDSL-Packet:=future packet envelope candidate / draft-non-executable
 ```
 
 ## CompactPrompt
@@ -234,16 +188,8 @@ Kanji-v1 required keys:
 Kanji aliases are structural keys, not permission to reduce protected words.
 
 ```text
-推奨:
-守:
-- 入力外事実追加禁止
-- 不明→断定禁止
-- 推測→推測明記
-
-非推奨:
-守:
-- 材外実追加禁止
-- 不→断定禁止
+構造aliasはKEY位置のみ
+禁止/未確認/未実行/承認待/断定禁止等の保護語弱化禁止
 ```
 
 ## CP-Lift / Packet boundary
@@ -263,19 +209,20 @@ CP-Lift triggers:
   AI coding toolへ渡す場合
 ```
 
-Current lift target:
+Current executable lift target:
 
 ```text
 Full KDSL profile:dev-prompt
 ```
 
-Future Packet:
+Packet boundary:
 
 ```text
 KDSL-Packet未正規化→実行指示扱禁止
 PKT:v1使用禁止
 Packet schema/BASE/TASK/FLOW/R1C/Packet lint未定義→停止
 unknown BASE/TASK/FLOW/SG/R1C推測禁止
+Safety Gate Registry/validator実装 != Packet executable
 ```
 
 ## Safety Gate Registry
@@ -285,7 +232,6 @@ Current v2-draft registry:
 ```text
 registry: kdsl-sg@0.1-draft
 states: hold|satisfied|blocked|na
-validator: not implemented
 ```
 
 IDs:
@@ -303,7 +249,7 @@ SG-KDSL-DP
 SG-STOP
 ```
 
-Core boundary:
+Boundary:
 
 ```text
 Core/R1/Bridge safety meaning > Registry mapping
@@ -326,54 +272,84 @@ NEXT != execution authority
 COMMIT.proposed != commit authority
 ```
 
-Registry adoption does not make KDSL-Packet executable.
-
 ## Validator helpers
 
 Current validator helpers are experimental and heuristic.
 
-```text
-checks:
-  required block presence
-  RT:v basis wording
-  NEXT/COMMIT authority shape
-  template reference/expansion evidence
-  CompactPrompt mode/safety/lexicon
-  CompactPrompt required blocks
-  representative restricted aliases
-  representative CP-Lift triggers
-  Packet draft boundary
-
-not checks:
-  semantic equivalence proof
-  full parser
-  full negation parser
-  Safety Gate Registry lint implementation
-  runtime execution
-  U approval
-  release readiness
-```
-
-CompactPrompt target:
+Targets:
 
 ```text
+python tools/validator/kdsl_validate.py --target r1 <file>
+python tools/validator/kdsl_validate.py --target prompt <file>
 python tools/validator/kdsl_validate.py --target compact <file>
+python tools/validator/kdsl_validate.py --target safety-gate <file>
+python tools/validator/kdsl_validate.py --target all <file>
 ```
 
-Verified sample state:
+Safety Gate first slice checks:
+
+```text
+known registry / known ID / known state
+id/state/scope/reason required fields
+state:satisfied evidence/authority
+state:blocked evidence warning
+state:na reason
+dev-prompt baseline gates
+representative rollback/data/public/runtime/KDSL-DP composition
+```
+
+Sample runner:
 
 ```text
 python tools/validator/run_samples.py
-→ total: 23 / failed: 0
 ```
+
+Current CI evidence:
+
+```text
+sample expectations: 34
+failed: 0
+actual Safety Gate repository example: included
+workflow: .github/workflows/validator.yml
+```
+
+Validator boundaries:
 
 ```text
 validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
 validator pass != semantic equivalence
+validator pass != safety proof
+validator pass != execution authority
 validator pass != release readiness
-CI pass != RT:v/U承認/safety proof/release readiness
+CI pass != stable/public-ready判断
+```
+
+## Repository structure
+
+```text
+spec/          Core/Profile/Lexicon/Registry/R1/Lint/Bridge
+examples/      理解補助。正本ではない
+templates/     再利用部品。正本ではない
+tools/         experimental validator helpers
+docs/          status/design/review/release planning
+experimental/  正本ではない実験案
+```
+
+## Known limitations
+
+```text
+full YAML parserなし
+full natural-language semantic parserなし
+full negation parserなし
+protected wording semantic equivalence lintなし
+Safety Gate parent-child inheritance lintなし
+Safety Gate aggregate state lintなし
+R1C schema未定義
+Packet schema/BASE/TASK/FLOW registry未定義
+Packet lint未定義
+KDSL-Packet:=draft-non-executable
 ```
 
 ## Operational rules
@@ -382,7 +358,7 @@ CI pass != RT:v/U承認/safety proof/release readiness
 - Manifest は正本参照関係を示す
 - LexiconはCore保護語を上書きしない
 - RegistryはCore/R1/Bridge意味を変更せず、権限を付与しない
-- unknown profile / lexicon / alias / preset / template / schema / registry / ID は推測しない
+- unknown profile / mode / safety / lexicon / alias / schema / registry / ID は推測しない
 - KDSL-DPはP1/P1Lへ正規化するまで実行指示扱いしない
 - KDSL_RESULT NEXTは提案であり実行許可ではない
 - KDSL_RESULT COMMITは実行結果または推奨messageであり自動commit許可ではない
@@ -393,14 +369,20 @@ CI pass != RT:v/U承認/safety proof/release readiness
 
 ```text
 P0:
-  Safety Gate Registry validator first slice
+  local mainをorigin/mainへ同期
+  34 sample runner再確認
 
 P1:
-  R1C compact schema検討
-  Packet BASE/TASK/FLOW registry検討
-  Packet schema/lint検討
+  R1C compact schema設計
 
 P2:
+  Packet BASE/TASK/FLOW registry
+  Packet schema/lint
+
+P3:
+  Safety Gate protected wording/inheritance validator拡張
+
+P4:
   public-facing v2 overview
   CI required check / branch protection検討
 
