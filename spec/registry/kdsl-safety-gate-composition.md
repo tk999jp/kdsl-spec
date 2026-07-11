@@ -1,8 +1,9 @@
 # KDSL Safety Gate Composition Rules v0.1-draft
 
-status: review-candidate
+status: v2-draft adopted
 registry: kdsl-sg@0.1-draft
 source: spec/registry/kdsl-safety-gate-registry.md
+manifest: spec/manifest.md
 
 ## 1. Purpose
 
