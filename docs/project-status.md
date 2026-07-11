@@ -56,8 +56,9 @@ compact_prompt_validator_workstream:
   target_branch: main
   pull_request: 2
   status: validation_passed
-  merge_status: merge_pending
-  verified_head_before_evidence_update: 2b50ed1
+  merge_status: ready_for_merge
+  verified_implementation_head: 2b50ed1
+  verification_record_commit: 8edc0c2
   scope:
     - CompactPrompt profile/shorthand detection
     - mode/safety/lexicon value lint
@@ -75,7 +76,7 @@ Direction:
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
-CompactPrompt validator:=Windows validation pass / merge pending
+CompactPrompt validator:=Windows validation pass / ready for squash merge
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -171,7 +172,7 @@ compact_prompt_windows_validation:
   date: 2026-07-11
   environment: Windows PowerShell 5.1 / repository checkout
   branch: agent/kdsl-compact-validator
-  verified_head: 2b50ed1
+  verified_implementation_head: 2b50ed1
   full_sample_runner:
     command: python tools/validator/run_samples.py
     total: 23
