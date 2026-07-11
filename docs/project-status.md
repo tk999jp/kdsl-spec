@@ -54,8 +54,10 @@ v2_compact_prompt_integration:
 compact_prompt_validator_workstream:
   branch: agent/kdsl-compact-validator
   target_branch: main
-  status: experimental_first_slice
-  merge_status: not_merged
+  pull_request: 2
+  status: validation_passed
+  merge_status: merge_pending
+  verified_head_before_evidence_update: 2b50ed1
   scope:
     - CompactPrompt profile/shorthand detection
     - mode/safety/lexicon value lint
@@ -73,7 +75,7 @@ Direction:
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
-CompactPrompt validator:=first slice review中
+CompactPrompt validator:=Windows validation pass / merge pending
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -105,7 +107,7 @@ validator:
     - NEXT/COMMIT authority-shape heuristic lint
     - template reference lint
     - template expansion evidence lint
-  candidate_branch_scope:
+  merge_candidate_scope:
     - CompactPrompt required block lint
     - CompactPrompt mode/safety/lexicon lint
     - kanji-v1 restricted alias lint
@@ -125,7 +127,6 @@ Constraints:
 
 ```text
 validator未実行→pass扱禁止
-isolated test pass != full sample runner pass
 validator pass != U承認
 validator pass != RT:v
 validator pass != 実装妥当性保証
@@ -166,38 +167,34 @@ main_sample_validation:
 ```
 
 ```yaml
-compact_prompt_isolated_validation:
+compact_prompt_windows_validation:
   date: 2026-07-11
-  method: isolated local Python execution
-  direct_cases:
-    standard_valid: 0
-    kanji_valid: 0
-    missing_block: 2
-    restricted_alias: 2
-    cp_lift_required: 2
-  wrapper_cases:
-    compact_valid: 0
-    compact_invalid: 2
-  existing_example_spot_checks:
-    prompt_improver: 0
-    blog_meta_kanji_corrected: 0
-    novel_review_kanji_corrected: 0
-  full_repository_runner: not_executed
+  environment: Windows PowerShell 5.1 / repository checkout
+  branch: agent/kdsl-compact-validator
+  verified_head: 2b50ed1
+  full_sample_runner:
+    command: python tools/validator/run_samples.py
+    total: 23
+    failed: 0
+  examples:
+    blog_meta_standard: pass
+    blog_meta_kanji: pass
+    novel_review_kanji: pass
+    prompt_improver: pass
+  repository_state:
+    worktree: clean
+    branch_tracking: synchronized
+    diff_check: pass
 ```
 
 ```text
-isolated validation details:
+verification details:
   tools/validator/verification/kdsl_compact_prompt_verify.md
-
-expected post-change sample count:
-  23
 ```
 
-## 8. Known gaps before validator merge or stable
+## 8. Known gaps before stable
 
 ```text
-full repository sample runner未実行
-Windows PowerShell/Python環境でのcheckout確認未実行
 GitHub Actions未構成
 full parserなし
 full natural-language semantic parserなし
@@ -214,7 +211,7 @@ Use as:
   experimental preview
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
-  heuristic validator helper candidate
+  heuristic validator helper
   internal/public review candidate
 
 Do not present as:
@@ -228,10 +225,10 @@ Do not present as:
 ## 10. Next safe steps
 
 ```text
-P0: agent/kdsl-compact-validatorをlocal checkout
-P1: python tools/validator/run_samples.py
-P2: CompactPrompt examplesを--target compactで検証
-P3: sample total=23 / failed=0確認後にPR review/merge判断
-P4: R1C / Safety Gate registry / Packet registryを別Phaseで検討
+P0: PR #2 ready化 / squash merge
+P1: merge後main状態正本同期
+P2: GitHub Actionsでsample runner実行を検討
+P3: R1C / Safety Gate registry / Packet registryを別Phaseで検討
+P4: public-facing v2 overview検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
