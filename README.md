@@ -25,8 +25,8 @@ R1C validator: first heuristic slice integrated
 R1C independent canonical/stable status: no
 Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries: v2-draft adopted
-Packet validator: not implemented
-validator sample suite: 49 expectations
+Packet validator: first heuristic slice integration pending
+validator sample suite: 69 expectations candidate
 validator_authority: non_authoritative
 ```
 
@@ -140,6 +140,7 @@ Validator:
   tools/validator/kdsl_compact_prompt.py
   tools/validator/kdsl_safety_gate.py
   tools/validator/kdsl_r1c.py
+  tools/validator/kdsl_packet.py
   tools/validator/run_samples.py
   tools/validator/samples/*
   tools/validator/verification/*
@@ -361,6 +362,7 @@ python tools/validator/kdsl_validate.py --target prompt <file>
 python tools/validator/kdsl_validate.py --target compact <file>
 python tools/validator/kdsl_validate.py --target safety-gate <file>
 python tools/validator/kdsl_validate.py --target r1c <file>
+python tools/validator/kdsl_validate.py --target packet <file>
 python tools/validator/kdsl_validate.py --target all <file>
 ```
 
@@ -386,6 +388,7 @@ examples/safety-gates/dev-prompt-safety-gates.example.md
 examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
+examples/packet/packet-design.example.md
 ```
 
 Validator boundaries:
@@ -425,7 +428,8 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
-Packet validator/sample matrix未実装
+Packet validator first slice:=integration pending
+Packet full YAML/semantic parserなし
 Packet normalization transformer/round-trip proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packet:=v2-draft adopted / non-executable
@@ -449,23 +453,18 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  local mainをorigin/mainへ同期
-  49 sample runner再確認
+  PR #13 CI確認 / squash merge / Packet validator closeout
 
 P1:
-  Packet validator first slice
-  Packet positive/negative sample matrix
-
-P2:
   Packet normalization round-trip tooling/tests
 
-P3:
+P2:
   Safety Gate protected wording/inheritance validator拡張
 
-P4:
+P3:
   R1C round-trip/property-based validator検討
 
-P5:
+P4:
   public-facing v2 overview
   CI required check / branch protection検討
 

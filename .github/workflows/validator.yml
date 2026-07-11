@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -36,51 +36,3 @@ jobs:
 
       - name: Run validator samples
         run: python tools/validator/run_samples.py
-
-  packet_validator_apply:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-packet-validator'
-    name: Apply Packet validator integration
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Check out Packet validator branch
-        uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-packet-validator
-          fetch-depth: 0
-
-      - name: Fix integration carrier
-        run: python .github/scripts/fix_packet_validator_script.py
-
-      - name: Apply exact asserted integration
-        id: apply
-        continue-on-error: true
-        shell: bash
-        run: |
-          python .github/scripts/apply_packet_validator.py > /tmp/packet-validator-apply.log 2>&1
-
-      - name: Upload integration diagnostic
-        if: steps.apply.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: packet-validator-apply-error-${{ github.run_id }}
-          path: /tmp/packet-validator-apply.log
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Fail after diagnostic upload
-        if: steps.apply.outcome == 'failure'
-        run: exit 1
-
-      - name: Restore read-only workflow and commit integration
-        if: steps.apply.outcome == 'success'
-        shell: bash
-        run: |
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/validator.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Validator: integrate Packet first slice"
-          git push origin HEAD:agent/kdsl-packet-validator

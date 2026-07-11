@@ -188,13 +188,20 @@ def main(argv):
         errors.append('CP-Lift required: ' + ', '.join(sorted(set(lift_hits))))
 
     if re.search(r'PKT\s*:\s*v1', scope, re.IGNORECASE):
-        errors.append('PKT:v1 is prohibited while Packet schema/registries are undefined')
+        errors.append('PKT:v1 is prohibited')
 
     if 'PACKET_DRAFT:' in scope:
-        if 'status: non-executable' not in scope or 'schema: undefined' not in scope:
-            errors.append('PACKET_DRAFT requires status: non-executable and schema: undefined')
+        required_packet_markers = (
+            'SCHEMA: kdsl-packet@0.1-draft',
+            'STATUS: non-executable',
+            'required: true',
+            'state: not_normalized',
+        )
+        missing = [marker for marker in required_packet_markers if marker not in scope]
+        if missing:
+            errors.append('PACKET_DRAFT non-executable markers missing: ' + ', '.join(missing))
         else:
-            info.append('non-executable Packet draft marker detected')
+            info.append('adopted non-executable Packet marker detected')
 
     info.append('CompactPrompt form: ' + ('kanji-v1' if expected_kanji else 'standard'))
     info.append('required blocks checked: ' + ', '.join(required))

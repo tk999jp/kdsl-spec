@@ -246,6 +246,20 @@ execution_effect: none
 stable_effect: none
 ```
 
+### PR #13 — Packet validator first slice
+
+```yaml
+pull_request: 13
+merge_status: pending
+source_branch: agent/kdsl-packet-validator
+checker: tools/validator/kdsl_packet.py
+wrapper_target: packet
+expected_sample_total: 69
+validator_authority: non_authoritative
+packet_execution_effect: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -260,6 +274,7 @@ R1C ownership:=v2-draft adopted serialization profile
 R1C canonical R1 replacement:=なし
 Packet design candidate:=main統合済み
 Packet ownership:=v2-draft adopted authoring schema/registries/lint
+Packet validator first slice:=integration pending
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -306,7 +321,7 @@ packet:
   task_registry: kdsl-packet-task@0.1-draft
   flow_registry: kdsl-packet-flow@0.1-draft
   lint: adopted
-  validator: not_implemented
+  validator: first_slice_integration_pending
   normalize_required: true
   packet_state: not_normalized
   pkt_v1: prohibited
@@ -332,6 +347,7 @@ validator:
     - compact
     - safety-gate
     - r1c
+    - packet
     - all
   current_main_scope:
     - KDSL_RESULT required block presence lint
@@ -344,10 +360,13 @@ validator:
     - R1C VERIFY class separation lint
     - R1C RT/NEXT/COMMIT boundary lint
     - Full R1 fallback/out-of-scope separation
+    - Packet envelope/field/order lint
+    - Packet registry/ID/gate/flow/authority/normalization lint
+    - Packet out-of-scope separation
   ci:
     workflow: .github/workflows/validator.yml
     command: python tools/validator/run_samples.py
-    expected_sample_total: 49
+    expected_sample_total: 69
     latest_pr_validation:
       pull_request: 7
       run_id: 29144196401
@@ -365,7 +384,8 @@ full natural-language trigger context parser
 R1C multi-line JSON parsing
 R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
-Packet validator/sample matrix
+Packet full YAML/semantic parser
+Packet Safety Gate state/evidence deep lint
 Packet normalization transformer/round-trip proof
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
@@ -460,6 +480,16 @@ failed: 0
 meaning: existing validator regression evidence; not Packet lint pass
 ```
 
+### Packet validator candidate
+
+```yaml
+pull_request: 13
+branch: agent/kdsl-packet-validator
+expected_sample_total: 69
+status: branch_validation_pending
+meaning: Packet first-slice heuristic candidate; not Packet execution/normalization proof
+```
+
 ### R1C validator
 
 ```yaml
@@ -496,7 +526,8 @@ protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
-Packet validator/sample matrix未実装
+Packet validator first slice:=integration pending
+Packet full YAML/semantic parserなし
 Packet normalization transformer/round-trip proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
@@ -529,11 +560,10 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #12 CI確認 / squash merge / Packet ownership closeout
-P1: Packet validator first slice / sample matrix
-P2: Packet normalization round-trip tooling/tests
-P3: Safety Gate protected wording/inheritance validator拡張
-P4: R1C round-trip/property-based validator検討
-P5: public-facing v2 overview / CI required check検討
+P0: PR #13 CI確認 / squash merge / Packet validator closeout
+P1: Packet normalization round-trip tooling/tests
+P2: Safety Gate protected wording/inheritance validator拡張
+P3: R1C round-trip/property-based validator検討
+P4: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

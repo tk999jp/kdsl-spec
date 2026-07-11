@@ -6,6 +6,19 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Packet validator first slice
+
+- Added `tools/validator/kdsl_packet.py`.
+- Added Packet envelope/required-field/order checks.
+- Added BASE/TASK/FLOW/SG registry and known ID checks.
+- Added TASK minimum Safety Gate/FLOW matrix checks.
+- Added AUTHORITY/NORMALIZE/OUT boundary checks.
+- Added PKT:v1 and representative trigger checks.
+- Added `--target packet` and Packet checking to `--target all`.
+- Expanded the candidate sample suite from 49 to 69 expectations.
+- Added actual `examples/packet/packet-design.example.md` coverage.
+- Packet execution/normalization readiness remains explicitly out of scope.
+
 #### Packet v2-draft ownership alignment
 
 - Adopted `kdsl-packet@0.1-draft` as a v2-draft non-executable authoring schema.
@@ -192,7 +205,8 @@ R1C independent canonical/stable status:=no
 R1C manifest/Bridge/glossary alignment:=integrated
 KDSL-Packet:=kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries:=v2-draft adopted
-Packet lint:=v2-draft adopted / validator not implemented
+Packet lint:=v2-draft adopted / validator first slice integration pending
+Packet sample suite:=69 expectations candidate
 normalization transformer/round-trip proof:=not implemented
 PKT:v1:=prohibited
 ```
