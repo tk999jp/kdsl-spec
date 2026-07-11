@@ -1,18 +1,18 @@
-# KDSL-CP / KDSL-Packet Bridge v0.4-draft
+# KDSL-CP / KDSL-Packet Bridge v0.5-draft
 
 status: v2-draft
-scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary
+scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / Packet non-executable boundary
 
 ## 1. Purpose
 
-This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.
+This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry and R1C may be referenced, and why adopted KDSL-Packet authoring remains non-executable.
 
 ```text
 KDSL-CP:=一般LLM / Project files / 単体prompt向け軽量profile
 Full KDSL dev-prompt:=現行のAI coding tool向け実行可能契約
 kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry
 kdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile
-KDSL-Packet:=将来のpacket envelope候補
+KDSL-Packet:=v2-draft adopted authoring envelope / non-executable
 ```
 
 KDSL-CP must not become a shortcut for unsafe implementation instructions.
@@ -37,7 +37,7 @@ If any trigger is present:
 ```text
 KDSL-CP単体実装指示禁止
 現行: Full KDSL profile:dev-promptへ昇格
-将来: canonical Packet schema/registry完成後のみKDSL-Packet使用可
+将来: Packet validator/normalization/execution promotion条件全充足後のみ実行可能性を再審査
 必要safety gate明示必須
 ```
 
@@ -63,7 +63,7 @@ D禁止時KDSL_PROMPT出力禁止
 KDSL_RESULT報告要求保持
 ```
 
-## 4. Mapping: CP to Full KDSL / future Packet
+## 4. Mapping: CP to Full KDSL / Packet authoring
 
 ```text
 KDSL-CP Role    → task role / responsibility
@@ -165,55 +165,72 @@ Packet effect:
 ```text
 R1C v2-draft採用 != Packet executable
 R1C validator実装 != Packet executable
-OUT/R1C mappingはfuture Packet設計入力であり実行許可ではない
+OUT/R1C mappingはPacket authoring fieldであり実行許可ではない
 ```
 
-## 7. KDSL-Packet draft boundary
+## 7. KDSL-Packet adopted non-executable boundary
 
-KDSL-Packet is not executable in this repository state because the following canonical specifications do not yet exist.
+Current v2-draft components:
 
 ```text
-Packet schema
-BASE registry
-TASK registry
-FLOW opcode registry
-canonical/stable SG registry
-Packet lint
+schema: kdsl-packet@0.1-draft
+source: spec/packet/kdsl-packet-schema.md
+BASE registry: kdsl-packet-base@0.1-draft
+TASK registry: kdsl-packet-task@0.1-draft
+FLOW registry: kdsl-packet-flow@0.1-draft
+lint: spec/lint/kdsl-packet-lint.md
+validator: not implemented
 ```
 
-Current dependency status:
+Adoption boundary:
 
 ```text
-kdsl-sg@0.1-draft:=v2-draft registry adopted
-Safety Gate validator:=first heuristic slice integrated
-kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
-R1C validator:=first heuristic slice integrated
-stable/canonical Packet dependency:=not satisfied
+Packet schema/registry/lint:=v2-draft adopted
+KDSL-Packet:=non-executable authoring/transport envelope
+STATUS:non-executable固定
+NORMALIZE.required:true固定
+NORMALIZE.state:not_normalized固定
+BASE/TASK/FLOW ID/opcode != authority
+normalization artifact未生成/未検証→実行禁止
+```
+
+Unresolved execution dependencies:
+
+```text
+Packet validator/sample matrix
+normalization transformer and round-trip proof
+Safety Gate completeness/inheritance proof
+stable/canonical execution dependency
+explicit executable promotion review/U承認
 ```
 
 Therefore:
 
 ```text
 KDSL-Packet未正規化→実行指示扱禁止
-Packet draft valid-looking != executable
+Packet valid-looking/lint-looking != executable
 PKT:v1使用禁止
 unknown BASE/TASK/FLOW/SG/R1C推測禁止
-Packet registry未定義→停止
+validator未実装→Packet lint pass扱禁止
 ```
 
-Allowed design notation:
+Required design notation:
 
 ```text
 PACKET_DRAFT:
-status: non-executable
-schema: undefined
+SCHEMA: kdsl-packet@0.1-draft
+STATUS: non-executable
+...
+NORMALIZE:
+  required: true
+  state: not_normalized
 ```
 
-This notation is for design discussion only and must not be passed to an AI coding tool as an implementation contract.
+This notation remains design/authoring input only and must not be passed directly to an AI coding tool as an implementation contract.
 
 ## 8. Packet-Summary
 
-Packet-Summary may summarize a future canonical Packet to KDSL-CP for human-facing or Project file use.
+Packet-Summary may summarize an adopted non-executable Packet authoring record to KDSL-CP for human-facing or Project file use.
 
 ```text
 BASE/TASK/SG/FLOW → Guard/Rulesへ要約
@@ -300,9 +317,9 @@ Guard:
 
 ```text
 PACKET_DRAFT:
-status: non-executable
-schema: undefined
-fields: BASE/TASK/SRC/READ/TGT/OBS/GOAL/NON/STOP/FLOW/VERIFY/OUT
+SCHEMA: kdsl-packet@0.1-draft
+STATUS: non-executable
+fields: BASE/TASK/SRC/READ/TGT/OBS/GOAL/NON/SG/STOP/FLOW/VERIFY/OUT/AUTHORITY/NORMALIZE
 ```
 
 ```text

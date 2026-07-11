@@ -196,6 +196,41 @@ final_head_ci_note: workflow-history approval state; not a sample failure
 stable_effect: none
 ```
 
+### PR #10 — Packet registry and schema design candidate
+
+```yaml
+pull_request: 10
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-packet-design
+source_head: 5c8d16ed8f49e7263f870e95f928772b689f4137
+squash_commit: 49cfdc665b4bf74e5324df019073aefbf786c383
+schema_id: kdsl-packet@0.1-draft
+base_registry: kdsl-packet-base@0.1-draft
+task_registry: kdsl-packet-task@0.1-draft
+flow_registry: kdsl-packet-flow@0.1-draft
+status: design_candidate_integrated
+executable: no
+workflow_run_id: 29147274104
+workflow_run_number: 78
+workflow_conclusion: success
+sample_total: 49
+sample_failed: 0
+stable_effect: none
+```
+
+### PR #11 — Packet v2-draft ownership alignment
+
+```yaml
+pull_request: 11
+merge_status: pending
+source_branch: agent/kdsl-packet-ownership
+target_status: v2_draft_adopted_non_executable
+canonical_effect: none
+execution_effect: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -208,7 +243,9 @@ R1C design candidate:=main統合済み
 R1C design-candidate validator first slice:=main統合済み
 R1C ownership:=v2-draft adopted serialization profile
 R1C canonical R1 replacement:=なし
-KDSL-Packet:=draft-non-executable
+Packet design candidate:=main統合済み
+Packet ownership:=v2-draft adopted authoring schema/registries/lint
+KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -241,7 +278,33 @@ R1C validator pass != canonical R1適合証明
 R1C adoption/validator存在 != Packet executable
 ```
 
-## 5. Validator maturity
+## 5. Packet current status
+
+```yaml
+packet:
+  schema_id: kdsl-packet@0.1-draft
+  status: v2_draft_adopted
+  canonical: v2_draft_only
+  stable: no
+  executable: no
+  base_registry: kdsl-packet-base@0.1-draft
+  task_registry: kdsl-packet-task@0.1-draft
+  flow_registry: kdsl-packet-flow@0.1-draft
+  lint: adopted
+  validator: not_implemented
+  normalize_required: true
+  packet_state: not_normalized
+  pkt_v1: prohibited
+```
+
+```text
+Registry/opcode != authority
+valid-looking/lint-looking != executable
+normalization artifact未生成/未検証→実行禁止
+KDSL-DP→P1/P1L正規化必須
+```
+
+## 6. Validator maturity
 
 ```yaml
 validator:
@@ -287,10 +350,13 @@ full natural-language trigger context parser
 R1C multi-line JSON parsing
 R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
+Packet validator/sample matrix
+Packet normalization transformer/round-trip proof
+Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
 ```
 
-## 6. Safety and authority boundaries
+## 7. Safety and authority boundaries
 
 ```text
 意味保持 > safety gate保持
@@ -329,7 +395,7 @@ validator pass != canonical/stable promotion
 CI pass != tag/release/Release Assets許可
 ```
 
-## 7. Validation evidence
+## 8. Validation evidence
 
 ### CompactPrompt local verification
 
@@ -366,6 +432,19 @@ failed: 0
 meaning: design-only regression evidence; not R1C lint pass
 ```
 
+### Packet design candidate regression
+
+```yaml
+pull_request: 10
+source_head: 5c8d16ed8f49e7263f870e95f928772b689f4137
+workflow_run_id: 29147274104
+run_number: 78
+conclusion: success
+sample_total: 49
+failed: 0
+meaning: existing validator regression evidence; not Packet lint pass
+```
+
 ### R1C validator
 
 ```yaml
@@ -392,7 +471,7 @@ docs/reviews/kdsl-r1c-design-integration.md
 docs/reviews/kdsl-r1c-validator-first-slice.md
 ```
 
-## 8. Known gaps before stable
+## 9. Known gaps before stable
 
 ```text
 full YAML/JSON/KDSL parserなし
@@ -402,15 +481,15 @@ protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
-Packet schema未定義
-BASE/TASK/FLOW registry未定義
-Packet lint未定義
-KDSL-Packetはdraft-non-executable
+Packet validator/sample matrix未実装
+Packet normalization transformer/round-trip proofなし
+Packet Safety Gate completeness/inheritance proofなし
+KDSL-Packetはv2-draft adopted / non-executable
 v2 public-facing overview未確定
 CI required check/branch protection未設定
 ```
 
-## 9. Recommended positioning
+## 10. Recommended positioning
 
 ```text
 Use as:
@@ -419,6 +498,7 @@ Use as:
   CompactPrompt architecture draft
   Safety Gate Registry v2-draft
   R1C v2-draft adopted compact serialization profile
+  Packet v2-draft adopted non-executable authoring schema
   experimental heuristic validator helpers
   validator sample CI baseline
 
@@ -431,13 +511,14 @@ Do not present as:
   executable Packet specification
 ```
 
-## 10. Next safe steps
+## 11. Next safe steps
 
 ```text
-P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
-P1: Packet BASE/TASK/FLOW registry/schema/lint設計
-P2: Safety Gate protected wording/inheritance validator拡張
-P3: R1C round-trip/property-based validator検討
-P4: public-facing v2 overview / CI required check検討
+P0: PR #11 CI確認 / squash merge / ownership closeout
+P1: Packet validator first slice / sample matrix
+P2: Packet normalization round-trip tooling/tests
+P3: Safety Gate protected wording/inheritance validator拡張
+P4: R1C round-trip/property-based validator検討
+P5: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

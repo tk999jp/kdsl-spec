@@ -322,45 +322,90 @@ current Full KDSL:=SG ID + complete protected wording
 ### KDSL-Packet
 
 ```text
-KDSL-Packet:=AI coding work-contract用packet envelope候補
+KDSL-Packet:=v2-draft adoptedのnon-executable authoring/transport envelope
+schema: kdsl-packet@0.1-draft
 ```
 
 Current status:
 
 ```text
-draft-non-executable
-```
-
-Reason:
-
-```text
-Packet schema未定義
-BASE/TASK/FLOW registry未定義
-SG registryはv2-draftのみでstable/canonical Packet dependency未充足
-R1Cはv2-draft adoptedだがPacket全体の実行条件未充足
-Packet lint未定義
+v2-draft adopted
+canonical/stable/executable: no
+validator: not implemented
+normalization required: yes
 ```
 
 ### PACKET_DRAFT
 
 ```text
-PACKET_DRAFT:=未定義Packetを設計検討するための非実行表記
+PACKET_DRAFT:=KDSL-Packet authoring recordの非実行top-level marker
 ```
 
 Required marker:
 
 ```text
-status: non-executable
-schema: undefined
+SCHEMA: kdsl-packet@0.1-draft
+STATUS: non-executable
+NORMALIZE.required: true
+NORMALIZE.state: not_normalized
 ```
 
 Constraints:
 
 ```text
 AI coding tool直接投入禁止
-valid-looking != executable
+valid-looking/lint-looking != executable
 PKT:v1使用禁止
-unknown registry推測禁止
+unknown schema/registry/ID/opcode推測禁止
+```
+
+### Packet BASE
+
+```text
+BASE:=normalization/source-contract classification
+registry: kdsl-packet-base@0.1-draft
+```
+
+```text
+BASE-DESIGN-ONLY
+BASE-KDSL-DEV
+BASE-ADPS-P1
+BASE ID != permission/normalization completion
+```
+
+### Packet TASK
+
+```text
+TASK:=work-risk/task-class classification
+registry: kdsl-packet-task@0.1-draft
+```
+
+TASK ID selects minimum gate expectations but does not satisfy gates or grant authority.
+
+### Packet FLOW
+
+```text
+FLOW:=ordered semantic work-state transition labels
+registry: kdsl-packet-flow@0.1-draft
+```
+
+```text
+FLOW opcode != command
+FLOW opcode != authority
+one-character opcode未定義
+```
+
+### Packet NORMALIZE
+
+```text
+NORMALIZE:=PacketからFull KDSLまたはP1/P1Lへの別artifact変換要求
+```
+
+```text
+required:true固定
+Packet内state:not_normalized固定
+KDSL-DP→P1/P1L正規化必須
+normalization未検証→実行禁止
 ```
 
 ## Result serialization profiles

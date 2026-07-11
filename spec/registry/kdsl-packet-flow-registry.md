@@ -1,14 +1,14 @@
-# KDSL Packet FLOW Registry v0.1 Draft Candidate
+# KDSL Packet FLOW Registry v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 registry: kdsl-packet-flow
 version: 0.1-draft
 executable_effect: none
 
 ## 1. Purpose
 
-This candidate defines semantic flow opcodes for a future KDSL-Packet.
+This v2-draft registry defines semantic flow opcodes for KDSL-Packet authoring.
 
 ```text
 FLOW opcode:=ordered work-state transition label
@@ -23,8 +23,8 @@ Exact commands, paths, APIs, branches, tags, and file names remain explicit payl
 
 ```text
 registry: kdsl-packet-flow@0.1-draft
-status: design-candidate
-adopted: no
+status: v2-draft adopted
+adopted: yes
 stable/public-ready: no
 Packet executable effect: none
 unknown FLOW opcode推測禁止
@@ -33,7 +33,7 @@ one-character opcode未定義
 
 ## 3. Step record
 
-Candidate step shape:
+Adopted step shape:
 
 ```yaml
 - op: FLOW-READ
@@ -68,7 +68,7 @@ opcodeのみでoperation details省略禁止
 unknown field/default推測禁止
 ```
 
-## 4. Candidate opcodes
+## 4. Adopted opcodes
 
 ### FLOW-READ
 

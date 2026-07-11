@@ -1,14 +1,14 @@
-# KDSL Packet BASE Registry v0.1 Draft Candidate
+# KDSL Packet BASE Registry v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 registry: kdsl-packet-base
 version: 0.1-draft
 executable_effect: none
 
 ## 1. Purpose
 
-This candidate defines normalization baselines for a future KDSL-Packet.
+This v2-draft registry defines normalization baselines for KDSL-Packet authoring.
 
 ```text
 BASE:=normalization/source-contract classification
@@ -27,8 +27,8 @@ Core/Profile/Bridge canonical meaning > BASE mapping > Packet/example/tool
 
 ```text
 registry: kdsl-packet-base@0.1-draft
-status: design-candidate
-adopted: no
+status: v2-draft adopted
+adopted: yes
 stable/public-ready: no
 Packet executable effect: none
 unknown BASE ID推測禁止
@@ -49,7 +49,7 @@ forbidden_inference
 
 No entry may grant edit, commit, push, release, destructive-operation, or runtime authority.
 
-## 4. Candidate entries
+## 4. Adopted entries
 
 ### BASE-DESIGN-ONLY
 

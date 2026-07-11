@@ -23,6 +23,9 @@ Safety Gate validator: first heuristic slice integrated
 R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
 R1C validator: first heuristic slice integrated
 R1C independent canonical/stable status: no
+Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
+Packet BASE/TASK/FLOW registries: v2-draft adopted
+Packet validator: not implemented
 validator sample suite: 49 expectations
 validator_authority: non_authoritative
 ```
@@ -101,6 +104,12 @@ Registries:
   spec/registry/README.md
   spec/registry/kdsl-safety-gate-registry.md
   spec/registry/kdsl-safety-gate-composition.md
+  spec/registry/kdsl-packet-base-registry.md
+  spec/registry/kdsl-packet-task-registry.md
+  spec/registry/kdsl-packet-flow-registry.md
+
+Packet:
+  spec/packet/kdsl-packet-schema.md
 
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
@@ -111,6 +120,7 @@ Lint:
   spec/lint/kdsl-compact-prompt-lint.md
   spec/lint/kdsl-safety-gate-registry-lint.md
   spec/lint/kdsl-r1c-lint.md
+  spec/lint/kdsl-packet-lint.md
 
 Bridge:
   spec/bridge/kdsl-adps-bridge.md
@@ -120,6 +130,7 @@ Examples:
   examples/compact-prompt/*
   examples/safety-gates/dev-prompt-safety-gates.example.md
   examples/r1c/*
+  examples/packet/*
   examples/midfd/*
   examples/public/*
 
@@ -172,7 +183,7 @@ Named compositions:
 KDSL-CP:=profile:compact-prompt
 KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
 KDSL-R1:=result envelope / KDSL_RESULT / Evidence / RT / Authority
-KDSL-Packet:=future packet envelope candidate / draft-non-executable
+KDSL-Packet:=kdsl-packet@0.1-draft authoring envelope / v2-draft adopted / non-executable
 ```
 
 ## CompactPrompt
@@ -311,18 +322,29 @@ PKT:v1使用禁止
 unknown BASE/TASK/FLOW/SG/R1C推測禁止
 ```
 
-Current unresolved Packet dependencies:
+Current adopted Packet components:
 
 ```text
-Packet schema
-BASE registry
-TASK registry
-FLOW opcode registry
-canonical/stable SG dependency
-Packet lint
+schema: kdsl-packet@0.1-draft
+BASE: kdsl-packet-base@0.1-draft
+TASK: kdsl-packet-task@0.1-draft
+FLOW: kdsl-packet-flow@0.1-draft
+lint: spec/lint/kdsl-packet-lint.md
+status: non-executable
+```
+
+Current unresolved execution dependencies:
+
+```text
+Packet validator/sample matrix
+normalization transformer/round-trip proof
+Safety Gate completeness/inheritance proof
+stable/canonical execution dependency
+explicit executable promotion review/U承認
 ```
 
 ```text
+Registry/lint adoption != Packet executable
 Safety Gate Registry/validator実装 != Packet executable
 R1C adoption/validator実装 != Packet executable
 ```
@@ -403,9 +425,10 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
-Packet schema/BASE/TASK/FLOW registry未定義
-Packet lint未定義
-KDSL-Packet:=draft-non-executable
+Packet validator/sample matrix未実装
+Packet normalization transformer/round-trip proofなし
+Packet Safety Gate completeness/inheritance proofなし
+KDSL-Packet:=v2-draft adopted / non-executable
 ```
 
 ## Operational rules
@@ -430,16 +453,19 @@ P0:
   49 sample runner再確認
 
 P1:
-  Packet BASE/TASK/FLOW registry
-  Packet schema/lint
+  Packet validator first slice
+  Packet positive/negative sample matrix
 
 P2:
-  Safety Gate protected wording/inheritance validator拡張
+  Packet normalization round-trip tooling/tests
 
 P3:
-  R1C round-trip/property-based validator検討
+  Safety Gate protected wording/inheritance validator拡張
 
 P4:
+  R1C round-trip/property-based validator検討
+
+P5:
   public-facing v2 overview
   CI required check / branch protection検討
 

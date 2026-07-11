@@ -1,13 +1,13 @@
-# KDSL Packet Lint v0.1 Draft Candidate
+# KDSL Packet Lint v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 validator: not implemented
 scope: kdsl-packet@0.1-draft / BASE / TASK / FLOW
 
 ## 1. Purpose
 
-This candidate defines semantic and structural checks for Packet design artifacts.
+This v2-draft lint specification defines semantic and structural checks for Packet authoring artifacts.
 
 ```text
 lint pass != executable
