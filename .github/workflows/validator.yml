@@ -47,6 +47,9 @@ jobs:
           ref: agent/kdsl-packet-validator-closeout-work
           fetch-depth: 0
 
+      - name: Fix closeout carrier
+        run: python .github/scripts/fix_packet_validator_closeout.py
+
       - name: Apply exact asserted closeout
         id: apply
         continue-on-error: true
