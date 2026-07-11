@@ -1,10 +1,13 @@
 # KDSL Safety Gate Registry Integration Record
 
-status: approved / merge-ready
+status: merged / closed
 record_date: 2026-07-11
 branch: agent/kdsl-safety-gate-registry
 target: main
 pull_request: 4
+merge_method: squash
+source_head: 194d7f36efe0d653c28f4f10e52ec37807f2424b
+squash_commit: e1ab32e398751dcb5bc38bec8325aeded798d843
 
 ## 1. Approval
 
@@ -114,16 +117,25 @@ CI pass != execution authority
 CI pass != stable/public-ready judgment
 ```
 
-Final pull-request validation is recorded in the PR body and post-merge project status to avoid a self-referential documentation commit loop.
-
-## 7. Merge gate
+Final pull-request validation:
 
 ```text
-cross-file alignment complete
-PR mergeable
-latest Validator CI success
-squash merge authorized
-post-merge project-status closeout required
+workflow: Validator CI
+source_head: 194d7f36efe0d653c28f4f10e52ec37807f2424b
+workflow_run_id: 29141378172
+run_number: 23
+status: completed
+conclusion: success
+expected_sample_suite: total 23 / failed 0
+```
+
+## 7. Integration result
+
+```text
+PR #4: merged
+merge method: squash
+squash commit: e1ab32e398751dcb5bc38bec8325aeded798d843
+project status closeout: docs/project-status.md
 ```
 
 ## 8. Non-actions
