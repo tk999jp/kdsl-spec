@@ -96,7 +96,13 @@ After the Safety Gate validator first slice, the expected repository suite is:
 
 ```text
 python tools/validator/run_samples.py
-→ total: 33 / failed: 0
+→ total: 34 / failed: 0
+```
+
+The suite includes the actual repository example:
+
+```text
+examples/safety-gates/dev-prompt-safety-gates.example.md
 ```
 
 Evidence:
