@@ -1,4 +1,4 @@
-# KDSL Packet TASK Registry v0.1 Draft Candidate
+# KDSL Packet TASK Registry v0.1 Draft
 
 status: v2-draft adopted
 canonical: v2-draft
@@ -8,7 +8,7 @@ executable_effect: none
 
 ## 1. Purpose
 
-This candidate classifies the intended work represented by a future KDSL-Packet.
+This v2-draft registry classifies intended work represented by KDSL-Packet authoring.
 
 ```text
 TASK:=work-class reference
@@ -22,8 +22,8 @@ TASK != Safety Gate satisfaction
 
 ```text
 registry: kdsl-packet-task@0.1-draft
-status: design-candidate
-adopted: no
+status: v2-draft adopted
+adopted: yes
 stable/public-ready: no
 Packet executable effect: none
 unknown TASK ID推測禁止
@@ -45,7 +45,7 @@ non_substitutes
 
 `required_gates` is additive. Specialized gates do not remove broader gates.
 
-## 4. Candidate entries
+## 4. Adopted entries
 
 ### TASK-INSPECT
 

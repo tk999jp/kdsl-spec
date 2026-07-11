@@ -1,4 +1,4 @@
-# KDSL Packet Schema v0.1 Draft Candidate
+# KDSL Packet Schema v0.1 Draft
 
 status: v2-draft adopted
 canonical: v2-draft
@@ -8,10 +8,10 @@ normalization_required: yes
 
 ## 1. Purpose
 
-This candidate defines a compact authoring envelope for development work contracts while preserving KDSL safety, evidence, authority, and result boundaries.
+This v2-draft schema defines a compact authoring envelope for development work contracts while preserving KDSL safety, evidence, authority, and result boundaries.
 
 ```text
-KDSL-Packet:=authoring/transport candidate
+KDSL-Packet:=v2-draft authoring/transport schema
 KDSL-Packet != direct execution contract
 KDSL-Packet != authority grant
 KDSL-Packet != P1/P1L
@@ -28,22 +28,22 @@ meaning/safety/evidence/authority > reversibility > compactness
 
 ```text
 schema: kdsl-packet@0.1-draft
-status: design-candidate
+status: v2-draft adopted
 executable: no
 PKT:v1使用禁止
 AI coding tool直接投入禁止
 normalization未完了→実行指示扱禁止
 ```
 
-This candidate may be reviewed, linted, summarized, or normalized. It must not be executed as written.
+This schema may be reviewed, linted, summarized, or normalized. It must not be executed as written.
 
 ## 3. Source-of-truth relation
 
 ```text
 Core/Profile/R1/Bridge canonical meaning
 > adopted Safety Gate/R1C mappings
-> Packet candidate
-> Packet lint candidate
+> Packet v2-draft schema/registries
+> Packet lint
 > Example/Tool
 ```
 
@@ -90,7 +90,7 @@ NORMALIZE
 
 All required fields must be present. No implicit defaults are defined.
 
-## 5. Candidate record shape
+## 5. Record shape
 
 ```yaml
 PACKET_DRAFT:
@@ -131,7 +131,7 @@ NORMALIZE:
   state: not_normalized
 ```
 
-The example shape is illustrative. Registry adoption and Packet lint implementation are separate phases.
+This shape defines the adopted v2-draft authoring structure. Packet validator implementation remains a separate phase.
 
 ## 6. Field semantics
 
@@ -326,7 +326,7 @@ normalization artifactを別途生成/検証必須
 KDSL-DP→P1/P1L正規化必須
 ```
 
-## 7. Candidate invariants
+## 7. Adopted invariants
 
 ```text
 PACKET_DRAFT先頭固定

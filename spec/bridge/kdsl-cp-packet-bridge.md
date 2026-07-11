@@ -1,11 +1,11 @@
 # KDSL-CP / KDSL-Packet Bridge v0.5-draft
 
 status: v2-draft
-scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / future Packet boundary
+scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / Packet non-executable boundary
 
 ## 1. Purpose
 
-This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry may be referenced, and how R1C may serialize results without making a future KDSL-Packet executable.
+This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry and R1C may be referenced, and why adopted KDSL-Packet authoring remains non-executable.
 
 ```text
 KDSL-CP:=一般LLM / Project files / 単体prompt向け軽量profile
@@ -63,7 +63,7 @@ D禁止時KDSL_PROMPT出力禁止
 KDSL_RESULT報告要求保持
 ```
 
-## 4. Mapping: CP to Full KDSL / future Packet
+## 4. Mapping: CP to Full KDSL / Packet authoring
 
 ```text
 KDSL-CP Role    → task role / responsibility
@@ -165,7 +165,7 @@ Packet effect:
 ```text
 R1C v2-draft採用 != Packet executable
 R1C validator実装 != Packet executable
-OUT/R1C mappingはfuture Packet設計入力であり実行許可ではない
+OUT/R1C mappingはPacket authoring fieldであり実行許可ではない
 ```
 
 ## 7. KDSL-Packet adopted non-executable boundary
@@ -230,7 +230,7 @@ This notation remains design/authoring input only and must not be passed directl
 
 ## 8. Packet-Summary
 
-Packet-Summary may summarize a future canonical Packet to KDSL-CP for human-facing or Project file use.
+Packet-Summary may summarize an adopted non-executable Packet authoring record to KDSL-CP for human-facing or Project file use.
 
 ```text
 BASE/TASK/SG/FLOW → Guard/Rulesへ要約

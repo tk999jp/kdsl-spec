@@ -226,11 +226,10 @@ current Full KDSL:=SG ID + complete protected wording
 Packet boundary:
 
 ```text
-SG registry v2-draft採用 != Packet schema完成
-SG registry v2-draft採用 != BASE/TASK/FLOW registry完成
-R1C v2-draft採用 != Packet schema/registry完成
-SG registry v2-draft採用 != Packet lint完成
-KDSL-Packet:=draft-non-executable保持
+SG/R1C adoption alone != Packet execution readiness
+Packet schema/registry/lint adoption != Packet executable
+Packet validator/normalization proof未充足→実行禁止
+KDSL-Packet:=non-executable / normalization required保持
 PKT:v1使用禁止保持
 ```
 
