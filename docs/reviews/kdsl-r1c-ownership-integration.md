@@ -35,15 +35,47 @@ KDSL-Packet:=draft-non-executable
 PKT:v1使用禁止
 ```
 
+## Alignment verification
+
+```text
+exact replacement assertions: pass
+alignment workflow run_id: 29145044694
+alignment workflow run_number: 67 / rerun failed jobs
+alignment job_id: 86525669280
+alignment job conclusion: success
+sample expectations job conclusion: success
+expected sample summary: total 49 / failed 0
+temporary carrier workflow: removed from branch
+temporary trigger marker: removed from branch
+main validator workflow: restored to contents: read
+branch validator workflow: restored to contents: read
+final PR changed files: seven ownership documents only
+```
+
+The initial alignment attempts stopped on exact-match assertions before creating an alignment commit. The corrected carrier completed successfully and committed the asserted document changes. Temporary write-enabled CI configuration was then restored on both `main` and the source branch.
+
 ## Merge gate
 
 ```text
 exact replacement assertions: pass
-Validator CI: required
-49 sample expectations: required / failed 0
+Validator CI sample job: pass
+49 sample expectations: failed 0
+final seven-file diff reviewed
 PR ready for review
 squash merge
 post-merge closeout
+```
+
+## Validation boundary
+
+```text
+CI pass != semantic equivalence
+CI pass != safety proof
+CI pass != RT:v
+CI pass != U承認
+CI pass != execution authority
+CI pass != stable/public-ready readiness
+R1C ownership adoption != Packet executable
 ```
 
 ## Non-actions
@@ -54,4 +86,5 @@ RT:v/NEXT/COMMIT意味変更なし
 Packet executable化なし
 tag/release/Release Assets操作なし
 stable/public-ready化なし
+source branch削除なし
 ```
