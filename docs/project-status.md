@@ -94,10 +94,10 @@ validator_ci_integration:
   command: python tools/validator/run_samples.py
 ```
 
-## 5. Safety Gate Registry integration
+## 5. Integrated Safety Gate Registry
 
 ```yaml
-safety_gate_registry_workstream:
+safety_gate_registry_integration:
   registry: kdsl-sg@0.1-draft
   source_branch: agent/kdsl-safety-gate-registry
   target_branch: main
@@ -105,13 +105,14 @@ safety_gate_registry_workstream:
   approval_status: user_approved
   approval_date: 2026-07-11
   merge_method: squash
-  merge_status: ready_for_merge
-  specification_status: v2_draft_adopted_on_branch
-  latest_source_head: a7db9a92723b933c481894287044fb56a801ff61
-  latest_ci_run_id: 29141314905
-  latest_ci_run_number: 20
-  latest_ci_status: completed
-  latest_ci_conclusion: success
+  merge_status: merged
+  specification_status: v2_draft_integrated
+  source_head: 194d7f36efe0d653c28f4f10e52ec37807f2424b
+  squash_commit: e1ab32e398751dcb5bc38bec8325aeded798d843
+  validator_ci_run_id: 29141378172
+  validator_ci_run_number: 23
+  validator_ci_status: completed
+  validator_ci_conclusion: success
   stable_effect: none
   states:
     - hold
@@ -147,7 +148,7 @@ v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
 CompactPrompt validator first slice:=main統合済み
 Validator CI baseline:=main統合済み
-Safety Gate Registry:=U承認済み / PR #4 squash merge待ち
+Safety Gate Registry:=main統合済み
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
@@ -304,18 +305,19 @@ validator_ci_pr_validation:
 ```
 
 ```yaml
-safety_gate_registry_candidate_validation:
+safety_gate_registry_pr_validation:
   date: 2026-07-11
   pull_request: 4
-  source_head: a7db9a92723b933c481894287044fb56a801ff61
+  source_head: 194d7f36efe0d653c28f4f10e52ec37807f2424b
   workflow: Validator CI
-  workflow_run_id: 29141314905
-  run_number: 20
+  workflow_run_id: 29141378172
+  run_number: 23
   status: completed
   conclusion: success
   sample_suite: existing 23 expectations
   meaning: existing validator regression check only
   safety_gate_validator: not_implemented
+  squash_commit: e1ab32e398751dcb5bc38bec8325aeded798d843
 ```
 
 ```text
@@ -364,7 +366,7 @@ Do not present as:
 ## 12. Next safe steps
 
 ```text
-P0: PR #4 ready化 / squash merge / main status closeout
+P0: local mainをorigin/mainへ同期 / sample runner再確認
 P1: Safety Gate Registry validator first slice
 P2: R1C compact schema設計
 P3: Packet BASE/TASK/FLOW registry・schema・lint設計
