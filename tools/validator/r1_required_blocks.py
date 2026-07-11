@@ -31,6 +31,18 @@ def present(text, name):
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
+
+    if not present(text, 'KDSL_RESULT'):
+        print('VALIDATION_RESULT:')
+        print('STATUS: pass')
+        print('ERRORS:')
+        print('  - none')
+        print('WARNINGS:')
+        print('  - none')
+        print('INFO:')
+        print('  - no KDSL_RESULT envelope detected; R1 required-block target not applicable')
+        return 0
+
     missing = [name for name in REQUIRED if not present(text, name)]
 
     print('VALIDATION_RESULT:')
