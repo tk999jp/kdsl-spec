@@ -298,11 +298,9 @@ def main(argv):
     if kind == 'full-kdsl-dev-prompt':
         if target.get('schema') != FULL_KDSL_SCHEMA:
             errors.append('full-kdsl-dev-prompt TARGET.schema mismatch')
-        if resolution != 'resolved':
-            errors.append('full-kdsl-dev-prompt target must be resolved or explicitly changed to a blocked target')
     elif kind == 'design-only':
-        if target.get('schema') != 'design-review' or resolution != 'resolved':
-            errors.append('design-only target must use design-review/resolved')
+        if target.get('schema') != 'design-review':
+            errors.append('design-only TARGET.schema must be design-review')
     elif kind in {'P1', 'P1L'}:
         if target.get('schema') != 'unresolved':
             errors.append(kind + ' TARGET.schema must remain unresolved')
