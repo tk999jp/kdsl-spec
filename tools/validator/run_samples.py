@@ -127,6 +127,11 @@ SAMPLES = [
         'expected': 0,
     },
     {
+        'name': 'safety gate repository example valid',
+        'command': ['kdsl_safety_gate.py', 'examples/safety-gates/dev-prompt-safety-gates.example.md'],
+        'expected': 0,
+    },
+    {
         'name': 'safety gate unknown registry',
         'command': ['kdsl_safety_gate.py', 'samples/sample_sg_unknown_registry.md'],
         'expected': 2,
@@ -180,6 +185,8 @@ def resolve_command(command):
     for item in command[1:]:
         if item.startswith('samples/'):
             args.append(str(ROOT / item))
+        elif item.startswith('examples/'):
+            args.append(str(REPO_ROOT / item))
         else:
             args.append(item)
     return [sys.executable, str(script), *args]
