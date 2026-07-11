@@ -4,6 +4,31 @@
 
 ### Changed
 
+- Added the KDSL Validator CI baseline:
+  - workflow: `.github/workflows/validator.yml`
+  - pull requests to `main`, pushes to `main`, and manual dispatch
+  - `ubuntu-latest` / Python 3.11 / `contents: read`
+  - command: `python tools/validator/run_samples.py`
+  - first pull-request run completed successfully with `total 23 / failed 0`
+- Added and adopted the v2-draft Safety Gate Registry candidate:
+  - registry: `kdsl-sg@0.1-draft`
+  - states: `hold|satisfied|blocked|na`
+  - ten semantic IDs from `SG-DESIGN` through `SG-STOP`
+  - additive multi-gate composition rules
+  - typed non-substitution between approval, evidence, runtime, and authority
+  - current Full KDSL keeps complete protected wording alongside SG references
+- Added Safety Gate Registry files:
+  - `spec/registry/README.md`
+  - `spec/registry/kdsl-safety-gate-registry.md`
+  - `spec/registry/kdsl-safety-gate-composition.md`
+  - `spec/lint/kdsl-safety-gate-registry-lint.md`
+  - `examples/safety-gates/dev-prompt-safety-gates.example.md`
+  - `docs/reviews/kdsl-safety-gate-registry-design.md`
+- Aligned `spec/manifest.md`, the CP-Packet bridge, v2 glossary, README, and project status with the Safety Gate Registry draft.
+- Safety Gate Registry adoption does not make KDSL-Packet executable:
+  - Packet schema / BASE / TASK / FLOW / R1C / Packet lint remain undefined
+  - `PKT:v1` remains prohibited
+  - Safety Gate validator implementation remains pending
 - Added the first CompactPrompt validator heuristic slice:
   - `tools/validator/kdsl_compact_prompt.py`
   - detects `profile:compact-prompt`, `KDSL-CP:`, and `KDSL-CP漢:`
@@ -177,6 +202,7 @@
 - v1.1.0-rc1 is a public experimental preview, not a stable/public-ready release.
 - License is MIT; see `LICENSE` and `docs/project-status.md`.
 - Validator helpers cover required-block, RT-basis, authority-guard, template-reference, template-expansion-evidence, and CompactPrompt lint.
+- Safety Gate Registry lint is specified but its validator implementation is not included yet.
 - Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
 - Combined validator wrapper supports target modes `r1`, `prompt`, `compact`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
@@ -185,7 +211,7 @@
 - Template-reference verification is recorded for OK and missing-gate samples.
 - Template-expansion-evidence verification is recorded for OK, warn, and fail samples.
 - CompactPrompt verification is recorded for valid, required-block, restricted-alias, and CP-Lift cases.
-- Validator helpers do not perform runtime verification, user approval, semantic equivalence, full template expansion proof, release readiness, or public-ready decisions.
+- Validator helpers and CI do not perform runtime verification, user approval, semantic equivalence, full template expansion proof, release readiness, or public-ready decisions.
 
 ## v0.1.0-draft
 

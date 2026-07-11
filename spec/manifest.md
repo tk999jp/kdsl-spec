@@ -18,7 +18,7 @@ stable_release: none
 Release Assets: none
 license: MIT
 validator: partial heuristic lint helpers / non-authoritative
-v2_branch_direction: CompactPrompt / Lexicon / CP-Lift architecture correction
+v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry architecture
 ```
 
 Policy:
@@ -62,7 +62,8 @@ Rules:
 lexicon != mode
 lexicon != profile
 unknown profile/mode/safety/lexicon/envelope推測禁止
-Core保護語をLexiconで上書禁止
+unknown registry/ID推測禁止
+Core保護語をLexicon/Registryで上書禁止
 ```
 
 ## 2. Specification layers
@@ -77,6 +78,11 @@ Profiles:
 Lexicons:
   profile内で使用する宣言済み語彙/alias集合
   Core保護語を上書きしない
+
+Registries:
+  既存正本意味を参照するID/state/composition集合
+  Registry ID != permission
+  Registry reference != protected wording削除許可
 
 R1:
   結果証跡/検収仕様の正本
@@ -116,13 +122,17 @@ Project Status:
 | `spec/profiles/kdsl-converter-prompt.md` | Profile | KDSL Converter出力契約 | Profile canonical |
 | `spec/profiles/kdsl-profile-compact-prompt.md` | Profile draft | 一般LLM / Project files向けKDSL-CP | v2 draft |
 | `spec/lexicons/kdsl-lexicon-kanji-v1.md` | Lexicon draft | KDSL-CP構造漢字alias | v2 draft |
+| `spec/registry/README.md` | Registry index | Registry layer境界/一覧 | v2 draft |
+| `spec/registry/kdsl-safety-gate-registry.md` | Registry draft | Safety Gate ID/state/inheritance | v2 draft adopted |
+| `spec/registry/kdsl-safety-gate-composition.md` | Registry draft | additive multi-gate composition | v2 draft adopted |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
 | `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |
 | `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
+| `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
 | `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / future Packet境界 | v2 draft |
 | `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
-| `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/Packet draft terms | v2 draft |
+| `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/SG/Packet draft terms | v2 draft |
 | `templates/*` | Templates | 再利用部品 | No |
 | `examples/*` | Examples | 理解補助/運用例 | No |
 | `tools/validator/*` | Tools | experimental heuristic lint helpers | No |
@@ -140,15 +150,18 @@ references:
   spec/core/kdsl-spec.md
   spec/lint/kdsl-lint-checklist.md
   spec/lexicons/kdsl-lexicon-kanji-v1.md
+  spec/registry/kdsl-safety-gate-registry.md
 ```
 
-Lexicon rule:
+Lexicon/Registry rule:
 
 ```text
 構造alias追加可
+Safety Gate参照ID追加可
 保護語弱化禁止
 禁止→禁 短縮禁止
 未確認/未実行/承認待/断定禁止の弱化禁止
+SG IDのみで保護語置換禁止
 ```
 
 ### Mode / safety / high-risk
@@ -169,6 +182,49 @@ Kanji selection:
 
 ```text
 mode:dense + lexicon:kanji-v1
+```
+
+### Safety Gate Registry
+
+```text
+v2 draft registry:
+  spec/registry/kdsl-safety-gate-registry.md
+
+composition:
+  spec/registry/kdsl-safety-gate-composition.md
+
+lint:
+  spec/lint/kdsl-safety-gate-registry-lint.md
+
+registry/version:
+  kdsl-sg@0.1-draft
+
+states:
+  hold|satisfied|blocked|na
+```
+
+Ownership rules:
+
+```text
+Core/R1/Bridge safety meaning > Registry mapping > Profile usage > Example/Tool
+Registry:=既存safety意味の参照ID/state/composition
+Registry != 新しい実行権限
+Registry state:satisfied != unrelated authority
+unknown registry/SG ID推測禁止
+hold/blocked gate削除禁止
+specialized gate != broader gate解除
+current Full KDSL:=SG ID + complete protected wording
+```
+
+Packet boundary:
+
+```text
+SG registry v2-draft採用 != Packet schema完成
+SG registry v2-draft採用 != BASE/TASK/FLOW registry完成
+SG registry v2-draft採用 != R1C schema完成
+SG registry v2-draft採用 != Packet lint完成
+KDSL-Packet:=draft-non-executable保持
+PKT:v1使用禁止保持
 ```
 
 ### KDSL-DP / ADPS boundary
@@ -233,7 +289,7 @@ current lift target:
 future Packet:
   draft-non-executable
   PKT:v1使用禁止
-  registry未定義→実行禁止
+  BASE/TASK/FLOW/R1C/Packet lint未定義→実行禁止
 ```
 
 ## 5. Duplication policy
@@ -244,6 +300,7 @@ Allowed:
 Core:=正本定義
 Profile:=用途文脈で再掲
 Lexicon:=alias定義
+Registry:=既存正本意味の参照ID/state/compositionとして再掲
 R1:=結果検収文脈で再掲
 Lint:=検査項目として再掲
 Bridge:=境界規則として再掲
@@ -256,6 +313,8 @@ Restrictions:
 
 ```text
 正本と矛盾する再掲禁止
+RegistryでCore/R1/Bridge意味変更禁止
+Registry IDで保護語置換禁止
 repository現在状態はdocs/project-status.mdと矛盾禁止
 example/template/designを正本扱禁止
 ```
@@ -270,10 +329,14 @@ KDSL-DP/P1/P1L境界変更→breaking候補
 profile追加→compatible候補
 lexicon追加→compatible候補
 既存alias意味変更→breaking候補
+registry追加→compatible draft候補
+adopted registry ID意味変更→breaking候補または新ID必須
+registry state意味変更→breaking候補
 lint追加→compatible候補
 example追加→patch候補
 validator heuristic改善→patch/compatible候補
 validatorを承認者扱い→禁止
+Registryを権限付与者扱い→禁止
 未定義Packet実行許可→禁止
 ```
 
@@ -293,6 +356,18 @@ Core/R1/Bridge整合
 KDSL-DP/P1/P1L境界破損なし
 public履歴/公開済tag/Release Assets非操作
 U明示承認
+```
+
+Registry promotion additional checks:
+
+```text
+ID意味固定
+state遷移整合
+composition不足なし
+unknown ID handling
+protected wording併記
+Packet非実行境界保持
+validator未実装→pass扱禁止
 ```
 
 ## 8. Stable/release dependency
@@ -315,6 +390,9 @@ Current decision:
 ```text
 v1.1.0 stable:=hold
 v2-draft:=continue
+kdsl-sg@0.1-draft:=v2-draft registry adopted
+Safety Gate validator:=未実装
+KDSL-Packet:=draft-non-executable
 Release Assets追加なし
 既存tag移動なし
 ```
