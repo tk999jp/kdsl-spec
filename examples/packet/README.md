@@ -1,24 +1,25 @@
 # KDSL Packet Examples
 
-status: design-candidate examples
+status: v2-draft examples
 canonical: no
 executable: no
 
-These examples illustrate `kdsl-packet@0.1-draft` candidate structure.
+These examples illustrate the adopted Packet authoring schema and the normalization-contract design candidate.
 
 ```text
 examples != specification
 valid-looking example != executable contract
-Packet example != AI coding tool instruction
+normalization preview != executable prompt
 ```
 
-Current examples:
+## Packet authoring
 
 ```text
 packet-design.example.md
+normalization-source.example.md
 ```
 
-Required boundary:
+Required Packet boundary:
 
 ```text
 PACKET_DRAFT
@@ -28,4 +29,24 @@ NORMALIZE.state:not_normalized
 PKT:v1使用禁止
 ```
 
-Before any real implementation work, a Packet candidate must be normalized to Full KDSL `profile:dev-prompt` or, for ADPS authoring, to P1/P1L under the canonical bridge.
+## Normalization design
+
+```text
+normalization-full-kdsl.example.md
+normalization-p1-blocked.example.md
+normalization-lossy-blocked.example.md
+```
+
+Required normalization boundary:
+
+```text
+NORMALIZATION_DRAFT
+STATUS:non-executable
+TARGET.executable:false
+semantic_equivalence:not_proven
+AUTHORITY.execution_authority:none
+```
+
+The Full KDSL example uses `KDSL_PROMPT_PREVIEW`, not `KDSL_PROMPT:`. P1/P1L examples remain blocked because a canonical target field schema is not present in this repository.
+
+Before any real implementation work, Packet authoring must pass through a separately specified and verified normalization process. This example set does not implement that transformer or grant execution authority.
