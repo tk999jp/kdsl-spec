@@ -1,10 +1,13 @@
 # KDSL R1C Ownership Integration
 
-status: merge-pending
+status: completed / merged
 review_date: 2026-07-11
 branch: agent/kdsl-r1c-ownership
 target: main
 pull_request: 8
+source_head: fbe92dd69125321977e3fbb971bed8fcc54edd39
+squash_commit: 87965cf7ff4284a2e53bc035ab38e611adc03287
+closeout_pull_request: 9
 
 ## Scope
 
@@ -54,16 +57,20 @@ final PR changed files: seven ownership documents only
 
 The initial alignment attempts stopped on exact-match assertions before creating an alignment commit. The corrected carrier completed successfully and committed the asserted document changes. Temporary write-enabled CI configuration was then restored on both `main` and the source branch.
 
-## Merge gate
+## Integration result
 
 ```text
 exact replacement assertions: pass
+alignment workflow run #67: success
 Validator CI sample job: pass
 49 sample expectations: failed 0
+substantive-document CI run #72: success
+final-head run #74: action_required / jobs none / workflow-history approval state
 final seven-file diff reviewed
-PR ready for review
-squash merge
-post-merge closeout
+PR #8 ready for review: yes
+merge_method: squash
+squash_commit: 87965cf7ff4284a2e53bc035ab38e611adc03287
+post-merge closeout: PR #9
 ```
 
 ## Validation boundary

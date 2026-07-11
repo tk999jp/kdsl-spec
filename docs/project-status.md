@@ -168,14 +168,31 @@ canonical_effect: none
 
 ```yaml
 pull_request: 8
-merge_status: pending
+merge_status: merged
+merge_method: squash
 source_branch: agent/kdsl-r1c-ownership
+source_head: fbe92dd69125321977e3fbb971bed8fcc54edd39
 base_commit: 4011599a5f3bbd81a97ac87fb3e2e6f0e90fe585
+squash_commit: 87965cf7ff4284a2e53bc035ab38e611adc03287
+closeout_pull_request: 9
 schema_id: kdsl-r1c@0.1-draft
-target_status: v2_draft_adopted_serialization_profile
+status: v2_draft_adopted_serialization_profile
 canonical_parent: spec/r1/r1-result-spec.md
 canonical_r1_replacement: none
 packet_execution_effect: none
+alignment_workflow_run_id: 29145044694
+alignment_workflow_run_number: 67
+alignment_job_conclusion: success
+sample_total: 49
+sample_failed: 0
+substantive_ci_run_id: 29145390191
+substantive_ci_run_number: 72
+substantive_ci_conclusion: success
+final_head_ci_run_id: 29145458879
+final_head_ci_run_number: 74
+final_head_ci_conclusion: action_required
+final_head_ci_jobs: none
+final_head_ci_note: workflow-history approval state; not a sample failure
 stable_effect: none
 ```
 
@@ -417,7 +434,7 @@ Do not present as:
 ## 10. Next safe steps
 
 ```text
-P0: PR #8 CI確認 / squash merge / ownership closeout
+P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
 P1: Packet BASE/TASK/FLOW registry/schema/lint設計
 P2: Safety Gate protected wording/inheritance validator拡張
 P3: R1C round-trip/property-based validator検討
