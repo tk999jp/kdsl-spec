@@ -56,6 +56,9 @@ jobs:
           ref: agent/kdsl-r1c-roundtrip-closeout-work
           fetch-depth: 0
 
+      - name: Fix closeout carrier
+        run: python .github/scripts/fix_r1c_roundtrip_closeout.py
+
       - name: Apply exact asserted closeout
         id: apply
         continue-on-error: true
