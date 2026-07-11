@@ -1,13 +1,13 @@
-# KDSL Packet Normalization Lint v0.1 Draft Candidate
+# KDSL Packet Normalization Lint v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 validator: not implemented
 scope: kdsl-packet-normalization@0.1-draft
 
 ## 1. Purpose
 
-This candidate defines structural and safety checks for non-executable Packet normalization evidence.
+This v2-draft lint specification defines structural and safety checks for non-executable Packet normalization evidence.
 
 ```text
 lint pass != semantic equivalence

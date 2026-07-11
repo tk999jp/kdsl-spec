@@ -1,7 +1,7 @@
-# KDSL Packet Normalization Contract v0.1 Draft Candidate
+# KDSL Packet Normalization Contract v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 schema_id: kdsl-packet-normalization@0.1-draft
 source_schema: kdsl-packet@0.1-draft
 executable: no
@@ -9,7 +9,7 @@ semantic_equivalence: not_proven
 
 ## 1. Purpose
 
-This candidate defines the evidence contract for expanding an adopted non-executable Packet into a reviewable target preview without granting execution authority.
+This v2-draft contract defines the evidence contract for expanding an adopted non-executable Packet into a reviewable target preview without granting execution authority.
 
 ```text
 Packet normalization:=source Packet→mapping evidence+non-executable target preview
@@ -29,7 +29,7 @@ meaning/safety/evidence/authority preservation > reversibility > preview complet
 
 ```text
 schema: kdsl-packet-normalization@0.1-draft
-status: design-candidate
+status: v2-draft adopted
 NORMALIZATION_DRAFT:=non-executable evidence artifact
 KDSL_PROMPT direct generation:=out of scope
 P1/P1L generation:=blocked until target schema exists
@@ -43,15 +43,15 @@ The normalization artifact may be inspected, linted, or used as input to a later
 ```text
 Core/Profile/R1/Bridge canonical meaning
 > adopted Packet schema/registries/lint
-> normalization contract candidate
-> normalization lint candidate
+> normalization contract/lint v2-draft mapping
+> examples/tools
 > examples/tools
 ```
 
 Conflict handling:
 
 ```text
-normalization candidate×canonical source→canonical source優先
+normalization contract×canonical source→canonical source優先
 unknown target schema/profile/field→blocked
 meaning/safety/authority loss→blocked
 ```
@@ -85,7 +85,7 @@ OUTPUT
 
 No implicit defaults are defined.
 
-## 5. Candidate record shape
+## 5. Record shape
 
 ```yaml
 NORMALIZATION_DRAFT:
@@ -122,7 +122,7 @@ OUTPUT:
   preview: ""
 ```
 
-The example shape is illustrative. Candidate lint/tool implementation is a separate phase.
+This record shape is adopted for v2-draft authoring evidence. Validator/mapper implementation remains a separate phase.
 
 ## 6. SOURCE
 
@@ -150,7 +150,7 @@ The digest proves source identity only. It does not prove meaning, safety, or au
 
 ## 7. TARGET
 
-Allowed candidate kinds:
+Allowed target kinds:
 
 ```text
 design-only
@@ -499,7 +499,7 @@ Any invalid condition blocks use of the normalization artifact.
 
 ## 17. Promotion gate
 
-Before adopted/tooling/executable promotion:
+Before validator/tooling/executable promotion:
 
 ```text
 manifest/Bridge/glossary ownership review

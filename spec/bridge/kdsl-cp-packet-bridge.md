@@ -1,17 +1,18 @@
-# KDSL-CP / KDSL-Packet Bridge v0.5-draft
+# KDSL-CP / KDSL-Packet Bridge v0.6-draft
 
 status: v2-draft
-scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / Packet non-executable boundary
+scope: CompactPrompt lift / Full KDSL boundary / Safety Gate Registry / R1C / Packet normalization / non-executable boundary
 
 ## 1. Purpose
 
-This bridge defines when KDSL-CP must be lifted to Full KDSL, how the v2-draft Safety Gate Registry and R1C may be referenced, and why adopted KDSL-Packet authoring remains non-executable.
+This bridge defines when KDSL-CP must be lifted to Full KDSL, how Safety Gate/R1C/Packet normalization references are bounded, and why Packet authoring and normalization previews remain non-executable.
 
 ```text
 KDSL-CP:=一般LLM / Project files / 単体prompt向け軽量profile
 Full KDSL dev-prompt:=現行のAI coding tool向け実行可能契約
 kdsl-sg@0.1-draft:=既存safety意味を参照するv2-draft Registry
 kdsl-r1c@0.1-draft:=canonical R1のv2-draft compact serialization profile
+kdsl-packet-normalization@0.1-draft:=Packet mapping/loss/round-trip evidence contract
 KDSL-Packet:=v2-draft adopted authoring envelope / non-executable
 ```
 
@@ -179,7 +180,9 @@ BASE registry: kdsl-packet-base@0.1-draft
 TASK registry: kdsl-packet-task@0.1-draft
 FLOW registry: kdsl-packet-flow@0.1-draft
 lint: spec/lint/kdsl-packet-lint.md
-validator: not implemented
+validator: first heuristic slice integrated
+normalization contract: spec/packet/kdsl-packet-normalization-contract.md
+normalization lint: spec/lint/kdsl-packet-normalization-lint.md
 ```
 
 Adoption boundary:
@@ -197,8 +200,7 @@ normalization artifact未生成/未検証→実行禁止
 Unresolved execution dependencies:
 
 ```text
-Packet validator/sample matrix
-normalization transformer and round-trip proof
+normalization validator/mapper and round-trip proof
 Safety Gate completeness/inheritance proof
 stable/canonical execution dependency
 explicit executable promotion review/U承認
@@ -228,7 +230,47 @@ NORMALIZE:
 
 This notation remains design/authoring input only and must not be passed directly to an AI coding tool as an implementation contract.
 
-## 8. Packet-Summary
+## 8. Packet normalization alignment
+
+Current v2-draft contract:
+
+```text
+schema: kdsl-packet-normalization@0.1-draft
+source: spec/packet/kdsl-packet-normalization-contract.md
+lint: spec/lint/kdsl-packet-normalization-lint.md
+validator/mapper: not implemented
+```
+
+Required boundary:
+
+```text
+NORMALIZATION_DRAFT:=non-executable evidence artifact
+STATUS:non-executable固定
+TARGET.executable:false固定
+AUTHORITY.execution_authority:none固定
+semantic_equivalence:not_proven固定
+KDSL_PROMPT_PREVIEW != KDSL_PROMPT
+```
+
+Target resolution:
+
+```text
+design-only→resolved review preview
+full-kdsl-dev-prompt→resolved KDSL_PROMPT_PREVIEW
+P1/P1L→blocked until canonical target field schema exists
+unknown target schema推測禁止
+```
+
+Promotion boundary:
+
+```text
+contract/lint adoption != normalization completion
+structural_pass != semantic equivalence/safety proof/authority
+normalization validator/mapper未実装→Packet normalized扱禁止
+executable target generation→separate specification/review/U承認必須
+```
+
+## 9. Packet-Summary
 
 Packet-Summary may summarize an adopted non-executable Packet authoring record to KDSL-CP for human-facing or Project file use.
 
@@ -240,7 +282,7 @@ OUT/R1C → Output/Checkへ要約
 
 Packet-Summary is a view, not the original execution contract.
 
-## 9. Summary restrictions
+## 10. Summary restrictions
 
 ```text
 D禁止削除禁止
@@ -253,9 +295,9 @@ hold/blocked Safety Gate削除禁止
 SG ID-only compression禁止
 ```
 
-## 10. Boundary examples
+## 11. Boundary examples
 
-### 10.1 KDSL-CP is enough
+### 11.1 KDSL-CP is enough
 
 ```text
 KDSL-CP漢:
@@ -275,7 +317,7 @@ repo操作なし
 runtime/R1不要
 ```
 
-### 10.2 CP-Lift required
+### 11.2 CP-Lift required
 
 ```text
 KDSL-CP:
@@ -313,7 +355,7 @@ Guard:
 - authority未確認→実行禁止
 ```
 
-### 10.3 Packet design draft only
+### 11.3 Packet design draft only
 
 ```text
 PACKET_DRAFT:
@@ -327,7 +369,7 @@ AI coding tool直接投入禁止
 canonical Packet schema/registry完成後に再評価
 ```
 
-## 11. Non-goals
+## 12. Non-goals
 
 ```text
 KDSL-DP/P1/P1L境界変更
@@ -337,4 +379,6 @@ KDSL-CPをAI coding tool実装契約として扱うこと
 SG IDによる保護語置換
 Registryによる実行権限付与
 未定義Packet直接実行
+NORMALIZATION_DRAFT/KDSL_PROMPT_PREVIEW直接実行
+P1/P1L schema推測
 ```

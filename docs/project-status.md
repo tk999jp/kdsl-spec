@@ -283,6 +283,50 @@ normalization_effect: none
 stable_effect: none
 ```
 
+### PR #17 — Packet normalization contract design candidate
+
+```yaml
+pull_request: 17
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-packet-normalization-design
+source_head: b11eac3b55853b240e850af5bc2f43bf5c7048b2
+squash_commit: e27f130f64f0f0e9c3c6ac005adffc9476860f6f
+schema_id: kdsl-packet-normalization@0.1-draft
+status: design_candidate_integrated
+executable: no
+workflow_run_id: 29149505919
+workflow_run_number: 127
+workflow_conclusion: success
+sample_total: 69
+sample_failed: 0
+stable_effect: none
+```
+
+### PR #18 — Packet normalization ownership work branch
+
+```yaml
+pull_request: 18
+merge_status: work_branch_pending_close
+source_branch: agent/kdsl-packet-normalization-ownership-work
+superseded_by: 19
+execution_effect: none
+stable_effect: none
+```
+
+### PR #19 — Packet normalization v2-draft ownership alignment
+
+```yaml
+pull_request: 19
+merge_status: pending
+source_branch: agent/kdsl-packet-normalization-ownership
+schema_id: kdsl-packet-normalization@0.1-draft
+target_status: v2_draft_adopted_non_executable
+validator_mapper: not_implemented
+execution_effect: none
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
@@ -298,6 +342,8 @@ R1C canonical R1 replacement:=なし
 Packet design candidate:=main統合済み
 Packet ownership:=v2-draft adopted authoring schema/registries/lint
 Packet validator first slice:=main統合済み / 69 expectations verified
+Packet normalization contract/lint:=v2-draft adopted / non-executable
+Packet normalization validator/mapper:=未実装
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -345,6 +391,11 @@ packet:
   flow_registry: kdsl-packet-flow@0.1-draft
   lint: adopted
   validator: first_slice_integrated
+  normalization_schema: kdsl-packet-normalization@0.1-draft
+  normalization_status: v2_draft_adopted_non_executable
+  normalization_lint: adopted
+  normalization_validator_mapper: not_implemented
+  semantic_equivalence: not_proven
   normalize_required: true
   packet_state: not_normalized
   pkt_v1: prohibited
@@ -411,7 +462,8 @@ R1C round-trip semantic proof
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
-Packet normalization transformer/round-trip proof
+Normalization validator/mapper未実装
+Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
 ```
@@ -492,6 +544,20 @@ failed: 0
 meaning: design-only regression evidence; not R1C lint pass
 ```
 
+### Packet normalization design regression
+
+```yaml
+pull_request: 17
+source_head: b11eac3b55853b240e850af5bc2f43bf5c7048b2
+squash_commit: e27f130f64f0f0e9c3c6ac005adffc9476860f6f
+workflow_run_id: 29149505919
+run_number: 127
+conclusion: success
+sample_total: 69
+failed: 0
+meaning: existing validator regression evidence; not normalization lint/mapper proof
+```
+
 ### Packet design candidate regression
 
 ```yaml
@@ -563,7 +629,8 @@ Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
 R1C round-trip semantic proofなし
 Packet full YAML/semantic parserなし
-Packet normalization transformer/round-trip proofなし
+Normalization validator/mapper未実装
+Normalization round-trip/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
 v2 public-facing overview未確定
@@ -580,6 +647,7 @@ Use as:
   Safety Gate Registry v2-draft
   R1C v2-draft adopted compact serialization profile
   Packet v2-draft adopted non-executable authoring schema
+  Packet normalization v2-draft non-executable evidence contract
   experimental heuristic validator helpers
   validator sample CI baseline
 
@@ -595,10 +663,11 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: PR #16 CI確認 / squash merge / Packet validator closeout
-P1: Packet normalization round-trip tooling/tests
-P2: Safety Gate protected wording/inheritance validator拡張
-P3: R1C round-trip/property-based validator検討
-P4: public-facing v2 overview / CI required check検討
+P0: PR #19 CI確認 / squash merge / normalization ownership closeout
+P1: normalization validator/structural mapper first slice
+P2: normalization round-trip/property tests
+P3: Safety Gate protected wording/inheritance validator拡張
+P4: R1C round-trip/property-based validator検討
+P5: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

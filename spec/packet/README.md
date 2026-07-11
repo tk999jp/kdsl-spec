@@ -12,14 +12,14 @@ status: v2-draft adopted
 executable: no
 ```
 
-## Normalization contract candidate
+## Adopted normalization contract
 
 ```text
 schema: kdsl-packet-normalization@0.1-draft
 source: spec/packet/kdsl-packet-normalization-contract.md
-status: design-candidate
+status: v2-draft adopted
 executable: no
-validator/tool: not implemented
+validator/mapper: not implemented
 ```
 
 ## Boundary
@@ -34,4 +34,4 @@ semantic_equivalence:not_proven
 PKT:v1使用禁止
 ```
 
-Ownership and promotion decisions are controlled by `spec/manifest.md`. The presence of a design candidate does not adopt it or authorize tooling, execution, stable promotion, tag/release operations, or Release Assets changes.
+Ownership and promotion decisions are controlled by `spec/manifest.md`. The adopted v2-draft contract does not authorize tooling, normalization completion, execution, stable promotion, tag/release operations, or Release Assets changes.
