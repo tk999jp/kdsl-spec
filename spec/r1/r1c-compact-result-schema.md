@@ -1,7 +1,7 @@
-# R1C Compact Result Schema v0.1 Draft Candidate
+# R1C Compact Result Schema v0.1 Draft
 
-status: review-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft subordinate
 schema_id: kdsl-r1c@0.1-draft
 base_canonical: spec/r1/r1-result-spec.md
 
@@ -30,14 +30,14 @@ Priority:
 canonical R1:
   spec/r1/r1-result-spec.md
 
-candidate serialization:
+v2-draft serialization:
   spec/r1/r1c-compact-result-schema.md
 ```
 
 Conflict rule:
 
 ```text
-canonical R1 > R1C candidate
+canonical R1 > R1C v2-draft serialization profile
 ```
 
 R1C must not redefine `STATUS`, `RT`, `NEXT`, `COMMIT`, Evidence, or Authority semantics.
@@ -475,10 +475,13 @@ A future Packet may reference an adopted R1C schema only after Packet dependenci
 
 ```text
 schema: kdsl-r1c@0.1-draft
-status: review-candidate
-canonical: no
-validator: not implemented
-main integration: no
+status: v2-draft adopted
+canonical: v2-draft subordinate to spec/r1/r1-result-spec.md
+validator: first heuristic slice integrated
+structural_round_trip: first slice integrated
+optional_safety_gates_round_trip: blocked
+semantic_equivalence: not_proven
+main integration: yes
 stable/public-ready effect: none
 ```
 

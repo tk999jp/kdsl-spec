@@ -1,9 +1,9 @@
-# KDSL R1C Lint v0.1 Draft Candidate
+# KDSL R1C Lint v0.1 Draft
 
-status: review-candidate
-canonical: no
+status: v2-draft adopted / first slices integrated
+canonical: v2-draft subordinate
 schema: kdsl-r1c@0.1-draft
-source_candidate: spec/r1/r1c-compact-result-schema.md
+source: spec/r1/r1c-compact-result-schema.md
 base_canonical: spec/r1/r1-result-spec.md
 
 ## 1. Purpose
@@ -488,22 +488,30 @@ INFO:
 ## 19. Validator status
 
 ```text
-R1C lint specification: review-candidate
-R1C validator implementation: not implemented
-validator未実装→pass扱禁止
-existing CI pass != R1C lint pass
+R1C lint specification: v2-draft adopted
+R1C validator: first heuristic slice integrated
+R1C structural round-trip helper: first slice integrated
+R1C round-trip property suite: 14 expectations / failed 0
+optional SAFETY_GATES round-trip: blocked
 ```
 
-## 20. Required adoption checks
-
-Before v2-draft adoption:
+Boundary:
 
 ```text
-U design approval
-manifest/bridge/glossary/status alignment
-success/blocked/needs_user examples
-R1C validator first slice
-sample runner integration
-Full R1 fallback verification
+structural_pass != Full R1 semantic equivalence
+structural_pass != safety proof
+structural_pass != RT:v
+structural_pass != execution authority
+structural_pass != release readiness
+```
+
+## 20. Remaining adoption/expansion checks
+
+```text
+multi-line optional JSON support
+optional SAFETY_GATES dedicated expansion
+full semantic equivalence proof
+broader property/mutation coverage
+canonical R1 remains authoritative
 Packet non-executable boundary confirmation
 ```

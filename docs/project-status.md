@@ -219,6 +219,32 @@ final_head_ci_note: workflow-history approval state; not a sample failure
 stable_effect: none
 ```
 
+### PR #34 — R1C structural round-trip first slice
+
+```yaml
+pull_request: 34
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-r1c-roundtrip
+source_head: 844a9f68306ffbb8ddfb539e3aba7a38d9cc6185
+squash_commit: ccc4c976274a42c45dd8109680d08ddd56341e82
+closeout_pull_request: 36
+workflow_run_id: 29154476912
+workflow_run_number: 179
+job_id: 86549240768
+workflow_conclusion: success
+existing_sample_total: 108
+existing_sample_failed: 0
+safety_gate_extension_total: 14
+safety_gate_extension_failed: 0
+round_trip_sample_total: 14
+round_trip_sample_failed: 0
+status_model: structural_pass|blocked|fail
+semantic_equivalence: not_proven
+execution_authority: none
+stable_effect: none
+```
+
 ### PR #10 — Packet registry and schema design candidate
 
 ```yaml
@@ -461,6 +487,7 @@ Safety Gate validator first slice:=main統合済み
 Safety Gate protected wording/inheritance first slice:=main統合済み / 108+14 expectations verified
 R1C design candidate:=main統合済み
 R1C design-candidate validator first slice:=main統合済み
+R1C structural round-trip first slice:=main統合済み / 14 expectations verified
 R1C ownership:=v2-draft adopted serialization profile
 R1C canonical R1 replacement:=なし
 Packet design candidate:=main統合済み
@@ -491,6 +518,9 @@ r1c:
   round_trip_to_full_r1: required by candidate
   full_r1_fallback: required by candidate
   validator: first heuristic slice integrated
+  structural_round_trip: first_slice_integrated
+  optional_safety_gates_round_trip: blocked
+  semantic_equivalence: not_proven
   manifest_bridge_glossary_alignment: integrated by PR #8
 ```
 
@@ -561,6 +591,7 @@ validator:
     - R1C schema/field/order/JSON shape lint
     - R1C VERIFY class separation lint
     - R1C RT/NEXT/COMMIT boundary lint
+    - R1C structural projection/reconstruction property lint
     - Full R1 fallback/out-of-scope separation
     - Packet envelope/field/order lint
     - Packet registry/ID/gate/flow/authority/normalization lint
@@ -571,17 +602,21 @@ validator:
     workflow: .github/workflows/validator.yml
     command: python tools/validator/run_samples.py
     extension_command: python tools/validator/run_safety_gate_samples.py
+    r1c_round_trip_command: python tools/validator/run_r1c_roundtrip_samples.py
     expected_sample_total: 108
     expected_safety_gate_extension_total: 14
+    expected_r1c_round_trip_total: 14
     latest_pr_validation:
-      pull_request: 31
-      run_id: 29153870878
-      run_number: 173
+      pull_request: 34
+      run_id: 29154476912
+      run_number: 179
       conclusion: success
       sample_total: 108
       sample_failed: 0
       safety_gate_extension_total: 14
       safety_gate_extension_failed: 0
+      r1c_round_trip_total: 14
+      r1c_round_trip_failed: 0
 ```
 
 Specified or designed but not fully implemented:
@@ -591,7 +626,8 @@ protected wording full semantic equivalence proof
 Safety Gate multi-generation inheritance graph/deep scope semantics
 full natural-language trigger context parser
 R1C multi-line JSON parsing
-R1C round-trip semantic proof
+R1C full semantic equivalence proof
+R1C optional SAFETY_GATES dedicated round-trip
 R1C optional EVIDENCE/AUTHORITY deep lint
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
@@ -692,6 +728,27 @@ conclusion: success
 sample_total: 34
 failed: 0
 meaning: design-only regression evidence; not R1C lint pass
+```
+
+### R1C structural round-trip first slice
+
+```yaml
+pull_request: 34
+source_branch: agent/kdsl-r1c-roundtrip
+source_head: 844a9f68306ffbb8ddfb539e3aba7a38d9cc6185
+squash_commit: ccc4c976274a42c45dd8109680d08ddd56341e82
+workflow_run_id: 29154476912
+run_number: 179
+job_id: 86549240768
+conclusion: success
+existing_sample_total: 108
+existing_failed: 0
+safety_gate_extension_total: 14
+safety_gate_extension_failed: 0
+round_trip_sample_total: 14
+round_trip_failed: 0
+optional_safety_gates: blocked
+meaning: selected structural properties only; not Full R1 semantic/safety/authority proof
 ```
 
 ### Packet normalization structural round-trip first slice
@@ -828,6 +885,7 @@ docs/reviews/kdsl-packet-normalization-design.md
 docs/reviews/kdsl-packet-normalization-ownership.md
 docs/reviews/kdsl-r1c-design-integration.md
 docs/reviews/kdsl-r1c-validator-first-slice.md
+docs/reviews/kdsl-r1c-roundtrip-first-slice.md
 ```
 
 ## 9. Known gaps before stable
@@ -838,7 +896,7 @@ full natural-language semantic parserなし
 full negation parserなし
 protected wording full semantic equivalence proofなし
 Safety Gate multi-generation inheritance graph/deep scope lintなし
-R1C round-trip semantic proofなし
+R1C full semantic equivalence proofなし / optional SAFETY_GATES round-trip blocked
 Packet full YAML/semantic parserなし
 Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
@@ -873,8 +931,8 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: R1C round-trip/property-based validator検討
-P1: public-facing v2 overview / CI required check検討
-P2: Safety Gate multi-generation inheritance/property tests検討
+P0: public-facing v2 overview / CI required check検討
+P1: Safety Gate multi-generation inheritance/property tests検討
+P2: R1C optional SAFETY_GATES dedicated round-trip検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
