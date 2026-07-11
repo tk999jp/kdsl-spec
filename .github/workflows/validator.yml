@@ -61,6 +61,18 @@ jobs:
 
           workflow = Path('.github/workflows/r1c-ownership-apply.yml')
           try:
+              for target in (
+                  'spec/manifest.md',
+                  'spec/bridge/kdsl-cp-packet-bridge.md',
+                  'spec/glossary-v2-draft.md',
+                  'docs/project-status.md',
+                  'README.md',
+                  'CHANGELOG.md',
+              ):
+                  path = Path(target)
+                  text = path.read_text(encoding='utf-8')
+                  path.write_text(text.replace('\r\n', '\n'), encoding='utf-8')
+
               text = workflow.read_text(encoding='utf-8')
               start_marker = "          python - <<'PY'\n"
               end_marker = "\n          PY\n\n      - name: Commit aligned documents"
