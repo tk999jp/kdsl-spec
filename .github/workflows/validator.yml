@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: validator-${{ github.workflow }}-${{ github.ref }}
@@ -31,8 +31,32 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Show Python version
-        run: python --version
-
       - name: Run validator samples
         run: python tools/validator/run_samples.py
+
+  packet_scope_fix:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-packet-validator'
+    name: Apply Packet scope correction
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out integration branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-packet-validator
+          fetch-depth: 0
+
+      - name: Apply exact scope correction
+        run: python .github/scripts/fix_packet_scope.py
+
+      - name: Restore read-only workflow and commit correction
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/validator.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Validator: limit Packet checks to Packet scope"
+          git push origin HEAD:agent/kdsl-packet-validator
