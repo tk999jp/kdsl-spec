@@ -6,6 +6,23 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Packet v2-draft ownership alignment
+
+- Adopted `kdsl-packet@0.1-draft` as a v2-draft non-executable authoring schema.
+- Adopted BASE / TASK / FLOW registries as v2-draft classification registries.
+- Adopted Packet lint requirements while keeping the validator unimplemented.
+- Required `STATUS:non-executable`, `NORMALIZE.required:true`, and `NORMALIZE.state:not_normalized`.
+- Kept registry IDs/opcodes separate from authority, Safety Gate satisfaction, commands, and normalization completion.
+- Kept `PKT:v1` prohibited and direct AI coding tool execution forbidden.
+
+#### Packet registry and schema design candidate
+
+- Added `kdsl-packet@0.1-draft`.
+- Added `kdsl-packet-base@0.1-draft`, `kdsl-packet-task@0.1-draft`, and `kdsl-packet-flow@0.1-draft`.
+- Added Packet lint candidate, design-only example, and design review record.
+- PR #10 regression CI: run #78 / existing 49 expectations / failed 0.
+- Design integration did not make Packet adopted, canonical, stable, or executable until the separate ownership review.
+
 #### R1C v2-draft ownership alignment
 
 - Adopted `kdsl-r1c@0.1-draft` as a v2-draft compact serialization profile subordinate to canonical R1.
@@ -173,8 +190,10 @@ Release Assets: none
 R1C:=kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
 R1C independent canonical/stable status:=no
 R1C manifest/Bridge/glossary alignment:=integrated
-KDSL-Packet:=draft-non-executable
-Packet schema/BASE/TASK/FLOW registry/Packet lint:=undefined
+KDSL-Packet:=kdsl-packet@0.1-draft / v2-draft adopted / non-executable
+Packet BASE/TASK/FLOW registries:=v2-draft adopted
+Packet lint:=v2-draft adopted / validator not implemented
+normalization transformer/round-trip proof:=not implemented
 PKT:v1:=prohibited
 ```
 

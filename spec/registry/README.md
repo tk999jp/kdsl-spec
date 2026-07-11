@@ -12,7 +12,7 @@ kdsl-sg@0.1-draft
   spec/registry/kdsl-safety-gate-composition.md
 ```
 
-## Current design-candidate registries
+## Current v2-draft adopted Packet registries
 
 ```text
 kdsl-packet-base@0.1-draft
@@ -25,11 +25,11 @@ kdsl-packet-flow@0.1-draft
   spec/registry/kdsl-packet-flow-registry.md
 ```
 
-Candidate status:
+Packet registry status:
 
 ```text
-adopted: no
-canonical: no
+adopted: v2-draft
+canonical: v2-draft only
 stable/public-ready: no
 Packet executable effect: none
 validator: not implemented
@@ -61,9 +61,9 @@ Current status:
 kdsl-sg@0.1-draft:=v2-draft adopted
 Safety Gate validator:=first heuristic slice integrated
 kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
-Packet BASE/TASK/FLOW registries:=design-candidate only
+Packet BASE/TASK/FLOW registries:=v2-draft adopted / non-executable
 KDSL-Packet:=draft-non-executable
 PKT:v1使用禁止
 ```
 
-Adoption in `spec/manifest.md` authorizes v2-draft reference use only. Design-candidate registry presence does not authorize adoption, stable promotion, execution authority, Packet execution, tag/release operations, or Release Assets changes.
+Adoption in `spec/manifest.md` authorizes v2-draft reference use only. Registry adoption does not authorize stable promotion, normalization completion, execution authority, Packet execution, tag/release operations, or Release Assets changes.

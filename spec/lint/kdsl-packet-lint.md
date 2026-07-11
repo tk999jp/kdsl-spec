@@ -1,7 +1,7 @@
 # KDSL Packet Lint v0.1 Draft Candidate
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 validator: not implemented
 scope: kdsl-packet@0.1-draft / BASE / TASK / FLOW
 

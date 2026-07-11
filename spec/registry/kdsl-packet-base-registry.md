@@ -1,7 +1,7 @@
 # KDSL Packet BASE Registry v0.1 Draft Candidate
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 registry: kdsl-packet-base
 version: 0.1-draft
 executable_effect: none

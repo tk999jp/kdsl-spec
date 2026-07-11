@@ -1,7 +1,7 @@
 # KDSL Packet Schema v0.1 Draft Candidate
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft
 schema_id: kdsl-packet@0.1-draft
 executable: no
 normalization_required: yes
