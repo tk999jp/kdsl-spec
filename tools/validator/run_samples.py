@@ -121,6 +121,61 @@ SAMPLES = [
         'command': ['kdsl_validate.py', '--target', 'compact', 'samples/sample_cp_restricted_alias.md'],
         'expected': 2,
     },
+    {
+        'name': 'safety gate valid baseline',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'safety gate repository example valid',
+        'command': ['kdsl_safety_gate.py', 'examples/safety-gates/dev-prompt-safety-gates.example.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'safety gate unknown registry',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_unknown_registry.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate unknown id and state',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_unknown_id_state.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate missing required field',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_missing_field.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate satisfied missing basis',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_satisfied_missing_basis.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate na missing reason',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_na_missing_reason.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate dev-prompt baseline missing',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_baseline_missing.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'safety gate rollback composition missing',
+        'command': ['kdsl_safety_gate.py', 'samples/sample_sg_composition_missing.md'],
+        'expected': 2,
+    },
+    {
+        'name': 'wrapper target safety gate valid',
+        'command': ['kdsl_validate.py', '--target', 'safety-gate', 'samples/sample_sg_valid.md'],
+        'expected': 0,
+    },
+    {
+        'name': 'wrapper target safety gate invalid',
+        'command': ['kdsl_validate.py', '--target', 'safety-gate', 'samples/sample_sg_composition_missing.md'],
+        'expected': 2,
+    },
 ]
 
 
@@ -130,6 +185,8 @@ def resolve_command(command):
     for item in command[1:]:
         if item.startswith('samples/'):
             args.append(str(ROOT / item))
+        elif item.startswith('examples/'):
+            args.append(str(REPO_ROOT / item))
         else:
             args.append(item)
     return [sys.executable, str(script), *args]
