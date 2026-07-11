@@ -331,8 +331,9 @@ Current status:
 ```text
 v2-draft adopted
 canonical/stable/executable: no
-validator: not implemented
+validator: first heuristic slice integrated
 normalization required: yes
+normalization contract: v2-draft adopted
 ```
 
 ### PACKET_DRAFT
@@ -394,6 +395,60 @@ FLOW opcode != command
 FLOW opcode != authority
 one-character opcode未定義
 ```
+
+### NORMALIZATION_DRAFT
+
+```text
+NORMALIZATION_DRAFT:=Packet source→target mapping/loss/round-trip evidence artifact
+schema: kdsl-packet-normalization@0.1-draft
+```
+
+Current status:
+
+```text
+v2-draft adopted
+non-executable
+validator/mapper: not implemented
+```
+
+Required boundary:
+
+```text
+STATUS:non-executable
+TARGET.executable:false
+semantic_equivalence:not_proven
+AUTHORITY.execution_authority:none
+```
+
+### KDSL_PROMPT_PREVIEW
+
+```text
+KDSL_PROMPT_PREVIEW:=Full KDSL target mappingを確認する非実行preview marker
+KDSL_PROMPT_PREVIEW != KDSL_PROMPT
+```
+
+It must not be passed directly to an AI coding tool as an implementation contract.
+
+### Structural round-trip
+
+```text
+structural round-trip:=Packet required fields/order/exact stringsをtarget projectionから再構成して比較する検査
+```
+
+```text
+structural_pass != semantic equivalence
+structural_pass != safety proof
+structural_pass != authority/normalization completion
+```
+
+### Normalization loss
+
+```text
+render_only:=表示差のみ候補
+critical:=scope/safety/authority/order/exact string等の損失
+```
+
+Critical loss or blocked unresolved items prohibit target preview/execution.
 
 ### Packet NORMALIZE
 

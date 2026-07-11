@@ -26,6 +26,8 @@ R1C independent canonical/stable status: no
 Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries: v2-draft adopted
 Packet validator: first heuristic slice integrated
+Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
+Packet normalization validator/mapper: not implemented
 validator sample suite: 69 expectations / failed 0
 validator_authority: non_authoritative
 ```
@@ -110,6 +112,7 @@ Registries:
 
 Packet:
   spec/packet/kdsl-packet-schema.md
+  spec/packet/kdsl-packet-normalization-contract.md
 
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
@@ -121,6 +124,7 @@ Lint:
   spec/lint/kdsl-safety-gate-registry-lint.md
   spec/lint/kdsl-r1c-lint.md
   spec/lint/kdsl-packet-lint.md
+  spec/lint/kdsl-packet-normalization-lint.md
 
 Bridge:
   spec/bridge/kdsl-adps-bridge.md
@@ -331,6 +335,8 @@ BASE: kdsl-packet-base@0.1-draft
 TASK: kdsl-packet-task@0.1-draft
 FLOW: kdsl-packet-flow@0.1-draft
 lint: spec/lint/kdsl-packet-lint.md
+normalization: kdsl-packet-normalization@0.1-draft
+normalization lint: spec/lint/kdsl-packet-normalization-lint.md
 status: non-executable
 ```
 
@@ -431,7 +437,7 @@ R1C multi-line JSON lintなし
 R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
 Packet full YAML/semantic parserなし
-Packet normalization transformer/round-trip proofなし
+Packet normalization validator/mapper/round-trip proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packet:=v2-draft adopted / non-executable
 ```
@@ -454,18 +460,21 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  PR #16 CI確認 / squash merge / Packet validator closeout
+  PR #19 CI確認 / squash merge / normalization ownership closeout
 
 P1:
-  Packet normalization round-trip tooling/tests
+  normalization validator/structural mapper first slice
 
 P2:
-  Safety Gate protected wording/inheritance validator拡張
+  normalization round-trip/property tests
 
 P3:
-  R1C round-trip/property-based validator検討
+  Safety Gate protected wording/inheritance validator拡張
 
 P4:
+  R1C round-trip/property-based validator検討
+
+P5:
   public-facing v2 overview
   CI required check / branch protection検討
 
