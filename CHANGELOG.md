@@ -14,6 +14,18 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 - Kept P1/P1L targets blocked while canonical target field schemas are absent.
 - Kept `semantic_equivalence:not_proven` and `execution_authority:none` mandatory.
 
+Verification:
+
+```text
+work_pull_request: 18
+work_head: 817762bfcdf3abb803d192eec4d12f2f366a7f07
+work_run: 29150276507 / #135 / alignment success / sample 69 / failed 0
+pull_request: 19
+source_head: 7e938b603fe0edbe79306485804a1e09f98ed76d
+squash_commit: 070b651a8d1088dd9698d0d9bd613fec3be84ef6
+clean_run: 29150351160 / #137 / success / sample 69 / failed 0
+```
+
 #### Packet normalization contract design candidate
 
 - Added normalization contract/lint candidates and exact source fixtures.
