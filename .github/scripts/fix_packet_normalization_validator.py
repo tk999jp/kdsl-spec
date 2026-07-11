@@ -30,5 +30,23 @@ text, count = readme_pattern.subn(lambda _: readme_replacement, text, count=1)
 if count != 1:
     raise SystemExit(f'normalization README gap block count: {count}')
 
+status_gap_pattern = re.compile(
+    r"""replace_once\(\n    'docs/project-status\.md',\n    'Normalization validator/mapper未実装\\nNormalization round-trip/property proofなし',\n    'Normalization validator/mapper first slice:=integration pending\\nNormalization round-trip/property proofなし',\n\)\n"""
+)
+status_gap_replacement = r"""replace_once(
+    'docs/project-status.md',
+    'Packet Safety Gate state/evidence deep lint\nNormalization validator/mapper未実装\nNormalization round-trip/property proofなし\nPacket Safety Gate completeness/inheritance proof',
+    'Packet Safety Gate state/evidence deep lint\nNormalization validator/mapper first slice:=integration pending\nNormalization round-trip/property proofなし\nPacket Safety Gate completeness/inheritance proof',
+)
+replace_once(
+    'docs/project-status.md',
+    'Packet full YAML/semantic parserなし\nNormalization validator/mapper未実装\nNormalization round-trip/property proofなし\nPacket Safety Gate completeness/inheritance proofなし',
+    'Packet full YAML/semantic parserなし\nNormalization validator/mapper first slice:=integration pending\nNormalization round-trip/property proofなし\nPacket Safety Gate completeness/inheritance proofなし',
+)
+"""
+text, count = status_gap_pattern.subn(lambda _: status_gap_replacement, text, count=1)
+if count != 1:
+    raise SystemExit(f'project-status normalization-gap block count: {count}')
+
 path.write_text(text, encoding='utf-8')
 Path('.github/scripts/fix_packet_normalization_validator.py').unlink()
