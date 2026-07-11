@@ -26,8 +26,6 @@ public-ready: no
 stable: no
 ```
 
-現在の状態は「公開済み experimental preview」であり、正式public-ready/stable releaseではありません。
-
 Policy:
 
 ```text
@@ -45,119 +43,125 @@ stable/public-ready化→別途U明示承認必須
 ### PR #1 — v2 CompactPrompt architecture
 
 ```yaml
-v2_compact_prompt_integration:
-  source_branch: feature/kdsl-v2-compact-prompt
-  pull_request: 1
-  merge_method: squash
-  merge_status: merged
-  squash_commit: ae55f845018c0e8208d9e07c9814bc48035b2ef8
-  review_close_commit: ef801fa23abb0d235df8c7e9a1ea929d5bf26b97
-  scope:
-    - CompactPrompt profile
-    - kanji-v1 lexicon
-    - CompactPrompt lint specification
-    - CP-Lift boundary
-    - future Packet non-executable boundary
-  stable_effect: none
+pull_request: 1
+merge_method: squash
+merge_status: merged
+squash_commit: ae55f845018c0e8208d9e07c9814bc48035b2ef8
+scope:
+  - CompactPrompt profile
+  - kanji-v1 lexicon
+  - CompactPrompt lint
+  - CP-Lift boundary
+  - Packet draft-non-executable boundary
+stable_effect: none
 ```
 
 ### PR #2 — CompactPrompt validator first slice
 
 ```yaml
-compact_prompt_validator_integration:
-  source_branch: agent/kdsl-compact-validator
-  pull_request: 2
-  merge_method: squash
-  merge_status: merged
-  squash_commit: c9e6dc5d8aaf4f5860fe2bab9d69247b41fc3b82
-  verified_implementation_head: 2b50ed1
-  scope:
-    - CompactPrompt profile/shorthand detection
-    - mode/safety/lexicon value lint
-    - required block lint
-    - kanji-v1 restricted alias lint
-    - representative CP-Lift trigger lint
-    - Packet draft boundary lint
-    - wrapper target compact
+pull_request: 2
+merge_status: merged
+squash_commit: c9e6dc5d8aaf4f5860fe2bab9d69247b41fc3b82
+scope:
+  - CompactPrompt structure/value lint
+  - kanji-v1 alias lint
+  - representative CP-Lift lint
+  - wrapper target compact
 ```
 
 ### PR #3 — Validator CI baseline
 
 ```yaml
-validator_ci_integration:
-  source_branch: agent/kdsl-validator-ci
-  pull_request: 3
-  merge_method: squash
-  merge_status: merged
-  squash_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
-  review_close_commit: eea2f9f3f3f15062ef24820f0efdc3fc85868146
-  workflow: .github/workflows/validator.yml
-  runner: ubuntu-latest
-  python: "3.11"
-  permissions: contents-read
-  timeout_minutes: 5
-  triggers:
-    - pull_request -> main
-    - push -> main
-    - workflow_dispatch
-  command: python tools/validator/run_samples.py
+pull_request: 3
+merge_status: merged
+squash_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
+workflow: .github/workflows/validator.yml
+runner: ubuntu-latest
+python: "3.11"
+permissions: contents-read
+command: python tools/validator/run_samples.py
 ```
 
 ### PR #4 — Safety Gate Registry v0.1 draft
 
 ```yaml
-safety_gate_registry_integration:
-  registry: kdsl-sg@0.1-draft
-  source_branch: agent/kdsl-safety-gate-registry
-  pull_request: 4
-  approval_status: user_approved
-  approval_date: 2026-07-11
-  merge_method: squash
-  merge_status: merged
-  source_head: 194d7f36efe0d653c28f4f10e52ec37807f2424b
-  squash_commit: e1ab32e398751dcb5bc38bec8325aeded798d843
-  validator_ci_run_id: 29141378172
-  validator_ci_run_number: 23
-  validator_ci_conclusion: success
-  specification_status: v2_draft_integrated
-  states:
-    - hold
-    - satisfied
-    - blocked
-    - na
-  ids:
-    - SG-DESIGN
-    - SG-SCOPE
-    - SG-EVIDENCE
-    - SG-RUNTIME
-    - SG-AUTHORITY
-    - SG-ROLLBACK
-    - SG-PUBLIC
-    - SG-DATA
-    - SG-KDSL-DP
-    - SG-STOP
-  stable_effect: none
+pull_request: 4
+merge_status: merged
+registry: kdsl-sg@0.1-draft
+squash_commit: e1ab32e398751dcb5bc38bec8325aeded798d843
+states:
+  - hold
+  - satisfied
+  - blocked
+  - na
+ids:
+  - SG-DESIGN
+  - SG-SCOPE
+  - SG-EVIDENCE
+  - SG-RUNTIME
+  - SG-AUTHORITY
+  - SG-ROLLBACK
+  - SG-PUBLIC
+  - SG-DATA
+  - SG-KDSL-DP
+  - SG-STOP
+stable_effect: none
 ```
 
-### PR #5 — Safety Gate Registry validator first slice
+### PR #5 — Safety Gate validator first slice
 
 ```yaml
-safety_gate_validator_integration:
-  source_branch: agent/kdsl-safety-gate-validator
-  pull_request: 5
-  merge_method: squash
-  merge_status: merged
-  source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
-  squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
-  workflow: Validator CI
-  workflow_run_id: 29143048337
-  workflow_run_number: 33
-  workflow_status: completed
-  workflow_conclusion: success
-  sample_total: 34
-  sample_failed: 0
-  actual_repository_example_checked: examples/safety-gates/dev-prompt-safety-gates.example.md
-  stable_effect: none
+pull_request: 5
+merge_status: merged
+squash_commit: 05773b4426481b783f2aeb55f1bcbcc50c17ee93
+workflow_run_id: 29143048337
+workflow_run_number: 33
+workflow_conclusion: success
+sample_total: 34
+sample_failed: 0
+```
+
+### PR #6 — R1C compact-result design candidate
+
+```yaml
+pull_request: 6
+merge_status: merged
+merge_method: squash
+source_head: d2460fa656d017963c34e382dddf4faa0248b68e
+squash_commit: 34d95a78aa1012662b3f2f68aac678686c95bdf0
+integration_record_commit: 24298c072aca75bba76da74766c66530e4649b83
+schema_id: kdsl-r1c@0.1-draft
+status: design_candidate_integrated
+canonical: no
+validator_at_merge: not_implemented
+scope:
+  - KDSL_RESULT envelope retained
+  - canonical 11 required field names retained
+  - JSON-compatible structured values
+  - no short aliases
+  - no implicit defaults
+  - round-trip requirement
+  - Full R1 fallback requirement
+stable_effect: none
+```
+
+### PR #7 — R1C design-candidate validator first slice
+
+```yaml
+pull_request: 7
+merge_status: merged
+merge_method: squash
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+squash_commit: 49957fe530d028738cea94d3b6ab1f473f8b176d
+workflow: Validator CI
+workflow_run_id: 29144196401
+workflow_run_number: 50
+workflow_status: completed
+workflow_conclusion: success
+sample_total: 49
+sample_failed: 0
+status: design_candidate_validator_integrated
+canonical_effect: none
 ```
 
 ## 3. Current architecture direction
@@ -166,26 +170,40 @@ safety_gate_validator_integration:
 v2-draft architecture:=main統合済み
 CompactPrompt validator first slice:=main統合済み
 Validator CI baseline:=main統合済み
-Safety Gate Registry:=main統合済み
-Safety Gate Registry validator first slice:=main統合済み
+Safety Gate Registry:=v2-draft integrated
+Safety Gate validator first slice:=main統合済み
+R1C design candidate:=main統合済み
+R1C design-candidate validator first slice:=main統合済み
+R1C canonical adoption:=未実施
 KDSL-Packet:=draft-non-executable
-R1C:=未定義
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
-## 4. License state
+## 4. R1C current status
 
 ```yaml
-license:
-  type: MIT
-  file: LICENSE
-  approved_by_user: 2026-07-07
-  scope:
-    - specifications
-    - documentation
-    - examples
-    - templates
-    - validator helper code
+r1c:
+  schema_id: kdsl-r1c@0.1-draft
+  design_candidate: integrated
+  canonical: no
+  stable: no
+  envelope: KDSL_RESULT
+  required_field_names: canonical R1 names retained
+  structured_values: JSON-compatible inline arrays/objects
+  short_aliases: prohibited
+  implicit_defaults: prohibited
+  round_trip_to_full_r1: required by candidate
+  full_r1_fallback: required by candidate
+  validator: first heuristic slice integrated
+  manifest_bridge_glossary_promotion: pending
+```
+
+R1Cは現時点で、canonical R1を置換しません。
+
+```text
+canonical R1 > R1C design candidate
+R1C validator pass != R1C canonical adoption
+R1C design/validator存在 != Packet executable
 ```
 
 ## 5. Validator maturity
@@ -195,78 +213,49 @@ validator:
   maturity: experimental_heuristic_helpers
   implementation: partial
   authority: non_authoritative
-  current_main_scope:
-    - KDSL_RESULT required block presence lint
-    - RT:v basis wording heuristic lint
-    - NEXT/COMMIT authority-shape heuristic lint
-    - template reference lint
-    - template expansion evidence lint
-    - CompactPrompt required block lint
-    - CompactPrompt mode/safety/lexicon lint
-    - kanji-v1 restricted alias lint
-    - representative CP-Lift lint
-    - Packet draft boundary lint
-    - Safety Gate registry name lint
-    - Safety Gate known ID/state lint
-    - Safety Gate required field lint
-    - Safety Gate satisfied evidence/authority lint
-    - dev-prompt baseline Safety Gate lint
-    - representative Safety Gate composition lint
   wrapper_targets:
     - r1
     - prompt
     - compact
     - safety-gate
+    - r1c
     - all
+  current_main_scope:
+    - KDSL_RESULT required block presence lint
+    - RT:v basis wording heuristic lint
+    - NEXT/COMMIT authority-shape heuristic lint
+    - template reference/expansion evidence lint
+    - CompactPrompt structure/value/alias/CP-Lift lint
+    - Safety Gate registry/ID/state/field/composition lint
+    - R1C schema/field/order/JSON shape lint
+    - R1C VERIFY class separation lint
+    - R1C RT/NEXT/COMMIT boundary lint
+    - Full R1 fallback/out-of-scope separation
   ci:
-    status: integrated
     workflow: .github/workflows/validator.yml
     command: python tools/validator/run_samples.py
-    expected_sample_total: 34
+    expected_sample_total: 49
     latest_pr_validation:
-      pull_request: 5
-      run_id: 29143048337
-      run_number: 33
+      pull_request: 7
+      run_id: 29144196401
+      run_number: 50
       conclusion: success
-  specified_not_implemented:
-    - protected wording semantic equivalence lint for SG references
-    - parent-child Safety Gate inheritance lint
-    - aggregate composite state calculation
-    - full trigger context parser
-  not_scope:
-    - semantic equivalence proof
-    - safety proof
-    - full template expansion proof
-    - full YAML parser
-    - full natural-language parser
-    - full negation parser
-    - runtime verification
-    - user approval
-    - execution authority
-    - release readiness judgment
 ```
 
-Constraints:
+Specified or designed but not fully implemented:
 
 ```text
-validator未実行→pass扱禁止
-validator pass != U承認
-validator pass != RT:v
-validator pass != 実装妥当性保証
-validator pass != semantic equivalence
-validator pass != safety proof
-validator pass != execution authority
-validator pass != release readiness
-CI pass != U承認
-CI pass != RT:v
-CI pass != semantic equivalence
-CI pass != safety proof
-CI pass != stable/public-ready判断
-CI pass != tag/release/Release Assets許可
-Safety Gate validator pass != Packet/R1C readiness
+protected wording semantic equivalence lint
+Safety Gate parent-child inheritance lint
+Safety Gate aggregate composite state calculation
+full natural-language trigger context parser
+R1C multi-line JSON parsing
+R1C round-trip semantic proof
+R1C optional EVIDENCE/AUTHORITY deep lint
+Packet OUT/R1C integration lint
 ```
 
-## 6. Safety status
+## 6. Safety and authority boundaries
 
 ```text
 意味保持 > safety gate保持
@@ -278,81 +267,107 @@ build/diff/lint/test/CI pass != RT:v
 KDSL_RESULT NEXT:=提案, 実行許可扱禁止
 KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 public履歴/公開済tag/Release Assets保護
-lexicon != mode/profile
-unknown profile/mode/safety/lexicon/envelope/registry/ID推測禁止
-構造aliasはKEY位置のみ
-保護語の一字短縮禁止
-KDSL-CP実装指示禁止
+unknown profile/mode/safety/lexicon/envelope/schema/registry/ID推測禁止
 Registry ID != permission
 state:satisfied != unrelated authority
 hold/blocked gate削除禁止
-specialized gate != broader gate解除
-current Full KDSL:=SG ID + complete protected wording
 SG ID-only compression禁止
+R1C short field alias未定義
+R1C required field省略禁止
+R1C NEXT.authority:=proposal_only
+R1C COMMIT.proposed != commit authority
 KDSL-Packet直接実行禁止
 PKT:v1使用禁止
 ```
 
+Validator/CI boundaries:
+
+```text
+validator未実行→pass扱禁止
+validator pass != U承認
+validator pass != RT:v
+validator pass != semantic equivalence
+validator pass != safety proof
+validator pass != execution authority
+validator pass != release readiness
+validator pass != canonical/stable promotion
+CI pass != tag/release/Release Assets許可
+```
+
 ## 7. Validation evidence
 
-### CompactPrompt Windows verification
+### CompactPrompt local verification
 
 ```yaml
-compact_prompt_windows_validation:
-  date: 2026-07-11
-  environment: Windows PowerShell 5.1 / repository checkout
-  branch: agent/kdsl-compact-validator
-  verified_implementation_head: 2b50ed1
-  command: python tools/validator/run_samples.py
-  total: 23
-  failed: 0
-  compact_examples: 4/4 pass
-  worktree: clean
-  branch_tracking: synchronized
-  diff_check: pass
+date: 2026-07-11
+environment: Windows PowerShell 5.1
+sample_total: 23
+failed: 0
+compact_examples: 4/4 pass
+worktree: clean
+diff_check: pass
 ```
 
-### Safety Gate validator verification
+### Safety Gate validator
 
 ```yaml
-safety_gate_validator_validation:
-  date: 2026-07-11
-  isolated_direct_cases: 8
-  isolated_unexpected_exits: 0
-  pull_request: 5
-  source_head: bc49316ba83ef59a7c49f6ae24a29f581e2ea16c
-  workflow: Validator CI
-  workflow_run_id: 29143048337
-  run_number: 33
-  status: completed
-  conclusion: success
-  sample_total: 34
-  failed: 0
-  actual_repository_example: pass
-  meaning: expected exit-code regression check only
+pull_request: 5
+workflow_run_id: 29143048337
+run_number: 33
+conclusion: success
+sample_total: 34
+failed: 0
 ```
 
-Verification details:
+### R1C design regression
+
+```yaml
+pull_request: 6
+workflow_run_id: 29143936842
+run_number: 41
+conclusion: success
+sample_total: 34
+failed: 0
+meaning: design-only regression evidence; not R1C lint pass
+```
+
+### R1C validator
+
+```yaml
+pull_request: 7
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+workflow_run_id: 29144196401
+run_number: 50
+conclusion: success
+sample_total: 49
+failed: 0
+repository_examples:
+  - examples/r1c/r1c-success.example.md
+  - examples/r1c/r1c-blocked.example.md
+  - examples/r1c/r1c-needs-user.example.md
+```
+
+Verification records:
 
 ```text
 tools/validator/verification/kdsl_compact_prompt_verify.md
 tools/validator/verification/kdsl_safety_gate_verify.md
-docs/reviews/kdsl-validator-ci-baseline.md
-docs/reviews/kdsl-safety-gate-registry-design.md
-docs/reviews/kdsl-safety-gate-registry-integration.md
-docs/reviews/kdsl-safety-gate-validator-first-slice.md
+tools/validator/verification/kdsl_r1c_verify.md
+docs/reviews/kdsl-r1c-design-integration.md
+docs/reviews/kdsl-r1c-validator-first-slice.md
 ```
 
 ## 8. Known gaps before stable
 
 ```text
-full YAML parserなし
+full YAML/JSON/KDSL parserなし
 full natural-language semantic parserなし
 full negation parserなし
 protected wording semantic equivalence lintなし
 Safety Gate parent-child inheritance lintなし
 Safety Gate aggregate state lintなし
-R1C schema未定義
+R1C canonical ownership alignment未実施
+R1C round-trip semantic proofなし
 Packet schema未定義
 BASE/TASK/FLOW registry未定義
 Packet lint未定義
@@ -369,27 +384,29 @@ Use as:
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
   Safety Gate Registry v2-draft
-  heuristic validator helper
+  R1C compact-result design candidate
+  experimental heuristic validator helpers
   validator sample CI baseline
-  internal/public review candidate
 
 Do not present as:
   stable standard
   production-ready validator suite
   proof system
   approval/runtime/release substitute
-  SG ID-only executable contract
+  canonical R1C standard
   executable Packet specification
 ```
 
 ## 10. Next safe steps
 
 ```text
-P0: local mainをorigin/mainへ同期 / 34 sample runner再確認
-P1: R1C compact schema設計
-P2: Packet BASE/TASK/FLOW registry・schema・lint設計
+P0: local mainをorigin/mainへ同期 / 49 sample runner再確認
+P1: R1C canonical-ownership review
+    - manifest/Bridge/glossary alignment可否
+    - design candidate→v2-draft adopted候補
+    - validator resultsはapproval代替禁止
+P2: Packet BASE/TASK/FLOW registry/schema/lint設計
 P3: Safety Gate protected wording/inheritance validator拡張
-P4: public-facing v2 overview検討
-P5: CI required check / branch protection化は別途U明示承認後に検討
+P4: public-facing v2 overview / CI required check検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
