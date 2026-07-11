@@ -115,6 +115,7 @@ AI coding / R1 examples:
 Validator helpers:
   tools/validator/README.md
   tools/validator/kdsl_validate.py
+  tools/validator/kdsl_compact_prompt.py
   tools/validator/run_samples.py
   tools/validator/*
 
@@ -273,18 +274,40 @@ checks:
   RT:v basis wording
   NEXT/COMMIT authority shape
   template reference/expansion evidence
+  CompactPrompt mode/safety/lexicon
+  CompactPrompt required blocks
+  representative restricted aliases
+  representative CP-Lift triggers
+  Packet draft boundary
 
 not checks:
   semantic equivalence proof
+  full parser
+  full negation parser
   runtime execution
   U approval
   release readiness
+```
+
+CompactPrompt target:
+
+```text
+python tools/validator/kdsl_validate.py --target compact <file>
+```
+
+Verified sample state:
+
+```text
+python tools/validator/run_samples.py
+→ total: 23 / failed: 0
 ```
 
 ```text
 validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
+validator pass != semantic equivalence
+validator pass != release readiness
 ```
 
 ## Operational rules
@@ -303,9 +326,8 @@ validator pass != 実装妥当性保証
 
 ```text
 P0:
-  manifest/README/examplesのv2 architecture同期
-  CompactPrompt lint運用確認
-  kanji-v1 examples review
+  CompactPrompt validator first slice review/merge
+  GitHub Actionsでsample runner実行を検討
 
 P1:
   R1C compact schema検討

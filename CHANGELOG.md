@@ -4,6 +4,25 @@
 
 ### Changed
 
+- Added the first CompactPrompt validator heuristic slice:
+  - `tools/validator/kdsl_compact_prompt.py`
+  - detects `profile:compact-prompt`, `KDSL-CP:`, and `KDSL-CP漢:`
+  - validates mode/safety/lexicon values
+  - checks required blocks for standard and kanji-v1 forms
+  - detects representative restricted one-character aliases
+  - detects representative CP-Lift triggers
+  - enforces draft Packet boundaries
+- Added `--target compact` to `tools/validator/kdsl_validate.py`.
+- Extended sample expectation runner from 16 to 23 cases.
+- Added CompactPrompt validator samples, expected results, implementation notes, and verification record.
+- Recorded Windows PowerShell 5.1 repository verification:
+  - `python tools/validator/run_samples.py`
+  - result: `total 23 / failed 0`
+  - CompactPrompt examples: 4/4 pass
+  - branch tracking synchronized
+  - `git diff --check`: pass
+- Corrected free-text structural alias use in two kanji-v1 examples:
+  - `守違反なし` → `安全規則違反なし`
 - Corrected the KDSL v2 draft architecture from parallel product families to orthogonal axes:
   - `profile`: compact-prompt / dev-prompt / converter / lint
   - `mode`: readable / min / dense / lock
@@ -157,14 +176,15 @@
 - Release Assets are not attached.
 - v1.1.0-rc1 is a public experimental preview, not a stable/public-ready release.
 - License is MIT; see `LICENSE` and `docs/project-status.md`.
-- Validator helpers cover required-block, RT-basis, authority-guard, template-reference, and template-expansion-evidence lint.
+- Validator helpers cover required-block, RT-basis, authority-guard, template-reference, template-expansion-evidence, and CompactPrompt lint.
 - Public-facing README / examples-public / release notes are draft-oriented rc1 materials.
-- Combined validator wrapper supports target modes `r1`, `prompt`, and `all`.
+- Combined validator wrapper supports target modes `r1`, `prompt`, `compact`, and `all`.
 - Required-block verification is recorded for OK and missing-block samples.
 - RT-basis verification is recorded for valid, invalid-basis, and no-basis samples.
 - Authority-guard verification is recorded for OK, warn, and fail samples.
 - Template-reference verification is recorded for OK and missing-gate samples.
 - Template-expansion-evidence verification is recorded for OK, warn, and fail samples.
+- CompactPrompt verification is recorded for valid, required-block, restricted-alias, and CP-Lift cases.
 - Validator helpers do not perform runtime verification, user approval, semantic equivalence, full template expansion proof, release readiness, or public-ready decisions.
 
 ## v0.1.0-draft
@@ -254,4 +274,4 @@ public: not_yet
 - This repository is a draft specification workspace.
 - No GitHub Release has been created for `v0.1.0-draft`.
 - Experimental concepts such as Actor Model, Protocol Stack, Contract Matrix, Evidence Ledger, Authority Rail, KDSL-Param, HMI-lint, and Python Validator are not Core specification yet.
-- Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, and template-expansion-evidence slices.
+- Validator implementation has started with required-block, RT-basis, authority-guard, template-reference, template-expansion-evidence, and CompactPrompt slices.
