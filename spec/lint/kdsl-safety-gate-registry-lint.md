@@ -1,7 +1,8 @@
 # KDSL Safety Gate Registry Lint v0.1-draft
 
-status: review-candidate
+status: v2-draft adopted / specification-only
 source: spec/registry/kdsl-safety-gate-registry.md
+composition: spec/registry/kdsl-safety-gate-composition.md
 validator: not_implemented
 
 ## 1. Purpose
@@ -103,7 +104,38 @@ compact registry contract→不合格
 current Full KDSL natural-language contract→gate意味保持を検査し、ID欠落だけでは不合格にしない
 ```
 
-## 5. Protected wording checks
+## 5. Composition checks
+
+Source:
+
+```text
+spec/registry/kdsl-safety-gate-composition.md
+```
+
+Required:
+
+```text
+conditional trigger→required composition確認
+specialized gateだけでbroader gate欠落→不合格
+composite aggregate state確認
+blocked/hold member欠落→不合格
+na bypass→不合格
+```
+
+Representative requirements:
+
+```text
+rollback/revert/未push破棄
+→ SG-DESIGN/SG-ROLLBACK/SG-SCOPE/SG-EVIDENCE/SG-AUTHORITY/SG-STOP
+
+data schema/保存形式/migration
+→ SG-DESIGN/SG-DATA/baseline gates
+
+runtime claim/RT:v
+→ SG-EVIDENCE/SG-RUNTIME
+```
+
+## 6. Protected wording checks
 
 Current Full KDSL:
 
@@ -125,7 +157,7 @@ SG-AUTHORITYのみでcommit/push/release権限条件なし
 SG-KDSL-DPのみでP1/P1L正規化条件なし
 ```
 
-## 6. Inheritance checks
+## 7. Inheritance checks
 
 ```text
 parent hold/blocked→childへ保持
@@ -150,7 +182,7 @@ hold→satisfied without evidence/authority→不合格
 satisfied scope拡大後も再評価なし→不合格
 ```
 
-## 7. Typed non-substitution checks
+## 8. Typed non-substitution checks
 
 ```text
 U承認→SG-RUNTIME satisfied扱禁止
@@ -161,7 +193,7 @@ COMMIT.proposed→commit許可扱禁止
 SG-EVIDENCE satisfied→SG-RUNTIME自動satisfied禁止
 ```
 
-## 8. Gate-specific minimum checks
+## 9. Gate-specific minimum checks
 
 ### SG-DESIGN
 
@@ -236,16 +268,16 @@ unknown registry/ID推測禁止
 停止条件発火時blocked保持
 ```
 
-## 9. Packet/R1C boundary checks
+## 10. Packet/R1C boundary checks
 
 ```text
-SG registry候補あり→Packet executable扱禁止
+SG registry採用→Packet executable扱禁止
 PKT:v1使用禁止保持
 PACKET_DRAFT status:non-executable/schema:undefined保持
 unknown BASE/TASK/FLOW/R1C推測禁止
 ```
 
-## 10. Result classification
+## 11. Result classification
 
 Pass:
 
@@ -253,6 +285,7 @@ Pass:
 known ID/state
 required fieldsあり
 applicable gate保持
+required composition保持
 state/evidence/authority整合
 protected wording弱化なし
 Packet非実行境界保持
@@ -270,6 +303,7 @@ Fail:
 ```text
 unknown ID/state
 required gate欠落
+required composition欠落
 blocked/hold削除
 satisfied根拠不足
 naによるgate bypass
@@ -278,7 +312,7 @@ authority/runtime/evidence混同
 Packet直接実行化
 ```
 
-## 11. Validator boundary
+## 12. Validator boundary
 
 ```text
 validator未実装→自動pass扱禁止
