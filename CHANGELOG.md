@@ -6,6 +6,22 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Packet normalization v2-draft ownership alignment
+
+- Adopted `kdsl-packet-normalization@0.1-draft` as a non-executable mapping/loss/round-trip evidence contract.
+- Adopted normalization lint requirements while keeping validator/mapper unimplemented.
+- Kept `KDSL_PROMPT_PREVIEW` distinct from executable `KDSL_PROMPT:`.
+- Kept P1/P1L targets blocked while canonical target field schemas are absent.
+- Kept `semantic_equivalence:not_proven` and `execution_authority:none` mandatory.
+
+#### Packet normalization contract design candidate
+
+- Added normalization contract/lint candidates and exact source fixtures.
+- Added Full KDSL preview, P1 blocked, and critical-loss blocked examples.
+- PR #17 squash: `e27f130f64f0f0e9c3c6ac005adffc9476860f6f`.
+- Validator CI run #127: existing 69 expectations / failed 0.
+- Design integration did not generate executable targets or normalize Packet state.
+
 #### Packet validator first slice
 
 - Added `tools/validator/kdsl_packet.py`.
@@ -227,7 +243,8 @@ KDSL-Packet:=kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries:=v2-draft adopted
 Packet lint:=v2-draft adopted / validator first slice integrated
 Packet sample suite:=69 expectations / failed 0
-normalization transformer/round-trip proof:=not implemented
+normalization contract/lint:=v2-draft adopted / non-executable
+normalization validator/mapper/round-trip proof:=not implemented
 PKT:v1:=prohibited
 ```
 

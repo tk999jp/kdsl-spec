@@ -1,9 +1,17 @@
 # KDSL Packet Normalization Contract Design Review
 
-status: design-candidate
+status: design-candidate integrated
 review_date: 2026-07-11
 branch: agent/kdsl-packet-normalization-design
 target: main
+pull_request: 17
+source_head: b11eac3b55853b240e850af5bc2f43bf5c7048b2
+squash_commit: e27f130f64f0f0e9c3c6ac005adffc9476860f6f
+workflow_run_id: 29149505919
+workflow_run_number: 127
+workflow_conclusion: success
+sample_total: 69
+sample_failed: 0
 canonical_effect: none
 execution_effect: none
 
@@ -26,7 +34,7 @@ examples/packet/README.md
 ```text
 schema: kdsl-packet-normalization@0.1-draft
 top-level: NORMALIZATION_DRAFT
-status: design-candidate / non-executable
+status: v2-draft adopted candidate basis / non-executable
 source: kdsl-packet@0.1-draft
 target preview: design-only|full-kdsl-dev-prompt
 P1/P1L: blocked until canonical target schema exists
@@ -194,8 +202,8 @@ stable/public-ready change: none
 ## 12. Split-phase plan
 
 ```text
-P1: design candidate integration
-P2: manifest/Bridge/glossary ownership adoption review
+P1: design candidate integration completed by PR #17
+P2: manifest/Bridge/glossary ownership adoption via PR #19
 P3: normalization validator + structural mapper first slice
 P4: round-trip/property tests
 P5: executable target promotion review only after explicit approval
@@ -206,7 +214,7 @@ The transformer and adoption are separated so a design document cannot self-auth
 ## 13. Merge gate
 
 ```text
-existing Validator CI regression: total 69 / failed 0
+Validator CI run #127: total 69 / failed 0
 source digests independently fixed
 P1/P1L blocked boundary reviewed
 example self-consistency reviewed

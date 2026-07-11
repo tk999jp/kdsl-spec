@@ -129,13 +129,15 @@ Project Status:
 | `spec/registry/kdsl-packet-task-registry.md` | Registry draft | Packet task-class IDs / minimum gate sets | v2 draft adopted / non-executable |
 | `spec/registry/kdsl-packet-flow-registry.md` | Registry draft | Packet semantic flow opcodes | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-schema.md` | Packet authoring schema draft | PACKET_DRAFT fields / normalization / authority boundary | v2 draft adopted / non-executable |
+| `spec/packet/kdsl-packet-normalization-contract.md` | Packet normalization draft | mapping/loss/round-trip evidence / non-executable preview | v2 draft adopted / non-executable |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
 | `spec/r1/r1c-compact-result-schema.md` | R1 serialization draft | canonical R1のcompact serialization profile | v2 draft adopted / canonical R1 subordinate |
 | `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |
 | `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
 | `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
 | `spec/lint/kdsl-r1c-lint.md` | Lint draft | R1C field/order/RT/NEXT/COMMIT/round-trip boundary lint | v2 draft adopted |
-| `spec/lint/kdsl-packet-lint.md` | Lint draft | Packet envelope/registry/gate/authority/normalization lint | v2 draft adopted / validator not implemented |
+| `spec/lint/kdsl-packet-lint.md` | Lint draft | Packet envelope/registry/gate/authority/normalization lint | v2 draft adopted / validator first slice integrated |
+| `spec/lint/kdsl-packet-normalization-lint.md` | Lint draft | normalization source/target/map/loss/round-trip/authority lint | v2 draft adopted / validator not implemented |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
 | `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / Safety Gate / R1C / future Packet境界 | v2 draft |
 | `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
@@ -314,6 +316,31 @@ unknown schema/registry/ID/opcode推測禁止
 PKT:v1使用禁止
 ```
 
+### Packet normalization contract
+
+```text
+v2-draft adopted contract:
+  spec/packet/kdsl-packet-normalization-contract.md
+
+schema/version:
+  kdsl-packet-normalization@0.1-draft
+
+lint:
+  spec/lint/kdsl-packet-normalization-lint.md
+```
+
+Ownership rules:
+
+```text
+Core/Profile/R1/Bridge meaning > Packet schema > normalization contract/lint > Example/Tool
+NORMALIZATION_DRAFT:=non-executable mapping/loss/round-trip evidence
+KDSL_PROMPT_PREVIEW != KDSL_PROMPT
+P1/P1L schema unresolved→TARGET blocked / preview禁止
+semantic_equivalence:not_proven固定
+AUTHORITY.execution_authority:none固定
+normalization validator/mapper未実装→normalized扱禁止
+```
+
 ### KDSL-CP
 
 ```text
@@ -351,9 +378,12 @@ current lift target:
 
 current Packet:
   schema/BASE/TASK/FLOW/lint:=v2-draft adopted
+  Packet validator:=first heuristic slice integrated
+  normalization contract/lint:=v2-draft adopted
+  normalization validator/mapper/round-trip proof:=not implemented
   executable:=no
   PKT:v1使用禁止
-  validator/normalization round-trip/stable dependency未充足→実行禁止
+  normalization/stable dependency未充足→実行禁止
 ```
 
 ## 5. Duplication policy
@@ -403,6 +433,8 @@ R1C required field削除/alias置換/default追加→breaking候補
 Packet schema/registry追加→compatible v2-draft候補
 Packet adopted ID/opcode意味変更→breaking候補または新ID必須
 Packet authority/normalization非実行境界弱化→breaking/prohibited
+normalization schema/map/loss/round-trip意味変更→breaking候補
+P1/P1L unresolved→resolved変更→target schema adoption必須
 example追加→patch候補
 validator heuristic改善→patch/compatible候補
 validatorを承認者扱い→禁止
@@ -449,6 +481,9 @@ README/status/manifest/glossary同期
 review/checklist更新
 validator maturity/limitations明記
 sample expectation runner確認
+Packet validator実装/期待結果
+normalization contract/lint ownership整合
+normalization validator/mapper/round-trip証拠
 public-facing guide確定
 R1 quickstart
 stable tag/release policy
@@ -467,7 +502,10 @@ R1C validator:=first heuristic slice integrated
 canonical R1 replacement:=none
 kdsl-packet@0.1-draft:=v2-draft authoring schema adopted
 Packet BASE/TASK/FLOW registries:=v2-draft adopted
-Packet lint:=v2-draft adopted / validator not implemented
+Packet lint:=v2-draft adopted / validator first slice integrated
+kdsl-packet-normalization@0.1-draft:=v2-draft adopted / non-executable
+normalization lint:=v2-draft adopted / validator not implemented
+normalization mapper/round-trip proof:=not implemented
 KDSL-Packet:=draft-non-executable / normalization required
 Release Assets追加なし
 既存tag移動なし
