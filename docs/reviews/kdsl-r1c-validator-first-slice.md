@@ -1,16 +1,19 @@
 # KDSL R1C Validator First-Slice Review
 
-status: implementation-review / merge-pending
+status: completed / merged
 review_date: 2026-07-11
-branch: agent/kdsl-r1c-validator
+source_branch: agent/kdsl-r1c-validator
 target: main
 pull_request: 7
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+merge_method: squash
+squash_commit: 49957fe530d028738cea94d3b6ab1f473f8b176d
 
-## Goal
+## 1. Goal
 
 Implement a non-authoritative heuristic validator for the integrated R1C design candidate without promoting R1C to canonical/stable status.
 
-## Implemented scope
+## 2. Implemented scope
 
 ```text
 script: tools/validator/kdsl_r1c.py
@@ -27,11 +30,12 @@ COMMIT actual/proposed/permission_basis
 Full R1 fallback/out-of-scope
 ```
 
-## Sample expansion
+## 3. Sample expansion
 
 ```text
 previous total: 34
 new total: 49
+failed: 0
 ```
 
 Coverage:
@@ -51,21 +55,21 @@ Full R1 fallback
 wrapper valid/invalid
 ```
 
-## Initial CI
+## 4. Final CI
 
 ```text
 workflow: Validator CI
-source_head: 5a48aa3a81789a4406c75820f9389be50b291118
-workflow_run_id: 29144103000
-run_number: 44
+source_head: 7e79a4db2e8800f5ba73f6ea8318ebd2f3c5f0bc
+workflow_run_id: 29144196401
+run_number: 50
 status: completed
 conclusion: success
 expected summary: total 49 / failed 0
 ```
 
-Final immutable head/run evidence is recorded in PR #7 after documentation commits.
+The successful runner confirms expected exit-code classifications. It does not prove semantic equivalence or evidence authenticity.
 
-## Accepted design choices
+## 5. Accepted design choices
 
 ### R1C detection
 
@@ -86,17 +90,28 @@ ST/PH/F/W/C/V/RK/NX/CM→未定義
 ```text
 one-line JSON-compatible arrays/objects
 commands/paths preserved as quoted strings
+required field omission禁止
+implicit defaults禁止
 ```
 
 ### Authority separation
 
 ```text
 NEXT.authority:=proposal_only
+NEXT実行許可扱禁止
 COMMIT.proposed != commit authority
 automatic commit authority→fail
 ```
 
-## Known limitations
+### Runtime separation
+
+```text
+RT:v→target runtime evidence必須
+build/diff/lint/test/CI pass != RT:v
+RT:p|u→runtime_unverified相当RISK必須
+```
+
+## 6. Known limitations
 
 ```text
 line-based parser
@@ -107,13 +122,14 @@ semantic equivalence proofなし
 runtime evidence authenticity判断なし
 execution evidence authenticity判断なし
 optional EVIDENCE/AUTHORITY deep lint限定
+R1C round-trip semantic proofなし
 ```
 
-## Status split
+## 7. Status split
 
 ```text
 R1C design candidate: main integrated
-R1C validator candidate: this PR
+R1C validator first slice: main integrated
 R1C canonical adoption: no
 manifest/Bridge/glossary promotion: pending
 ```
@@ -126,7 +142,7 @@ CI pass != specification approval
 正本参照変更は独立approval/review対象
 ```
 
-## Safety boundaries
+## 8. Safety boundaries
 
 ```text
 validator pass != semantic equivalence
@@ -141,16 +157,17 @@ KDSL-Packet:=draft-non-executable
 PKT:v1使用禁止
 ```
 
-## Merge gate
+## 9. Merge result
 
 ```text
-final Validator CI success
-PR ready for review
-squash merge
-post-merge project-status/README/CHANGELOG synchronization
+PR ready for review: completed
+Validator CI success: completed
+squash merge: completed
+post-merge project-status synchronization: completed
+post-merge verification closeout: completed
 ```
 
-## Non-actions
+## 10. Non-actions
 
 ```text
 canonical R1変更なし
@@ -158,5 +175,5 @@ manifest/Bridge/glossary R1C adoptionなし
 R1C stable/canonical化なし
 Packet executable化なし
 tag/release/Release Assets操作なし
-branch deletionなし
+source branch deletionなし
 ```
