@@ -4,7 +4,7 @@ status: canonical-project-status
 last_updated: 2026-07-11
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
-仕様正本は `spec/manifest.md` と `spec/core/*` / `spec/r1/*` / `spec/lint/*` / `spec/bridge/*` を参照します。
+仕様正本は `spec/manifest.md` と `spec/core/*` / `spec/r1/*` / `spec/lint/*` / `spec/bridge/*` / `spec/registry/*` を参照します。
 
 ## 1. Current public state
 
@@ -94,6 +94,46 @@ validator_ci_integration:
   command: python tools/validator/run_samples.py
 ```
 
+## 5. Safety Gate Registry integration
+
+```yaml
+safety_gate_registry_workstream:
+  registry: kdsl-sg@0.1-draft
+  source_branch: agent/kdsl-safety-gate-registry
+  target_branch: main
+  pull_request: 4
+  approval_status: user_approved
+  approval_date: 2026-07-11
+  merge_method: squash
+  merge_status: ready_for_merge
+  specification_status: v2_draft_adopted_on_branch
+  stable_effect: none
+  states:
+    - hold
+    - satisfied
+    - blocked
+    - na
+  ids:
+    - SG-DESIGN
+    - SG-SCOPE
+    - SG-EVIDENCE
+    - SG-RUNTIME
+    - SG-AUTHORITY
+    - SG-ROLLBACK
+    - SG-PUBLIC
+    - SG-DATA
+    - SG-KDSL-DP
+    - SG-STOP
+  scope:
+    - Registry layer and manifest ownership
+    - gate state/inheritance/conflict model
+    - additive multi-gate composition
+    - protected wording non-replacement
+    - typed approval/evidence/runtime/authority separation
+    - CP-Packet bridge and glossary alignment
+  validator_implementation: not_implemented
+```
+
 Direction:
 
 ```text
@@ -102,10 +142,11 @@ v1.1.0 stable:=当面保留
 v2-draft architecture:=main統合済み
 CompactPrompt validator first slice:=main統合済み
 Validator CI baseline:=main統合済み
+Safety Gate Registry:=U承認済み / PR #4 squash merge待ち
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
 
-## 5. License state
+## 6. License state
 
 ```yaml
 license:
@@ -120,7 +161,7 @@ license:
     - validator helper code
 ```
 
-## 6. Validator maturity
+## 7. Validator maturity
 
 ```yaml
 validator:
@@ -138,6 +179,10 @@ validator:
     - kanji-v1 restricted alias lint
     - representative CP-Lift lint
     - Packet draft boundary lint
+  specified_not_implemented:
+    - Safety Gate Registry ID/state lint
+    - Safety Gate composition lint
+    - protected wording replacement lint for SG references
   ci:
     status: integrated
     workflow: .github/workflows/validator.yml
@@ -168,9 +213,10 @@ CI pass != semantic equivalence
 CI pass != safety proof
 CI pass != stable/public-ready判断
 CI pass != tag/release/Release Assets許可
+Safety Gate validator未実装→SG lint pass扱禁止
 ```
 
-## 7. Safety status
+## 8. Safety status
 
 ```text
 意味保持 > safety gate保持
@@ -182,15 +228,21 @@ KDSL_RESULT NEXT:=提案, 実行許可扱禁止
 KDSL_RESULT COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 public履歴/公開済tag/Release Assets保護
 lexicon != mode/profile
-unknown lexicon/alias推測禁止
+unknown lexicon/alias/registry/ID推測禁止
 構造aliasはKEY位置のみ
 保護語の一字短縮禁止
 KDSL-CP実装指示禁止
-Packet registry未定義→KDSL-Packet直接実行禁止
+Registry ID != permission
+state:satisfied != unrelated authority
+hold/blocked gate削除禁止
+specialized gate != broader gate解除
+current Full KDSL:=SG ID + complete protected wording
+SG ID-only compression禁止
+KDSL-Packet直接実行禁止
 PKT:v1使用禁止
 ```
 
-## 8. Validation and integration evidence
+## 9. Validation and integration evidence
 
 ```yaml
 main_sample_validation:
@@ -246,30 +298,50 @@ validator_ci_pr_validation:
   squash_commit: 8505c16b44b4a95892e8d2f3f44119a2ad31afde
 ```
 
+```yaml
+safety_gate_registry_candidate_validation:
+  date: 2026-07-11
+  pull_request: 4
+  reviewed_head_before_alignment: 085f18fc5234e2ae4333139c7f7f004680d28960
+  workflow: Validator CI
+  workflow_run_id: 29140629991
+  run_number: 6
+  status: completed
+  conclusion: success
+  sample_suite: existing 23 expectations
+  meaning: existing validator regression check only
+  safety_gate_validator: not_implemented
+```
+
 ```text
 verification details:
   tools/validator/verification/kdsl_compact_prompt_verify.md
   docs/reviews/kdsl-validator-ci-baseline.md
+  docs/reviews/kdsl-safety-gate-registry-design.md
 ```
 
-## 9. Known gaps before stable
+## 10. Known gaps before stable
 
 ```text
 full parserなし
 full natural-language semantic parserなし
 full negation parserなし
-Packet schema/BASE/TASK/FLOW/SG/R1C registry未定義
+Safety Gate Registry validator未実装
+R1C schema未定義
+Packet schema/BASE/TASK/FLOW registry未定義
+Packet lint未定義
 KDSL-Packetはdraft-non-executable
 v2 public-facing overview未確定
 ```
 
-## 10. Recommended positioning
+## 11. Recommended positioning
 
 ```text
 Use as:
   experimental preview
   safety-gate-preserving prompt notation draft
   CompactPrompt architecture draft
+  Safety Gate Registry v2-draft
   heuristic validator helper
   validator sample CI baseline
   internal/public review candidate
@@ -279,15 +351,18 @@ Do not present as:
   production-ready validator suite
   proof system
   approval/runtime/release substitute
+  SG ID-only executable contract
   executable Packet specification
 ```
 
-## 11. Next safe steps
+## 12. Next safe steps
 
 ```text
-P0: local mainをorigin/mainへ同期
-P1: R1C / Safety Gate registry / Packet registryを別Phaseで設計
-P2: public-facing v2 overview検討
-P3: CI required check / branch protection化は別途U明示承認後に検討
+P0: PR #4 Validator CI再確認 / squash merge / main status closeout
+P1: Safety Gate Registry validator first slice
+P2: R1C compact schema設計
+P3: Packet BASE/TASK/FLOW registry・schema・lint設計
+P4: public-facing v2 overview検討
+P5: CI required check / branch protection化は別途U明示承認後に検討
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
