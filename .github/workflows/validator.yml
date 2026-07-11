@@ -47,6 +47,9 @@ jobs:
           ref: agent/kdsl-packet-normalization-validator
           fetch-depth: 0
 
+      - name: Fix integration carrier
+        run: python .github/scripts/fix_packet_normalization_validator.py
+
       - name: Apply exact asserted integration
         id: apply
         continue-on-error: true
