@@ -1,6 +1,6 @@
 # Experimental Validator Helpers
 
-目的: KDSL / R1 / Template / CompactPrompt をPython等で機械検査するための experimental heuristic lint helper 置き場。
+目的: KDSL / R1 / Template / CompactPrompt / Safety Gate Registry をPython等で機械検査するための experimental heuristic lint helper 置き場。
 
 status: experimental-heuristic-helpers
 implementation: partial
@@ -11,9 +11,12 @@ source_specs:
 spec/core/kdsl-spec.md
 spec/lint/kdsl-lint-checklist.md
 spec/lint/kdsl-compact-prompt-lint.md
+spec/lint/kdsl-safety-gate-registry-lint.md
 spec/r1/r1-result-spec.md
 spec/bridge/kdsl-adps-bridge.md
 spec/bridge/kdsl-cp-packet-bridge.md
+spec/registry/kdsl-safety-gate-registry.md
+spec/registry/kdsl-safety-gate-composition.md
 templates/README.md
 ```
 
@@ -27,6 +30,8 @@ Validator helpers != 要件判断者
 Validator helpers != D禁止解除者
 Validator helpers != release readiness判定者
 Validator helpers != semantic equivalence proof
+Validator helpers != safety proof
+Validator helpers != execution authority
 ```
 
 ## 現在の実装範囲
@@ -59,16 +64,25 @@ kdsl_compact_prompt.py:
   representative CP-Lift trigger lint
   Packet draft boundary lint
 
+kdsl_safety_gate.py:
+  SAFETY_GATES block detection
+  kdsl-sg@0.1-draft registry check
+  known Safety Gate ID/state check
+  id/state/scope/reason required field check
+  satisfied evidence/authority check
+  dev-prompt baseline gate check
+  representative additive composition check
+
 kdsl_validate.py:
-  target wrapper: r1 / prompt / compact / all
+  target wrapper: r1 / prompt / compact / safety-gate / all
 
 run_samples.py:
   sample expectation runner
 ```
 
-## CompactPrompt verification
+## Verification state
 
-Windows PowerShell 5.1 repository verification:
+CompactPrompt Windows PowerShell 5.1 repository verification:
 
 ```text
 python tools/validator/run_samples.py
@@ -81,10 +95,25 @@ git diff --check:
 → pass
 ```
 
+Safety Gate validator isolated candidate verification:
+
+```text
+direct cases: 8
+unexpected exits: 0
+```
+
+Expected repository suite after first-slice integration:
+
+```text
+python tools/validator/run_samples.py
+→ total: 33 / failed: 0
+```
+
 Evidence:
 
 ```text
 tools/validator/verification/kdsl_compact_prompt_verify.md
+tools/validator/verification/kdsl_safety_gate_verify.md
 ```
 
 ## 目的
@@ -99,6 +128,8 @@ Packet draftの実行可能誤認検出
 R1/KDSL_RESULTの必須block欠落検出
 RT:v根拠語のfield-scoped検出
 NEXT/COMMIT権限混同のshape検出
+Safety Gate registry/ID/state/field欠落検出
+Safety Gate baseline/compositionの代表的欠落検出
 EVIDENCEの観測/推論/未観測/未確認分離検査設計
 AUTHORITYのcommit/push/release衝突検査設計
 ```
@@ -114,9 +145,13 @@ D禁止を解除しない
 曖昧ログの意味を断定しない
 template全文展開を証明しない
 自然言語の意味等価性を証明しない
+safety proofとして扱わない
+operation authorityを付与しない
 full parserとして扱わない
+full YAML parserとして扱わない
 full negation parserとして扱わない
 release readinessを判定しない
+Packet/R1C readinessを判定しない
 ```
 
 ## 想定構成
@@ -133,10 +168,36 @@ tools/validator/
   kdsl_template_expansion.py
   kdsl_compact_prompt.py
   kdsl-compact-prompt-implementation-notes.md
+  kdsl_safety_gate.py
+  kdsl-safety-gate-implementation-notes.md
   kdsl_validate.py
+  kdsl_validate_usage.md
   run_samples.py
   samples/*
   verification/*
+```
+
+## Safety Gate first-slice checks
+
+```text
+registry:=kdsl-sg@0.1-draft
+known IDs:=SG-DESIGN/SG-SCOPE/SG-EVIDENCE/SG-RUNTIME/SG-AUTHORITY/SG-ROLLBACK/SG-PUBLIC/SG-DATA/SG-KDSL-DP/SG-STOP
+states:=hold|satisfied|blocked|na
+required fields:=id/state/scope/reason
+state:satisfied→evidence/authority必須
+state:blocked→evidence欠落warn
+state:na→reason必須
+dev-prompt baseline:=SG-SCOPE/SG-EVIDENCE/SG-AUTHORITY/SG-STOP
+representative composition:=rollback/data/public/runtime/KDSL-DP
+```
+
+Boundary:
+
+```text
+SAFETY_GATES blockなし→対象外pass/info
+current Full KDSL protected wording検査→未実装
+parent-child inheritance lint→未実装
+aggregate state calculation→未実装
 ```
 
 ## 設計方針
@@ -144,7 +205,7 @@ tools/validator/
 ```text
 軽量lint helperとして扱う
 検査項目を仕様として固定しすぎない
-R1/CompactPrompt validatorを優先
+R1/CompactPrompt/Safety Gate validatorを優先
 Template lintは未読/未定義/権限衝突を優先
 KDSL parserは過剰に厳密化しない
 Markdown + code block + key-value風blockの軽量検査から始める
@@ -154,8 +215,8 @@ validator passの過信を避ける
 ## 検査レベル
 
 ```text
-ERROR: safety gate破損/権限事故/RT:v誤認/必須block欠落/CP-Lift漏れ
-WARN: 曖昧/弱化/推奨block欠落/構造key混在
+ERROR: safety gate破損/権限事故/RT:v誤認/必須block欠落/CP-Lift漏れ/unknown SG/必須composition欠落
+WARN: 曖昧/弱化/推奨block欠落/構造key混在/blocked evidence欠落
 INFO: 任意改善/表記揺れ/対象外
 ```
 
@@ -166,17 +227,29 @@ python tools/validator/run_samples.py
 ```
 
 このrunnerは、サンプルファイルと期待exit codeのズレを検出するための補助です。
-runner passも、承認/RT:v/release readinessを意味しません。
+runner passも、承認/RT:v/safety proof/release readinessを意味しません。
+
+GitHub Actions:
+
+```text
+workflow: .github/workflows/validator.yml
+trigger: pull_request/main push/workflow_dispatch
+command: python tools/validator/run_samples.py
+```
 
 ## Known limitations
 
 ```text
 文字列/軽量構造lint中心
+single SAFETY_GATES blockのみ解析
 full parserなし
+full YAML parserなし
 full natural-language semantic parserなし
 full negation parserなし
 full template expansion proofなし
-GitHub Actions未構成
+Safety Gate triggerの例示/実操作完全識別なし
+protected wording semantic lintなし
+parent-child inheritance lintなし
 runtime実行なし
 source authenticity判断なし
 approval delegationなし
@@ -190,6 +263,9 @@ validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
 validator pass != semantic equivalence
+validator pass != safety proof
+validator pass != execution authority
 validator pass != release readiness
+Safety Gate validator pass != Packet/R1C readiness
 validator failure時→該当箇所を修正またはU確認
 ```
