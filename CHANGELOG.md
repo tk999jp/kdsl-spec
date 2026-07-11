@@ -6,6 +6,17 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Packet normalization validator / mapper first slice
+
+- Added `tools/validator/kdsl_packet_normalization.py`.
+- Added non-executable `tools/validator/kdsl_packet_normalize.py`.
+- Added normalization schema/field/order/source/target/map/loss/round-trip/authority/output checks.
+- Added Full KDSL/design preview generation and P1/P1L blocked evidence generation.
+- Added `--target normalization` and normalization checking to `--target all`.
+- Expanded the candidate suite from 69 to 93 expectations.
+- Kept executable `KDSL_PROMPT:`, P1, and P1L generation prohibited.
+- Kept Packet state `not_normalized`, `semantic_equivalence:not_proven`, and `execution_authority:none`.
+
 #### Packet normalization v2-draft ownership alignment
 
 - Adopted `kdsl-packet-normalization@0.1-draft` as a non-executable mapping/loss/round-trip evidence contract.

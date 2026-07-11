@@ -24,6 +24,9 @@ CHECKER_SETS = {
     'packet': [
         'kdsl_packet.py',
     ],
+    'normalization': [
+        'kdsl_packet_normalization.py',
+    ],
     'all': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
@@ -34,10 +37,11 @@ CHECKER_SETS = {
         'kdsl_safety_gate.py',
         'kdsl_r1c.py',
         'kdsl_packet.py',
+        'kdsl_packet_normalization.py',
     ],
 }
 
-TARGETS = 'r1, prompt, compact, safety-gate, r1c, packet, all'
+TARGETS = 'r1, prompt, compact, safety-gate, r1c, packet, normalization, all'
 
 
 def parse_args(argv):
@@ -59,7 +63,7 @@ def parse_args(argv):
         raise ValueError('unexpected argument: ' + arg)
     if path is None:
         raise ValueError(
-            'usage: python kdsl_validate.py [--target r1|prompt|compact|safety-gate|r1c|packet|all] <file>'
+            'usage: python kdsl_validate.py [--target r1|prompt|compact|safety-gate|r1c|packet|normalization|all] <file>'
         )
     if target_mode not in CHECKER_SETS:
         raise ValueError('unknown target: ' + target_mode)

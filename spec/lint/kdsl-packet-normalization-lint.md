@@ -2,7 +2,7 @@
 
 status: v2-draft adopted
 canonical: v2-draft
-validator: not implemented
+validator: first-slice integration pending
 scope: kdsl-packet-normalization@0.1-draft
 
 ## 1. Purpose
@@ -378,8 +378,8 @@ PKT:v1使用
 Current state:
 
 ```text
-normalization validator: not implemented
-normalization transformer: not implemented
+normalization validator: first-slice integration pending
+normalization mapper: first-slice integration pending
 round-trip property tests: not implemented
 lint pass claim: prohibited until implementation/execution evidence
 ```

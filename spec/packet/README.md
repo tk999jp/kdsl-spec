@@ -19,7 +19,7 @@ schema: kdsl-packet-normalization@0.1-draft
 source: spec/packet/kdsl-packet-normalization-contract.md
 status: v2-draft adopted
 executable: no
-validator/mapper: not implemented
+validator/mapper: first-slice integration pending
 ```
 
 ## Boundary
