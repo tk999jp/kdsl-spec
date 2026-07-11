@@ -28,8 +28,8 @@ Packet BASE/TASK/FLOW registries: v2-draft adopted
 Packet validator: first heuristic slice integrated
 Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
 Packet normalization validator/mapper: first-slice integrated / non-executable preview only
-Packet normalization structural round-trip: first-slice integration pending
-validator sample suite: 108 expectations candidate
+Packet normalization structural round-trip: first-slice integrated / selected structural properties only
+validator sample suite: 108 expectations / failed 0
 validator_authority: non_authoritative
 ```
 
@@ -445,7 +445,7 @@ R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
 Packet full YAML/semantic parserなし
 Packet normalization validator/mapper first slice:=main integrated / 93 expectations verified
-Packet normalization structural round-trip first slice:=integration pending
+Packet normalization structural round-trip first slice:=main integrated / 108 expectations verified
 Packet normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packet:=v2-draft adopted / non-executable
@@ -469,15 +469,12 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  PR #27 CI確認 / squash merge / round-trip closeout
-
-P1:
   Safety Gate protected wording/inheritance validator拡張
 
-P2:
+P1:
   R1C round-trip/property-based validator検討
 
-P3:
+P2:
   public-facing v2 overview
   CI required check / branch protection検討
 
