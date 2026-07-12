@@ -6,6 +6,35 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Phase 3 R1C deep optional-block round-trip
+
+- Added `kdsl-r1c-optional-blocks@0.1-draft` subordinate contract.
+- Added exact EVIDENCE classification and cross-class contradiction checks.
+- Added six-rail AUTHORITY checks against FILES/CMD/COMMIT evidence.
+- Added ANNUNCIATOR structural preservation and dedicated SAFETY_GATES projection/reconstruction.
+- Promoted valid optional SAFETY_GATES from blocked to structural pass.
+- Expanded unified `KDSL Validation` from 181 to 215 expectations.
+
+Verification:
+
+```text
+pull_request: 45
+source_head: 1fcd09cf13aaeb3aa54ed0194d443c962bbbd4b7
+squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
+workflow_run_id: 29185669224
+run_number: 207
+unified_total: 215
+failed: 0
+```
+
+Boundaries:
+
+```text
+SEMANTIC_EQUIVALENCE:not_proven
+FULL_SAFETY_PROOF:not_proven
+EXECUTION_AUTHORITY:none
+```
+
 #### Phase 2 Safety Semantics / multi-generation inheritance
 
 - Added `kdsl-safety-language@0.1-draft` bounded protected-language semantics.

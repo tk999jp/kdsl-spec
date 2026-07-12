@@ -24,6 +24,7 @@ Safety Semantics: kdsl-safety-language@0.1-draft / Phase 2 bounded first slice i
 Safety Gate multi-generation graph/deep-scope first slice: integrated
 R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
 R1C validator: first heuristic slice integrated
+R1C deep optional-block validator/round-trip: Phase 3 first slice integrated
 R1C independent canonical/stable status: no
 Packet schema: kdsl-packet@0.1-draft / v2-draft adopted / non-executable
 Packet BASE/TASK/FLOW registries: v2-draft adopted
@@ -33,7 +34,7 @@ Packet normalization validator/mapper: first-slice integrated / non-executable p
 Packet normalization structural round-trip: first-slice integrated / selected structural properties only
 Common parser/AST: Phase 1 integrated / source-spanned first slice
 major parser adapters: R1C / Packet / Packet Normalization / Safety Gate
-KDSL Validation unified suite: 181 expectations / failed 0
+KDSL Validation unified suite: 215 expectations / failed 0
 required check activation: pending / issue #39
 validator_authority: non_authoritative
 ```
@@ -124,6 +125,7 @@ Packet:
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
   spec/r1/r1c-compact-result-schema.md
+  spec/r1/r1c-optional-block-contract.md
 
 Lint:
   spec/lint/kdsl-lint-checklist.md
@@ -387,6 +389,7 @@ python tools/validator/kdsl_validate.py --target safety-gate <file>
 python tools/validator/kdsl_validate.py --target safety-semantics <file>
 python tools/validator/kdsl_safety_gate_graph.py <graph.json>
 python tools/validator/kdsl_validate.py --target r1c <file>
+python tools/validator/kdsl_r1c_roundtrip.py <file>
 python tools/validator/kdsl_validate.py --target packet <file>
 python tools/validator/kdsl_validate.py --target normalization <file>
 python tools/validator/kdsl_packet_normalize.py <packet-file>
@@ -407,17 +410,18 @@ component runners:
   run_parser_samples.py: 11
   run_safety_semantics_samples.py: 32
   run_safety_semantics_examples.py: 2
+  run_r1c_optional_samples.py: 34
 ```
 
 Latest CI evidence:
 
 ```text
-pull_request: 42
-source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
-squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+pull_request: 45
+source_head: 1fcd09cf13aaeb3aa54ed0194d443c962bbbd4b7
+squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
 workflow/check: KDSL Validation
-workflow_run: #200 / success
-unified expectations: 181
+workflow_run: #207 / success
+unified expectations: 215
 failed: 0
 required-check repository setting: pending / issue #39
 ```
@@ -471,7 +475,8 @@ full negation/exception reasoningなし
 protected wording full semantic equivalence proofなし
 Safety Gate multi-generation DAG/deep-scope first slice:=integrated; arbitrary graph/full scope proof未実装
 R1C multiline JSON input:=common parser adapter integrated
-R1C round-trip semantic proofなし
+R1C deep optional-block structural round-trip:=Phase 3 integrated
+R1C round-trip full semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
 Packet full semantic parserなし
 Packet normalization validator/mapper first slice:=main integrated / 93 expectations verified
@@ -503,9 +508,6 @@ P0:
   required KDSL Validation check activation / issue #39
 
 P1:
-  Phase 3 R1C deep optional-block round-trip / Evidence / Authority
-
-P2:
   Phase 4 Packet / Normalization semantic-property proof
 
 P3:
