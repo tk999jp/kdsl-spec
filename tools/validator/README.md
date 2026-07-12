@@ -47,6 +47,17 @@ Validator helpers != canonical promotion authority
 ## 現在の実装範囲
 
 ```text
+kdsl_parser.py / kdsl_parse.py:
+  source-spanned Document/Envelope/Field AST
+  field order/duplicate/tab diagnostics
+  multiline JSON-compatible field capture
+  block scalar/mapping/sequence/record adapters
+  exact raw text retention
+
+kdsl_parser_adapter.py:
+  R1C/Packet/Normalization/Safety Gate input adapters
+  semantic rules remain in each checker
+
 r1_required_blocks.py:
   KDSL_RESULT required block presence lint
 
@@ -131,10 +142,18 @@ kdsl_packet_normalize.py:
   no executable KDSL_PROMPT/P1/P1L generation
 
 kdsl_validate.py:
+  common parser preflight
   target wrapper: r1 / prompt / compact / safety-gate / r1c / packet / normalization / all
 
+run_all_samples.py:
+  unified core/Safety Gate/R1C round-trip/parser runner
+  missing summary or child-runner failure detection
+
+run_parser_samples.py:
+  parser/AST and adapter integration property runner
+
 run_samples.py:
-  sample expectation runner
+  core/Packet/Normalization expectation runner
 ```
 
 ## Verification state
@@ -178,6 +197,16 @@ R1C structural round-trip first slice integrated:
   R1C round-trip suite: 14 / failed: 0
   pull_request: 34
   workflow_run: 179 / success
+
+Common parser / unified validation Phase 1 integrated:
+  core suite: 108 / failed: 0
+  Safety Gate suite: 14 / failed: 0
+  R1C round-trip suite: 14 / failed: 0
+  parser/adapter suite: 11 / failed: 0
+  unified total: 147 / failed: 0
+  pull_request: 38
+  workflow_run: 192 / success
+  required-check activation: pending / issue #39
 ```
 
 Repository examples included in the suite:
@@ -202,6 +231,7 @@ tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
 tools/validator/verification/kdsl_packet_roundtrip_verify.md
+tools/validator/verification/kdsl_common_parser_verify.md
 ```
 
 ## 目的
@@ -224,6 +254,8 @@ R1C Full R1 fallback分離
 Packet envelope/registry/gate/flow/authority/normalization境界検出
 Normalization mapping/loss/authority/output境界検出
 Non-executable structural preview生成
+共通source-spanned parser/ASTによる入力解釈統一
+multiline JSON-compatible R1C field処理
 EVIDENCEの観測/推論/未観測/未確認分離検査設計
 AUTHORITYのcommit/push/release衝突検査設計
 ```
@@ -241,8 +273,8 @@ template全文展開を証明しない
 自然言語の意味等価性を証明しない
 safety proofとして扱わない
 operation authorityを付与しない
-full parserとして扱わない
-full YAML/JSON parserとして扱わない
+common parser first sliceをfull semantic parserとして扱わない
+full YAML/KDSL semantic parserとして扱わない
 full negation parserとして扱わない
 release readinessを判定しない
 R1C canonical/stable promotionを判定しない
@@ -279,8 +311,14 @@ tools/validator/
   kdsl_packet_roundtrip.py
   kdsl-packet-normalization-implementation-notes.md
   kdsl-packet-roundtrip-implementation-notes.md
+  kdsl_parser.py
+  kdsl_parse.py
+  kdsl_parser_adapter.py
+  kdsl_suite.py
   kdsl_validate.py
   kdsl_validate_usage.md
+  run_all_samples.py
+  run_parser_samples.py
   run_samples.py
   samples/*
   verification/*
@@ -333,8 +371,8 @@ unknown SCHEMA:=fail
 Boundary:
 
 ```text
-inline JSON-compatible valueのみ
-multi-line structured value未実装
+inline/multiline JSON-compatible valueをcommon parserで結合
+multiline JSON adapter検証済み
 Full R1 semantic validationの代替ではない
 R1C validator pass != R1C canonical/stable promotion
 R1C validator pass != Packet readiness

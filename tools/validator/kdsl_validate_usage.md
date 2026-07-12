@@ -5,7 +5,7 @@ script: tools/validator/kdsl_validate.py
 
 ## Purpose
 
-Run validator checks by target type so unrelated checks do not run against the wrong document class unless explicitly requested.
+Run a common parser preflight and then validator checks by target type so unrelated semantic checks do not run against the wrong document class unless explicitly requested.
 
 ## Targets
 
@@ -54,6 +54,17 @@ Run validator checks by target type so unrelated checks do not run against the w
     kdsl_packet.py
     kdsl_packet_normalization.py
 ```
+
+## Parser preflight
+
+For structured targets, the wrapper first parses known envelopes and reports duplicate fields, tab indentation, malformed JSON-compatible values, and source spans before semantic checkers run.
+
+```text
+python tools/validator/kdsl_parse.py --envelope KDSL_RESULT --json <file>
+python tools/validator/kdsl_parse.py --envelope PACKET_DRAFT <file>
+```
+
+Parser success is not semantic validation or authority.
 
 ## Default
 
@@ -115,11 +126,11 @@ representative composition: rollback/data/public/runtime/KDSL-DP
 Not covered:
 
 ```text
-full YAML parsing
+full YAML/KDSL semantic parsing
 full natural-language trigger parsing
 full negation parsing
 protected wording semantic equivalence
-parent-child inheritance across documents
+multi-generation inheritance graph/deep scope semantics
 execution authority judgment
 ```
 
@@ -142,8 +153,8 @@ Full R1 fallback/out-of-scope
 Not covered:
 
 ```text
-full JSON/YAML/KDSL parser
-multi-line JSON objects
+full JSON/YAML/KDSL semantic parser
+multiline JSON-compatible fields are parsed, but semantic equivalence is not proven
 semantic equivalence proof
 execution evidence authenticity
 runtime evidence authenticity
@@ -250,6 +261,12 @@ Packet normalization round-trip first slice integrated:
   total: 108 / failed: 0
   pull_request: 27
   workflow_run: 163 / success
+
+Common parser / unified validation Phase 1 integrated:
+  component totals: 108 + 14 + 14 + 11
+  unified total: 147 / failed: 0
+  pull_request: 38
+  workflow_run: 192 / success
 ```
 
 The current suite includes actual repository examples:
@@ -273,6 +290,7 @@ tools/validator/verification/kdsl_safety_gate_verify.md
 tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
+tools/validator/verification/kdsl_common_parser_verify.md
 ```
 
 ## Exit codes
@@ -288,6 +306,7 @@ The wrapper returns the highest exit code produced by the selected checker set.
 ## Boundaries
 
 ```text
+parser preflight pass != semantic validation
 validator pass != RT:v
 validator pass != U approval
 validator pass != implementation validity

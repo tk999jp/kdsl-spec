@@ -1,6 +1,7 @@
 # Required CI Check Activation
 
 status: activation-pending
+tracking_issue: 39
 repository: tk999jp/kdsl-spec
 target_branch: main
 required_check_name: KDSL Validation
@@ -11,7 +12,15 @@ Require the unified validator workflow before a pull request may merge into `mai
 
 ## Prerequisite
 
-The workflow must have completed at least once on a pull request with this exact check name:
+Completed evidence:
+
+```text
+pull_request: 38
+workflow_run: #192 / success
+unified_total: 147 / failed 0
+```
+
+The workflow has completed with this exact check name:
 
 ```text
 KDSL Validation
