@@ -1,7 +1,7 @@
 # KDSL / R1 Project Status
 
 status: canonical-project-status
-last_updated: 2026-07-11
+last_updated: 2026-07-12
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本は `spec/manifest.md` と `spec/core/*` / `spec/profiles/*` / `spec/r1/*` / `spec/lint/*` / `spec/bridge/*` / `spec/registry/*` を参照します。
@@ -476,12 +476,56 @@ normalization_effect: none
 stable_effect: none
 ```
 
+### PR #37 — Phase 1 common parser work branch
+
+```yaml
+pull_request: 37
+merge_status: closed_unmerged
+source_branch: agent/kdsl-common-parser-phase1-work
+source_head: 58154edb350e61db5a4b39c9cc91f081f2caa439
+superseded_by: 38
+work_run_id: 29176973744
+work_run_number: 189
+baseline_conclusion: success
+adapter_conclusion: success
+reason: clean replacement after temporary write-enabled workflow
+```
+
+### PR #38 — Phase 1 common parser / unified validation foundation
+
+```yaml
+pull_request: 38
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-common-parser-phase1
+source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
+squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+closeout_pull_request: 41
+workflow: KDSL Validation
+workflow_run_id: 29177082691
+workflow_run_number: 192
+job_id: 86608033032
+workflow_conclusion: success
+core_total: 108
+safety_gate_total: 14
+r1c_round_trip_total: 14
+parser_adapter_total: 11
+unified_total: 147
+failed: 0
+required_check_issue: 39
+required_check_activation: pending
+validator_authority: non_authoritative
+stable_effect: none
+```
+
 ## 3. Current architecture direction
 
 ```text
 v2-draft architecture:=main統合済み
 CompactPrompt validator first slice:=main統合済み
 Validator CI baseline:=main統合済み
+Common parser/AST Phase 1:=main統合済み / 147 expectations verified
+KDSL Validation unified check:=main統合済み / repository required setting pending issue #39
 Safety Gate Registry:=v2-draft integrated
 Safety Gate validator first slice:=main統合済み
 Safety Gate protected wording/inheritance first slice:=main統合済み / 108+14 expectations verified
@@ -512,7 +556,7 @@ r1c:
   stable: no
   envelope: KDSL_RESULT
   required_field_names: canonical R1 names retained
-  structured_values: JSON-compatible inline arrays/objects
+  structured_values: JSON-compatible inline/multiline arrays/objects via common parser adapter
   short_aliases: prohibited
   implicit_defaults: prohibited
   round_trip_to_full_r1: required by candidate
@@ -570,6 +614,12 @@ validator:
   maturity: experimental_heuristic_helpers
   implementation: partial
   authority: non_authoritative
+  common_parser_ast: first_slice_integrated
+  parser_adapters:
+    - r1c
+    - packet
+    - normalization
+    - safety-gate
   wrapper_targets:
     - r1
     - prompt
@@ -580,6 +630,9 @@ validator:
     - normalization
     - all
   current_main_scope:
+    - source-spanned envelope/field AST and common parser diagnostics
+    - multiline JSON-compatible value capture
+    - common parser preflight / exact raw text retention
     - KDSL_RESULT required block presence lint
     - RT:v basis wording heuristic lint
     - NEXT/COMMIT authority-shape heuristic lint
@@ -600,23 +653,24 @@ validator:
     - Non-executable structural mapper
   ci:
     workflow: .github/workflows/validator.yml
-    command: python tools/validator/run_samples.py
-    extension_command: python tools/validator/run_safety_gate_samples.py
-    r1c_round_trip_command: python tools/validator/run_r1c_roundtrip_samples.py
-    expected_sample_total: 108
-    expected_safety_gate_extension_total: 14
-    expected_r1c_round_trip_total: 14
+    workflow_name: KDSL Validation
+    required_check_name: KDSL Validation
+    command: python tools/validator/run_all_samples.py
+    component_commands:
+      - python tools/validator/run_samples.py
+      - python tools/validator/run_safety_gate_samples.py
+      - python tools/validator/run_r1c_roundtrip_samples.py
+      - python tools/validator/run_parser_samples.py
+    expected_unified_total: 147
+    required_check_activation: pending
+    required_check_issue: 39
     latest_pr_validation:
-      pull_request: 34
-      run_id: 29154476912
-      run_number: 179
+      pull_request: 38
+      run_id: 29177082691
+      run_number: 192
       conclusion: success
-      sample_total: 108
-      sample_failed: 0
-      safety_gate_extension_total: 14
-      safety_gate_extension_failed: 0
-      r1c_round_trip_total: 14
-      r1c_round_trip_failed: 0
+      unified_total: 147
+      failed: 0
 ```
 
 Specified or designed but not fully implemented:
@@ -625,7 +679,8 @@ Specified or designed but not fully implemented:
 protected wording full semantic equivalence proof
 Safety Gate multi-generation inheritance graph/deep scope semantics
 full natural-language trigger context parser
-R1C multi-line JSON parsing
+common parser first slice integrated; full YAML/KDSL semantic parser未実装
+R1C multiline JSON adapter integrated
 R1C full semantic equivalence proof
 R1C optional SAFETY_GATES dedicated round-trip
 R1C optional EVIDENCE/AUTHORITY deep lint
@@ -634,6 +689,28 @@ Packet Safety Gate state/evidence deep lint
 Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
+```
+
+### Phase 1 common parser / unified validation
+
+```yaml
+pull_request: 38
+source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
+squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+workflow: KDSL Validation
+workflow_run_id: 29177082691
+run_number: 192
+job_id: 86608033032
+conclusion: success
+core_total: 108
+safety_gate_total: 14
+r1c_round_trip_total: 14
+parser_adapter_total: 11
+unified_total: 147
+failed: 0
+required_check_activation: pending
+required_check_issue: 39
+meaning: parser/structural regression evidence; not semantic-equivalence/safety/authority proof
 ```
 
 ## 7. Safety and authority boundaries
@@ -878,6 +955,7 @@ tools/validator/verification/kdsl_r1c_verify.md
 tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
 tools/validator/verification/kdsl_packet_roundtrip_verify.md
+tools/validator/verification/kdsl_common_parser_verify.md
 docs/reviews/kdsl-packet-validator-first-slice.md
 docs/reviews/kdsl-packet-roundtrip-first-slice.md
 docs/reviews/kdsl-packet-normalization-validator-first-slice.md
@@ -891,7 +969,8 @@ docs/reviews/kdsl-r1c-roundtrip-first-slice.md
 ## 9. Known gaps before stable
 
 ```text
-full YAML/JSON/KDSL parserなし
+common source-spanned parser/AST first slice統合済み
+full YAML/KDSL semantic parserなし
 full natural-language semantic parserなし
 full negation parserなし
 protected wording full semantic equivalence proofなし
@@ -902,7 +981,7 @@ Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
 v2 public-facing overview未確定
-CI required check/branch protection未設定
+KDSL Validation workflow/check実装済み / required repository setting未設定 issue #39
 ```
 
 ## 10. Recommended positioning
@@ -931,8 +1010,10 @@ Do not present as:
 ## 11. Next safe steps
 
 ```text
-P0: public-facing v2 overview / CI required check検討
-P1: Safety Gate multi-generation inheritance/property tests検討
-P2: R1C optional SAFETY_GATES dedicated round-trip検討
+P0: required KDSL Validation check activation / issue #39
+P1: Phase 2 Safety Semantics / multi-generation inheritance / bounded protected-language model
+P2: Phase 3 R1C deep optional-block round-trip / Evidence / Authority
+P3: Phase 4 Packet / Normalization semantic-property proof
+P4: Phase 5 public-facing v2 hardening / release-readiness review
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```
