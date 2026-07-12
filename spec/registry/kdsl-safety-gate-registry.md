@@ -180,6 +180,27 @@ Conflict resolution:
 na×trigger evidence→hold|blocked
 ```
 
+## 5.1 Bounded semantic and graph alignment
+
+```text
+model: kdsl-safety-language@0.1-draft
+source: spec/registry/kdsl-safety-semantics.md
+```
+
+```text
+protected concepts:=declared strong/weak wording groups
+condition/exception detection:=bounded only
+scope relations:=equal|narrowed|widened|overlap|disjoint|unknown
+multi-generation inheritance:=acyclic node/edge graph
+multi-parent state precedence:=blocked > hold > satisfied
+```
+
+```text
+bounded semantic pass != full semantic equivalence
+inheritance graph pass != complete safety proof
+scope relation pass != execution authority
+```
+
 ## 6. Registry entries
 
 ### SG-DESIGN

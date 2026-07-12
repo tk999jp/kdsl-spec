@@ -20,6 +20,8 @@ CompactPrompt validator: first slice integrated
 Validator CI: integrated
 Safety Gate Registry: kdsl-sg@0.1-draft / v2-draft integrated
 Safety Gate validator: first heuristic slice integrated
+Safety Semantics: kdsl-safety-language@0.1-draft / Phase 2 bounded first slice integrated
+Safety Gate multi-generation graph/deep-scope first slice: integrated
 R1C: kdsl-r1c@0.1-draft / v2-draft adopted serialization profile
 R1C validator: first heuristic slice integrated
 R1C independent canonical/stable status: no
@@ -31,7 +33,7 @@ Packet normalization validator/mapper: first-slice integrated / non-executable p
 Packet normalization structural round-trip: first-slice integrated / selected structural properties only
 Common parser/AST: Phase 1 integrated / source-spanned first slice
 major parser adapters: R1C / Packet / Packet Normalization / Safety Gate
-KDSL Validation unified suite: 147 expectations / failed 0
+KDSL Validation unified suite: 181 expectations / failed 0
 required check activation: pending / issue #39
 validator_authority: non_authoritative
 ```
@@ -110,6 +112,7 @@ Registries:
   spec/registry/README.md
   spec/registry/kdsl-safety-gate-registry.md
   spec/registry/kdsl-safety-gate-composition.md
+  spec/registry/kdsl-safety-semantics.md
   spec/registry/kdsl-packet-base-registry.md
   spec/registry/kdsl-packet-task-registry.md
   spec/registry/kdsl-packet-flow-registry.md
@@ -263,6 +266,8 @@ hold/blocked gate削除禁止
 specialized gate != broader gate解除
 current Full KDSL:=SG ID + complete protected wording
 SG ID-only compression禁止
+bounded semantic match != full semantic equivalence
+multi-generation graph pass != complete safety proof
 ```
 
 ## R1C compact-result serialization profile
@@ -379,6 +384,8 @@ python tools/validator/kdsl_validate.py --target r1 <file>
 python tools/validator/kdsl_validate.py --target prompt <file>
 python tools/validator/kdsl_validate.py --target compact <file>
 python tools/validator/kdsl_validate.py --target safety-gate <file>
+python tools/validator/kdsl_validate.py --target safety-semantics <file>
+python tools/validator/kdsl_safety_gate_graph.py <graph.json>
 python tools/validator/kdsl_validate.py --target r1c <file>
 python tools/validator/kdsl_validate.py --target packet <file>
 python tools/validator/kdsl_validate.py --target normalization <file>
@@ -398,17 +405,19 @@ component runners:
   run_safety_gate_samples.py: 14
   run_r1c_roundtrip_samples.py: 14
   run_parser_samples.py: 11
+  run_safety_semantics_samples.py: 32
+  run_safety_semantics_examples.py: 2
 ```
 
 Latest CI evidence:
 
 ```text
-pull_request: 38
-source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
-squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+pull_request: 42
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
 workflow/check: KDSL Validation
-workflow_run: #192 / success
-unified expectations: 147
+workflow_run: #200 / success
+unified expectations: 181
 failed: 0
 required-check repository setting: pending / issue #39
 ```
@@ -417,6 +426,8 @@ Repository examples included:
 
 ```text
 examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/safety-gates/bounded-semantics.example.md
+examples/safety-gates/multigeneration/graph.json
 examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
@@ -454,10 +465,11 @@ experimental/  正本ではない実験案
 ```text
 common source-spanned parser/AST first slice:=main integrated
 full YAML/KDSL semantic parserなし
+bounded Safety Semantics first slice:=main integrated
 full natural-language semantic parserなし
-full negation parserなし
-protected wording semantic equivalence lintなし
-Safety Gate pairwise inheritance/aggregate:=integrated; multi-generation/deep scope未実装
+full negation/exception reasoningなし
+protected wording full semantic equivalence proofなし
+Safety Gate multi-generation DAG/deep-scope first slice:=integrated; arbitrary graph/full scope proof未実装
 R1C multiline JSON input:=common parser adapter integrated
 R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
@@ -491,15 +503,12 @@ P0:
   required KDSL Validation check activation / issue #39
 
 P1:
-  Phase 2 Safety Semantics / multi-generation inheritance / bounded protected-language model
-
-P2:
   Phase 3 R1C deep optional-block round-trip / Evidence / Authority
 
-P3:
+P2:
   Phase 4 Packet / Normalization semantic-property proof
 
-P4:
+P3:
   Phase 5 public-facing v2 hardening / release-readiness review
 
 Hold:
