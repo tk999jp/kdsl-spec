@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {"id": "phase0", "file": "phase0.md"},
+    {"id": "phase1", "file": "phase1.md"},
+    {"id": "phase2", "file": "phase2.md"}
+  ],
+  "edges": [
+    ["phase0", "phase1"],
+    ["phase1", "phase2"]
+  ]
+}
