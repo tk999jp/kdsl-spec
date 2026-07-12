@@ -1,9 +1,14 @@
 # Phase 2 — Safety Semantics / Multi-Generation Inheritance
 
-status: implementation-candidate
+status: implementation-candidate / verified
 review_date: 2026-07-12
 branch: agent/kdsl-phase2-safety-semantics
 target: main
+pull_request: 42
+workflow: KDSL Validation
+workflow_run_id: 29180282315
+workflow_run_number: 198
+workflow_conclusion: success
 
 ## Scope
 
@@ -32,16 +37,18 @@ EXECUTION_AUTHORITY:none
 existing Safety Gate registry IDs/states unchanged
 pairwise checker warning compatibility retained
 new graph checker is strict deep-scope enforcement surface
-existing 147 expectations must remain unchanged
+existing 147 expectations remain passing
 ```
 
-## Required verification
+## Verification
 
 ```text
-existing unified suite: 147 / failed 0
+existing Phase 1 unified suite: 147 / failed 0
 Phase 2 property suite: 32 / failed 0
 Phase 2 repository examples: 2 / failed 0
-expected unified total: 181 / failed 0
+unified runners: 6
+unified total: 181 / failed 0
+workflow run #198: success
 ```
 
 ## Non-actions
