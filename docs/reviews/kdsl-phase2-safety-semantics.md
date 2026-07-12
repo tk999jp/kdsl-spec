@@ -1,10 +1,14 @@
 # Phase 2 — Safety Semantics / Multi-Generation Inheritance
 
-status: implementation-candidate / verified
+status: completed / merged
 review_date: 2026-07-12
 branch: agent/kdsl-phase2-safety-semantics
 target: main
 pull_request: 42
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+closeout_work_pull_request: 43
+closeout_pull_request: 44
 workflow: KDSL Validation
 workflow_run_id: 29180282315
 workflow_run_number: 198

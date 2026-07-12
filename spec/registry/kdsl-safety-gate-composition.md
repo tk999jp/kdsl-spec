@@ -209,7 +209,17 @@ blocked/hold member欠落→不合格
 na bypass→不合格
 ```
 
-## 8. Packet boundary
+## 8. Bounded semantic / graph boundary
+
+```text
+model: kdsl-safety-language@0.1-draft
+bounded concept match != complete natural-language understanding
+multi-generation graph validates declared inheritance edges only
+widened/overlap/disjoint satisfied scope→explicit re-evaluation required
+aggregate satisfied != execution permission
+```
+
+## 9. Packet boundary
 
 ```text
 composition rules defined != Packet executable

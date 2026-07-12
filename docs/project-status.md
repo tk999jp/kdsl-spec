@@ -491,6 +491,33 @@ adapter_conclusion: success
 reason: clean replacement after temporary write-enabled workflow
 ```
 
+### PR #42 — Phase 2 Safety Semantics / multi-generation inheritance
+
+```yaml
+pull_request: 42
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-phase2-safety-semantics
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+closeout_work_pull_request: 43
+closeout_pull_request: 44
+model: kdsl-safety-language@0.1-draft
+workflow: KDSL Validation
+workflow_run_id: 29180355132
+workflow_run_number: 200
+workflow_conclusion: success
+phase1_existing_total: 147
+phase2_property_total: 32
+phase2_repository_examples: 2
+unified_total: 181
+failed: 0
+full_semantic_equivalence: not_proven
+full_safety_proof: not_proven
+execution_authority: none
+stable_effect: none
+```
+
 ### PR #38 — Phase 1 common parser / unified validation foundation
 
 ```yaml
@@ -529,6 +556,7 @@ KDSL Validation unified check:=main統合済み / repository required setting pe
 Safety Gate Registry:=v2-draft integrated
 Safety Gate validator first slice:=main統合済み
 Safety Gate protected wording/inheritance first slice:=main統合済み / 108+14 expectations verified
+Safety Semantics/multi-generation graph Phase 2:=main統合済み / 181 unified expectations verified
 R1C design candidate:=main統合済み
 R1C design-candidate validator first slice:=main統合済み
 R1C structural round-trip first slice:=main統合済み / 14 expectations verified
@@ -625,6 +653,7 @@ validator:
     - prompt
     - compact
     - safety-gate
+    - safety-semantics
     - r1c
     - packet
     - normalization
@@ -641,6 +670,9 @@ validator:
     - Safety Gate registry/ID/state/field/composition lint
     - Safety Gate representative protected wording/trigger-na/aggregate lint
     - Safety Gate pairwise parent-child inheritance lint
+    - bounded protected-language semantic IR lint
+    - multi-generation DAG inheritance/multi-parent conflict lint
+    - deep scope equal/narrowed/widened/overlap/disjoint/unknown lint
     - R1C schema/field/order/JSON shape lint
     - R1C VERIFY class separation lint
     - R1C RT/NEXT/COMMIT boundary lint
@@ -661,24 +693,26 @@ validator:
       - python tools/validator/run_safety_gate_samples.py
       - python tools/validator/run_r1c_roundtrip_samples.py
       - python tools/validator/run_parser_samples.py
-    expected_unified_total: 147
+      - python tools/validator/run_safety_semantics_samples.py
+      - python tools/validator/run_safety_semantics_examples.py
+    expected_unified_total: 181
     required_check_activation: pending
     required_check_issue: 39
     latest_pr_validation:
-      pull_request: 38
-      run_id: 29177082691
-      run_number: 192
+      pull_request: 42
+      run_id: 29180355132
+      run_number: 200
       conclusion: success
-      unified_total: 147
+      unified_total: 181
       failed: 0
 ```
 
 Specified or designed but not fully implemented:
 
 ```text
-protected wording full semantic equivalence proof
-Safety Gate multi-generation inheritance graph/deep scope semantics
-full natural-language trigger context parser
+bounded protected-language model integrated; full semantic equivalence proof未実装
+multi-generation DAG/deep-scope first slice integrated; arbitrary graph/full scope proof未実装
+full natural-language trigger/negation/exception context parser未実装
 common parser first slice integrated; full YAML/KDSL semantic parser未実装
 R1C multiline JSON adapter integrated
 R1C full semantic equivalence proof
@@ -689,6 +723,28 @@ Packet Safety Gate state/evidence deep lint
 Normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proof
 Packet OUT/R1C integration lint
+```
+
+### Phase 2 Safety Semantics / multi-generation inheritance
+
+```yaml
+pull_request: 42
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+model: kdsl-safety-language@0.1-draft
+workflow: KDSL Validation
+workflow_run_id: 29180355132
+run_number: 200
+conclusion: success
+phase1_existing_total: 147
+phase2_property_total: 32
+phase2_repository_examples: 2
+unified_total: 181
+failed: 0
+full_semantic_equivalence: not_proven
+full_safety_proof: not_proven
+execution_authority: none
+meaning: bounded declared-concept and graph evidence only; not complete semantic/safety proof
 ```
 
 ### Phase 1 common parser / unified validation
@@ -956,6 +1012,8 @@ tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
 tools/validator/verification/kdsl_packet_roundtrip_verify.md
 tools/validator/verification/kdsl_common_parser_verify.md
+docs/reviews/kdsl-phase2-safety-semantics.md
+tools/validator/kdsl-safety-semantics-implementation-notes.md
 docs/reviews/kdsl-packet-validator-first-slice.md
 docs/reviews/kdsl-packet-roundtrip-first-slice.md
 docs/reviews/kdsl-packet-normalization-validator-first-slice.md
@@ -971,10 +1029,11 @@ docs/reviews/kdsl-r1c-roundtrip-first-slice.md
 ```text
 common source-spanned parser/AST first slice統合済み
 full YAML/KDSL semantic parserなし
+bounded Safety Semantics first slice統合済み
 full natural-language semantic parserなし
-full negation parserなし
+full negation/exception reasoningなし
 protected wording full semantic equivalence proofなし
-Safety Gate multi-generation inheritance graph/deep scope lintなし
+multi-generation DAG/deep-scope first slice統合済み / arbitrary graph/full scope proofなし
 R1C full semantic equivalence proofなし / optional SAFETY_GATES round-trip blocked
 Packet full YAML/semantic parserなし
 Normalization semantic/property proofなし
@@ -1011,9 +1070,8 @@ Do not present as:
 
 ```text
 P0: required KDSL Validation check activation / issue #39
-P1: Phase 2 Safety Semantics / multi-generation inheritance / bounded protected-language model
-P2: Phase 3 R1C deep optional-block round-trip / Evidence / Authority
-P3: Phase 4 Packet / Normalization semantic-property proof
-P4: Phase 5 public-facing v2 hardening / release-readiness review
+P1: Phase 3 R1C deep optional-block round-trip / Evidence / Authority
+P2: Phase 4 Packet / Normalization semantic-property proof
+P3: Phase 5 public-facing v2 hardening / release-readiness review
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

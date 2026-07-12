@@ -18,7 +18,7 @@ stable_release: none
 Release Assets: none
 license: MIT
 validator: partial heuristic lint helpers / non-authoritative
-v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / R1C architecture
+v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / Safety Semantics / R1C architecture
 ```
 
 Policy:
@@ -125,6 +125,7 @@ Project Status:
 | `spec/registry/README.md` | Registry index | Registry layer境界/一覧 | v2 draft |
 | `spec/registry/kdsl-safety-gate-registry.md` | Registry draft | Safety Gate ID/state/inheritance | v2 draft adopted |
 | `spec/registry/kdsl-safety-gate-composition.md` | Registry draft | additive multi-gate composition | v2 draft adopted |
+| `spec/registry/kdsl-safety-semantics.md` | Registry semantic draft | bounded protected-language IR / deep scope / multi-generation inheritance | v2 draft adopted subordinate |
 | `spec/registry/kdsl-packet-base-registry.md` | Registry draft | Packet normalization baseline IDs | v2 draft adopted / non-executable |
 | `spec/registry/kdsl-packet-task-registry.md` | Registry draft | Packet task-class IDs / minimum gate sets | v2 draft adopted / non-executable |
 | `spec/registry/kdsl-packet-flow-registry.md` | Registry draft | Packet semantic flow opcodes | v2 draft adopted / non-executable |
@@ -202,6 +203,10 @@ v2 draft registry:
 composition:
   spec/registry/kdsl-safety-gate-composition.md
 
+bounded semantics:
+  spec/registry/kdsl-safety-semantics.md
+  model: kdsl-safety-language@0.1-draft
+
 lint:
   spec/lint/kdsl-safety-gate-registry-lint.md
 
@@ -223,6 +228,9 @@ unknown registry/SG ID推測禁止
 hold/blocked gate削除禁止
 specialized gate != broader gate解除
 current Full KDSL:=SG ID + complete protected wording
+bounded semantic match != full semantic equivalence
+multi-generation graph pass != complete safety proof
+scope relation pass != execution authority
 ```
 
 Packet boundary:

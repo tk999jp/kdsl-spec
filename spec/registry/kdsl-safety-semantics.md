@@ -1,7 +1,7 @@
-# KDSL Safety Gate Bounded Semantics v0.1 Draft Candidate
+# KDSL Safety Gate Bounded Semantics v0.1 Draft
 
-status: design-candidate
-canonical: no
+status: v2-draft adopted
+canonical: v2-draft subordinate
 model: kdsl-safety-language@0.1-draft
 source_registry: spec/registry/kdsl-safety-gate-registry.md
 composition: spec/registry/kdsl-safety-gate-composition.md
@@ -9,7 +9,7 @@ executable: no
 
 ## 1. Purpose
 
-This candidate defines a bounded semantic intermediate representation for protected Safety Gate wording and a graph model for multi-generation inheritance.
+This v2-draft subordinate specification defines a bounded semantic intermediate representation for protected Safety Gate wording and a graph model for multi-generation inheritance.
 
 ```text
 bounded semantic match != full natural-language understanding
@@ -236,13 +236,13 @@ stable/public-ready promotion
 
 ## 12. Promotion gate
 
-Before v2-draft adoption:
+Before broader semantic/proof promotion:
 
 ```text
 existing 147 regression expectations pass
 bounded semantics/property suite pass
 multi-generation graph property suite pass
-registry/composition/lint ownership alignment
-known limitation disclosure
-clean PR + squash merge + closeout
+registry/composition/lint ownership alignment completed
+known limitation disclosure maintained
+full semantic/proof promotion requires separate review/U approval
 ```
