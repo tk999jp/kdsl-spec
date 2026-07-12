@@ -1,9 +1,9 @@
-# KDSL Glossary v1.1-sync
+# KDSL Glossary v1.1-v2-sync
 
 目的: kdsl-spec内で使う主要用語を定義し、表記揺れと誤解を減らす。
 
-status: draft-main-v1.1-sync
-source_alignment: spec/core v1.1 / bridge v0.2 / R1 v0.1-draft
+status: draft-main-v2-sync
+source_alignment: spec/core v1.1-v2-sync / manifest v2-draft-sync / bridge v0.2 / R1 v0.1-draft
 
 ## Core terms
 
@@ -20,20 +20,35 @@ KDSL:=LLM直投入可能な安全gate保持型半構造化prompt記法
 完全な形式言語ではなく、LLM向けの半構造化prompt記法。
 ```
 
-### format / profile / mode / safety
+### format / profile / mode / safety / lexicon / envelope
 
 ```text
 format:=記法系の指定。KDSLでは `format: KDSL`
-profile:=用途別運用仕様。dev-prompt/converter/lint/rulebook等
+profile:=用途別運用仕様。compact-prompt/dev-prompt/converter/lint
 mode:=圧縮強度。readable/min/dense/lock
 safety:=安全保持強度。normal/lock-critical/lock-all
+lexicon:=宣言済み語彙/alias集合。standard/kanji-v1
+envelope:=prompt/resultを包む契約形式。plain/packet-draft/result
 ```
 
 制約:
 
 ```text
-safety > high-risk判定 > mode > profile
+safety > high-risk判定 > mode > profile > lexicon > envelope
 mode:converter廃止。converterはprofileで扱う
+lexicon != mode
+lexicon != profile
+packet-draft:=non-executable
+unknown profile/mode/safety/lexicon/envelope推測禁止
+```
+
+legacy:
+
+```text
+rulebook:=v1.1 legacy profile name
+rulebook新規使用禁止
+rulebookを正式v2 profile扱い禁止
+legacy rulebook入力→用途確認なしにcompact-prompt/lintへ自動補正禁止
 ```
 
 ### operator
