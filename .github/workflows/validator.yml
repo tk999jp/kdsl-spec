@@ -52,4 +52,14 @@ jobs:
           python-version: '3.11'
 
       - name: Run Packet semantic/property suite
-        run: python tools/validator/run_packet_semantic_property_samples.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validator/run_packet_semantic_property_samples.py 2>&1 | tee packet-semantic-property.log
+
+      - name: Upload Packet semantic/property log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packet-semantic-property-${{ github.run_id }}
+          path: packet-semantic-property.log
