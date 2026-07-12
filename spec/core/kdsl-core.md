@@ -1,4 +1,4 @@
-# KDSL Core v1.1
+# KDSL Core v1.1-v2-sync
 
 目的: KDSLの共通記法 / 保護語 / 変換文型 / ADPS境界語を定義する  
 参照正本: `kdsl-spec.md`
@@ -7,9 +7,21 @@
 
 ```text
 format: KDSL
-profile: <dev-prompt|converter|lint|rulebook>
+profile: <compact-prompt|dev-prompt|converter|lint>
 mode: <readable|min|dense|lock>
 safety: <normal|lock-critical|lock-all>
+lexicon: <standard|kanji-v1>
+envelope: <plain|packet-draft|result>
+```
+
+互換境界:
+
+```text
+rulebook:=v1.1 legacy profile name
+rulebook新規使用禁止
+rulebookを正式v2 profile扱い禁止
+legacy rulebook入力→用途確認なしにcompact-prompt/lintへ自動補正禁止
+unknown profile/mode/safety/lexicon/envelope推測禁止
 ```
 
 優先: 意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減

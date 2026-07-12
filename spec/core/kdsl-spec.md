@@ -1,4 +1,4 @@
-# KDSL Specification v1.1-ADPS-aware
+# KDSL Specification v1.1-ADPS-aware-v2-sync
 
 目的: 日本語promptを、LLM直投入可能な安全gate保持型圧縮記法へ変換する  
 対象: ChatGPT / Codex / AI coding tool / 長文運用prompt / 開発支援prompt  
@@ -43,13 +43,15 @@ rollback事故防止
 
 ## 1 設計単位
 
-KDSLはversion差ではなく、次の構成で運用する。
+KDSLはversion差ではなく、次の直交軸で運用する。
 
 ```text
 format: KDSL
 profile: <用途>
 mode: <圧縮強度>
 safety: <安全保持強度>
+lexicon: <宣言済み語彙/alias集合>
+envelope: <契約block形式>
 ```
 
 例:
@@ -58,6 +60,8 @@ format: KDSL
 profile: dev-prompt
 mode: min
 safety: lock-critical
+lexicon: standard
+envelope: plain
 ```
 
 ### format
@@ -68,11 +72,23 @@ format: KDSL
 
 ### profile
 
+正式値:
+
 ```text
+profile: compact-prompt
 profile: dev-prompt
 profile: converter
 profile: lint
-profile: rulebook
+```
+
+互換境界:
+
+```text
+rulebook:=v1.1 legacy profile name
+rulebook新規使用禁止
+rulebookを正式v2 profile扱い禁止
+legacy rulebook入力→用途確認なしにcompact-prompt/lintへ自動補正禁止
+unknown profile推測禁止
 ```
 
 ### mode
@@ -97,6 +113,38 @@ mode: converter
 safety: normal
 safety: lock-critical
 safety: lock-all
+```
+
+### lexicon
+
+```text
+lexicon: standard
+lexicon: kanji-v1
+```
+
+制約:
+
+```text
+lexicon != mode
+lexicon != profile
+unknown lexicon推測禁止
+Core保護語をLexiconで上書禁止
+```
+
+### envelope
+
+```text
+envelope: plain
+envelope: packet-draft
+envelope: result
+```
+
+制約:
+
+```text
+packet-draft:=non-executable
+result:=KDSL_RESULT/R1系
+unknown envelope推測禁止
 ```
 
 ---
