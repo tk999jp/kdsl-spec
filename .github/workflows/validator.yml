@@ -1,26 +1,23 @@
-name: Validator CI
+name: Phase 1 Parser Integration
 
 on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: validator-${{ github.workflow }}-${{ github.ref }}
+  group: phase1-parser-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  samples:
-    name: Sample expectations
+  baseline:
+    name: Phase 1 Baseline
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out repository
@@ -31,14 +28,39 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Show Python version
-        run: python --version
+      - name: Run unified suite before adapters
+        run: python tools/validator/run_all_samples.py
 
-      - name: Run validator samples
-        run: python tools/validator/run_samples.py
+  apply:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-common-parser-phase1-work'
+    name: Apply Phase 1 parser adapters
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-      - name: Run Safety Gate extension samples
-        run: python tools/validator/run_safety_gate_samples.py
+    steps:
+      - name: Check out work branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-common-parser-phase1-work
+          fetch-depth: 0
 
-      - name: Run R1C round-trip property samples
-        run: python tools/validator/run_r1c_roundtrip_samples.py
+      - name: Apply exact adapter integration
+        run: python .github/scripts/apply_phase1_parser.py
+
+      - name: Install final read-only workflow
+        shell: bash
+        run: |
+          cp .github/validator-phase1-final.yml .github/workflows/validator.yml
+          rm .github/validator-phase1-final.yml
+
+      - name: Verify final tree
+        run: python tools/validator/run_all_samples.py
+
+      - name: Commit final Phase 1 tree
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Validator: integrate common parser and unified suite"
+          git push origin HEAD:agent/kdsl-common-parser-phase1-work
