@@ -4,44 +4,35 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  phase3-closeout-clean:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-phase3-r1c-deep-optional-closeout-clean'
-    name: Apply remaining Phase 3 closeout
+  validation:
+    name: KDSL Validation
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Check out clean closeout branch
+      - name: Check out repository
         uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-phase3-r1c-deep-optional-closeout-clean
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
-      - name: Apply remaining exact closeout alignment
-        run: python .github/scripts/apply_phase3_closeout_remaining.py
+      - name: Show Python version
+        run: python --version
 
-      - name: Verify unified suite after alignment
+      - name: Run unified validator suite
         run: python tools/validator/run_all_samples.py
-
-      - name: Commit verified documents
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add README.md CHANGELOG.md docs/project-status.md spec/manifest.md tools/validator/README.md .github/scripts/apply_phase3_closeout_remaining.py
-          git commit -m "Docs: complete Phase 3 R1C closeout records"
-          git push origin HEAD:agent/kdsl-phase3-r1c-deep-optional-closeout-clean
