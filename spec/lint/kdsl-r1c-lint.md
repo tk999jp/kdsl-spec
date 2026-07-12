@@ -1,6 +1,6 @@
 # KDSL R1C Lint v0.1 Draft
 
-status: v2-draft adopted / first slices integrated
+status: v2-draft adopted / Phase 3 deep optional-block first slice integrated
 canonical: v2-draft subordinate
 schema: kdsl-r1c@0.1-draft
 source: spec/r1/r1c-compact-result-schema.md
@@ -485,14 +485,39 @@ INFO:
   optional readability improvements
 ```
 
+## 18.1 Phase 3 deep optional-block enforcement
+
+```text
+EVIDENCE:
+  exact observed/inferred/not_observed/unverified keys
+  cross-class duplicate/conflict detection
+  VERIFY.pass / RT:v contradiction detection
+
+AUTHORITY:
+  exact read/edit/stage/commit/push/release rails
+  FILES/CMD/COMMIT cross-field authority conflict detection
+  AUTHORITY record != authority grant
+
+ANNUNCIATOR:
+  canonical-key structural validation only
+  full value-semantic consistency proofなし
+
+SAFETY_GATES:
+  registry/ID/state/record deep lint
+  ordered structural projection/reconstruction
+  valid optional block→structural_pass first slice
+```
+
 ## 19. Validator status
 
 ```text
 R1C lint specification: v2-draft adopted
 R1C validator: first heuristic slice integrated
-R1C structural round-trip helper: first slice integrated
-R1C round-trip property suite: 14 expectations / failed 0
-optional SAFETY_GATES round-trip: blocked
+R1C structural round-trip helper: Phase 3 optional-block first slice integrated
+R1C base round-trip property suite: 14 expectations / failed 0
+R1C deep optional-block suite: 34 expectations / failed 0
+optional EVIDENCE/AUTHORITY/ANNUNCIATOR round-trip: structural_pass first slice
+optional SAFETY_GATES round-trip: structural_pass first slice
 ```
 
 Boundary:
@@ -508,9 +533,10 @@ structural_pass != release readiness
 ## 20. Remaining adoption/expansion checks
 
 ```text
-multi-line optional JSON support
-optional SAFETY_GATES dedicated expansion
-full semantic equivalence proof
+multi-line optional JSON support: common parser/Phase 3 integrated
+optional SAFETY_GATES dedicated expansion: Phase 3 integrated
+full Evidence/Authority natural-language semantic equivalence proof
+ANNUNCIATOR full value-semantic consistency proof
 broader property/mutation coverage
 canonical R1 remains authoritative
 Packet non-executable boundary confirmation
