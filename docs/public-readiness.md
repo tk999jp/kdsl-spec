@@ -30,8 +30,10 @@ workflow: .github/workflows/validator.yml
 workflow_name: KDSL Validation
 unified_runner: python tools/validator/run_all_samples.py
 focused_job: Packet Semantic Property
-latest_verified_merged_pr: #48
-latest_verified_run: #224
+latest_verified_merged_pr: #50
+latest_verified_merged_run: #239 / success
+current_candidate_pr: #51
+current_candidate_run: #241 / success
 unified_expectations: 257
 failed: 0
 required_check_activation: pending / issue #39
@@ -55,11 +57,13 @@ validator pass != release readiness
 Core formal axes sync: main integrated by PR #50
 Glossary formal axes sync: main integrated by PR #50
 Converter GitHub source priority/A-G/CP-Lift sync: main integrated by PR #50
-External README simplification: candidate branch
-Introductory overview refresh: candidate branch
-R1 quickstart: candidate branch
-Public example boundary guide: candidate branch
-Public R1 examples current-contract alignment: candidate branch
+External README simplification: PR #51 candidate
+Introductory overview refresh: PR #51 candidate
+R1 quickstart: PR #51 candidate
+Public example boundary guide: PR #51 candidate
+Public R1 examples current-contract alignment: PR #51 candidate
+KDSL-DP normalization-path correction: PR #51 candidate
+obsolete public README draft retirement: PR #51 candidate
 ```
 
 Candidate integration does not change stable/public-ready status.
@@ -164,14 +168,14 @@ License: MIT。
 | Check | Required for stable | Status |
 |---|---:|---|
 | LICENSE decided | yes | MIT |
-| External README | yes | candidate |
-| Introductory overview | yes | candidate |
+| External README | yes | candidate / PR #51 |
+| Introductory overview | yes | candidate / PR #51 |
 | Core/Profile/Glossary v2 alignment | yes | partial / Core+Glossary+Converter integrated |
 | Private examples excluded from candidate subset | yes | pass |
-| Public examples non-normative boundary | yes | candidate |
-| KDSL-DP warning prominent | yes | candidate |
-| Packet non-executable warning prominent | yes | candidate |
-| R1 quickstart | yes | candidate |
+| Public examples non-normative boundary | yes | candidate / PR #51 |
+| KDSL-DP warning prominent | yes | candidate / PR #51 |
+| Packet non-executable warning prominent | yes | candidate / PR #51 |
+| R1 quickstart | yes | candidate / PR #51 |
 | Validator implementation status clear | yes | candidate / heuristic |
 | Unified sample expectation runner | yes | 257 / failed 0 |
 | GitHub Actions workflow | yes | configured |
