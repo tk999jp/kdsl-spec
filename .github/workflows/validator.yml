@@ -32,7 +32,17 @@ jobs:
           python-version: '3.11'
 
       - name: Apply exact Phase 4 closeout
-        run: python .github/scripts/apply_phase4_closeout.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python .github/scripts/apply_phase4_closeout.py 2>&1 | tee phase4-closeout.log
+
+      - name: Upload closeout diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-closeout-${{ github.run_id }}
+          path: phase4-closeout.log
 
       - name: Verify unified suite after closeout
         run: python tools/validator/run_all_samples.py
