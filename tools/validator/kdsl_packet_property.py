@@ -140,6 +140,26 @@ def gate_line(record: dict[str, str]) -> str:
     )
 
 
+def preview_list_section(preview: str, heading: str) -> list[str]:
+    lines = preview.splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if line.strip() == heading:
+            start = index + 1
+            break
+    if start is None:
+        return []
+    values: list[str] = []
+    for line in lines[start:]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if not stripped.startswith('- '):
+            break
+        values.append(stripped[2:])
+    return values
+
+
 def check_preview(data: dict, normalized: dict) -> tuple[list[str], list[str], list[str]]:
     checks: list[str] = []
     errors: list[str] = []
@@ -179,10 +199,11 @@ def check_preview(data: dict, normalized: dict) -> tuple[list[str], list[str], l
         errors.append('STOP order changed in preview')
     elif data['stop']:
         checks.append('STOP order preserved')
-    if data['verify'] and not ordered_in_text(data['verify'], preview):
+    verify_section = preview_list_section(preview, '検証要求:')
+    if data['verify'] and verify_section[: len(data['verify'])] != data['verify']:
         errors.append('VERIFY order changed in preview')
     elif data['verify']:
-        checks.append('VERIFY requirement order preserved')
+        checks.append('VERIFY requirement order preserved in verification section')
 
     for rail in AUTHORITY_RAILS:
         expected = '- ' + rail + ': ' + data['authority'].get(rail, 'unknown')
@@ -203,18 +224,17 @@ def check_preview(data: dict, normalized: dict) -> tuple[list[str], list[str], l
         if any(marker in line for marker in ('禁止', '未確認', '未実行', '!=')):
             continue
         if re.search(r'\b(?:success|completed|executed|verified)\b|成功|実行済|確認済|完了', lowered, re.IGNORECASE):
-            if line.strip() not in load_text.__doc__ if False else False:
-                pass
             source_candidates = exact_strings(data)
             if not any(candidate and candidate in line for candidate in source_candidates):
                 errors.append('preview appears to invent completion/verification claim: ' + line.strip())
     if not any(error.startswith('preview appears to invent') for error in errors):
         checks.append('no invented completion/verification claim detected')
 
-    if data['result_schema'] not in preview:
-        errors.append('result schema missing from preview')
+    report_section = preview_list_section(preview, '報告形式:')
+    if data['result_schema'] not in report_section:
+        errors.append('result schema missing from report-format section')
     else:
-        checks.append('result schema request preserved')
+        checks.append('result schema request preserved in report-format section')
     return checks, errors, warnings
 
 
