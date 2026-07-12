@@ -386,6 +386,11 @@ def validate_sg(block, task_id, text, errors):
     return valid_ids
 
 
+
+# Phase 1 common parser adapter. Semantic validation remains in this module.
+from kdsl_parser_adapter import install_packet
+install_packet(globals())
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)

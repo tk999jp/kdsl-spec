@@ -2,31 +2,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+from kdsl_parser import DiagnosticBag, DocumentNode, load_text
+
 CHECKER_SETS = {
-    'r1': [
-        'r1_required_blocks.py',
-        'r1_rt_basis.py',
-        'r1_authority_guard.py',
-    ],
-    'prompt': [
-        'kdsl_template_refs.py',
-        'kdsl_template_expansion.py',
-    ],
-    'compact': [
-        'kdsl_compact_prompt.py',
-    ],
-    'safety-gate': [
-        'kdsl_safety_gate.py',
-    ],
-    'r1c': [
-        'kdsl_r1c.py',
-    ],
-    'packet': [
-        'kdsl_packet.py',
-    ],
-    'normalization': [
-        'kdsl_packet_normalization.py',
-    ],
+    'r1': ['r1_required_blocks.py', 'r1_rt_basis.py', 'r1_authority_guard.py'],
+    'prompt': ['kdsl_template_refs.py', 'kdsl_template_expansion.py'],
+    'compact': ['kdsl_compact_prompt.py'],
+    'safety-gate': ['kdsl_safety_gate.py'],
+    'r1c': ['kdsl_r1c.py'],
+    'packet': ['kdsl_packet.py'],
+    'normalization': ['kdsl_packet_normalization.py'],
     'all': [
         'r1_required_blocks.py',
         'r1_rt_basis.py',
@@ -39,6 +24,15 @@ CHECKER_SETS = {
         'kdsl_packet.py',
         'kdsl_packet_normalization.py',
     ],
+}
+
+TARGET_MARKERS = {
+    'r1': ('KDSL_RESULT',),
+    'r1c': ('KDSL_RESULT',),
+    'safety-gate': ('SAFETY_GATES',),
+    'packet': ('PACKET_DRAFT',),
+    'normalization': ('NORMALIZATION_DRAFT',),
+    'all': ('KDSL_RESULT', 'SAFETY_GATES', 'PACKET_DRAFT', 'NORMALIZATION_DRAFT'),
 }
 
 TARGETS = 'r1, prompt, compact, safety-gate, r1c, packet, normalization, all'
@@ -70,6 +64,37 @@ def parse_args(argv):
     return target_mode, path
 
 
+def run_parser_preflight(target_mode, target):
+    markers = TARGET_MARKERS.get(target_mode, ())
+    if not markers:
+        return 0
+
+    text = load_text(target)
+    document = DocumentNode.parse(text)
+    bag = DiagnosticBag()
+    for issue in document.issues:
+        bag.add_issue(issue)
+
+    found = []
+    for marker in markers:
+        envelope = document.find_envelope(marker)
+        if envelope is None:
+            continue
+        found.append(marker)
+        for issue in envelope.issues:
+            bag.add_issue(issue)
+
+    print('PARSER_PREFLIGHT:')
+    print('  target: ' + target_mode)
+    print('  envelopes: ' + (','.join(found) if found else 'none'))
+    print('  status: ' + ('fail' if bag.errors else ('warn' if bag.warnings else 'pass')))
+    for item in bag.errors:
+        print('  error: ' + item)
+    for item in bag.warnings:
+        print('  warning: ' + item)
+    return bag.exit_code
+
+
 def run_checker(root, checker, target):
     script = root / checker
     print('CHECK: ' + checker)
@@ -94,7 +119,7 @@ def main(argv):
         return 2
 
     root = Path(__file__).resolve().parent
-    final_code = 0
+    final_code = run_parser_preflight(target_mode, target)
 
     print('TARGET: ' + target_mode)
     for checker in CHECKER_SETS[target_mode]:
