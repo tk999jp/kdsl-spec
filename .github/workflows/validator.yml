@@ -35,7 +35,17 @@ jobs:
         run: python .github/scripts/apply_phase4_property_section_fix.py
 
       - name: Verify Packet semantic/property suite
-        run: python tools/validator/run_packet_semantic_property_samples.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validator/run_packet_semantic_property_samples.py 2>&1 | tee phase4-section-fix.log
+
+      - name: Upload section-fix diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase4-section-fix-${{ github.run_id }}
+          path: phase4-section-fix.log
 
       - name: Commit verified fix
         shell: bash
