@@ -12,6 +12,7 @@ RUNNERS = (
     ('safety-semantics', 'run_safety_semantics_samples.py'),
     ('safety-semantics-examples', 'run_safety_semantics_examples.py'),
     ('r1c-optional', 'run_r1c_optional_samples.py'),
+    ('packet-semantic-property', 'run_packet_semantic_property_samples.py'),
 )
 
 

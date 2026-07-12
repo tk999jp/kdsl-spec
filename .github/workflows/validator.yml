@@ -36,3 +36,20 @@ jobs:
 
       - name: Run unified validator suite
         run: python tools/validator/run_all_samples.py
+
+  packet-semantic-property:
+    name: Packet Semantic Property
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Run Packet semantic/property suite
+        run: python tools/validator/run_packet_semantic_property_samples.py
