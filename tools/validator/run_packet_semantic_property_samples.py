@@ -167,7 +167,7 @@ def main() -> int:
         '    報告形式:\n    - kdsl-r1c@0.1-draft',
         '    報告形式:\n    - canonical-r1',
     )
-    results.append(run_property_text('preview result schema loss detected', source, result_schema_loss, 2, ('result schema missing from preview',)))
+    results.append(run_property_text('preview result schema loss detected', source, result_schema_loss, 2, ('result schema missing from report-format section',)))
     results.append(run_property_text('executable preview marker rejected', source, replace_once(normalization, 'KDSL_PROMPT_PREVIEW:', 'KDSL_PROMPT:'), 2, ('normalization artifact failed base checker',)))
     results.append(run_property_text('semantic equivalence claim rejected', source, replace_once(normalization, 'semantic_equivalence: not_proven', 'semantic_equivalence: proven'), 2, ('normalization artifact failed base checker',)))
 
