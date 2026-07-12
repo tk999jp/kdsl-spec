@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
@@ -36,3 +36,38 @@ jobs:
 
       - name: Run unified validator suite
         run: python tools/validator/run_all_samples.py
+
+  phase2_closeout:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-phase2-safety-semantics-closeout-work'
+    name: Apply Phase 2 closeout
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out closeout work branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/kdsl-phase2-safety-semantics-closeout-work
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Apply exact closeout alignment
+        run: python .github/scripts/apply_phase2_safety_semantics_closeout.py
+
+      - name: Verify unified suite after alignment
+        run: python tools/validator/run_all_samples.py
+
+      - name: Restore read-only workflow and commit closeout
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/validator.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Docs: close Phase 2 Safety Semantics integration"
+          git push origin HEAD:agent/kdsl-phase2-safety-semantics-closeout-work
