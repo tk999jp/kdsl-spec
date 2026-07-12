@@ -1,10 +1,11 @@
 # Phase 5 — Public-facing v2 Hardening Closeout
 
-status: closeout-candidate
+status: closeout-record
 review_date: 2026-07-12
 branch: agent/kdsl-phase5-release-readiness-closeout
 target: main
 base: 442d53226c7d0fd000ed1f93efc28ccbb367b129
+pull_request: 52
 
 ## 1. Scope completed
 
@@ -26,6 +27,12 @@ PR #51:
   NEXT/COMMIT Authority separation examples
   KDSL-DP normalization path correction
   obsolete public README draft retirement
+
+PR #52:
+  public-readiness final decision
+  concise operational-status canonical
+  exact pre-Phase5 status blob archive
+  Phase 5 closeout record
 ```
 
 ## 2. Verification evidence
@@ -46,13 +53,38 @@ PR #51:
   Packet Semantic Property: success
 ```
 
+PR #52 merge gate:
+
+```text
+latest PR HEADのKDSL Validation成功必須
+latest PR HEADのPacket Semantic Property成功必須
+過去run成功のみで最新HEAD成功扱禁止
+```
+
 ```text
 unified_expectations: 257
 failed: 0
 validator_authority: non_authoritative
 ```
 
-## 3. Public-facing decision
+## 3. Operational-status canonical restructuring
+
+The former long-form `docs/project-status.md` blob is preserved exactly at:
+
+```text
+docs/project-status-history/project-status-through-phase4-20260712.md
+blob: c35f6b890c8b15cc49b928d9906e7a19b7bf9082
+```
+
+The current `docs/project-status.md` is reduced to current public state, canonical references, Phase 1–5 summary, validator state, safety boundaries, known gaps, and next steps.
+
+```text
+current operational status > historical status archive
+historical archive:=証跡保持 / 現在状態正本ではない
+existing Git history:=保持
+```
+
+## 4. Public-facing decision
 
 ```text
 experimental preview documentation: ready
@@ -65,7 +97,7 @@ public_ready promotion: not_approved
 
 Phase 5 improves clarity and external usability. It does not convert draft/subordinate specifications into stable or executable contracts.
 
-## 4. Required-check blocker
+## 5. Required-check blocker
 
 ```text
 issue: #39
@@ -83,7 +115,7 @@ issue existence != required-check activation
 
 The available GitHub connector does not expose repository Rulesets/branch-protection mutation. Activation must be performed through repository Settings or another authorized administration path, then verified with a PR that is blocked while the check is pending/failing.
 
-## 5. Specification maturity blockers
+## 6. Specification maturity blockers
 
 ```text
 full YAML/KDSL semantic parser: not implemented
@@ -97,7 +129,7 @@ canonical P1/P1L target schema: unresolved
 
 These are not failures of Phase 5 documentation hardening. They are separate implementation/proof phases and must not be silently promoted by documentation quality or CI success.
 
-## 6. Authority and release boundary
+## 7. Authority and release boundary
 
 ```text
 stable/public-ready U approval: none
@@ -116,7 +148,7 @@ validator pass != RT:v
 validator pass != release readiness
 ```
 
-## 7. Final judgment
+## 8. Final judgment
 
 ```text
 PHASE5_PUBLIC_HARDENING: complete
@@ -136,7 +168,7 @@ specification remains experimental/partial
 stable/public-ready approval is absent
 ```
 
-## 8. Non-actions
+## 9. Non-actions
 
 ```text
 stable tag作成なし
@@ -148,7 +180,7 @@ Packet executable化なし
 canonical P1/P1L schema推測なし
 ```
 
-## 9. Next safe steps
+## 10. Next safe steps
 
 ```text
 P0: issue #39 required KDSL Validation ruleset activation and verification
