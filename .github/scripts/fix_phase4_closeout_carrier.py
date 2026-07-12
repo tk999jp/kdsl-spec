@@ -29,6 +29,16 @@ patches = [
 ''',
         'Packet lint metadata carrier anchor',
     ),
+    (
+        "replace_once('spec/lint/kdsl-packet-normalization-lint.md', 'validator: first-slice integrated', 'validator: Phase 4 selected property first slice integrated')\n",
+        '''replace_once(
+    'spec/lint/kdsl-packet-normalization-lint.md',
+    'status: v2-draft adopted\\ncanonical: v2-draft\\nvalidator: first-slice integrated\\nscope: kdsl-packet-normalization@0.1-draft',
+    'status: v2-draft adopted\\ncanonical: v2-draft\\nvalidator: Phase 4 selected property first slice integrated\\nscope: kdsl-packet-normalization@0.1-draft',
+)
+''',
+        'Normalization lint metadata carrier anchor',
+    ),
 ]
 
 for old, new, label in patches:
