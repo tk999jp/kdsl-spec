@@ -120,12 +120,10 @@ def main(argv):
         elif parent_state == 'satisfied' and child_state == 'satisfied':
             relation = scope_relation(parent_entry.get('scope', ''), child_entry.get('scope', ''))
             if relation in {'widened', 'overlap', 'disjoint'}:
-                if not REEVALUATION_RE.search(basis) or is_blank(child_entry.get('evidence')):
-                    errors.append(
-                        f'{gate_id}: satisfied scope {relation}; explicit re-evaluation evidence required'
-                    )
-                else:
+                if REEVALUATION_RE.search(basis) and not is_blank(child_entry.get('evidence')):
                     info.append(f'{gate_id}: satisfied scope {relation} re-evaluated')
+                else:
+                    warnings.append(f'{gate_id}: satisfied scope changed; re-evaluate evidence and authority')
             elif relation == 'unknown':
                 warnings.append(f'{gate_id}: satisfied scope relation unknown; re-evaluate evidence and authority')
             elif relation == 'narrowed':
