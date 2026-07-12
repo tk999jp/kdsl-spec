@@ -19,6 +19,18 @@ CASES = (
         ('FILES', 'src/A.cs', 'PARSER_AST_READY'),
     ),
     SuiteCase(
+        'R1C checker accepts parser multiline JSON',
+        ('kdsl_r1c.py', 'samples/parser/r1c_multiline_json.md'),
+        0,
+        ('R1C schema checked', 'structured JSON fields checked'),
+    ),
+    SuiteCase(
+        'wrapper accepts parser multiline R1C',
+        ('kdsl_validate.py', '--target', 'r1c', 'samples/parser/r1c_multiline_json.md'),
+        0,
+        ('PARSER_PREFLIGHT:', 'CHECK: kdsl_r1c.py'),
+    ),
+    SuiteCase(
         'parser normalization block scalar',
         ('kdsl_parse.py', '--json', '--envelope', 'NORMALIZATION_DRAFT', 'samples/parser/normalization_block_scalar.md'),
         0,
