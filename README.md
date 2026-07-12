@@ -32,9 +32,10 @@ Packet validator: first heuristic slice integrated
 Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
 Packet normalization validator/mapper: first-slice integrated / non-executable preview only
 Packet normalization structural round-trip: first-slice integrated / selected structural properties only
+Packet semantic/property contract: kdsl-packet-property@0.1-draft / Phase 4 strict first slice integrated / non-executable
 Common parser/AST: Phase 1 integrated / source-spanned first slice
 major parser adapters: R1C / Packet / Packet Normalization / Safety Gate
-KDSL Validation unified suite: 215 expectations / failed 0
+KDSL Validation unified suite: 257 expectations / failed 0
 required check activation: pending / issue #39
 validator_authority: non_authoritative
 ```
@@ -121,6 +122,7 @@ Registries:
 Packet:
   spec/packet/kdsl-packet-schema.md
   spec/packet/kdsl-packet-normalization-contract.md
+  spec/packet/kdsl-packet-semantic-property-contract.md
 
 R1 / KDSL_RESULT:
   spec/r1/r1-result-spec.md
@@ -157,6 +159,9 @@ Validator:
   tools/validator/kdsl_packet_normalization.py
   tools/validator/kdsl_packet_normalize.py
   tools/validator/kdsl_packet_roundtrip.py
+  tools/validator/kdsl_packet_semantic.py
+  tools/validator/kdsl_packet_normalize_semantic.py
+  tools/validator/kdsl_packet_property.py
   tools/validator/kdsl_parser.py
   tools/validator/kdsl_parse.py
   tools/validator/kdsl_parser_adapter.py
@@ -356,17 +361,19 @@ FLOW: kdsl-packet-flow@0.1-draft
 lint: spec/lint/kdsl-packet-lint.md
 normalization: kdsl-packet-normalization@0.1-draft
 normalization lint: spec/lint/kdsl-packet-normalization-lint.md
+semantic/property contract: kdsl-packet-property@0.1-draft
+semantic/property spec: spec/packet/kdsl-packet-semantic-property-contract.md
 status: non-executable
 ```
 
 Current unresolved execution dependencies:
 
 ```text
-Packet validator/sample matrix
-normalization transformer/round-trip proof
-Safety Gate completeness/inheritance proof
+full Packet/Normalization semantic equivalence proof
+complete Safety Gate completeness/inheritance proof across arbitrary documents
+canonical P1/P1L target schema
 stable/canonical execution dependency
-explicit executable promotion review/U承認
+explicit executable transformer specification/review/U承認
 ```
 
 ```text
@@ -391,9 +398,12 @@ python tools/validator/kdsl_safety_gate_graph.py <graph.json>
 python tools/validator/kdsl_validate.py --target r1c <file>
 python tools/validator/kdsl_r1c_roundtrip.py <file>
 python tools/validator/kdsl_validate.py --target packet <file>
+python tools/validator/kdsl_validate.py --target packet-semantic <file>
 python tools/validator/kdsl_validate.py --target normalization <file>
 python tools/validator/kdsl_packet_normalize.py <packet-file>
 python tools/validator/kdsl_packet_roundtrip.py <packet-file> [normalization-file]
+python tools/validator/kdsl_packet_normalize_semantic.py <packet-file>
+python tools/validator/kdsl_packet_property.py <packet-file> [normalization-file]
 python tools/validator/kdsl_parse.py --envelope <MARKER> [--json] <file>
 python tools/validator/kdsl_validate.py --target all <file>
 ```
@@ -411,17 +421,18 @@ component runners:
   run_safety_semantics_samples.py: 32
   run_safety_semantics_examples.py: 2
   run_r1c_optional_samples.py: 34
+  run_packet_semantic_property_samples.py: 42
 ```
 
 Latest CI evidence:
 
 ```text
-pull_request: 45
-source_head: 1fcd09cf13aaeb3aa54ed0194d443c962bbbd4b7
-squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
-workflow/check: KDSL Validation
-workflow_run: #207 / success
-unified expectations: 215
+pull_request: 48
+source_head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+workflow/check: KDSL Validation + Packet Semantic Property
+workflow_run: #224 / success
+unified expectations: 257
 failed: 0
 required-check repository setting: pending / issue #39
 ```
@@ -436,6 +447,7 @@ examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
 examples/packet/packet-design.example.md
+examples/packet/packet-semantic-property.example.md
 ```
 
 Validator boundaries:
@@ -478,11 +490,12 @@ R1C multiline JSON input:=common parser adapter integrated
 R1C deep optional-block structural round-trip:=Phase 3 integrated
 R1C round-trip full semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
-Packet full semantic parserなし
+Packet strict bounded semantic/property first slice:=Phase 4 integrated / 42 expectations / 257 unified verified
+Packet full YAML/natural-language semantic equivalence proofなし
 Packet normalization validator/mapper first slice:=main integrated / 93 expectations verified
 Packet normalization structural round-trip first slice:=main integrated / 108 expectations verified
-Packet normalization semantic/property proofなし
-Packet Safety Gate completeness/inheritance proofなし
+Packet selected semantic/property comparison:=Phase 4 integrated
+Packet complete Safety Gate completeness/inheritance proofなし
 required KDSL Validation check:=workflow ready / repository setting pending issue #39
 KDSL-Packet:=v2-draft adopted / non-executable
 ```
@@ -508,9 +521,6 @@ P0:
   required KDSL Validation check activation / issue #39
 
 P1:
-  Phase 4 Packet / Normalization semantic-property proof
-
-P3:
   Phase 5 public-facing v2 hardening / release-readiness review
 
 Hold:

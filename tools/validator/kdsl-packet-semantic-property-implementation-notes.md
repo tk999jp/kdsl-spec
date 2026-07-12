@@ -1,6 +1,6 @@
 # Packet / Normalization Semantic Property Implementation Notes
 
-status: implementation-candidate
+status: completed / main integrated
 phase: 4
 model: kdsl-packet-property@0.1-draft
 validator_authority: non-authoritative
@@ -68,12 +68,16 @@ invented completion-claim rejection
 LOSS/UNRESOLVED consistency
 ```
 
-## Candidate verification matrix
+## Verification matrix
 
 ```text
-existing unified expectations: 215
-Phase 4 Packet semantic/property expectations: 42
-candidate unified expectations: 257
+implementation PR: 48
+source head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+workflow run: 29191890776 / #224 / success
+existing unified expectations: 215 / failed 0
+Phase 4 Packet semantic/property expectations: 42 / failed 0
+unified expectations: 257 / failed 0
 ```
 
 ## Result boundary

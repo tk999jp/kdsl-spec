@@ -18,7 +18,7 @@ stable_release: none
 Release Assets: none
 license: MIT
 validator: partial heuristic lint helpers / non-authoritative
-v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / Safety Semantics / R1C architecture
+v2_branch_direction: CompactPrompt / Lexicon / CP-Lift / Safety Gate Registry / Safety Semantics / R1C / Packet semantic-property architecture
 ```
 
 Policy:
@@ -131,6 +131,7 @@ Project Status:
 | `spec/registry/kdsl-packet-flow-registry.md` | Registry draft | Packet semantic flow opcodes | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-schema.md` | Packet authoring schema draft | PACKET_DRAFT fields / normalization / authority boundary | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-normalization-contract.md` | Packet normalization draft | mapping/loss/round-trip evidence / non-executable preview | v2 draft adopted / non-executable |
+| `spec/packet/kdsl-packet-semantic-property-contract.md` | Packet property subordinate draft | strict source semantics / selected source-preview property comparison | v2 draft adopted subordinate / non-executable |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
 | `spec/r1/r1c-compact-result-schema.md` | R1 serialization draft | canonical R1のcompact serialization profile | v2 draft adopted / canonical R1 subordinate |
 | `spec/r1/r1c-optional-block-contract.md` | R1C subordinate contract draft | EVIDENCE/AUTHORITY/ANNUNCIATOR/SAFETY_GATES deep optional-block rules | v2 draft adopted / R1C subordinate |
@@ -138,8 +139,8 @@ Project Status:
 | `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
 | `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
 | `spec/lint/kdsl-r1c-lint.md` | Lint draft | R1C field/order/RT/NEXT/COMMIT/round-trip boundary lint | v2 draft adopted |
-| `spec/lint/kdsl-packet-lint.md` | Lint draft | Packet envelope/registry/gate/authority/normalization lint | v2 draft adopted / validator first slice integrated |
-| `spec/lint/kdsl-packet-normalization-lint.md` | Lint draft | normalization source/target/map/loss/round-trip/authority lint | v2 draft adopted / validator not implemented |
+| `spec/lint/kdsl-packet-lint.md` | Lint draft | Packet envelope/registry/gate/authority/normalization lint | v2 draft adopted / Phase 4 strict first slice integrated |
+| `spec/lint/kdsl-packet-normalization-lint.md` | Lint draft | normalization source/target/map/loss/round-trip/authority lint | v2 draft adopted / Phase 4 selected property first slice integrated |
 | `spec/bridge/kdsl-adps-bridge.md` | Bridge | KDSL/KDSL-DP/ADPS/P1/P1L/R1境界 | Yes |
 | `spec/bridge/kdsl-cp-packet-bridge.md` | Bridge draft | CP-Lift / Full KDSL / Safety Gate / R1C / future Packet境界 | v2 draft |
 | `spec/glossary.md` | Glossary | v1.1 canonical terms | Yes |
@@ -312,6 +313,10 @@ registries:
 
 lint:
   spec/lint/kdsl-packet-lint.md
+
+strict semantic/property subordinate:
+  spec/packet/kdsl-packet-semantic-property-contract.md
+  model: kdsl-packet-property@0.1-draft
 ```
 
 Ownership rules:
@@ -325,6 +330,7 @@ STATUS:non-executable固定
 NORMALIZE.required:true固定
 NORMALIZE.state:not_normalized固定
 normalization artifact未生成/未検証→実行禁止
+property_pass != semantic equivalence/safety proof/normalization completion/execution authority
 unknown schema/registry/ID/opcode推測禁止
 PKT:v1使用禁止
 ```
@@ -340,6 +346,9 @@ schema/version:
 
 lint:
   spec/lint/kdsl-packet-normalization-lint.md
+
+strict property contract:
+  spec/packet/kdsl-packet-semantic-property-contract.md
 ```
 
 Ownership rules:
@@ -351,7 +360,7 @@ KDSL_PROMPT_PREVIEW != KDSL_PROMPT
 P1/P1L schema unresolved→TARGET blocked / preview禁止
 semantic_equivalence:not_proven固定
 AUTHORITY.execution_authority:none固定
-normalization validator/mapper未実装→normalized扱禁止
+normalization validator/mapper/property first slices integrated→なお normalized扱禁止
 ```
 
 ### KDSL-CP
