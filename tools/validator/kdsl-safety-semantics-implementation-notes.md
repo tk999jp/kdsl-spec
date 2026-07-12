@@ -10,6 +10,7 @@ validator_authority: non-authoritative
 tools/validator/kdsl_safety_semantics.py
 tools/validator/kdsl_safety_gate_graph.py
 tools/validator/run_safety_semantics_samples.py
+tools/validator/run_safety_semantics_examples.py
 ```
 
 ## Bounded semantic checks
@@ -41,8 +42,10 @@ independent na re-evaluation
 ```text
 semantic cases: 16
 graph cases: 16
-Phase 2 total: 32
-expected unified total: 179
+Phase 2 property total: 32
+repository examples: 2
+existing Phase 1 unified total: 147
+expected unified total: 181
 ```
 
 ## Boundaries
