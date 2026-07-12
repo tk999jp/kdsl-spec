@@ -133,6 +133,7 @@ Project Status:
 | `spec/packet/kdsl-packet-normalization-contract.md` | Packet normalization draft | mapping/loss/round-trip evidence / non-executable preview | v2 draft adopted / non-executable |
 | `spec/r1/r1-result-spec.md` | R1 | KDSL_RESULT / RT / Evidence / Authority | Yes |
 | `spec/r1/r1c-compact-result-schema.md` | R1 serialization draft | canonical R1のcompact serialization profile | v2 draft adopted / canonical R1 subordinate |
+| `spec/r1/r1c-optional-block-contract.md` | R1C subordinate contract draft | EVIDENCE/AUTHORITY/ANNUNCIATOR/SAFETY_GATES deep optional-block rules | v2 draft adopted / R1C subordinate |
 | `spec/lint/kdsl-lint-checklist.md` | Lint | Core/dev-prompt/R1 lint | Yes |
 | `spec/lint/kdsl-compact-prompt-lint.md` | Lint draft | KDSL-CP / kanji-v1 / CP-Lift lint | v2 draft |
 | `spec/lint/kdsl-safety-gate-registry-lint.md` | Lint draft | SG ID/state/composition/protected wording lint | v2 draft |
@@ -276,6 +277,9 @@ v2-draft adopted profile:
 lint:
   spec/lint/kdsl-r1c-lint.md
 
+optional-block contract:
+  spec/r1/r1c-optional-block-contract.md
+
 schema/version:
   kdsl-r1c@0.1-draft
 ```
@@ -292,6 +296,7 @@ short field alias禁止
 implicit default禁止
 round-trip不成立→Full R1 fallback必須
 R1C validator pass != canonical R1適合証明
+Phase 3 optional-block structural_pass != semantic equivalence/safety proof/authority
 ```
 
 ### KDSL-Packet authoring schema

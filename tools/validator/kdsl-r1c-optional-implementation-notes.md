@@ -1,6 +1,6 @@
 # R1C Deep Optional-Block Validation / Round-Trip
 
-status: implementation-candidate
+status: integrated / verified
 model: kdsl-r1c-optional-blocks@0.1-draft
 parent_schema: kdsl-r1c@0.1-draft
 validator_authority: non-authoritative
@@ -57,7 +57,9 @@ full value-semantic consistency proofなし
 ```text
 existing unified total: 181 / failed 0
 Phase 3 optional-block suite: 34 / failed 0
-expected unified total: 215 / failed 0
+verified unified total: 215 / failed 0
+pull_request: 45
+workflow_run: 29185669224 / #207 / success
 ```
 
 ## Boundaries

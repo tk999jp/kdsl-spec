@@ -491,6 +491,32 @@ adapter_conclusion: success
 reason: clean replacement after temporary write-enabled workflow
 ```
 
+### PR #45 — Phase 3 R1C deep optional-block round-trip
+
+```yaml
+pull_request: 45
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-phase3-r1c-deep-optional
+source_head: 1fcd09cf13aaeb3aa54ed0194d443c962bbbd4b7
+squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
+closeout_work_pull_request: 46
+closeout_pull_request: 47
+model: kdsl-r1c-optional-blocks@0.1-draft
+workflow: KDSL Validation
+workflow_run_id: 29185669224
+workflow_run_number: 207
+workflow_conclusion: success
+previous_unified_total: 181
+phase3_optional_total: 34
+unified_total: 215
+failed: 0
+semantic_equivalence: not_proven
+full_safety_proof: not_proven
+execution_authority: none
+stable_effect: none
+```
+
 ### PR #42 — Phase 2 Safety Semantics / multi-generation inheritance
 
 ```yaml
@@ -560,6 +586,7 @@ Safety Semantics/multi-generation graph Phase 2:=main統合済み / 181 unified 
 R1C design candidate:=main統合済み
 R1C design-candidate validator first slice:=main統合済み
 R1C structural round-trip first slice:=main統合済み / 14 expectations verified
+R1C deep optional-block Phase 3:=main統合済み / 34 optional expectations / 215 unified verified
 R1C ownership:=v2-draft adopted serialization profile
 R1C canonical R1 replacement:=なし
 Packet design candidate:=main統合済み
@@ -677,6 +704,7 @@ validator:
     - R1C VERIFY class separation lint
     - R1C RT/NEXT/COMMIT boundary lint
     - R1C structural projection/reconstruction property lint
+    - R1C EVIDENCE/AUTHORITY/ANNUNCIATOR/SAFETY_GATES deep optional lint
     - Full R1 fallback/out-of-scope separation
     - Packet envelope/field/order lint
     - Packet registry/ID/gate/flow/authority/normalization lint
@@ -695,15 +723,16 @@ validator:
       - python tools/validator/run_parser_samples.py
       - python tools/validator/run_safety_semantics_samples.py
       - python tools/validator/run_safety_semantics_examples.py
-    expected_unified_total: 181
+      - python tools/validator/run_r1c_optional_samples.py
+    expected_unified_total: 215
     required_check_activation: pending
     required_check_issue: 39
     latest_pr_validation:
-      pull_request: 42
-      run_id: 29180355132
-      run_number: 200
+      pull_request: 45
+      run_id: 29185669224
+      run_number: 207
       conclusion: success
-      unified_total: 181
+      unified_total: 215
       failed: 0
 ```
 
@@ -715,9 +744,9 @@ multi-generation DAG/deep-scope first slice integrated; arbitrary graph/full sco
 full natural-language trigger/negation/exception context parser未実装
 common parser first slice integrated; full YAML/KDSL semantic parser未実装
 R1C multiline JSON adapter integrated
+R1C optional-block structural/deep lint first slice integrated
 R1C full semantic equivalence proof
-R1C optional SAFETY_GATES dedicated round-trip
-R1C optional EVIDENCE/AUTHORITY deep lint
+R1C ANNUNCIATOR full value-semantic consistency proof
 Packet full YAML/semantic parser
 Packet Safety Gate state/evidence deep lint
 Normalization semantic/property proofなし
@@ -1070,8 +1099,7 @@ Do not present as:
 
 ```text
 P0: required KDSL Validation check activation / issue #39
-P1: Phase 3 R1C deep optional-block round-trip / Evidence / Authority
-P2: Phase 4 Packet / Normalization semantic-property proof
-P3: Phase 5 public-facing v2 hardening / release-readiness review
+P1: Phase 4 Packet / Normalization semantic-property proof
+P2: Phase 5 public-facing v2 hardening / release-readiness review
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

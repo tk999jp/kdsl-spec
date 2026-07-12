@@ -19,6 +19,7 @@ spec/packet/kdsl-packet-schema.md
 spec/packet/kdsl-packet-normalization-contract.md
 spec/r1/r1-result-spec.md
 spec/r1/r1c-compact-result-schema.md
+spec/r1/r1c-optional-block-contract.md
 spec/bridge/kdsl-adps-bridge.md
 spec/bridge/kdsl-cp-packet-bridge.md
 spec/registry/kdsl-safety-gate-registry.md
@@ -125,11 +126,17 @@ kdsl_r1c.py:
   NEXT proposal_only lint
   COMMIT actual/proposed/permission basis lint
 
+kdsl_r1c_optional.py:
+  EVIDENCE exact classification/cross-field lint
+  AUTHORITY rail vs FILES/CMD/COMMIT lint
+  ANNUNCIATOR structural lint
+  SAFETY_GATES deep record lint
+
 kdsl_r1c_roundtrip.py:
   canonical Full R1 structural projection/reconstruction
   scalar/array/class/order preservation
   optional EVIDENCE/AUTHORITY/ANNUNCIATOR preservation
-  optional SAFETY_GATES safe block
+  optional EVIDENCE/AUTHORITY/ANNUNCIATOR/SAFETY_GATES structural preservation
   no semantic-equivalence/authority claim
 
 kdsl_packet.py:
@@ -209,6 +216,13 @@ R1C structural round-trip first slice integrated:
   pull_request: 34
   workflow_run: 179 / success
 
+R1C deep optional-block Phase 3 integrated:
+  previous unified: 181 / failed: 0
+  optional-block suite: 34 / failed: 0
+  unified total: 215 / failed: 0
+  pull_request: 45
+  workflow_run: 207 / success
+
 Common parser / unified validation Phase 1 integrated:
   core suite: 108 / failed: 0
   Safety Gate suite: 14 / failed: 0
@@ -253,6 +267,8 @@ tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
 tools/validator/verification/kdsl_packet_roundtrip_verify.md
 tools/validator/verification/kdsl_common_parser_verify.md
+docs/reviews/kdsl-phase3-r1c-deep-optional.md
+tools/validator/kdsl-r1c-optional-implementation-notes.md
 ```
 
 ## 目的
