@@ -32,6 +32,9 @@ canonical R1:
 
 v2-draft serialization:
   spec/r1/r1c-compact-result-schema.md
+
+Phase 3 subordinate optional-block contract:
+  spec/r1/r1c-optional-block-contract.md
 ```
 
 Conflict rule:
@@ -92,6 +95,8 @@ SAFETY_GATES
 ```
 
 Optional blocks retain their canonical names. No alias is defined in this candidate.
+
+Phase 3 deep optional validation and round-trip rules are defined in `spec/r1/r1c-optional-block-contract.md`.
 
 ## 4. No-alias rule
 
@@ -478,8 +483,11 @@ schema: kdsl-r1c@0.1-draft
 status: v2-draft adopted
 canonical: v2-draft subordinate to spec/r1/r1-result-spec.md
 validator: first heuristic slice integrated
-structural_round_trip: first slice integrated
-optional_safety_gates_round_trip: blocked
+deep_optional_validator: Phase 3 first slice integrated
+structural_round_trip: Phase 3 optional-block first slice integrated
+optional_evidence_authority_round_trip: structural_pass first slice
+optional_safety_gates_round_trip: structural_pass first slice
+annunciator_round_trip: structural-only first slice
 semantic_equivalence: not_proven
 main integration: yes
 stable/public-ready effect: none
