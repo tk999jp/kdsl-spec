@@ -194,14 +194,14 @@ validator pass != release readiness
 
 ## Public examples
 
-External-facing examples are under [`examples/public/`](examples/public/README.md).
+External-facing examples are under [`examples/public/`](examples/public/README.md). Representative R1 examples:
 
 ```text
 examples/public/r1_result_valid.example.md
 examples/public/r1_result_authority_guard.example.md
 ```
 
-Examples are not Core specification and do not grant execution, commit, push, release, or Runtime authority.
+The directory README lists all public examples. Examples are not Core specification and do not grant execution, commit, push, release, or Runtime authority.
 
 ## Release policy
 
