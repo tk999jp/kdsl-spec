@@ -1,10 +1,11 @@
 # Phase 5 — Public README / R1 Quickstart / Public Examples
 
-status: implementation-candidate
+status: reviewed-integration-candidate
 review_date: 2026-07-12
 branch: agent/kdsl-phase5-public-readme-r1-quickstart
 target: main
 base: 49b6c865af046d44efc04a46d851aed55d222a61
+pull_request: 51
 
 ## Scope
 
@@ -79,6 +80,32 @@ examples/public/* != RT:v evidence
 examples/public/* != commit/push/release authority
 ```
 
+## Manual review
+
+```text
+changed paths limited to public entry/guide/example/readiness/review files
+README relative links resolved to existing repository paths
+public examples contain no MidFD/private project dependency
+public example listing clarified as representative, not exhaustive
+obsolete public-facing README draft retained through Git history and replaced by superseded pointer
+RT/NEXT/COMMIT/KDSL-DP/Packet boundaries retained
+```
+
+## Validation evidence
+
+```text
+workflow: KDSL Validation
+candidate_pr: 51
+run_number: 241
+conclusion: success
+jobs:
+  KDSL Validation: success
+  Packet Semantic Property: success
+unified_expected_total: 257
+```
+
+Final-head rerun remains required after review-record updates.
+
 ## Validator/release boundaries
 
 ```text
@@ -108,8 +135,7 @@ canonical P1/P1L schema推測なし
 ## Remaining Phase 5 work
 
 ```text
-latest branch CI
-manual cross-file link and safety review
+final-head CI
 required KDSL Validation check activation / issue #39
 final release-readiness review
 operational status closeout
