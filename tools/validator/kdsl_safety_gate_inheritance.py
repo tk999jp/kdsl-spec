@@ -10,13 +10,14 @@ from kdsl_safety_gate import (
     is_blank,
     parse_registry,
 )
+from kdsl_safety_semantics import REEVALUATION_RE, scope_relation
 
 RESOLUTION_WORDING = re.compile(
     r'resolved|resolution|解消|解除|原因除去|再確認|再評価|充足確認|verified',
     re.IGNORECASE,
 )
 SATISFACTION_WORDING = re.compile(
-    r'confirmed|verified|確認済|充足|resolved|解消|根拠',
+    r'confirmed|verified|確認済|充足|resolved|解消|根拠|再評価',
     re.IGNORECASE,
 )
 
@@ -117,10 +118,20 @@ def main(argv):
                 warnings.append(f'{gate_id}: parent na must be re-evaluated in child; copied reason detected')
 
         elif parent_state == 'satisfied' and child_state == 'satisfied':
-            parent_scope = str(parent_entry.get('scope', '')).strip()
-            child_scope = str(child_entry.get('scope', '')).strip()
-            if parent_scope != child_scope:
-                warnings.append(f'{gate_id}: satisfied scope changed; re-evaluate evidence and authority')
+            relation = scope_relation(parent_entry.get('scope', ''), child_entry.get('scope', ''))
+            if relation in {'widened', 'overlap', 'disjoint'}:
+                if not REEVALUATION_RE.search(basis) or is_blank(child_entry.get('evidence')):
+                    errors.append(
+                        f'{gate_id}: satisfied scope {relation}; explicit re-evaluation evidence required'
+                    )
+                else:
+                    info.append(f'{gate_id}: satisfied scope {relation} re-evaluated')
+            elif relation == 'unknown':
+                warnings.append(f'{gate_id}: satisfied scope relation unknown; re-evaluate evidence and authority')
+            elif relation == 'narrowed':
+                info.append(f'{gate_id}: satisfied scope narrowed')
+            else:
+                info.append(f'{gate_id}: satisfied scope preserved')
 
     info.append('parent aggregate state: ' + aggregate_state(parent.values()))
     info.append('child aggregate state: ' + aggregate_state(child.values()))
