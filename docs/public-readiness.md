@@ -30,14 +30,20 @@ workflow: .github/workflows/validator.yml
 workflow_name: KDSL Validation
 unified_runner: python tools/validator/run_all_samples.py
 focused_job: Packet Semantic Property
-latest_verified_merged_pr: #50
-latest_verified_merged_run: #239 / success
-current_candidate_pr: #51
-current_candidate_run: #241 / success
+latest_verified_merged_pr: #50 / success
+current_candidate_pr: #51 / validation success recorded in PR
 unified_expectations: 257
 failed: 0
 required_check_activation: pending / issue #39
 validator_authority: non_authoritative
+```
+
+Merge condition for each candidate:
+
+```text
+latest candidate HEADのKDSL Validation成功必須
+latest candidate HEADのPacket Semantic Property成功必須
+過去run成功のみで最新HEAD成功扱禁止
 ```
 
 境界:
