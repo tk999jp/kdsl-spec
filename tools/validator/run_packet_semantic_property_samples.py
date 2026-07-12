@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 import tempfile
@@ -77,6 +78,16 @@ def replace_once(text: str, old: str, new: str) -> str:
     return text.replace(old, new, 1)
 
 
+def mutate_digest(text: str) -> str:
+    match = re.search(r'sha256:([0-9a-f]{64})', text)
+    if match is None:
+        raise AssertionError('digest mutation anchor not found')
+    digest = match.group(1)
+    first = '0' if digest[0] != '0' else '1'
+    mutated = first + digest[1:]
+    return text[:match.start(1)] + mutated + text[match.end(1):]
+
+
 def main() -> int:
     source = SOURCE.read_text(encoding='utf-8')
     normalization = generate_normalization(SOURCE)
@@ -106,7 +117,7 @@ def main() -> int:
     results.append(run_text('SG hold granting authority rejected', 'kdsl_packet_semantic.py', replace_once(source, '      authority: "not_established"', '      authority: "allow"'), 2, ('hold conflicts with granting authority',)))
     results.append(run_text('duplicate SG ID rejected', 'kdsl_packet_semantic.py', replace_once(source, '    - id: SG-RUNTIME', '    - id: SG-SCOPE'), 2, ('duplicate Packet Safety Gate ID',)))
     results.append(run_text('scope protected wording weakening rejected', 'kdsl_packet_semantic.py', replace_once(source, 'TGT外変更禁止', 'TGT外変更可能'), 2, ('protected concept weakened',)))
-    results.append(run_text('evidence protected wording weakening rejected', 'kdsl_packet_semantic.py', replace_once(source, '未確認を確認済扱い禁止', '未確認を確認済扱い可能'), 2, ('bounded semantic concept missing',)))
+    results.append(run_text('evidence protected wording weakening rejected', 'kdsl_packet_semantic.py', replace_once(source, '未確認を確認済扱い禁止', '未確認を確認済扱い可能'), 2, ('protected concept weakened',)))
     results.append(run_text('runtime non-substitution weakening rejected', 'kdsl_packet_semantic.py', replace_once(source, 'build/diff/lint/test/CI pass != RT:v', 'build pass = RT:v'), 2, ('protected concept weakened',)))
     results.append(run_text('KDSL-DP direct execution weakening rejected', 'kdsl_packet_semantic.py', replace_once(source, 'KDSL-DP直接実行禁止', 'KDSL-DP直接実行可能'), 2, ('protected concept weakened',)))
     blocked_change = replace_once(source, '    - id: SG-RUNTIME\n      state: hold', '    - id: SG-RUNTIME\n      state: blocked')
@@ -119,25 +130,44 @@ def main() -> int:
     results.append(run_text('VERIFY completed claim rejected', 'kdsl_packet_semantic.py', replace_once(source, '  - "relevant unit tests"', '  - "unit tests passed"'), 2, ('must describe a requirement',)))
     results.append(run_text('Packet normalized self-claim rejected', 'kdsl_packet_semantic.py', replace_once(source, '  state: not_normalized', '  state: normalized'), 2, ('base Packet checker failed',)))
 
-    results.append(run_property_text('property digest mismatch detected', source, replace_once(normalization, 'sha256:', 'sha256:0'), 2, ('source digest mismatch',)))
+    results.append(run_property_text('property digest mismatch detected', source, mutate_digest(normalization), 2, ('source digest mismatch',)))
     duplicate_map = replace_once(normalization, '    - source: STATUS', '    - source: SCHEMA\n      target: "duplicate"\n      mode: exact\n      evidence: "duplicate"\n    - source: STATUS')
     results.append(run_property_text('duplicate MAP source detected', source, duplicate_map, 2, ('duplicate MAP source entries',)))
     missing_map = normalization.replace('    - source: NORMALIZE\n      target: "normalization provenance"\n      mode: exact\n      evidence: "Phase 4 strict mapper preserves source field and reconstruction property"\n', '')
-    results.append(run_property_text('missing MAP source detected', source, missing_map, 2, ('MAP missing Packet fields: NORMALIZE',)))
+    results.append(run_property_text('missing MAP source detected', source, missing_map, 2, ('resolved target missing Packet field accounting: NORMALIZE',)))
     results.append(run_property_text('MAP mode policy mutation detected', source, replace_once(normalization, '    - source: SG\n      target: "Safety Gates/禁止"\n      mode: expanded', '    - source: SG\n      target: "Safety Gates/禁止"\n      mode: exact'), 2, ('MAP mode mismatch: SG',)))
     results.append(run_property_text('PRESERVE exact string loss detected', source, replace_once(normalization, '    - "src/Example.cs"\n', ''), 2, ('PRESERVE.exact_strings missing',)))
-    results.append(run_property_text('PRESERVE protected wording loss detected', source, replace_once(normalization, '    - "TGT外変更禁止"\n', ''), 2, ('PRESERVE.protected_wording missing',)))
+    protected_loss = replace_once(
+        normalization,
+        '  protected_wording:\n    - "TGT外変更禁止"\n',
+        '  protected_wording:\n',
+    )
+    results.append(run_property_text('PRESERVE protected wording loss detected', source, protected_loss, 2, ('PRESERVE.protected_wording missing',)))
     results.append(run_property_text('PRESERVE ordered field mutation detected', source, replace_once(normalization, 'FLOW-READ>FLOW-ANALYZE>FLOW-GATE>FLOW-CHANGE>FLOW-VERIFY>FLOW-REPORT', 'FLOW-ANALYZE>FLOW-READ>FLOW-GATE>FLOW-CHANGE>FLOW-VERIFY>FLOW-REPORT'), 2, ('PRESERVE.ordered_fields missing or changed',)))
     results.append(run_property_text('preview Safety Gate record loss detected', source, replace_once(normalization, 'scope=src/Example.cs', 'scope=src/Other.cs'), 2, ('Safety Gate record not exactly represented',)))
-    results.append(run_property_text('preview FLOW detail loss detected', source, replace_once(normalization, 'Inspect exact READ references', 'Inspect references'), 2, ('exact source strings missing from preview',)))
+    preview_flow_detail_loss = replace_once(
+        normalization,
+        '    - FLOW-READ: Inspect exact READ references',
+        '    - FLOW-READ: Inspect references',
+    )
+    results.append(run_property_text('preview FLOW detail loss detected', source, preview_flow_detail_loss, 2, ('exact source strings missing from preview',)))
     flow_order_changed = replace_once(normalization, '    - FLOW-READ: Inspect exact READ references\n    - FLOW-ANALYZE: Separate observation from inference', '    - FLOW-ANALYZE: Separate observation from inference\n    - FLOW-READ: Inspect exact READ references')
     results.append(run_property_text('preview FLOW order mutation detected', source, flow_order_changed, 2, ('FLOW opcode/detail order changed',)))
     stop_order_changed = replace_once(normalization, '    - Unexpected diff outside TGT\n    - Root cause remains unconfirmed', '    - Root cause remains unconfirmed\n    - Unexpected diff outside TGT')
     results.append(run_property_text('preview STOP order mutation detected', source, stop_order_changed, 2, ('STOP order changed',)))
-    verify_order_changed = replace_once(normalization, '    - git diff --check\n    - relevant unit tests', '    - relevant unit tests\n    - git diff --check')
+    verify_order_changed = replace_once(
+        normalization,
+        '    検証要求:\n    - git diff --check\n    - relevant unit tests',
+        '    検証要求:\n    - relevant unit tests\n    - git diff --check',
+    )
     results.append(run_property_text('preview VERIFY order mutation detected', source, verify_order_changed, 2, ('VERIFY order changed',)))
     results.append(run_property_text('preview authority widening detected', source, replace_once(normalization, '    - push: forbid', '    - push: allow'), 2, ('authority rail missing or widened',)))
-    results.append(run_property_text('preview result schema loss detected', source, replace_once(normalization, '    - kdsl-r1c@0.1-draft', '    - canonical-r1'), 2, ('result schema missing from preview',)))
+    result_schema_loss = replace_once(
+        normalization,
+        '    報告形式:\n    - kdsl-r1c@0.1-draft',
+        '    報告形式:\n    - canonical-r1',
+    )
+    results.append(run_property_text('preview result schema loss detected', source, result_schema_loss, 2, ('result schema missing from preview',)))
     results.append(run_property_text('executable preview marker rejected', source, replace_once(normalization, 'KDSL_PROMPT_PREVIEW:', 'KDSL_PROMPT:'), 2, ('normalization artifact failed base checker',)))
     results.append(run_property_text('semantic equivalence claim rejected', source, replace_once(normalization, 'semantic_equivalence: not_proven', 'semantic_equivalence: proven'), 2, ('normalization artifact failed base checker',)))
 
