@@ -1,10 +1,10 @@
 # Public Readiness Notes
 
-status: v2-draft-hardening
+status: phase5-public-hardening-integrated
 last_updated: 2026-07-12
 project_status: docs/project-status.md
 public_recommendation: experimental_preview_only
-stable_recommendation: not_yet
+stable_recommendation: not_ready
 license: MIT
 
 ## 1. Current decision
@@ -20,185 +20,235 @@ tag: v1.1.0-rc1
 license: MIT
 ```
 
-現時点の判断は「公開済み experimental preview」とする。
-正式なpublic-ready/stable releaseではない。
+Phase 5のpublic-facing hardeningは統合済みです。
+ただし、これはpublic-ready/stable release承認ではありません。
 
-## 2. Current validation evidence
+```text
+public documentation hardening: complete
+stable readiness: not_ready
+stable/public-ready authority: none
+```
+
+## 2. Phase 5 integration evidence
+
+### Slice 1 — Core / Glossary / Converter synchronization
+
+```text
+pull_request: 50
+squash_commit: 49b6c865af046d44efc04a46d851aed55d222a61
+workflow_run: #239
+conclusion: success
+scope:
+  Core formal profile/lexicon/envelope axes
+  rulebook legacy boundary
+  Glossary synchronization
+  Converter GitHub source priority
+  A-G / CompactPrompt / KDSL-CP漢 / CP-Lift
+  protected lint gates
+```
+
+### Slice 2 — Public guide / R1 Quickstart / examples
+
+```text
+pull_request: 51
+squash_commit: 442d53226c7d0fd000ed1f93efc28ccbb367b129
+workflow_run: #246
+conclusion: success
+scope:
+  root README public entry
+  v2 overview
+  R1 quickstart
+  public example non-normative boundary
+  R1 RT/NEXT/COMMIT example correction
+  KDSL-DP normalization-path correction
+  obsolete README draft retirement
+```
+
+Validation scope:
 
 ```text
 workflow: .github/workflows/validator.yml
-workflow_name: KDSL Validation
-unified_runner: python tools/validator/run_all_samples.py
-focused_job: Packet Semantic Property
-latest_verified_merged_pr: #50 / success
-current_candidate_pr: #51 / validation success recorded in PR
+jobs:
+  KDSL Validation
+  Packet Semantic Property
 unified_expectations: 257
 failed: 0
-required_check_activation: pending / issue #39
 validator_authority: non_authoritative
 ```
 
-Merge condition for each candidate:
+## 3. Completed public-facing criteria
 
 ```text
-latest candidate HEADのKDSL Validation成功必須
-latest candidate HEADのPacket Semantic Property成功必須
-過去run成功のみで最新HEAD成功扱禁止
+public-facing README: integrated
+introductory overview: integrated
+Core/Profile/Glossary formal axes: synchronized
+Converter source priority and A-G contract: synchronized
+minimal public examples: separated and non-normative
+KDSL-DP direct-execution warning: prominent
+Packet non-executable warning: prominent
+R1 quickstart: integrated
+validator maturity/limitations: explicit
+example/template authority warning: explicit
+sample expectation runner: configured
+GitHub Actions workflow: configured
+existing tag movement prohibition: retained
+Release Assets prohibition: retained
 ```
 
-境界:
+## 4. Stable/public-ready blockers
+
+### P0 repository enforcement
+
+```text
+required KDSL Validation check activation: pending
+tracking: issue #39
+workflow exists: yes
+workflow success history: yes
+repository ruleset enforcement: not confirmed
+```
 
 ```text
 workflow success != required-check activation
-validator pass != semantic equivalence proof
-validator pass != complete safety proof
-validator pass != RT:v
-validator pass != U承認
-validator pass != release readiness
+issue creation != required-check activation
 ```
 
-## 3. Phase 5 public-facing candidates
+### Specification maturity
 
 ```text
-Core formal axes sync: main integrated by PR #50
-Glossary formal axes sync: main integrated by PR #50
-Converter GitHub source priority/A-G/CP-Lift sync: main integrated by PR #50
-External README simplification: PR #51 candidate
-Introductory overview refresh: PR #51 candidate
-R1 quickstart: PR #51 candidate
-Public example boundary guide: PR #51 candidate
-Public R1 examples current-contract alignment: PR #51 candidate
-KDSL-DP normalization-path correction: PR #51 candidate
-obsolete public README draft retirement: PR #51 candidate
+full YAML/KDSL semantic parser: not implemented
+full natural-language negation/exception reasoning: not implemented
+full semantic equivalence proof: not proven
+complete safety proof: not proven
+Packet normalization completion: not proven
+KDSL-Packet: non-executable
+canonical P1/P1L target schema: unresolved
 ```
 
-Candidate integration does not change stable/public-ready status.
+These gaps do not invalidate the experimental preview. They prevent claiming production-grade proof or executable Packet readiness.
 
-## 4. Reasons not to treat as stable yet
+### Release authority
 
 ```text
-仕様がdraft/preview段階
-validatorはpartial heuristic lint helpers
-public-facing documentsはPhase 5 review中
-用語の一部が内部運用寄り
-full YAML/KDSL semantic parserなし
-full natural-language negation/exception reasoningなし
-full semantic equivalence/safety proofなし
-KDSL-Packetはnon-executable
-required KDSL Validation repository setting未設定
-release-readiness final review未完了
-U stable/public-ready明示承認なし
+U stable/public-ready explicit approval: not granted
+stable tag creation authority: none
+release authority: none
+Release Assets authority: none
 ```
 
-## 5. Publicization risks
+## 5. Release-readiness decision
 
 ```text
-未成熟な仕様が外部にstable/canonical standard扱いされる
-KDSL-DPを実行指示と誤解される
-Packet draftを実行契約と誤解される
-RT:v条件が簡略化され、build/test passと混同される
+review_status: complete
+public_experimental_preview: continue
+public_ready: no
+stable_release: no
+release_candidate_promotion: no
+Packet executable promotion: no
+```
+
+Reason:
+
+```text
+public-facing documentation is sufficient for experimental preview use
+required repository enforcement remains pending
+validator remains non-authoritative/partial
+semantic/safety completion is not proven
+stable/public-ready U approval is absent
+```
+
+## 6. Publicization risks retained
+
+```text
+experimental previewがstable/canonical standard扱いされる
+KDSL-DPが実行指示と誤解される
+Packet draftが実行契約と誤解される
+RT:vがbuild/test/CI passと混同される
 NEXT/COMMITの権限分離が抜ける
-AI coding promptのsafety gateが外部で弱化される
 validator passが承認/RT:v/release readinessの代替に見える
 public exampleが実行権限に見える
 ```
 
-## 6. Minimum before stable public release
-
-stable化前に必要:
-
-```text
-public-facing README確定
-introductory overview確定
-Core/Profile/Glossary正式値同期
-minimal public examples確定
-KDSL-DP boundary warning確認
-Packet non-executable boundary warning確認
-R1 quickstart確定
-validator maturity/limitations確認
-template/example non-normative warning確認
-sample expectation runner確認
-required KDSL Validation check activation
-stable tag/release policy確定
-release-readiness final review
-U明示承認
-```
-
-## 7. Candidate stable public package
+## 7. Public package for experimental preview
 
 ```text
 README.md
 LICENSE
 spec/core/*
 spec/profiles/*
-spec/r1/r1-result-spec.md
-spec/lint/kdsl-lint-checklist.md
-spec/bridge/kdsl-adps-bridge.md
+spec/lexicons/*
+spec/registry/*
+spec/packet/*
+spec/r1/*
+spec/lint/*
+spec/bridge/*
 spec/manifest.md
 spec/glossary.md
+spec/glossary-v2-draft.md
 docs/project-status.md
 docs/overview.md
 docs/r1-quickstart.md
+docs/public-readiness.md
 examples/public/*
 tools/validator/README.md
 tools/validator/run_all_samples.py
 .github/workflows/validator.yml
 ```
 
-Packet/R1C/Safety Semantics v2-draft subordinate filesをstable packageへ含めるかは、release-readiness reviewで別途判定する。
+The inclusion of v2-draft subordinate files does not promote them to stable/canonical executable specifications.
 
-## 8. Public messaging candidate
+## 8. Public messaging
 
 ```text
 KDSL is a safety-gate-preserving semi-structured prompt notation for Human-AI work contracts.
 R1 is an evidence-oriented result specification for reviewing AI-assisted work.
-This project is an experimental preview.
+This project is a public experimental preview, not a stable standard.
 Validator helpers are heuristic lint tools, not proof systems or release authorities.
 KDSL-Packet remains non-executable.
 License: MIT.
 ```
 
-日本語案:
+日本語:
 
 ```text
 KDSLは、AIへの作業指示から禁止・承認・未確認・停止条件を落とさないための半構造化prompt記法です。
 R1は、AIの作業結果を人間が検収可能にするための結果証跡仕様です。
-この仕様はexperimental previewです。
+このrepositoryは公開済みexperimental previewであり、stable standardではありません。
 validator helperはヒューリスティックなlint補助であり、証明器や承認者ではありません。
-KDSL-Packetは現在もnon-executableです。
+KDSL-Packetはnon-executableです。
 License: MIT。
 ```
 
-## 9. Public readiness checklist
+## 9. Final checklist
 
-| Check | Required for stable | Status |
-|---|---:|---|
-| LICENSE decided | yes | MIT |
-| External README | yes | candidate / PR #51 |
-| Introductory overview | yes | candidate / PR #51 |
-| Core/Profile/Glossary v2 alignment | yes | partial / Core+Glossary+Converter integrated |
-| Private examples excluded from candidate subset | yes | pass |
-| Public examples non-normative boundary | yes | candidate / PR #51 |
-| KDSL-DP warning prominent | yes | candidate / PR #51 |
-| Packet non-executable warning prominent | yes | candidate / PR #51 |
-| R1 quickstart | yes | candidate / PR #51 |
-| Validator implementation status clear | yes | candidate / heuristic |
-| Unified sample expectation runner | yes | 257 / failed 0 |
-| GitHub Actions workflow | yes | configured |
-| Required KDSL Validation check | yes | pending / issue #39 |
-| No public release assets | yes | pass |
-| Existing tag movement prohibited | yes | pass |
-| Stable tag/release policy | yes | partial |
-| Release-readiness review | yes | pending |
-| U explicit stable approval | yes | pending |
+| Check | Required for experimental preview | Required for stable | Status |
+|---|---:|---:|---|
+| LICENSE | yes | yes | pass / MIT |
+| Public README | yes | yes | pass |
+| Overview | yes | yes | pass |
+| Core/Profile/Glossary alignment | yes | yes | pass |
+| Public examples separated | yes | yes | pass |
+| KDSL-DP warning | yes | yes | pass |
+| Packet non-executable warning | yes | yes | pass |
+| R1 quickstart | yes | yes | pass |
+| Validator limitations clear | yes | yes | pass |
+| Unified sample runner | yes | yes | pass / 257 |
+| GitHub Actions workflow | yes | yes | pass |
+| Required KDSL Validation ruleset | no | yes | pending / issue #39 |
+| No Release Assets | yes | until approved | pass |
+| Existing tag movement prohibited | yes | yes | pass |
+| Release-readiness review | yes | yes | complete / not_ready |
+| U explicit stable approval | no | yes | pending |
 
-## 10. Recommendation
+## 10. Next safe steps
 
 ```text
-Keep public experimental preview.
-Continue Phase 5 public-facing v2 hardening.
-Do not present as stable/public-ready.
-Do not attach Release Assets.
-Do not move existing tags.
-Do not create stable v1.1.0 without U explicit approval.
+P0: activate and verify required KDSL Validation check / issue #39
+P1: continue semantic/parser/safety proof maturation as separate phases
+Hold: stable tag/release/Release Assets/public-ready promotion
+```
+
+```text
+NEXT:=proposal only
+NEXT実行許可扱禁止
+stable/public-ready化→別途U明示承認必須
 ```
