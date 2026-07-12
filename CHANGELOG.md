@@ -6,6 +6,37 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Phase 4 Packet / Normalization semantic-property proof
+
+- Added `kdsl-packet-property@0.1-draft` subordinate property contract.
+- Added an explicit strict Packet semantic surface and `packet-semantic` wrapper target.
+- Added a non-executable strict normalization mapper preserving selected exact strings, Safety Gate records, flow/order, result schema, and authority rails.
+- Added source Packet × Normalization property comparison with section-scoped VERIFY/result-schema reconstruction checks.
+- Added 42 positive/negative/property expectations and a focused read-only CI job.
+- Expanded unified `KDSL Validation` from 215 to 257 expectations.
+
+Verification:
+
+```text
+pull_request: 48
+source_head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+workflow_run_id: 29191890776
+run_number: 224
+phase4_total: 42
+unified_total: 257
+failed: 0
+```
+
+Boundaries:
+
+```text
+SEMANTIC_EQUIVALENCE:not_proven
+FULL_SAFETY_PROOF:not_proven
+NORMALIZATION_COMPLETION:not_proven
+EXECUTION_AUTHORITY:none
+```
+
 #### Phase 3 R1C deep optional-block round-trip
 
 - Added `kdsl-r1c-optional-blocks@0.1-draft` subordinate contract.

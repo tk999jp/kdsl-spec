@@ -491,6 +491,31 @@ adapter_conclusion: success
 reason: clean replacement after temporary write-enabled workflow
 ```
 
+### PR #48 — Phase 4 Packet / Normalization semantic-property proof
+
+```yaml
+pull_request: 48
+merge_status: merged
+merge_method: squash
+source_branch: agent/kdsl-phase4-packet-semantic-property
+source_head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+model: kdsl-packet-property@0.1-draft
+workflow: KDSL Validation
+workflow_run_id: 29191890776
+workflow_run_number: 224
+workflow_conclusion: success
+previous_unified_total: 215
+phase4_property_total: 42
+unified_total: 257
+failed: 0
+semantic_equivalence: not_proven
+full_safety_proof: not_proven
+normalization_completion: not_proven
+execution_authority: none
+stable_effect: none
+```
+
 ### PR #45 — Phase 3 R1C deep optional-block round-trip
 
 ```yaml
@@ -595,6 +620,7 @@ Packet validator first slice:=main統合済み / 69 expectations verified
 Packet normalization contract/lint:=v2-draft adopted / non-executable
 Packet normalization validator/mapper first slice:=main統合済み / 93 expectations verified
 Packet normalization structural round-trip first slice:=main統合済み / 108 expectations verified
+Packet/Normalization semantic-property Phase 4:=main統合済み / 42 property expectations / 257 unified verified
 KDSL-Packet:=non-executable / normalization required
 stable/tag/release/Release Assets操作:=別途U明示承認必須
 ```
@@ -618,7 +644,7 @@ r1c:
   full_r1_fallback: required by candidate
   validator: first heuristic slice integrated
   structural_round_trip: first_slice_integrated
-  optional_safety_gates_round_trip: blocked
+  optional_safety_gates_round_trip: structural_pass_first_slice_phase3
   semantic_equivalence: not_proven
   manifest_bridge_glossary_alignment: integrated by PR #8
 ```
@@ -649,6 +675,9 @@ packet:
   normalization_status: v2_draft_adopted_non_executable
   normalization_lint: adopted
   normalization_validator_mapper: first_slice_integrated_non_executable
+  semantic_property_model: kdsl-packet-property@0.1-draft
+  semantic_property_validator: phase4_strict_first_slice_integrated
+  property_pass_scope: selected_properties_only
   semantic_equivalence: not_proven
   normalize_required: true
   packet_state: not_normalized
@@ -683,6 +712,7 @@ validator:
     - safety-semantics
     - r1c
     - packet
+    - packet-semantic
     - normalization
     - all
   current_main_scope:
@@ -708,9 +738,11 @@ validator:
     - Full R1 fallback/out-of-scope separation
     - Packet envelope/field/order lint
     - Packet registry/ID/gate/flow/authority/normalization lint
+    - Packet strict OBS/Safety Gate/FLOW/authority bounded semantic lint
     - Packet out-of-scope separation
     - Normalization envelope/source/target/map/loss/authority/output lint
     - Non-executable structural mapper
+    - strict source-to-preview exact/protected/order/authority/result property comparison
   ci:
     workflow: .github/workflows/validator.yml
     workflow_name: KDSL Validation
@@ -724,15 +756,16 @@ validator:
       - python tools/validator/run_safety_semantics_samples.py
       - python tools/validator/run_safety_semantics_examples.py
       - python tools/validator/run_r1c_optional_samples.py
-    expected_unified_total: 215
+      - python tools/validator/run_packet_semantic_property_samples.py
+    expected_unified_total: 257
     required_check_activation: pending
     required_check_issue: 39
     latest_pr_validation:
-      pull_request: 45
-      run_id: 29185669224
-      run_number: 207
+      pull_request: 48
+      run_id: 29191890776
+      run_number: 224
       conclusion: success
-      unified_total: 215
+      unified_total: 257
       failed: 0
 ```
 
@@ -747,11 +780,32 @@ R1C multiline JSON adapter integrated
 R1C optional-block structural/deep lint first slice integrated
 R1C full semantic equivalence proof
 R1C ANNUNCIATOR full value-semantic consistency proof
-Packet full YAML/semantic parser
-Packet Safety Gate state/evidence deep lint
-Normalization semantic/property proofなし
-Packet Safety Gate completeness/inheritance proof
-Packet OUT/R1C integration lint
+Packet strict bounded semantic/property first slice integrated; full YAML/natural-language semantic equivalence proof未実装
+Packet Safety Gate state/evidence/authority strict first slice integrated; arbitrary cross-document completeness/inheritance proof未実装
+Normalization selected property comparison integrated; full normalization semantic proof/normalization completion proofなし
+Packet OUT result-schema section property integrated; full R1/R1C semantic integration proofなし
+```
+
+### Phase 4 Packet / Normalization semantic-property proof
+
+```yaml
+pull_request: 48
+source_head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+model: kdsl-packet-property@0.1-draft
+workflow: KDSL Validation
+workflow_run_id: 29191890776
+run_number: 224
+conclusion: success
+previous_unified_total: 215
+phase4_property_total: 42
+unified_total: 257
+failed: 0
+semantic_equivalence: not_proven
+full_safety_proof: not_proven
+normalization_completion: not_proven
+execution_authority: none
+meaning: selected bounded source/preview properties only; not full semantic/safety/normalization/authority proof
 ```
 
 ### Phase 2 Safety Semantics / multi-generation inheritance
@@ -913,6 +967,26 @@ optional_safety_gates: blocked
 meaning: selected structural properties only; not Full R1 semantic/safety/authority proof
 ```
 
+### Packet / Normalization semantic-property Phase 4
+
+```yaml
+pull_request: 48
+source_branch: agent/kdsl-phase4-packet-semantic-property
+source_head: ea982099bd5b99862191e0792e15cd501c4cc4f4
+squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
+workflow_run_id: 29191890776
+run_number: 224
+conclusion: success
+phase4_property_total: 42
+phase4_property_failed: 0
+unified_runners: 8
+unified_total: 257
+unified_failed: 0
+full_kdsl_selected_properties: property_pass
+p1_p1l: blocked
+meaning: selected source/preview property evidence; not semantic-equivalence/safety/normalization-completion/execution proof
+```
+
 ### Packet normalization structural round-trip first slice
 
 ```yaml
@@ -1041,6 +1115,8 @@ tools/validator/verification/kdsl_packet_verify.md
 tools/validator/verification/kdsl_packet_normalization_verify.md
 tools/validator/verification/kdsl_packet_roundtrip_verify.md
 tools/validator/verification/kdsl_common_parser_verify.md
+docs/reviews/kdsl-phase4-packet-normalization-property.md
+tools/validator/kdsl-packet-semantic-property-implementation-notes.md
 docs/reviews/kdsl-phase2-safety-semantics.md
 tools/validator/kdsl-safety-semantics-implementation-notes.md
 docs/reviews/kdsl-packet-validator-first-slice.md
@@ -1063,10 +1139,11 @@ full natural-language semantic parserなし
 full negation/exception reasoningなし
 protected wording full semantic equivalence proofなし
 multi-generation DAG/deep-scope first slice統合済み / arbitrary graph/full scope proofなし
-R1C full semantic equivalence proofなし / optional SAFETY_GATES round-trip blocked
-Packet full YAML/semantic parserなし
-Normalization semantic/property proofなし
-Packet Safety Gate completeness/inheritance proofなし
+R1C full semantic equivalence proofなし / optional SAFETY_GATES structural round-trip Phase 3 first slice統合済み
+Packet strict bounded semantic/property Phase 4 first slice統合済み
+Packet full YAML/natural-language semantic equivalence proofなし
+Normalization full semantic/property/normalization-completion proofなし
+Packet arbitrary cross-document Safety Gate completeness/inheritance proofなし
 KDSL-Packetはv2-draft adopted / non-executable
 v2 public-facing overview未確定
 KDSL Validation workflow/check実装済み / required repository setting未設定 issue #39
@@ -1099,7 +1176,6 @@ Do not present as:
 
 ```text
 P0: required KDSL Validation check activation / issue #39
-P1: Phase 4 Packet / Normalization semantic-property proof
-P2: Phase 5 public-facing v2 hardening / release-readiness review
+P1: Phase 5 public-facing v2 hardening / release-readiness review
 Hold: v1.1.0 stable / tag / release / Release Assets
 ```

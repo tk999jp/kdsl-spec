@@ -17,6 +17,7 @@ spec/lint/kdsl-packet-lint.md
 spec/lint/kdsl-packet-normalization-lint.md
 spec/packet/kdsl-packet-schema.md
 spec/packet/kdsl-packet-normalization-contract.md
+spec/packet/kdsl-packet-semantic-property-contract.md
 spec/r1/r1-result-spec.md
 spec/r1/r1c-compact-result-schema.md
 spec/r1/r1c-optional-block-contract.md
@@ -147,6 +148,25 @@ kdsl_packet.py:
   AUTHORITY/NORMALIZE/OUT boundary checks
   PKT:v1 and representative trigger checks
 
+kdsl_packet_semantic.py:
+  OBS explicit classification
+  Safety Gate state/evidence/authority strict checks
+  bounded protected-language checks
+  FLOW×authority/blocked-state consistency
+  VERIFY requirement/evidence separation
+
+kdsl_packet_normalize_semantic.py:
+  strict Packet semantic prerequisite
+  non-executable preview generation
+  full SG record / exact / protected / order / authority preservation evidence
+  P1/P1L unresolved blocking
+
+kdsl_packet_property.py:
+  source digest and all-17-field MAP comparison
+  exact/protected/order/property comparison
+  section-scoped VERIFY/result-schema checks
+  authority non-widening / LOSS/UNRESOLVED consistency
+
 kdsl_packet_normalization.py:
   NORMALIZATION_DRAFT schema/field/order checks
   source/target/map/preserve/loss/round-trip checks
@@ -161,10 +181,10 @@ kdsl_packet_normalize.py:
 
 kdsl_validate.py:
   common parser preflight
-  target wrapper: r1 / prompt / compact / safety-gate / safety-semantics / r1c / packet / normalization / all
+  target wrapper: r1 / prompt / compact / safety-gate / safety-semantics / r1c / packet / packet-semantic / normalization / all
 
 run_all_samples.py:
-  unified core/Safety Gate/R1C round-trip/parser/Safety Semantics runner
+  unified core/Safety Gate/R1C/Packet semantic-property runner
   missing summary or child-runner failure detection
 
 run_parser_samples.py:
@@ -223,6 +243,14 @@ R1C deep optional-block Phase 3 integrated:
   pull_request: 45
   workflow_run: 207 / success
 
+Packet / Normalization semantic-property Phase 4 integrated:
+  previous unified: 215 / failed: 0
+  strict semantic/property suite: 42 / failed: 0
+  unified total: 257 / failed: 0
+  pull_request: 48
+  workflow_run: 224 / success
+  model: kdsl-packet-property@0.1-draft
+
 Common parser / unified validation Phase 1 integrated:
   core suite: 108 / failed: 0
   Safety Gate suite: 14 / failed: 0
@@ -252,6 +280,7 @@ examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
 examples/packet/packet-design.example.md
+examples/packet/packet-semantic-property.example.md
 examples/packet/normalization-full-kdsl.example.md
 examples/packet/normalization-p1-blocked.example.md
 examples/packet/normalization-lossy-blocked.example.md
@@ -269,6 +298,8 @@ tools/validator/verification/kdsl_packet_roundtrip_verify.md
 tools/validator/verification/kdsl_common_parser_verify.md
 docs/reviews/kdsl-phase3-r1c-deep-optional.md
 tools/validator/kdsl-r1c-optional-implementation-notes.md
+docs/reviews/kdsl-phase4-packet-normalization-property.md
+tools/validator/kdsl-packet-semantic-property-implementation-notes.md
 ```
 
 ## 目的
@@ -291,7 +322,9 @@ R1C schema/field/type/order欠落検出
 R1C RT/NEXT/COMMIT境界検出
 R1C Full R1 fallback分離
 Packet envelope/registry/gate/flow/authority/normalization境界検出
+Packet strict OBS/Safety Gate/FLOW/authority bounded semantic検出
 Normalization mapping/loss/authority/output境界検出
+source Packet×preview selected property比較
 Non-executable structural preview生成
 共通source-spanned parser/ASTによる入力解釈統一
 multiline JSON-compatible R1C field処理
@@ -319,6 +352,7 @@ full YAML/KDSL semantic parserとして扱わない
 full negation parserとして扱わない
 release readinessを判定しない
 R1C canonical/stable promotionを判定しない
+Packet semantic/property passをfull semantic-equivalence/safety/normalization-completion proofとして扱わない
 Packet execution/normalization readinessを判定しない
 ```
 

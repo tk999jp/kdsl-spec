@@ -2,7 +2,7 @@
 
 status: v2-draft adopted
 canonical: v2-draft
-validator: not implemented
+validator: Phase 4 strict first slice integrated
 scope: kdsl-packet@0.1-draft / BASE / TASK / FLOW
 
 ## 1. Purpose
@@ -344,9 +344,11 @@ Packet NEXT/COMMIT authority shortcuts prohibited
 Current state:
 
 ```text
-Packet validator: not implemented
-sample runner coverage: not implemented
-Packet lint pass claim: prohibited until implementation/execution evidence
+Packet validator: first slice integrated
+Packet strict semantic validator: Phase 4 first slice integrated
+Packet semantic/property runner: 42 expectations / failed 0
+unified KDSL Validation: 257 expectations / failed 0
+Packet lint pass claim outside executed evidence: prohibited
 ```
 
 Future validator success will still not prove:
@@ -368,11 +370,10 @@ Before adopted/canonical/executable promotion:
 ```text
 manifest/Bridge/glossary ownership alignment
 registry ID freeze
-Packet parser/lint implementation
-positive/negative sample matrix
-normalization round-trip tests
-Safety Gate inheritance/composition tests
-Authority non-substitution tests
-R1C integration tests
+full YAML/natural-language semantic parser review
+arbitrary cross-document Safety Gate completeness/inheritance review
+full normalization semantic-equivalence review
+canonical P1/P1L schema and executable transformer review
+R1/R1C full semantic integration review
 U明示承認
 ```

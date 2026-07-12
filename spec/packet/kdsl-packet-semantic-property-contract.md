@@ -1,6 +1,6 @@
 # KDSL Packet Semantic Property Contract v0.1 Draft
 
-status: implementation-candidate
+status: v2-draft adopted subordinate
 model_id: kdsl-packet-property@0.1-draft
 packet_schema: kdsl-packet@0.1-draft
 normalization_schema: kdsl-packet-normalization@0.1-draft
@@ -318,9 +318,11 @@ No result from this contract authorizes direct use by an AI coding tool.
 ## 11. Current status
 
 ```text
-contract: implementation-candidate
-validator: Phase 4 candidate
-property suite target: 42 expectations
-unified target: 257 expectations
+contract: v2-draft adopted subordinate
+validator: Phase 4 strict first slice integrated
+property suite: 42 expectations / failed 0
+unified suite: 257 expectations / failed 0
+implementation PR: 48 / squash 47b15f9af3496dc36e14673cf0a681e3c333b098
+workflow run: 29191890776 / #224 / success
 stable/public-ready effect: none
 ```

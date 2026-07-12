@@ -2,7 +2,7 @@
 
 status: v2-draft adopted
 canonical: v2-draft
-validator: first-slice integrated
+validator: Phase 4 selected property first slice integrated
 scope: kdsl-packet-normalization@0.1-draft
 
 ## 1. Purpose
@@ -380,8 +380,10 @@ Current state:
 ```text
 normalization validator: first-slice integrated
 normalization mapper: first-slice integrated / non-executable preview only
-round-trip property tests: first-slice integrated / selected structural properties only
-lint pass claim: prohibited until implementation/execution evidence
+structural round-trip tests: first-slice integrated / selected structural properties only
+strict semantic/property comparison: Phase 4 integrated / 42 expectations / failed 0
+unified KDSL Validation: 257 expectations / failed 0
+lint/property pass claim outside executed evidence: prohibited
 ```
 
 Future validator success will still not prove:
@@ -402,12 +404,10 @@ Before adoption/tooling/executable generation:
 
 ```text
 manifest/Bridge/glossary ownership review
-positive/negative normalization sample matrix
-source digest tests
-Full KDSL mapping tests
-reconstruction/round-trip tests
-exact-string/protected-wording property tests
-Authority non-substitution tests
+additional target-profile property matrices
+full semantic-equivalence/safety-completeness review
+canonical P1/P1L target schema before related mapping
+executable transformer specification and independent authority review
 P1/P1L target schema adoption before mapping
 U明示承認
 ```

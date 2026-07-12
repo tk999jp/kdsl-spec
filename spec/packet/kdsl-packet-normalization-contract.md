@@ -44,7 +44,7 @@ The normalization artifact may be inspected, linted, or used as input to a later
 Core/Profile/R1/Bridge canonical meaning
 > adopted Packet schema/registries/lint
 > normalization contract/lint v2-draft mapping
-> examples/tools
+> semantic/property subordinate contract
 > examples/tools
 ```
 
@@ -460,6 +460,36 @@ previewに実行済/確認済/successを発明禁止
 
 A later executable transformer must be specified, reviewed, and approved separately.
 
+## 14.1 Phase 4 strict semantic/property comparison
+
+```text
+contract: spec/packet/kdsl-packet-semantic-property-contract.md
+model: kdsl-packet-property@0.1-draft
+strict mapper: tools/validator/kdsl_packet_normalize_semantic.py
+property checker: tools/validator/kdsl_packet_property.py
+```
+
+Selected properties:
+
+```text
+source digest
+all 17 MAP fields/mode policy
+exact strings/protected wording/ordered fields
+SG state/scope/reason/evidence/authority
+FLOW/STOP/VERIFY section order
+six authority rails
+OUT result schema in report-format section
+LOSS/UNRESOLVED consistency
+```
+
+```text
+property_pass != semantic equivalence
+property_pass != safety proof
+property_pass != normalization completion
+property_pass != execution authority
+P1/P1L unresolved→blocked / preview禁止
+```
+
 ## 15. Validity conditions
 
 A normalization draft is structurally valid only when:
@@ -503,12 +533,11 @@ Before validator/tooling/executable promotion:
 
 ```text
 manifest/Bridge/glossary ownership review
-normalization lint implementation
-positive/negative sample matrix
-Full KDSL structural mapper tests
-Packet reconstruction/round-trip tests
-exact-string/protected-wording property tests
-Authority non-substitution tests
+first-slice lint/mapper/property review
+full semantic-equivalence/safety-completeness review
+additional target-profile property matrices
+canonical P1/P1L target schema before related mapping
+executable transformer specification and independent authority review
 P1/P1L target schema adoption before related mapping
 U明示承認
 ```

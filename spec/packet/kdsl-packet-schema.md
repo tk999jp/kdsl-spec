@@ -33,6 +33,8 @@ executable: no
 PKT:v1使用禁止
 AI coding tool直接投入禁止
 normalization未完了→実行指示扱禁止
+strict property model: kdsl-packet-property@0.1-draft
+property_pass != semantic equivalence/safety proof/normalization completion/execution authority
 ```
 
 This schema may be reviewed, linted, summarized, or normalized. It must not be executed as written.
@@ -428,6 +430,37 @@ examples/packet/packet-design.example.md
 
 The example remains non-executable even when structurally valid.
 
+## 11.1 Phase 4 strict semantic/property surface
+
+```text
+contract: spec/packet/kdsl-packet-semantic-property-contract.md
+model: kdsl-packet-property@0.1-draft
+validator target: packet-semantic
+strict mapper: non-executable preview only
+property result: property_pass|blocked|fail
+```
+
+Selected checks:
+
+```text
+OBS classification
+SG id/state/scope/reason/evidence/authority
+bounded protected wording
+FLOW×authority/blocked-state consistency
+exact/protected/order preservation
+section-scoped VERIFY/result-schema preservation
+P1/P1L unresolved blocking
+```
+
+Boundary:
+
+```text
+property_pass != semantic equivalence
+property_pass != complete safety proof
+property_pass != normalization completion
+property_pass != execution authority
+```
+
 ## 12. Promotion gate
 
 Before any adopted/canonical/executable promotion:
@@ -435,12 +468,11 @@ Before any adopted/canonical/executable promotion:
 ```text
 manifest/Bridge/glossary ownership review
 BASE/TASK/FLOW registry adoption review
-Packet lint implementation
-validator sample suite
-normalization round-trip tests
-Safety Gate completeness tests
-Authority non-substitution tests
-R1C output integration tests
+Packet/Normalization first-slice tooling review
+full semantic-equivalence/safety-completeness review
+canonical P1/P1L target schema before related generation
+executable transformer specification and independent authority review
+R1/R1C full semantic output integration review
 U明示承認
 ```
 
