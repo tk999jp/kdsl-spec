@@ -1,9 +1,16 @@
 # Phase 3 — R1C Deep Optional-Block Round-Trip
 
-status: implementation-candidate
+status: completed / merged
 review_date: 2026-07-12
 branch: agent/kdsl-phase3-r1c-deep-optional
 target: main
+pull_request: 45
+source_head: 1fcd09cf13aaeb3aa54ed0194d443c962bbbd4b7
+squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
+closeout_work_pull_request: 46
+closeout_pull_request: 47
+workflow_run: 29185669224 / #207 / success
+unified_total: 215 / failed 0
 
 ## Scope
 
