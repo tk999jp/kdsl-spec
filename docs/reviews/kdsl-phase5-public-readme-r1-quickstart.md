@@ -91,20 +91,21 @@ obsolete public-facing README draft retained through Git history and replaced by
 RT/NEXT/COMMIT/KDSL-DP/Packet boundaries retained
 ```
 
-## Validation evidence
+## Validation contract
 
 ```text
 workflow: KDSL Validation
 candidate_pr: 51
-run_number: 241
-conclusion: success
 jobs:
-  KDSL Validation: success
-  Packet Semantic Property: success
+  KDSL Validation
+  Packet Semantic Property
 unified_expected_total: 257
+merge_gate:
+  latest PR HEADの両job成功必須
+  過去run成功のみで最新HEAD成功扱禁止
 ```
 
-Final-head rerun remains required after review-record updates.
+Successful earlier candidate runs are regression evidence only. The PR record must retain the exact final-head workflow run used for merge.
 
 ## Validator/release boundaries
 
@@ -135,7 +136,7 @@ canonical P1/P1L schema推測なし
 ## Remaining Phase 5 work
 
 ```text
-final-head CI
+latest PR HEAD CI success confirmation
 required KDSL Validation check activation / issue #39
 final release-readiness review
 operational status closeout
