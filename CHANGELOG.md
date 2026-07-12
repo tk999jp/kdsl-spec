@@ -6,6 +6,29 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Phase 1 common parser / unified validation foundation
+
+- Added a source-spanned `DocumentNode` / `EnvelopeNode` / `FieldNode` AST.
+- Added duplicate, tab-indentation, malformed multiline JSON, field-order, exact-text, and block-scalar handling.
+- Migrated R1C, Packet, Packet Normalization, and Safety Gate input parsing through common adapters.
+- Added `kdsl_parse.py`, parser/property samples, and `run_all_samples.py`.
+- Replaced fragmented CI entrypoints with the stable read-only `KDSL Validation` check.
+- Verified multiline R1C through parser CLI, semantic checker, and wrapper.
+
+Verification:
+
+```text
+work_pull_request: 37 / closed unmerged
+pull_request: 38
+source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
+squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+workflow_run_id: 29177082691
+run_number: 192
+unified_total: 147
+failed: 0
+required_check_activation: pending / issue #39
+```
+
 #### Packet normalization structural round-trip first slice
 
 - Added `tools/validator/kdsl_packet_roundtrip.py`.

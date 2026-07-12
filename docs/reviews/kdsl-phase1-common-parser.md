@@ -1,9 +1,21 @@
 # Phase 1 — Common Parser / Validation Foundation
 
-status: branch-validation-pending
+status: completed / merged
 review_date: 2026-07-12
 repository: tk999jp/kdsl-spec
 base: main@ca258df765a93ac7e1fed64a2d845897c78fa7cd
+work_pull_request: 37
+pull_request: 38
+source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
+squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+workflow_run_id: 29177082691
+workflow_run_number: 192
+job_id: 86608033032
+workflow_conclusion: success
+unified_total: 147
+failed: 0
+required_check_issue: 39
+required_check_activation: pending
 
 ## Scope
 
@@ -72,6 +84,17 @@ The connected GitHub tool can edit workflow files and PRs but does not expose re
 workflow/check implementation:=in scope
 required-check repository setting:=manual activation runbook
 activation status must not be claimed until GitHub settings evidence exists
+```
+
+## Integration result
+
+```text
+work PR #37:=closed without merge
+clean PR #38:=squash merged
+common parser adapters:=R1C/Packet/Normalization/Safety Gate
+multiline R1C:=parser CLI + checker + wrapper pass
+workflow/check:=KDSL Validation / contents:read
+required-check repository setting:=pending issue #39
 ```
 
 ## Non-actions

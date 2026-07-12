@@ -29,7 +29,10 @@ Packet validator: first heuristic slice integrated
 Packet normalization contract: kdsl-packet-normalization@0.1-draft / v2-draft adopted / non-executable
 Packet normalization validator/mapper: first-slice integrated / non-executable preview only
 Packet normalization structural round-trip: first-slice integrated / selected structural properties only
-validator sample suite: 108 expectations / failed 0
+Common parser/AST: Phase 1 integrated / source-spanned first slice
+major parser adapters: R1C / Packet / Packet Normalization / Safety Gate
+KDSL Validation unified suite: 147 expectations / failed 0
+required check activation: pending / issue #39
 validator_authority: non_authoritative
 ```
 
@@ -149,6 +152,11 @@ Validator:
   tools/validator/kdsl_packet_normalization.py
   tools/validator/kdsl_packet_normalize.py
   tools/validator/kdsl_packet_roundtrip.py
+  tools/validator/kdsl_parser.py
+  tools/validator/kdsl_parse.py
+  tools/validator/kdsl_parser_adapter.py
+  tools/validator/run_all_samples.py
+  tools/validator/run_parser_samples.py
   tools/validator/run_samples.py
   tools/validator/samples/*
   tools/validator/verification/*
@@ -376,23 +384,33 @@ python tools/validator/kdsl_validate.py --target packet <file>
 python tools/validator/kdsl_validate.py --target normalization <file>
 python tools/validator/kdsl_packet_normalize.py <packet-file>
 python tools/validator/kdsl_packet_roundtrip.py <packet-file> [normalization-file]
+python tools/validator/kdsl_parse.py --envelope <MARKER> [--json] <file>
 python tools/validator/kdsl_validate.py --target all <file>
 ```
 
-Current sample runner:
+Current unified runner:
 
 ```text
-python tools/validator/run_samples.py
+python tools/validator/run_all_samples.py
+
+component runners:
+  run_samples.py: 108
+  run_safety_gate_samples.py: 14
+  run_r1c_roundtrip_samples.py: 14
+  run_parser_samples.py: 11
 ```
 
 Latest CI evidence:
 
 ```text
-sample expectations: 69
+pull_request: 38
+source_head: 9fe8912b39e5df1b31b85e3302dfda35351f25c0
+squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+workflow/check: KDSL Validation
+workflow_run: #192 / success
+unified expectations: 147
 failed: 0
-workflow: .github/workflows/validator.yml
-latest Packet PR: #14
-latest Packet run: #116 / success
+required-check repository setting: pending / issue #39
 ```
 
 Repository examples included:
@@ -434,20 +452,21 @@ experimental/  正本ではない実験案
 ## Known limitations
 
 ```text
-full YAML/JSON/KDSL parserなし
+common source-spanned parser/AST first slice:=main integrated
+full YAML/KDSL semantic parserなし
 full natural-language semantic parserなし
 full negation parserなし
 protected wording semantic equivalence lintなし
-Safety Gate parent-child inheritance lintなし
-Safety Gate aggregate state lintなし
-R1C multi-line JSON lintなし
+Safety Gate pairwise inheritance/aggregate:=integrated; multi-generation/deep scope未実装
+R1C multiline JSON input:=common parser adapter integrated
 R1C round-trip semantic proofなし
 Packet validator first slice:=main integrated / 69 expectations verified
-Packet full YAML/semantic parserなし
+Packet full semantic parserなし
 Packet normalization validator/mapper first slice:=main integrated / 93 expectations verified
 Packet normalization structural round-trip first slice:=main integrated / 108 expectations verified
 Packet normalization semantic/property proofなし
 Packet Safety Gate completeness/inheritance proofなし
+required KDSL Validation check:=workflow ready / repository setting pending issue #39
 KDSL-Packet:=v2-draft adopted / non-executable
 ```
 
@@ -469,14 +488,19 @@ KDSL-Packet:=v2-draft adopted / non-executable
 
 ```text
 P0:
-  Safety Gate protected wording/inheritance validator拡張
+  required KDSL Validation check activation / issue #39
 
 P1:
-  R1C round-trip/property-based validator検討
+  Phase 2 Safety Semantics / multi-generation inheritance / bounded protected-language model
 
 P2:
-  public-facing v2 overview
-  CI required check / branch protection検討
+  Phase 3 R1C deep optional-block round-trip / Evidence / Authority
+
+P3:
+  Phase 4 Packet / Normalization semantic-property proof
+
+P4:
+  Phase 5 public-facing v2 hardening / release-readiness review
 
 Hold:
   v1.1.0 stable release
