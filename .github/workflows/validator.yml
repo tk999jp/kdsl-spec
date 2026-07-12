@@ -4,58 +4,52 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  phase4-closeout:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-phase4-packet-semantic-property-closeout'
-    name: Apply Phase 4 closeout
+  validation:
+    name: KDSL Validation
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
-      - name: Check out Phase 4 closeout branch
+      - name: Check out repository
         uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-phase4-packet-semantic-property-closeout
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
-      - name: Scope closeout carrier anchors
-        run: python .github/scripts/fix_phase4_closeout_carrier.py
+      - name: Show Python version
+        run: python --version
 
-      - name: Apply exact Phase 4 closeout
-        shell: bash
-        run: |
-          set -o pipefail
-          python .github/scripts/apply_phase4_closeout.py 2>&1 | tee phase4-closeout.log
-
-      - name: Upload closeout diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: phase4-closeout-${{ github.run_id }}
-          path: phase4-closeout.log
-
-      - name: Verify unified suite after closeout
+      - name: Run unified validator suite
         run: python tools/validator/run_all_samples.py
 
-      - name: Commit verified closeout
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          rm .github/scripts/apply_phase4_closeout.py .github/scripts/fix_phase4_closeout_carrier.py
-          git add CHANGELOG.md README.md docs/project-status.md docs/reviews/kdsl-phase4-packet-normalization-property.md spec/manifest.md spec/packet/kdsl-packet-schema.md spec/packet/kdsl-packet-normalization-contract.md spec/packet/kdsl-packet-semantic-property-contract.md spec/lint/kdsl-packet-lint.md spec/lint/kdsl-packet-normalization-lint.md tools/validator/README.md tools/validator/kdsl-packet-semantic-property-implementation-notes.md .github/scripts/apply_phase4_closeout.py .github/scripts/fix_phase4_closeout_carrier.py
-          git commit -m "Docs: align Phase 4 Packet property status"
-          git push origin HEAD:agent/kdsl-phase4-packet-semantic-property-closeout
+  packet-semantic-property:
+    name: Packet Semantic Property
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Run Packet semantic/property suite
+        run: python tools/validator/run_packet_semantic_property_samples.py
