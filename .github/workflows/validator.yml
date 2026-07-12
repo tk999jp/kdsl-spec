@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
@@ -16,7 +16,7 @@ concurrency:
 jobs:
   phase3-closeout:
     if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-phase3-r1c-deep-optional-closeout'
-    name: Apply Phase 3 closeout
+    name: Export Phase 3 closeout
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -37,51 +37,23 @@ jobs:
       - name: Verify unified suite after alignment
         run: python tools/validator/run_all_samples.py
 
-      - name: Restore read-only workflow and commit closeout
+      - name: Collect verified closeout files
         shell: bash
         run: |
-          cat > .github/workflows/validator.yml <<'EOF'
-          name: KDSL Validation
+          mkdir -p phase3-closeout/spec/r1 phase3-closeout/spec/lint phase3-closeout/spec phase3-closeout/docs/reviews phase3-closeout/docs phase3-closeout/tools/validator
+          cp README.md CHANGELOG.md phase3-closeout/
+          cp spec/r1/r1c-compact-result-schema.md phase3-closeout/spec/r1/
+          cp spec/lint/kdsl-r1c-lint.md phase3-closeout/spec/lint/
+          cp spec/manifest.md phase3-closeout/spec/
+          cp docs/project-status.md phase3-closeout/docs/
+          cp docs/reviews/kdsl-phase3-r1c-deep-optional.md phase3-closeout/docs/reviews/
+          cp tools/validator/README.md phase3-closeout/tools/validator/
+          cp tools/validator/kdsl-r1c-optional-implementation-notes.md phase3-closeout/tools/validator/
+          find phase3-closeout -type f -print | sort
 
-          on:
-            pull_request:
-              branches:
-                - main
-            push:
-              branches:
-                - main
-            workflow_dispatch:
-
-          permissions:
-            contents: read
-
-          concurrency:
-            group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
-            cancel-in-progress: true
-
-          jobs:
-            validation:
-              name: KDSL Validation
-              runs-on: ubuntu-latest
-              timeout-minutes: 10
-
-              steps:
-                - name: Check out repository
-                  uses: actions/checkout@v7
-
-                - name: Set up Python
-                  uses: actions/setup-python@v6
-                  with:
-                    python-version: '3.11'
-
-                - name: Show Python version
-                  run: python --version
-
-                - name: Run unified validator suite
-                  run: python tools/validator/run_all_samples.py
-          EOF
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          git commit -m "Docs: close Phase 3 R1C deep optional integration"
-          git push origin HEAD:agent/kdsl-phase3-r1c-deep-optional-closeout
+      - name: Upload verified closeout files
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-closeout-${{ github.run_id }}
+          path: phase3-closeout
+          if-no-files-found: error
