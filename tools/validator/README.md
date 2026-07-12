@@ -23,6 +23,7 @@ spec/bridge/kdsl-adps-bridge.md
 spec/bridge/kdsl-cp-packet-bridge.md
 spec/registry/kdsl-safety-gate-registry.md
 spec/registry/kdsl-safety-gate-composition.md
+spec/registry/kdsl-safety-semantics.md
 spec/registry/kdsl-packet-base-registry.md
 spec/registry/kdsl-packet-task-registry.md
 spec/registry/kdsl-packet-flow-registry.md
@@ -101,7 +102,17 @@ kdsl_safety_gate_inheritance.py:
   parent hold/blocked gate preservation
   blocked/hold unsafe transition check
   parent na re-evaluation warning
-  satisfied scope-change warning
+  pairwise deep-scope warning compatibility
+
+kdsl_safety_semantics.py:
+  bounded protected-concept strong/weak wording checks
+  condition/exception atom capture
+  explicit semantic weakening detection
+
+kdsl_safety_gate_graph.py:
+  multi-generation DAG/cycle/node validation
+  multi-parent aggregate precedence
+  strict deep-scope re-evaluation enforcement
 
 kdsl_r1c.py:
   KDSL_RESULT + kdsl-r1c@0.1-draft detection
@@ -143,10 +154,10 @@ kdsl_packet_normalize.py:
 
 kdsl_validate.py:
   common parser preflight
-  target wrapper: r1 / prompt / compact / safety-gate / r1c / packet / normalization / all
+  target wrapper: r1 / prompt / compact / safety-gate / safety-semantics / r1c / packet / normalization / all
 
 run_all_samples.py:
-  unified core/Safety Gate/R1C round-trip/parser runner
+  unified core/Safety Gate/R1C round-trip/parser/Safety Semantics runner
   missing summary or child-runner failure detection
 
 run_parser_samples.py:
@@ -206,6 +217,14 @@ Common parser / unified validation Phase 1 integrated:
   unified total: 147 / failed: 0
   pull_request: 38
   workflow_run: 192 / success
+
+Safety Semantics / multi-generation inheritance Phase 2 integrated:
+  existing Phase 1 suite: 147 / failed: 0
+  bounded semantic/graph properties: 32 / failed: 0
+  repository examples: 2 / failed: 0
+  unified total: 181 / failed: 0
+  pull_request: 42
+  workflow_run: 200 / success
   required-check activation: pending / issue #39
 ```
 
@@ -213,6 +232,8 @@ Repository examples included in the suite:
 
 ```text
 examples/safety-gates/dev-prompt-safety-gates.example.md
+examples/safety-gates/bounded-semantics.example.md
+examples/safety-gates/multigeneration/graph.json
 examples/r1c/r1c-success.example.md
 examples/r1c/r1c-blocked.example.md
 examples/r1c/r1c-needs-user.example.md
@@ -248,6 +269,8 @@ RT:v根拠語のfield-scoped検出
 NEXT/COMMIT権限混同のshape検出
 Safety Gate registry/ID/state/field欠落検出
 Safety Gate baseline/compositionの代表的欠落検出
+Safety Gate bounded protected-language弱化検出
+Safety Gate multi-generation inheritance/deep-scope検出
 R1C schema/field/type/order欠落検出
 R1C RT/NEXT/COMMIT境界検出
 R1C Full R1 fallback分離
@@ -274,6 +297,8 @@ template全文展開を証明しない
 safety proofとして扱わない
 operation authorityを付与しない
 common parser first sliceをfull semantic parserとして扱わない
+bounded Safety Semanticsをfull semantic equivalence proofとして扱わない
+multi-generation graph passをcomplete safety proofとして扱わない
 full YAML/KDSL semantic parserとして扱わない
 full negation parserとして扱わない
 release readinessを判定しない
@@ -297,7 +322,11 @@ tools/validator/
   kdsl-compact-prompt-implementation-notes.md
   kdsl_safety_gate.py
   kdsl_safety_gate_inheritance.py
+  kdsl_safety_semantics.py
+  kdsl_safety_gate_graph.py
   run_safety_gate_samples.py
+  run_safety_semantics_samples.py
+  run_safety_semantics_examples.py
   kdsl-safety-gate-implementation-notes.md
   kdsl_r1c.py
   kdsl_r1c_roundtrip.py

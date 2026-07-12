@@ -6,6 +6,36 @@ Detailed decisions and verification evidence are retained in `docs/reviews/*`, `
 
 ### Added
 
+#### Phase 2 Safety Semantics / multi-generation inheritance
+
+- Added `kdsl-safety-language@0.1-draft` bounded protected-language semantics.
+- Added declared strong/weak concept checks for Safety Gate protected wording.
+- Added condition/exception atom capture without claiming full natural-language understanding.
+- Added multi-generation DAG inheritance, cycle/node validation, and multi-parent state precedence.
+- Added strict deep-scope re-evaluation checks for widened/overlap/disjoint satisfied scopes.
+- Added 32 property cases and 2 repository-example cases.
+- Expanded unified `KDSL Validation` from 147 to 181 expectations.
+
+Verification:
+
+```text
+pull_request: 42
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+workflow_run_id: 29180355132
+run_number: 200
+unified_total: 181
+failed: 0
+```
+
+Boundaries:
+
+```text
+FULL_SEMANTIC_EQUIVALENCE:not_proven
+FULL_SAFETY_PROOF:not_proven
+EXECUTION_AUTHORITY:none
+```
+
 #### Phase 1 common parser / unified validation foundation
 
 - Added a source-spanned `DocumentNode` / `EnvelopeNode` / `FieldNode` AST.

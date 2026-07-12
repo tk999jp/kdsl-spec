@@ -10,6 +10,8 @@ status: v2-draft adopted workspace
 kdsl-sg@0.1-draft
   spec/registry/kdsl-safety-gate-registry.md
   spec/registry/kdsl-safety-gate-composition.md
+  spec/registry/kdsl-safety-semantics.md
+  bounded model: kdsl-safety-language@0.1-draft
 ```
 
 ## Current v2-draft adopted Packet registries
@@ -51,6 +53,8 @@ BASE/TASK/FLOW ID != normalization completion
 FLOW opcode != command
 unknown registry/ID推測禁止
 specialized gate != broader gate解除
+bounded semantic match != full semantic equivalence
+graph validation != execution authority
 ```
 
 The registry layer does not replace Core, Profile, R1, Lint, or Bridge specifications.
@@ -60,6 +64,7 @@ Current status:
 ```text
 kdsl-sg@0.1-draft:=v2-draft adopted
 Safety Gate validator:=first heuristic slice integrated
+Safety Semantics/multi-generation graph:=Phase 2 integrated / bounded / non-authoritative
 kdsl-r1c@0.1-draft:=v2-draft serialization profile adopted
 Packet BASE/TASK/FLOW registries:=v2-draft adopted / non-executable
 KDSL-Packet:=draft-non-executable

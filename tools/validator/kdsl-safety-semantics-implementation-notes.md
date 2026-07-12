@@ -1,6 +1,6 @@
 # Safety Semantics / Multi-Generation Inheritance First Slice
 
-status: implementation-candidate
+status: first-slice integrated
 model: kdsl-safety-language@0.1-draft
 validator_authority: non-authoritative
 
@@ -46,6 +46,18 @@ Phase 2 property total: 32
 repository examples: 2
 existing Phase 1 unified total: 147
 expected unified total: 181
+```
+
+## Integration evidence
+
+```text
+pull_request: 42
+source_head: f11fe00da04f25ae5fe7855535b9634e645a901e
+squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
+workflow_run_id: 29180355132
+run_number: 200
+unified_total: 181
+failed: 0
 ```
 
 ## Boundaries

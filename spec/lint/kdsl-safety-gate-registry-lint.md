@@ -1,6 +1,6 @@
 # KDSL Safety Gate Registry Lint v0.1-draft
 
-status: v2-draft adopted / first-slice implemented
+status: v2-draft adopted / Phase 2 bounded-semantics first slice implemented
 source: spec/registry/kdsl-safety-gate-registry.md
 composition: spec/registry/kdsl-safety-gate-composition.md
 validator: first_slice_integrated
@@ -327,14 +327,26 @@ tools/validator/kdsl_safety_gate_inheritance.py
   parent hold/blocked preservation
   unsafe transition rejection
   parent na copied-reason warning
-  satisfied scope-change warning
+  pairwise deep-scope relation warning compatibility
+
+tools/validator/kdsl_safety_semantics.py
+  declared protected-concept strong/weak pattern checks
+  bounded condition/exception atom capture
+  explicit semantic weakening detection
+
+tools/validator/kdsl_safety_gate_graph.py
+  multi-generation DAG/cycle/node validation
+  multi-parent aggregate precedence
+  hold/blocked descendant preservation
+  strict deep-scope re-evaluation enforcement
 ```
 
 Remaining boundary:
 
 ```text
-representative wording check != full semantic equivalence
-pairwise parent/child check != complete inheritance graph proof
+bounded wording model != full semantic equivalence
+multi-generation DAG check != arbitrary workflow graph proof
+normalized exact-item scope relation != full scope semantics
 aggregate state report != execution permission
 validator pass != semantic equivalence
 validator pass != U承認
