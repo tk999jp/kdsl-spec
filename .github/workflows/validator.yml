@@ -4,55 +4,52 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kdsl-validation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  phase4-property-fix:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/kdsl-phase4-packet-semantic-property'
-    name: Apply Phase 4 property section fix
+  validation:
+    name: KDSL Validation
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Check out Phase 4 branch
+      - name: Check out repository
         uses: actions/checkout@v7
-        with:
-          ref: agent/kdsl-phase4-packet-semantic-property
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
-      - name: Apply section-scoped property fix
-        run: python .github/scripts/apply_phase4_property_section_fix.py
+      - name: Show Python version
+        run: python --version
 
-      - name: Verify Packet semantic/property suite
-        shell: bash
-        run: |
-          set -o pipefail
-          python tools/validator/run_packet_semantic_property_samples.py 2>&1 | tee phase4-section-fix.log
+      - name: Run unified validator suite
+        run: python tools/validator/run_all_samples.py
 
-      - name: Upload section-fix diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
+  packet-semantic-property:
+    name: Packet Semantic Property
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          name: phase4-section-fix-${{ github.run_id }}
-          path: phase4-section-fix.log
+          python-version: '3.11'
 
-      - name: Commit verified fix
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          rm .github/scripts/apply_phase4_property_section_fix.py
-          git add tools/validator/kdsl_packet_property.py .github/scripts/apply_phase4_property_section_fix.py
-          git commit -m "Validator: scope Packet preview property checks"
-          git push origin HEAD:agent/kdsl-phase4-packet-semantic-property
+      - name: Run Packet semantic/property suite
+        run: python tools/validator/run_packet_semantic_property_samples.py
