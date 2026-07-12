@@ -12,6 +12,7 @@ CHECKER_SETS = {
     'safety-semantics': ['kdsl_safety_semantics.py'],
     'r1c': ['kdsl_r1c.py', 'kdsl_r1c_optional.py'],
     'packet': ['kdsl_packet.py'],
+    'packet-semantic': ['kdsl_packet.py', 'kdsl_packet_semantic.py'],
     'normalization': ['kdsl_packet_normalization.py'],
     'all': [
         'r1_required_blocks.py',
@@ -35,11 +36,12 @@ TARGET_MARKERS = {
     'safety-gate': ('SAFETY_GATES',),
     'safety-semantics': ('SAFETY_GATES',),
     'packet': ('PACKET_DRAFT',),
+    'packet-semantic': ('PACKET_DRAFT',),
     'normalization': ('NORMALIZATION_DRAFT',),
     'all': ('KDSL_RESULT', 'SAFETY_GATES', 'PACKET_DRAFT', 'NORMALIZATION_DRAFT'),
 }
 
-TARGETS = 'r1, prompt, compact, safety-gate, safety-semantics, r1c, packet, normalization, all'
+TARGETS = 'r1, prompt, compact, safety-gate, safety-semantics, r1c, packet, packet-semantic, normalization, all'
 
 
 def parse_args(argv):
@@ -61,7 +63,7 @@ def parse_args(argv):
         raise ValueError('unexpected argument: ' + arg)
     if path is None:
         raise ValueError(
-            'usage: python kdsl_validate.py [--target r1|prompt|compact|safety-gate|safety-semantics|r1c|packet|normalization|all] <file>'
+            'usage: python kdsl_validate.py [--target r1|prompt|compact|safety-gate|safety-semantics|r1c|packet|packet-semantic|normalization|all] <file>'
         )
     if target_mode not in CHECKER_SETS:
         raise ValueError('unknown target: ' + target_mode)
