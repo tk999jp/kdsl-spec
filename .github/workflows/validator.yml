@@ -31,6 +31,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Scope closeout carrier anchors
+        run: python .github/scripts/fix_phase4_closeout_carrier.py
+
       - name: Apply exact Phase 4 closeout
         shell: bash
         run: |
@@ -52,7 +55,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          rm .github/scripts/apply_phase4_closeout.py
-          git add CHANGELOG.md README.md docs/project-status.md docs/reviews/kdsl-phase4-packet-normalization-property.md spec/manifest.md spec/packet/kdsl-packet-schema.md spec/packet/kdsl-packet-normalization-contract.md spec/packet/kdsl-packet-semantic-property-contract.md spec/lint/kdsl-packet-lint.md spec/lint/kdsl-packet-normalization-lint.md tools/validator/README.md tools/validator/kdsl-packet-semantic-property-implementation-notes.md .github/scripts/apply_phase4_closeout.py
+          rm .github/scripts/apply_phase4_closeout.py .github/scripts/fix_phase4_closeout_carrier.py
+          git add CHANGELOG.md README.md docs/project-status.md docs/reviews/kdsl-phase4-packet-normalization-property.md spec/manifest.md spec/packet/kdsl-packet-schema.md spec/packet/kdsl-packet-normalization-contract.md spec/packet/kdsl-packet-semantic-property-contract.md spec/lint/kdsl-packet-lint.md spec/lint/kdsl-packet-normalization-lint.md tools/validator/README.md tools/validator/kdsl-packet-semantic-property-implementation-notes.md .github/scripts/apply_phase4_closeout.py .github/scripts/fix_phase4_closeout_carrier.py
           git commit -m "Docs: align Phase 4 Packet property status"
           git push origin HEAD:agent/kdsl-phase4-packet-semantic-property-closeout
