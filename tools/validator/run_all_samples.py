@@ -9,6 +9,7 @@ RUNNERS = (
     ('safety-gate', 'run_safety_gate_samples.py'),
     ('r1c-roundtrip', 'run_r1c_roundtrip_samples.py'),
     ('parser', 'run_parser_samples.py'),
+    ('safety-semantics', 'run_safety_semantics_samples.py'),
 )
 
 
