@@ -20,48 +20,33 @@ tag: v1.1.0-rc1
 license: MIT
 ```
 
-Phase 5のpublic-facing hardeningは統合済みです。
+Phase 5のpublic-facing hardeningとrequired-check repository enforcementは統合済みです。
 ただし、これはpublic-ready/stable release承認ではありません。
 
 ```text
 public documentation hardening: complete
+required KDSL Validation ruleset: active
 stable readiness: not_ready
 stable/public-ready authority: none
 ```
 
 ## 2. Phase 5 integration evidence
 
-### Slice 1 — Core / Glossary / Converter synchronization
-
 ```text
-pull_request: 50
-squash_commit: 49b6c865af046d44efc04a46d851aed55d222a61
-workflow_run: #239
-conclusion: success
-scope:
-  Core formal profile/lexicon/envelope axes
-  rulebook legacy boundary
-  Glossary synchronization
-  Converter GitHub source priority
-  A-G / CompactPrompt / KDSL-CP漢 / CP-Lift
-  protected lint gates
-```
+PR #50:
+  squash_commit: 49b6c865af046d44efc04a46d851aed55d222a61
+  workflow_run: 239 / success
+  scope: Core / Glossary / Converter synchronization
 
-### Slice 2 — Public guide / R1 Quickstart / examples
+PR #51:
+  squash_commit: 442d53226c7d0fd000ed1f93efc28ccbb367b129
+  workflow_run: 246 / success
+  scope: README / Overview / R1 Quickstart / public examples
 
-```text
-pull_request: 51
-squash_commit: 442d53226c7d0fd000ed1f93efc28ccbb367b129
-workflow_run: #246
-conclusion: success
-scope:
-  root README public entry
-  v2 overview
-  R1 quickstart
-  public example non-normative boundary
-  R1 RT/NEXT/COMMIT example correction
-  KDSL-DP normalization-path correction
-  obsolete README draft retirement
+PR #52:
+  squash_commit: 88f3d94b0c5915a74f3654e0407bffda3bb9f4c3
+  workflow_run: 250 / success
+  scope: Phase 5 closeout / status canonical reorganization
 ```
 
 Validation scope:
@@ -76,7 +61,43 @@ failed: 0
 validator_authority: non_authoritative
 ```
 
-## 3. Completed public-facing criteria
+## 3. Repository enforcement
+
+```text
+ruleset_name: Protect main with KDSL Validation
+ruleset_id: 18832171
+status: Active
+target: default branch / main
+bypass_list: empty
+require_pull_request_before_merging: yes
+required_approvals: 0
+allowed_merge_method: Squash
+required_status_check: KDSL Validation
+require_branch_up_to_date: yes
+restrict_deletions: yes
+block_force_pushes: yes
+```
+
+Verification evidence:
+
+```text
+U共有Settings画面: Ruleset created / Active / applies to main
+verification_pull_request: 53
+verification_head: b78ee593d6dfb42a6edfce53701c510b39f83067
+workflow_run: 252 / success
+merge: not executed
+close_without_merge: completed
+```
+
+```text
+required KDSL Validation activation: confirmed
+workflow success != semantic equivalence proof
+workflow success != complete safety proof
+workflow success != RT:v
+workflow success != release readiness
+```
+
+## 4. Completed experimental-preview criteria
 
 ```text
 public-facing README: integrated
@@ -91,26 +112,15 @@ validator maturity/limitations: explicit
 example/template authority warning: explicit
 sample expectation runner: configured
 GitHub Actions workflow: configured
+required KDSL Validation ruleset: active
 existing tag movement prohibition: retained
 Release Assets prohibition: retained
 ```
 
-## 4. Stable/public-ready blockers
+## 5. Stable/public-ready blockers
 
-### P0 repository enforcement
-
-```text
-required KDSL Validation check activation: pending
-tracking: issue #39
-workflow exists: yes
-workflow success history: yes
-repository ruleset enforcement: not confirmed
-```
-
-```text
-workflow success != required-check activation
-issue creation != required-check activation
-```
+Repository enforcement is no longer a blocker.
+The remaining blockers are specification maturity and release authority.
 
 ### Specification maturity
 
@@ -135,11 +145,12 @@ release authority: none
 Release Assets authority: none
 ```
 
-## 5. Release-readiness decision
+## 6. Release-readiness decision
 
 ```text
 review_status: complete
 public_experimental_preview: continue
+repository_enforcement: active
 public_ready: no
 stable_release: no
 release_candidate_promotion: no
@@ -150,13 +161,13 @@ Reason:
 
 ```text
 public-facing documentation is sufficient for experimental preview use
-required repository enforcement remains pending
+required repository enforcement is active
 validator remains non-authoritative/partial
 semantic/safety completion is not proven
 stable/public-ready U approval is absent
 ```
 
-## 6. Publicization risks retained
+## 7. Publicization risks retained
 
 ```text
 experimental previewがstable/canonical standard扱いされる
@@ -168,7 +179,7 @@ validator passが承認/RT:v/release readinessの代替に見える
 public exampleが実行権限に見える
 ```
 
-## 7. Public package for experimental preview
+## 8. Public package for experimental preview
 
 ```text
 README.md
@@ -196,7 +207,7 @@ tools/validator/run_all_samples.py
 
 The inclusion of v2-draft subordinate files does not promote them to stable/canonical executable specifications.
 
-## 8. Public messaging
+## 9. Public messaging
 
 ```text
 KDSL is a safety-gate-preserving semi-structured prompt notation for Human-AI work contracts.
@@ -218,7 +229,7 @@ KDSL-Packetはnon-executableです。
 License: MIT。
 ```
 
-## 9. Final checklist
+## 10. Final checklist
 
 | Check | Required for experimental preview | Required for stable | Status |
 |---|---:|---:|---|
@@ -233,16 +244,16 @@ License: MIT。
 | Validator limitations clear | yes | yes | pass |
 | Unified sample runner | yes | yes | pass / 257 |
 | GitHub Actions workflow | yes | yes | pass |
-| Required KDSL Validation ruleset | no | yes | pending / issue #39 |
+| Required KDSL Validation ruleset | no | yes | pass / active |
 | No Release Assets | yes | until approved | pass |
 | Existing tag movement prohibited | yes | yes | pass |
 | Release-readiness review | yes | yes | complete / not_ready |
 | U explicit stable approval | no | yes | pending |
 
-## 10. Next safe steps
+## 11. Next safe steps
 
 ```text
-P0: activate and verify required KDSL Validation check / issue #39
+P0: integrate activation closeout and close Issue #39
 P1: continue semantic/parser/safety proof maturation as separate phases
 Hold: stable tag/release/Release Assets/public-ready promotion
 ```

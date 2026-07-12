@@ -118,67 +118,16 @@ KDSL-Packet:=v2-draft authoring envelope / non-executable
 
 ## 4. Integrated phase summary
 
-### Foundation / v2 architecture
-
 ```text
-CompactPrompt architecture: integrated
-kanji-v1 lexicon: integrated
-CP-Lift boundary: integrated
-Validator CI baseline: integrated
-Safety Gate Registry: v2-draft integrated
-R1C serialization profile: v2-draft adopted / canonical R1 subordinate
-Packet schema/registries: v2-draft adopted / non-executable
+Foundation / v2 architecture: integrated
+Phase 1 Common parser / unified validation: integrated
+Phase 2 Safety Semantics bounded slice: integrated
+Phase 3 R1C deep optional-block round-trip: integrated
+Phase 4 Packet / Normalization semantic properties: integrated
+Phase 5 Public-facing v2 hardening: complete
 ```
 
-### Phase 1 — Common parser / unified validation
-
-```text
-pull_request: 38
-squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
-status: integrated
-unified_expectations: 147
-failed: 0
-```
-
-### Phase 2 — Safety Semantics
-
-```text
-pull_request: 42
-squash_commit: 66191b6b97bab720ffd14d5732aa6f5bc0d92a44
-status: integrated
-unified_expectations: 181
-failed: 0
-full_semantic_equivalence: not_proven
-full_safety_proof: not_proven
-```
-
-### Phase 3 — R1C deep optional-block round-trip
-
-```text
-pull_request: 45
-squash_commit: 24f08a4397f22555e73469099014b6ba502760c3
-status: integrated
-unified_expectations: 215
-failed: 0
-semantic_equivalence: not_proven
-execution_authority: none
-```
-
-### Phase 4 — Packet / Normalization semantic properties
-
-```text
-pull_request: 48
-squash_commit: 47b15f9af3496dc36e14673cf0a681e3c333b098
-status: integrated
-unified_expectations: 257
-failed: 0
-semantic_equivalence: not_proven
-full_safety_proof: not_proven
-normalization_completion: not_proven
-execution_authority: none
-```
-
-### Phase 5 — Public-facing v2 hardening
+Phase 5 evidence:
 
 ```text
 slice1_pull_request: 50
@@ -190,22 +139,11 @@ slice2_squash_commit: 442d53226c7d0fd000ed1f93efc28ccbb367b129
 slice2_workflow_run: 246 / success
 
 closeout_pull_request: 52
+closeout_squash_commit: 88f3d94b0c5915a74f3654e0407bffda3bb9f4c3
 status: public-facing hardening complete
 ```
 
-Scope:
-
-```text
-Core/Profile/Glossary formal axes synchronization
-Converter GitHub source priority / A-G / CP-Lift synchronization
-public README / overview
-R1 quickstart
-public example separation and authority boundary
-KDSL-DP normalization-path correction
-public-readiness review
-```
-
-Decision:
+Phase 5 decision:
 
 ```text
 experimental preview documentation: ready
@@ -216,7 +154,49 @@ public_ready: no
 stable_release: no
 ```
 
-## 5. Validator status
+## 5. Repository enforcement
+
+```yaml
+repository_enforcement:
+  ruleset_name: Protect main with KDSL Validation
+  ruleset_id: 18832171
+  enforcement_status: active
+  target: default_branch / main
+  bypass_list: empty
+  restrict_deletions: true
+  require_pull_request_before_merging: true
+  required_approvals: 0
+  allowed_merge_method: squash
+  require_status_checks: true
+  required_status_check: KDSL Validation
+  require_branches_up_to_date: true
+  block_force_pushes: true
+```
+
+Activation evidence:
+
+```text
+U共有GitHub Settings画面:
+  ruleset created
+  status: Active
+  target: main
+  required check: KDSL Validation
+
+verification_pull_request: 53
+verification_head: b78ee593d6dfb42a6edfce53701c510b39f83067
+workflow_run: 252
+workflow_conclusion: success
+merge: not executed
+close_without_merge: completed
+```
+
+```text
+required_check_activation: confirmed
+issue_39_resolution_candidate: yes
+workflow success != semantic equivalence/safety proof/RT:v/release readiness
+```
+
+## 6. Validator status
 
 ```yaml
 validator:
@@ -228,23 +208,8 @@ validator:
   unified_command: python tools/validator/run_all_samples.py
   unified_expectations: 257
   failed: 0
-  required_check_activation: pending
-  required_check_issue: 39
-```
-
-Current wrapper targets:
-
-```text
-r1
-prompt
-compact
-safety-gate
-safety-semantics
-r1c
-packet
-packet-semantic
-normalization
-all
+  required_check_activation: active
+  required_check_ruleset: Protect main with KDSL Validation
 ```
 
 Boundaries:
@@ -256,10 +221,10 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-workflow success != required-check activation
+required check active != stable/public-ready approval
 ```
 
-## 6. R1 / R1C status
+## 7. R1 / R1C status
 
 ```text
 canonical R1: spec/r1/r1-result-spec.md
@@ -279,7 +244,7 @@ NEXT:=提案, 実行許可扱禁止
 COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ```
 
-## 7. Packet status
+## 8. Packet status
 
 ```text
 schema: kdsl-packet@0.1-draft
@@ -302,7 +267,7 @@ normalization preview != executable target
 KDSL-Packet直接実行禁止
 ```
 
-## 8. Safety and authority boundaries
+## 9. Safety and authority boundaries
 
 ```text
 意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
@@ -318,10 +283,9 @@ unknown profile/mode/safety/lexicon/envelope/schema/registry/ID推測禁止
 hold/blocked gate削除禁止
 ```
 
-## 9. Known gaps
+## 10. Known gaps
 
 ```text
-required KDSL Validation repository ruleset activation / issue #39
 full YAML/KDSL semantic parser
 full natural-language negation/exception reasoning
 full semantic equivalence proof
@@ -333,7 +297,7 @@ canonical P1/P1L target schema
 stable/public-ready U approval
 ```
 
-## 10. Current positioning
+## 11. Current positioning
 
 Use as:
 
@@ -356,10 +320,10 @@ executable Packet specification
 independent canonical R1C standard
 ```
 
-## 11. Next safe steps
+## 12. Next safe steps
 
 ```text
-P0: activate and verify required KDSL Validation check / issue #39
+P0: close Issue #39 after activation record integration
 P1: continue semantic/parser/safety proof maturation as separate phases
 Hold: stable/public-ready/tag/release/Release Assets
 ```
