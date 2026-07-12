@@ -6,11 +6,12 @@ import sys
 from pathlib import Path
 
 from kdsl_r1c import OPTIONAL_KEYS, REQUIRED_KEYS, SCHEMA_ID, extract_result_scope, parse_top_level
+from kdsl_r1c_optional import parse_safety_gates_model
 
 ROOT = Path(__file__).resolve().parent
 STRUCTURED_KEYS = {'FILES', 'CMD', 'VERIFY', 'RT', 'RISK', 'NEXT', 'COMMIT'}
 JSON_OPTIONAL_KEYS = {'EVIDENCE', 'AUTHORITY', 'ANNUNCIATOR'}
-UNSUPPORTED_OPTIONAL_KEYS = {'SAFETY_GATES'}
+SAFETY_OPTIONAL_KEYS = {'SAFETY_GATES'}
 
 
 def load_text(path):
@@ -55,10 +56,10 @@ def parse_model(text):
             model['required'][key] = value
 
     for key in optional_order:
-        if key in UNSUPPORTED_OPTIONAL_KEYS:
-            model['optional'][key] = {'_unsupported_raw': values.get(key, '')}
-        elif key in JSON_OPTIONAL_KEYS:
+        if key in JSON_OPTIONAL_KEYS:
             model['optional'][key] = json.loads(values[key])
+        elif key in SAFETY_OPTIONAL_KEYS:
+            model['optional'][key] = parse_safety_gates_model(values[key])
         else:
             model['optional'][key] = values[key]
     return model
@@ -121,7 +122,7 @@ def compare_models(source, reconstructed):
 
 def validate_source(path):
     result = subprocess.run(
-        [sys.executable, str(ROOT / 'kdsl_r1c.py'), str(path)],
+        [sys.executable, str(ROOT / 'kdsl_validate.py'), '--target', 'r1c', str(path)],
         capture_output=True,
         text=True,
     )
@@ -176,14 +177,6 @@ def main(argv):
     except (ValueError, KeyError, json.JSONDecodeError) as exc:
         return emit('fail', digest, ['source parse failed'], errors=[str(exc)])
 
-    if any(key in model['optional'] for key in UNSUPPORTED_OPTIONAL_KEYS):
-        return emit(
-            'blocked',
-            digest,
-            ['required field model parsed', 'optional SAFETY_GATES requires dedicated expansion'],
-            warnings=['first slice does not claim safe SAFETY_GATES round-trip'],
-        )
-
     projection = project_to_full_r1(model)
     reconstructed = reconstruct_r1c(projection)
     mismatches = compare_models(model, reconstructed)
@@ -193,21 +186,25 @@ def main(argv):
     warnings = []
     if validator_code == 1:
         warnings.append('source validator returned warning')
-    return emit(
-        'structural_pass',
-        digest,
-        [
-            'canonical required field order preserved',
-            'scalar fields preserved exactly',
-            'FILES/CMD/RISK order preserved',
-            'VERIFY classes preserved',
-            'RT state/basis preserved',
-            'NEXT proposal_only boundary preserved',
-            'COMMIT actual/proposed/permission_basis preserved',
-            'optional JSON blocks preserved',
-        ],
-        warnings=warnings,
-    )
+    checks = [
+        'canonical required field order preserved',
+        'scalar fields preserved exactly',
+        'FILES/CMD/RISK order preserved',
+        'VERIFY classes preserved',
+        'RT state/basis preserved',
+        'NEXT proposal_only boundary preserved',
+        'COMMIT actual/proposed/permission_basis preserved',
+        'optional JSON blocks preserved',
+    ]
+    if 'EVIDENCE' in model['optional']:
+        checks.append('optional EVIDENCE classifications preserved')
+    if 'AUTHORITY' in model['optional']:
+        checks.append('optional AUTHORITY rails preserved')
+    if 'ANNUNCIATOR' in model['optional']:
+        checks.append('optional ANNUNCIATOR structure preserved')
+    if 'SAFETY_GATES' in model['optional']:
+        checks.append('optional SAFETY_GATES registry/entry/order preserved')
+    return emit('structural_pass', digest, checks, warnings=warnings)
 
 
 if __name__ == '__main__':

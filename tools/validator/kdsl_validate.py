@@ -10,7 +10,7 @@ CHECKER_SETS = {
     'compact': ['kdsl_compact_prompt.py'],
     'safety-gate': ['kdsl_safety_gate.py'],
     'safety-semantics': ['kdsl_safety_semantics.py'],
-    'r1c': ['kdsl_r1c.py'],
+    'r1c': ['kdsl_r1c.py', 'kdsl_r1c_optional.py'],
     'packet': ['kdsl_packet.py'],
     'normalization': ['kdsl_packet_normalization.py'],
     'all': [
@@ -21,7 +21,9 @@ CHECKER_SETS = {
         'kdsl_template_expansion.py',
         'kdsl_compact_prompt.py',
         'kdsl_safety_gate.py',
+        'kdsl_safety_semantics.py',
         'kdsl_r1c.py',
+        'kdsl_r1c_optional.py',
         'kdsl_packet.py',
         'kdsl_packet_normalization.py',
     ],

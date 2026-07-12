@@ -99,7 +99,7 @@ def main():
 
         safety_path = tmp_path / 'safety.md'
         safety_path.write_text(safety_gate_doc(), encoding='utf-8')
-        results.append(run_cli('optional Safety Gates safely blocked', safety_path, 1, ('STATUS: blocked', 'does not claim safe SAFETY_GATES round-trip')))
+        results.append(run_cli('optional Safety Gates structural pass', safety_path, 0, ('STATUS: structural_pass', 'optional SAFETY_GATES registry/entry/order preserved')))
 
     def mutate_files_order(projection):
         index, value = find_field(projection, 'FILES')
