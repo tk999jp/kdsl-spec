@@ -12,6 +12,10 @@ Core formal profile values synchronized with v2 manifest
 lexicon/envelope axes added to Core entry contract
 rulebook classified as v1.1 legacy compatibility name
 legacy rulebook automatic correction prohibited
+glossary formal axes synchronized
+converter GitHub source-of-truth priority synchronized
+converter A-G selection / CompactPrompt / KDSL-CP漢 synchronized
+CP-Lift trigger and Packet non-executable boundaries synchronized
 public readiness GitHub Actions evidence refreshed
 required check activation retained as pending / issue #39
 ```
@@ -35,6 +39,33 @@ legacy:
 rulebook新規使用禁止
 rulebookを正式v2 profile扱い禁止
 legacy rulebook入力→用途確認なしにcompact-prompt/lintへ自動補正禁止
+```
+
+## Converter synchronization
+
+```text
+source priority:
+  confirmed GitHub main
+  Project files snapshot
+  U explicit specification
+
+prompt-only selections:
+  A mode:min
+  B mode:dense
+  C dense result only
+  D comparison
+  E lint
+  F CompactPrompt
+  G KDSL-CP漢
+```
+
+Boundaries:
+
+```text
+F/GでもCP-Lift判定必須
+AI coding/repo/runtime/public/data/正本操作→profile:dev-prompt
+KDSL-Packet:=non-executable
+Packet validator/property pass != execution authority
 ```
 
 ## Public readiness correction
@@ -77,8 +108,6 @@ main直接更新なし
 ## Remaining Phase 5 work
 
 ```text
-spec/glossary.md formal profile wording sync
-converter profile source-of-truth and A-G selection sync
 README/overview public-facing simplification
 R1 quickstart
 external example separation
