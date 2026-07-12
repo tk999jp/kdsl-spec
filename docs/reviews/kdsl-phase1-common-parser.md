@@ -1,6 +1,6 @@
 # Phase 1 — Common Parser / Validation Foundation
 
-status: implementation-candidate
+status: branch-validation-pending
 review_date: 2026-07-12
 repository: tk999jp/kdsl-spec
 base: main@ca258df765a93ac7e1fed64a2d845897c78fa7cd

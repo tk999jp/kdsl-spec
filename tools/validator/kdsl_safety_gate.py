@@ -260,6 +260,11 @@ def emit(errors, warnings, info):
     return 2 if errors else (1 if warnings else 0)
 
 
+
+# Phase 1 common parser adapter. Semantic validation remains in this module.
+from kdsl_parser_adapter import install_safety_gate
+install_safety_gate(globals())
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)

@@ -215,6 +215,11 @@ def validate_records(label, records, required_fields, errors):
             errors.append(f'{label} entry {index} missing fields: ' + ', '.join(missing))
 
 
+
+# Phase 1 common parser adapter. Semantic validation remains in this module.
+from kdsl_parser_adapter import install_normalization
+install_normalization(globals())
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)

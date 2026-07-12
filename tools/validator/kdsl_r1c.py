@@ -232,6 +232,11 @@ def validate_optional_json(key, value, errors):
         errors.append(f'{key} must be a JSON object when present')
 
 
+
+# Phase 1 common parser adapter. Semantic validation remains in this module.
+from kdsl_parser_adapter import install_r1c
+install_r1c(globals())
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
