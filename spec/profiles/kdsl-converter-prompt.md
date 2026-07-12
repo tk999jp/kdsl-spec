@@ -371,16 +371,20 @@ compact-prompt/kanji-v1/CP-Lift:
 
 ```text
 D禁止保持
+D禁保持
 rollback/revert保持
 未確認→確認済扱禁止保持
 未実行→実行済扱禁止保持
 未確認→成功扱禁止保持
 未確認→断定禁止保持
+承認gate保持
 実機確認分離保持
 U観測>AI推測保持
 共有材先読保持
 AI丸投禁止保持
 原因未確→広域修正禁止保持
+正本保護保持
+data保護保持
 public履歴/公開済tag/Release Assets保護保持
 state/docs固定保持
 LocalBuild/Runtime未実行→実行済扱禁止保持
