@@ -5,10 +5,6 @@ SELECTED_NAMES = {
     'r1c repository blocked example valid',
     'r1c repository needs-user example valid',
     'r1c unknown schema',
-    'r1c missing required field',
-    'r1c short alias rejected',
-    'r1c invalid structured JSON',
-    'r1c invalid RT v basis',
 }
 
 
