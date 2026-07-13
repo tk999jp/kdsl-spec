@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6c-r1c-compatibility-integrated
+phase: phase6c-r1c-checker-migration-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -10,7 +10,7 @@ tracking_issue: 55
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
 
-Phase 5以前の詳細なPR/CI履歴は次の非正本archiveへ保持します。
+Phase 5以前の詳細な履歴は次の非正本archiveへ保持します。
 
 ```text
 docs/project-status-history/project-status-through-phase4-20260712.md
@@ -39,15 +39,9 @@ current_public_state:
 public: yes
 public-ready: no
 stable: no
-```
-
-Policy:
-
-```text
 v0.1.0-draft tag:=履歴として維持
 v1.1.0-rc1:=experimental historical baseline
 v1.1.0 stable:=保留
-v2-draft設計/validator改善:=継続
 既存tag移動禁止
 Release Assets操作禁止
 stable/public-ready化→別途U明示承認必須
@@ -99,15 +93,6 @@ lexicon: standard|kanji-v1
 envelope: plain|packet-draft|result
 ```
 
-Legacy:
-
-```text
-rulebook:=v1.1 legacy profile name
-rulebook新規使用禁止
-rulebookを正式v2 profile扱い禁止
-legacy rulebook入力→用途確認なしに他profileへ自動補正禁止
-```
-
 Named compositions:
 
 ```text
@@ -115,6 +100,15 @@ KDSL-CP:=profile:compact-prompt
 KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
 KDSL-R1:=envelope:result / KDSL_RESULT
 KDSL-Packet:=v2-draft authoring envelope / non-executable
+```
+
+Legacy:
+
+```text
+rulebook:=v1.1 legacy profile name
+rulebook新規使用禁止
+rulebookを正式v2 profile扱い禁止
+legacy rulebook入力→用途確認なしに他profileへ自動補正禁止
 ```
 
 ## 4. Integrated phase summary
@@ -129,6 +123,7 @@ Phase 5 Public-facing v2 hardening: complete
 Phase 6A Semantic Parser Foundation design: integrated
 Phase 6B additive typed parser/AST v2 core: integrated
 Phase 6C-1 R1C compatibility view/parity: integrated
+Phase 6C-2 R1C checker migration: integrated
 ```
 
 Phase 5 evidence:
@@ -195,11 +190,11 @@ validator:
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
   unified_runners: 10
-  unified_expectations: 277
+  unified_expectations: 279
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
-  phase6c_r1c_parity_cases: 8
+  phase6c_r1c_parity_cases: 10
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
@@ -207,21 +202,13 @@ validator:
 Latest verification:
 
 ```text
-implementation PR: 59
-source head: 0f974b0d91c0188761f779de16c4dc43d07a2551
-squash commit: e20ebde511ce860faf9224f0b5902c08309a0a6f
-workflow run: 29223392311 / #263 / success
+implementation PR: 61
+source head: 627fde4a718a40a762b6285884f756a9ccd60dc5
+squash commit: a81bb8cae5aefd4020c0df004c616d5e4f834cee
+workflow run: 29224617949 / #289 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
-```
-
-Corrective evidence:
-
-```text
-run #261: KDSL Validation failure / fenced example scope mismatch
-run #262: KDSL Validation failure / compact failure logging enabled
-run #263: success after R1C compatibility scope correction
 ```
 
 Unified output policy:
@@ -253,11 +240,17 @@ tools/validator/kdsl_parser.py
 tools/validator/kdsl_parser_adapter.py
 DocumentNode / EnvelopeNode / FieldNode
 SourceSpan / ParseIssue / DiagnosticBag
-legacy adapter consumers:
-  R1C / Packet / Packet Normalization / Safety Gate
 ```
 
-Phase 1 parser remains active for existing semantic checkers.
+Remaining legacy adapter consumers:
+
+```text
+Packet
+Packet Normalization
+Safety Gate
+```
+
+R1C is no longer a Phase 1 namespace-adapter consumer.
 
 ### Phase 6A design
 
@@ -327,21 +320,45 @@ field duplicate order
 fenced repository examples
 ```
 
-Corrective boundary:
+### Phase 6C-2 R1C checker migration
 
 ```text
-R1CCompatibilityView selects legacy-compatible fenced scope
-selected scope→AST v2 raw-envelope context
+implementation:
+  tools/validator/kdsl_r1c.py
+  tools/validator/kdsl_parser_v2_compat.py
+review:
+  docs/reviews/kdsl-phase6c-r1c-checker-migration.md
+PR: 61
+squash: a81bb8cae5aefd4020c0df004c616d5e4f834cee
+status: integrated
+```
+
+Current R1C path:
+
+```text
+AST v2 compatibility extraction
+→ Full R1 fallback when R1C schema absent
+→ legacy-v2 parity guard when R1C schema present
+→ existing R1C semantic validation
+```
+
+Corrective boundaries:
+
+```text
+fenced repository example→legacy-compatible scope selection
 AST v2 active-document fence isolation remains unchanged
+SAFETY_GATES standalone marker/R1C field ambiguity→R1C scope限定処理
+marker registry restored in finally
+same-marker divergence→semantic validation前にfail
 ```
 
 Migration boundary:
 
 ```text
-R1C checker switch: not performed
-legacy namespace adapter: retained
+R1C semantic policy: unchanged
+legacy adapter file: retained
 Packet/Normalization/Safety Gate compatibility views: pending
-legacy adapter removal: prohibited until broader parity evidence
+legacy adapter removal: prohibited until remaining parity evidence
 ```
 
 ## 8. R1 / R1C status
@@ -350,6 +367,7 @@ legacy adapter removal: prohibited until broader parity evidence
 canonical R1: spec/r1/r1-result-spec.md
 R1C schema: kdsl-r1c@0.1-draft
 R1C status: v2-draft adopted serialization profile
+R1C extraction: AST v2 compatibility path + legacy parity guard
 R1C independent canonical spec: no
 R1C stable: no
 R1C full semantic equivalence: not_proven
@@ -406,12 +424,13 @@ hold/blocked gate削除禁止
 ## 11. Known gaps
 
 ```text
-R1C checker migration to explicit compatibility view
-Full R1 / CompactPrompt compatibility views
-Safety Gate / Packet / Normalization compatibility views
-same-marker duplicate-envelope parity
-legacy-v2 semantic-checker parity proof
+Full R1 compatibility view/migration
+CompactPrompt compatibility view/migration
+Safety Gate compatibility view/migration
+Packet compatibility view/migration
+Packet Normalization compatibility view/migration
 legacy adapter retirement proof
+same-marker multiple-envelope general semantics
 broader fence/context semantics beyond current first slice
 full YAML/KDSL semantic parser
 full natural-language negation/exception reasoning
@@ -436,7 +455,7 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
-bounded R1C legacy-v2 structural parity helper
+R1C AST v2 compatibility extraction with legacy parity guard
 ```
 
 Do not present as:
@@ -454,9 +473,9 @@ semantic equivalence proof
 ## 13. Next safe steps
 
 ```text
-P0: Phase 6C-2 switch R1C structural extraction with dual-run parity guard
-P1: Full R1 / CompactPrompt compatibility views and migration
-P2: Safety Gate / Packet / Normalization compatibility views and migration
+P0: Phase 6C-3 CompactPrompt header/structural compatibility inventory and pilot
+P1: Safety Gate compatibility view and migration
+P2: Packet / Packet Normalization compatibility views and migration
 P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
