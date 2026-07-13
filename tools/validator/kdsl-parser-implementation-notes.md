@@ -1,22 +1,23 @@
 # KDSL Common Parser / AST
 
-status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated / phase6c-r1c-compat-integrated
+status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated / phase6c-r1c-checker-migrated
 phase1_pull_request: 38
 phase1_squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
 phase6a_pull_request: 56
 phase6a_squash_commit: bedd63937a9ef746962836833d24ad77ff3f09d0
 phase6b_pull_request: 57
 phase6b_squash_commit: 54c214587cedfc4af634edba9d3df7cdea30d524
-phase6b_workflow_run: 29222907053 / 257 / success
-phase6c_r1c_pull_request: 59
-phase6c_r1c_squash_commit: e20ebde511ce860faf9224f0b5902c08309a0a6f
-phase6c_r1c_workflow_run: 29223392311 / 263 / success
+phase6c_compat_pull_request: 59
+phase6c_compat_squash_commit: e20ebde511ce860faf9224f0b5902c08309a0a6f
+phase6c_checker_pull_request: 61
+phase6c_checker_squash_commit: a81bb8cae5aefd4020c0df004c616d5e4f834cee
+phase6c_checker_workflow: 29224617949 / 289 / success
 phase6_tracking_issue: 55
 validator_authority: non-authoritative
 
-## Purpose
+## 1. Purpose
 
-Replace duplicated envelope and field scanning with source-spanned parser foundations while preserving existing semantic validators and their safety boundaries.
+Provide source-spanned parser foundations and migrate semantic checkers incrementally without changing canonical safety, authority, runtime, or release meanings.
 
 ```text
 parser/AST != semantic equivalence proof
@@ -26,7 +27,12 @@ parser/AST != RT:v
 parser/AST != release readiness
 ```
 
-## Phase 1 compatibility parser
+## 2. Phase 1 compatibility parser
+
+```text
+tools/validator/kdsl_parser.py
+tools/validator/kdsl_parser_adapter.py
+```
 
 Core model:
 
@@ -52,18 +58,17 @@ exact strings
 legacy checker adapters
 ```
 
-Existing adapter consumers:
+Remaining adapter consumers after Phase 6C-2:
 
 ```text
-kdsl_r1c.py
 kdsl_packet.py
 kdsl_packet_normalization.py
 kdsl_safety_gate.py
 ```
 
-Semantic rules remain in their checker modules. Phase 6C-1 does not switch these checkers and does not remove `kdsl_parser_adapter.py`.
+`kdsl_r1c.py` no longer installs the Phase 1 namespace adapter.
 
-## Phase 6A design contract
+## 3. Phase 6A design contract
 
 ```text
 docs/design/kdsl-semantic-parser-v2.md
@@ -81,7 +86,7 @@ checker-by-checker parity migration
 legacy adapter retirement only after evidence
 ```
 
-## Phase 6B typed AST v2
+## 4. Phase 6B typed AST v2
 
 Implementation:
 
@@ -129,7 +134,7 @@ UTF-8/Japanese exact wording preservation
 unknown header values retained without inference
 ```
 
-## Phase 6C-1 R1C compatibility view
+## 5. Phase 6C-1 R1C compatibility view
 
 Implementation:
 
@@ -139,7 +144,7 @@ tools/validator/kdsl_parser_v2_r1c_parity.py
 tools/validator/run_parser_v2_r1c_parity_samples.py
 ```
 
-Compatibility contract:
+Compared contract:
 
 ```text
 KDSL_RESULT envelope presence
@@ -150,51 +155,96 @@ relative field line numbers
 duplicate field order
 ```
 
-The compatibility view reconstructs legacy values from AST v2 raw source. It does not use normalized values to replace quoted/protected/multiline source text.
-
-### Fenced example corrective
-
-Initial parity runs exposed a real scope-selection difference:
+Fenced example correction:
 
 ```text
-legacy parser: selects KDSL_RESULT inside repository Markdown fence
-AST v2 active-document: excludes fenced envelope
+legacy parser selects fenced repository R1C example
+AST v2 active-document excludes fenced envelope
+R1CCompatibilityView selects the legacy-compatible scope
+selected scope is parsed in raw-envelope context
+AST v2 active-document policy remains unchanged
 ```
 
-Correction:
+## 6. Phase 6C-2 R1C checker migration
+
+`kdsl_r1c.py` now uses `R1CCompatibilityView` for structural extraction.
+
+Runtime path:
 
 ```text
-R1CCompatibilityView independently selects the first legacy-compatible R1C scope
-selected scope is parsed in AST v2 raw-envelope context
-AST v2 active-document fence policy remains unchanged
+input
+→ AST v2 compatibility extraction
+→ no R1C schema: Full R1 fallback/out-of-scope
+→ R1C schema present: legacy-v2 parity guard
+→ mismatch: fail before semantic validation
+→ match: existing R1C semantic validation
 ```
 
-This is a compatibility-surface correction, not a general active-document semantic change.
+Semantic rules retained:
 
-## Verification
+```text
+required field/order rules
+structured JSON rules
+RT state/basis rules
+NEXT proposal_only boundary
+COMMIT actual/proposed/permission boundary
+optional-block validation
+PKT:v1 prohibition
+```
+
+### Full R1 fallback correction
+
+The parity guard is applied only after an R1C schema marker is found.
+
+```text
+Full R1 KDSL_RESULT != automatic R1C target
+schema absent→R1C out-of-scope
+```
+
+### Optional SAFETY_GATES correction
+
+`SAFETY_GATES:` is both:
+
+```text
+standalone envelope marker
+R1C optional field
+```
+
+Within an already selected R1C compatibility scope only:
+
+```text
+SAFETY_GATES temporarily treated as field
+scope parsed
+marker registry restored in finally
+```
+
+General AST v2 and standalone Safety Gate behavior remain unchanged.
+
+## 7. Verification
 
 ```text
 Phase 1 parser/adapter suite: 11 / failed 0
 Phase 6B parser-v2 suite: 12 / failed 0
-Phase 6C R1C parity suite: 8 / failed 0
+Phase 6C R1C parity suite: 10 / failed 0
 unified runners: 10
-unified expectations: 277 / failed 0
+unified expectations: 279 / failed 0
 workflow: KDSL Validation
-final workflow run: 29223392311 / #263 / success
+workflow run: 29224617949 / #289 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
 ```
 
-Corrective history:
+Permanent Phase 6C-2 guard cases:
 
 ```text
-run #261: KDSL Validation failure / fenced scope mismatch
-run #262: KDSL Validation failure / compact failure output enabled
-run #263: success after compatibility scope correction
+R1C optional SAFETY_GATES parity
+same-marker divergence rejected before semantic validation
 ```
 
-## Unified runner output policy
+Temporary diagnostic runners used during corrective isolation were removed before the final workflow run. The complete unified runner was restored.
+
+## 8. Unified runner output policy
 
 ```text
 successful child runner: compact total/failed summary
@@ -205,44 +255,47 @@ non-zero child exit: failure
 
 Output compaction changes observability only and does not weaken the suite.
 
-## Current limitations
+## 9. Current limitations
 
 ```text
 not a complete YAML parser
 not a complete JSON5 parser
 not a natural-language semantic parser
-Phase 1 parser remains active for existing semantic checkers
-R1CCompatibilityView is not yet wired into kdsl_r1c.py
-Packet/Normalization/Safety Gate compatibility views not implemented
-legacy namespace adapter remains
-same-marker duplicate-envelope parity not proven
+R1C parity proves selected structural contract only
+R1C full semantic equivalence not proven
+Full R1 compatibility view not implemented
+CompactPrompt compatibility view not implemented
+Safety Gate/Packet/Normalization compatibility views not implemented
+legacy namespace adapter remains for three checker families
 legacy adapter retirement proof incomplete
-active-document/raw-envelope contexts are first slice only
+same-marker multiple-envelope semantics not generally defined
 no alias inference
 no unknown schema inference
 no implicit defaults
 ```
 
-## Phase 6C-2 next step
+## 10. Next migration order
 
 ```text
-switch kdsl_r1c.py structural extraction to explicit R1CCompatibilityView
-dual-run or parity guard during migration
-existing R1C expected exits retained
-legacy adapter retained for Packet/Normalization/Safety Gate
+CompactPrompt header/structural compatibility
+Safety Gate records
+Packet
+Packet Normalization
+Phase 6D mutation/property/repository corpus
+legacy adapter retirement decision
 ```
 
 Stop migration when:
 
 ```text
-R1C expected exits change
-RT/NEXT/COMMIT inputs change
+expected checker exits change without specification approval
 protected wording/raw text changes
-fenced/unfenced scope compatibility changes
+RT/NEXT/COMMIT input changes
 unknown schema/default inference is required
+Packet execution/normalization boundary weakens
 ```
 
-## Exit codes
+## 11. Exit codes
 
 ```text
 0: pass / applicable parse succeeded
