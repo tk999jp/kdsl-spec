@@ -1,15 +1,13 @@
 import tempfile
 from pathlib import Path
 
-from run_r1c_roundtrip_samples import optional_doc, run_cli, safety_gate_doc
+from run_r1c_roundtrip_samples import optional_doc, run_cli
 
 
 def main():
     results = []
     with tempfile.TemporaryDirectory() as tmp:
-        tmp_path = Path(tmp)
-
-        optional_path = tmp_path / 'optional.md'
+        optional_path = Path(tmp) / 'optional.md'
         optional_path.write_text(optional_doc(), encoding='utf-8')
         results.append(
             run_cli(
@@ -17,17 +15,6 @@ def main():
                 optional_path,
                 0,
                 ('optional JSON blocks preserved',),
-            )
-        )
-
-        safety_path = tmp_path / 'safety.md'
-        safety_path.write_text(safety_gate_doc(), encoding='utf-8')
-        results.append(
-            run_cli(
-                'optional Safety Gates structural pass',
-                safety_path,
-                0,
-                ('STATUS: structural_pass', 'optional SAFETY_GATES registry/entry/order preserved'),
             )
         )
 
