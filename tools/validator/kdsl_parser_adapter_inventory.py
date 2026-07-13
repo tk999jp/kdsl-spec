@@ -9,7 +9,6 @@ ADAPTER_MODULE = 'kdsl_parser_adapter'
 ALLOWED_DIRECT_IMPORTS = {
     'kdsl_packet.py': {'install_packet'},
     'kdsl_packet_normalization.py': {'install_normalization'},
-    'kdsl_safety_gate.py': {'install_safety_gate'},
 }
 PROHIBITED_INSTALLERS = {'install_r1c'}
 

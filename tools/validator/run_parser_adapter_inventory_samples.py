@@ -62,7 +62,6 @@ def main() -> int:
                     'MODE: repository',
                     'kdsl_packet.py <- kdsl_parser_adapter: install_packet',
                     'kdsl_packet_normalization.py <- kdsl_parser_adapter: install_normalization',
-                    'kdsl_safety_gate.py <- kdsl_parser_adapter: install_safety_gate',
                     'LEGACY_STRUCTURAL_HELPER_CONSUMERS:',
                     'state: blocked',
                     boundary,
