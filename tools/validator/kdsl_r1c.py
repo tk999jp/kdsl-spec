@@ -3,6 +3,8 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_compat import R1CCompatibilityView, compare_r1c_legacy_v2
+
 SCHEMA_ID = 'kdsl-r1c@0.1-draft'
 REQUIRED_KEYS = (
     'SCHEMA',
@@ -48,45 +50,15 @@ def emit(errors, warnings, info):
 
 
 def extract_result_scope(text):
-    lines = text.splitlines()
-    start = None
-    for index, line in enumerate(lines):
-        if line.strip() == 'KDSL_RESULT:':
-            start = index
-            break
-    if start is None:
-        return None
-
-    scope = []
-    for index in range(start, len(lines)):
-        line = lines[index]
-        stripped = line.strip()
-        if index > start and stripped == '```':
-            break
-        if index > start and line.startswith('#'):
-            break
-        scope.append(line)
-    return scope
+    view = R1CCompatibilityView.from_text(text)
+    return list(view.scope_lines) if view is not None else None
 
 
 def parse_top_level(scope):
-    entries = []
-    duplicates = []
-    seen = set()
-    pattern = re.compile(r'^\s*([A-Z][A-Z0-9_-]*)\s*:\s*(.*)$')
-    for line_number, raw_line in enumerate(scope, start=1):
-        match = pattern.match(raw_line)
-        if not match:
-            continue
-        key = match.group(1)
-        value = match.group(2).strip()
-        if key == 'KDSL_RESULT':
-            continue
-        if key in seen:
-            duplicates.append(key)
-        seen.add(key)
-        entries.append((key, value, line_number))
-    return entries, duplicates
+    view = R1CCompatibilityView.from_text('\n'.join(scope))
+    if view is None:
+        return [], []
+    return list(view.entries), list(view.duplicates)
 
 
 def parse_json_value(key, value, errors):
@@ -232,20 +204,20 @@ def validate_optional_json(key, value, errors):
         errors.append(f'{key} must be a JSON object when present')
 
 
-
-# Phase 1 common parser adapter. Semantic validation remains in this module.
-from kdsl_parser_adapter import install_r1c
-install_r1c(globals())
-
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
-    scope = extract_result_scope(text)
 
     errors = []
     warnings = []
     info = []
 
+    parity_errors, _ = compare_r1c_legacy_v2(text)
+    if parity_errors:
+        errors.extend('R1C parser parity guard: ' + item for item in parity_errors)
+        return emit(errors, warnings, info)
+
+    scope = extract_result_scope(text)
     if scope is None:
         info.append('no KDSL_RESULT block detected; R1C target not applicable')
         return emit(errors, warnings, info)
