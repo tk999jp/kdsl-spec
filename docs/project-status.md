@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6c-normalization-compatibility-integrated
+phase: phase6c-normalization-checker-migration-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -89,22 +89,12 @@ lexicon: standard|kanji-v1
 envelope: plain|packet-draft|result
 ```
 
-Named compositions:
-
 ```text
 KDSL-CP:=profile:compact-prompt
 KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
 KDSL-R1:=envelope:result / KDSL_RESULT
 KDSL-Packet:=v2-draft authoring envelope / non-executable
-```
-
-Legacy:
-
-```text
-rulebook:=v1.1 legacy profile name
-rulebook新規使用禁止
-rulebookを正式v2 profile扱い禁止
-legacy rulebook入力→用途確認なしに他profileへ自動補正禁止
+rulebook:=v1.1 legacy profile name / 新規使用禁止
 ```
 
 ## 4. Integrated phase summary
@@ -127,19 +117,22 @@ Phase 6C-6 Safety Gate checker migration: integrated
 Phase 6C-7 Packet compatibility view/parity: integrated
 Phase 6C-8 Packet base checker migration: integrated
 Phase 6C-9 Packet Normalization compatibility view/parity: integrated
+Phase 6C-10 Packet Normalization checker migration: integrated
 ```
 
-Phase 5 public evidence:
+Phase 6C reviews:
 
 ```text
-PR #50 / 49b6c865af046d44efc04a46d851aed55d222a61
-PR #51 / 442d53226c7d0fd000ed1f93efc28ccbb367b129
-PR #52 / 88f3d94b0c5915a74f3654e0407bffda3bb9f4c3
-experimental preview documentation: ready
-public repository navigation: ready
-public examples: non-normative
-public_ready: no
-stable_release: no
+docs/reviews/kdsl-phase6c-r1c-compatibility-view.md
+docs/reviews/kdsl-phase6c-r1c-checker-migration.md
+docs/reviews/kdsl-phase6c-compact-compatibility-view.md
+docs/reviews/kdsl-phase6c-compact-checker-migration.md
+docs/reviews/kdsl-phase6c-safety-gate-compatibility-view.md
+docs/reviews/kdsl-phase6c-safety-gate-checker-migration.md
+docs/reviews/kdsl-phase6c-packet-compatibility-view.md
+docs/reviews/kdsl-phase6c-packet-checker-migration.md
+docs/reviews/kdsl-phase6c-normalization-compatibility-view.md
+docs/reviews/kdsl-phase6c-normalization-checker-migration.md
 ```
 
 ## 5. Repository enforcement
@@ -161,8 +154,6 @@ repository_enforcement:
   block_force_pushes: true
 ```
 
-Activation evidence:
-
 ```text
 verification PR: 53 / closed without merge
 verification workflow: #252 / success
@@ -170,9 +161,6 @@ activation record PR: 54
 activation record squash: 9434628aefb966d0b66e9d865a956d961b551ef2
 issue #39: closed / completed
 required_check_activation: confirmed
-```
-
-```text
 workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ```
 
@@ -186,8 +174,8 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 17
-  unified_expectations: 329
+  unified_runners: 18
+  unified_expectations: 336
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
@@ -199,196 +187,90 @@ validator:
   phase6c_packet_parity_cases: 8
   phase6c_packet_checker_migration_cases: 6
   phase6c_normalization_parity_cases: 8
-  required_check_activation: active
-  required_check_ruleset: Protect main with KDSL Validation
+  phase6c_normalization_checker_migration_cases: 7
 ```
 
 Latest implementation verification:
 
 ```text
-implementation PR: 75
-source head: c99a774ba7d58dcc7eac5e733cdc1d12a4b9e310
-squash commit: ceb8269c2f1b3fe84342bd0fcff6d36871385510
-workflow run: 29233236734 / #317 / success
+implementation PR: 77
+source head: cd70e15f8df7d1d17f7c5ee1f8348719cba327a0
+squash commit: 01f7c7c29aae98b1dfbb95ae416446c9e5b5f823
+workflow run: 29233820287 / #321 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
 ```
 
-Unified output policy:
-
 ```text
 successful child runner→compact summary
 failed/malformed child runner→full stdout/stderr
 missing summary or non-zero exit→failure
-```
-
-Boundaries:
-
-```text
 validator未実行→pass扱禁止
 validator pass != semantic equivalence
 validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-required check active != stable/public-ready approval
 ```
 
-## 7. Semantic parser status
+## 7. Semantic parser / checker migration state
 
-### Phase 1 compatibility parser
-
-```text
-tools/validator/kdsl_parser.py
-tools/validator/kdsl_parser_adapter.py
-DocumentNode / EnvelopeNode / FieldNode
-SourceSpan / ParseIssue / DiagnosticBag
-```
-
-Active namespace-adapter checker consumer:
+Typed AST core:
 
 ```text
-Packet Normalization
-```
-
-Retained helper-export compatibility:
-
-```text
-kdsl_packet.py installs Phase 1 helper exports for imported semantic/property/normalization modules
-Packet base checker scope/entries/blocks are AST v2
-```
-
-Migrated base/checker paths:
-
-```text
-R1C: AST v2 compatibility extraction + parity guard
-CompactPrompt: AST v2 compatibility extraction + parity guard
-Safety Gate: AST v2 compatibility extraction + parity guard
-Packet base checker: AST v2 compatibility extraction + parity guard
-```
-
-Compatibility pilot without checker switch:
-
-```text
-Packet Normalization: AST v2 CompatibilityView + parity corpus integrated
-```
-
-```text
-legacy adapter removal: prohibited until Normalization checker and helper-consumer migration evidence
-```
-
-### Phase 6B typed AST v2 core
-
-```text
-implementation:
-  tools/validator/kdsl_parser_v2.py
-  tools/validator/kdsl_parse_v2.py
-corpus:
-  tools/validator/run_parser_v2_samples.py
-  tools/validator/samples/parser-v2/*
-PR: 57
-squash: 54c214587cedfc4af634edba9d3df7cdea30d524
-status: integrated / additive
-```
-
-Implemented surface:
-
-```text
-ordered document children
-formal header nodes
-multiple envelope exposure
-raw + normalized value channels
+tools/validator/kdsl_parser_v2.py
+tools/validator/kdsl_parse_v2.py
+DocumentNodeV2 / HeaderNode / EnvelopeNodeV2 / FieldNodeV2
+SourceSpanV2 / DiagnosticV2
 typed scalar/block/JSON/mapping/sequence/record nodes
-nested source spans
-duplicate envelope/field/mapping-key diagnostics
-invalid JSON/unclosed fence diagnostics
 active-document fence isolation
-CRLF normalization
-UTF-8/Japanese exact wording preservation
-unknown header values retained without inference
+raw-envelope compatibility contexts
 ```
 
-### R1C migration
+Migrated active checker paths:
 
 ```text
-compatibility view: tools/validator/kdsl_parser_v2_compat.py
-parity checker: tools/validator/kdsl_parser_v2_r1c_parity.py
-semantic checker: tools/validator/kdsl_r1c.py
-PRs: 59 / 61
-status: checker migrated under parity guard
+R1C:
+  tools/validator/kdsl_parser_v2_compat.py
+  tools/validator/kdsl_r1c.py
+CompactPrompt:
+  tools/validator/kdsl_parser_v2_compact_compat.py
+  tools/validator/kdsl_compact_prompt.py
+Safety Gate:
+  tools/validator/kdsl_parser_v2_safety_gate_compat.py
+  tools/validator/kdsl_safety_gate.py
+Packet base checker:
+  tools/validator/kdsl_parser_v2_packet_compat.py
+  tools/validator/kdsl_packet.py
+Packet Normalization checker:
+  tools/validator/kdsl_parser_v2_normalization_compat.py
+  tools/validator/kdsl_packet_normalization.py
 ```
 
-### CompactPrompt migration
+Common runtime pattern:
 
 ```text
-compatibility view: tools/validator/kdsl_parser_v2_compact_compat.py
-parity checker: tools/validator/kdsl_parser_v2_compact_parity.py
-semantic checker: tools/validator/kdsl_compact_prompt.py
-migration suite: tools/validator/run_compact_migration_samples.py
-PRs: 63 / 65
-status: checker migrated under parity guard
+input
+→ AST v2 CompatibilityView
+→ Phase 1/AST v2 structural parity guard
+→ mismatch: semantic validation前にfail
+→ match: existing semantic validation
 ```
 
-### Safety Gate migration
+No active base checker remains solely on the Phase 1 namespace-adapter structural path.
+
+Retained helper compatibility:
 
 ```text
-compatibility view: tools/validator/kdsl_parser_v2_safety_gate_compat.py
-parity checker: tools/validator/kdsl_parser_v2_safety_gate_parity.py
-semantic checker: tools/validator/kdsl_safety_gate.py
-migration suite: tools/validator/run_safety_gate_migration_samples.py
-PRs: 67 / 69
-status: checker migrated under parity guard
+kdsl_packet.py installs Phase 1-compatible helper exports for semantic/property/normalization modules
+kdsl_packet_normalization.py installs Phase 1-compatible helper exports for round-trip/property modules
+kdsl_safety_gate.py retains helper APIs for inheritance/graph/R1C optional/semantic modules
 ```
 
-### Packet migration
-
 ```text
-compatibility view: tools/validator/kdsl_parser_v2_packet_compat.py
-parity checker: tools/validator/kdsl_parser_v2_packet_parity.py
-semantic checker: tools/validator/kdsl_packet.py
-migration suite: tools/validator/run_packet_migration_samples.py
-PRs: 71 / 73
-status: base checker migrated under parity guard
-```
-
-Retained helper boundary:
-
-```text
-install_packet(globals()): retained for imported helper API
-Packet semantic/property/normalization helper migration: not claimed
-```
-
-### Packet Normalization compatibility pilot
-
-```text
-compatibility view: tools/validator/kdsl_parser_v2_normalization_compat.py
-parity checker: tools/validator/kdsl_parser_v2_normalization_parity.py
-parity suite: tools/validator/run_parser_v2_normalization_parity_samples.py
-review: docs/reviews/kdsl-phase6c-normalization-compatibility-view.md
-PR: 75
-squash: ceb8269c2f1b3fe84342bd0fcff6d36871385510
-status: compatibility view/parity integrated
-```
-
-Compared contract:
-
-```text
-NORMALIZATION_DRAFT presence/exact scope
-top-level order/value/relative line/duplicates
-raw block boundaries
-nested scalar maps and duplicates
-MAP/UNRESOLVED/LOSS records
-PRESERVE nested lists
-OUTPUT.preview block scalar
-```
-
-Migration boundary:
-
-```text
-normalization checker switch: not performed
-Phase 1 adapter: retained
-normalization semantic/equivalence/authority policy: unchanged
+helper exports retained != active checker Phase 1 path
+legacy adapter removal: prohibited until helper-consumer and Full R1 evidence
 ```
 
 ## 8. R1 / R1C status
@@ -397,7 +279,7 @@ normalization semantic/equivalence/authority policy: unchanged
 canonical R1: spec/r1/r1-result-spec.md
 R1C schema: kdsl-r1c@0.1-draft
 R1C status: v2-draft adopted serialization profile
-R1C extraction: AST v2 compatibility path + legacy parity guard
+R1C extraction: AST v2 CompatibilityView + legacy parity guard
 R1C independent canonical spec: no
 R1C stable: no
 R1C full semantic equivalence: not_proven
@@ -416,7 +298,6 @@ COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 profile: compact-prompt
 standard structure: Goal/Input/Output/Guard/Check
 kanji-v1 structure: 目/材/出/守/確
-semantic checker: tools/validator/kdsl_compact_prompt.py
 AST v2 checker migration: integrated
 legacy-v2 parity guard: active
 ```
@@ -432,7 +313,6 @@ KDSL-CP漢 alias:=構造KEY位置のみ
 
 ```text
 registry: kdsl-sg@0.1-draft
-semantic checker: tools/validator/kdsl_safety_gate.py
 AST v2 checker migration: integrated
 legacy-v2 parity guard: active
 structural parity: 8 / failed 0
@@ -469,9 +349,10 @@ Normalization:
 ```text
 schema: kdsl-packet-normalization@0.1-draft
 status: non-executable
-AST v2 compatibility view: integrated
-checker migration: pending
+AST v2 checker migration: integrated
+legacy-v2 parity guard: active
 structural parity: 8 / failed 0
+checker migration corpus: 7 / failed 0
 TARGET.executable: false
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
@@ -506,9 +387,8 @@ hold/blocked gate削除禁止
 
 ```text
 Full R1 compatibility view/migration
-Packet Normalization checker migration
-Packet helper-consumer structural migration decision
-inheritance/graph helper structural migration decision
+Packet/Normalization helper-consumer structural migration decision
+Safety Gate inheritance/graph helper structural migration decision
 legacy adapter retirement proof
 same-marker multi-envelope semantics
 complete semantic equivalence proof
@@ -527,8 +407,7 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
-R1C / CompactPrompt / Safety Gate / Packet base checker AST v2 extraction under parity guards
-Packet Normalization AST v2 structural parity pilot
+R1C / CompactPrompt / Safety Gate / Packet / Normalization active checker AST v2 extraction under parity guards
 ```
 
 Do not present as:
@@ -546,10 +425,11 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6C-10 Packet Normalization checker migration under parity guard
-P1: Full R1 compatibility view/migration
+P0: Phase 6C-11 Full R1 compatibility inventory/view/parity pilot
+P1: Full R1 checker migration after parity evidence
 P2: helper-consumer migration decision
-P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
+P3: Phase 6D mutation/property/repository corpus
+P4: legacy adapter retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
@@ -557,13 +437,11 @@ Stop when:
 
 ```text
 existing checker exits change without specification approval
+RT/NEXT/COMMIT evidence or authority meaning changes
 normalization STATUS non-executable weakens
 TARGET.executable false weakens
 ROUND_TRIP.semantic_equivalence not_proven weakens
 AUTHORITY.execution_authority none weakens
-executable target marker prohibition weakens
 Packet STATUS/normalization state/authority rails weaken
-protected wording/raw text changes
-RT/NEXT/COMMIT meaning changes
 unknown schema/default inference is required
 ```
