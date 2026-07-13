@@ -42,6 +42,12 @@ CASES = (
         (*PASS_MARKERS, 'raw-source compatibility retained'),
     ),
     SuiteCase(
+        'R1C parity optional Safety Gates field',
+        ('kdsl_parser_v2_r1c_parity.py', 'samples/parser-v2/r1c_safety_gates_optional.md'),
+        0,
+        (*PASS_MARKERS, 'raw-source compatibility retained'),
+    ),
+    SuiteCase(
         'R1C parity repository success example',
         ('kdsl_parser_v2_r1c_parity.py', 'examples/r1c/r1c-success.example.md'),
         0,
@@ -58,6 +64,15 @@ CASES = (
         ('kdsl_parser_v2_r1c_parity.py', 'examples/r1c/r1c-needs-user.example.md'),
         0,
         PASS_MARKERS,
+    ),
+    SuiteCase(
+        'R1C checker parity guard blocks unsupported same-marker divergence',
+        ('kdsl_r1c.py', 'samples/parser-v2/r1c_same_marker_duplicate.md'),
+        2,
+        (
+            'STATUS: fail',
+            'R1C parser parity guard: entry mismatch',
+        ),
     ),
 )
 
