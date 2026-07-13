@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import re
+from contextlib import contextmanager
 from dataclasses import dataclass
 
-from kdsl_parser_v2 import DocumentNodeV2, EnvelopeNodeV2, FieldNodeV2
+from kdsl_parser_v2 import (
+    KNOWN_ENVELOPES,
+    DocumentNodeV2,
+    EnvelopeNodeV2,
+    FieldNodeV2,
+)
 
 _FIELD_RE = re.compile(r'^([A-Za-z][A-Za-z0-9_-]*)\s*:\s*(.*)$')
 _MARKER_RE = re.compile(r'^(\s*)KDSL_RESULT\s*:\s*$')
@@ -16,6 +22,7 @@ _TOP_LEVEL_ENVELOPES = {
     'STRUCTURAL_ROUND_TRIP_RESULT',
     'R1C_STRUCTURAL_ROUND_TRIP_RESULT',
 }
+_R1C_FIELD_MARKERS = {'SAFETY_GATES'}
 
 
 @dataclass(frozen=True)
@@ -42,7 +49,14 @@ class R1CCompatibilityView:
         # preserves Phase 1 behavior for repository examples whose active R1C
         # envelope is placed inside a Markdown fence, while leaving the AST v2
         # active-document fence policy unchanged.
-        document = DocumentNodeV2.parse('\n'.join(scope_lines), context='raw-envelope')
+        #
+        # SAFETY_GATES is both a standalone KDSL-family envelope marker and an
+        # optional R1C field. Within this already-selected KDSL_RESULT scope it
+        # must remain a field, so the compatibility parser temporarily removes
+        # only that marker from the general envelope registry. The registry is
+        # restored in all cases before returning.
+        with _r1c_field_marker_scope():
+            document = DocumentNodeV2.parse('\n'.join(scope_lines), context='raw-envelope')
         envelopes = document.envelopes('KDSL_RESULT')
         if not envelopes:
             return None
@@ -70,6 +84,16 @@ class R1CCompatibilityView:
     @property
     def field_order(self) -> tuple[str, ...]:
         return tuple(key for key, _, _ in self.entries)
+
+
+@contextmanager
+def _r1c_field_marker_scope():
+    removed = {marker for marker in _R1C_FIELD_MARKERS if marker in KNOWN_ENVELOPES}
+    KNOWN_ENVELOPES.difference_update(removed)
+    try:
+        yield
+    finally:
+        KNOWN_ENVELOPES.update(removed)
 
 
 def compare_r1c_legacy_v2(text: str) -> tuple[list[str], list[str]]:
