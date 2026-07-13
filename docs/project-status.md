@@ -2,15 +2,15 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-consumer-matrix-integrated
+phase: phase6d-unified-runner-corrective-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 330f79694a50b509b02d9a43a7160ad8ab2650cb
+verified_main_head: 724d31dfb1adbbba7488db4cb444c65047492d5d
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
-詳細なphase証跡は `docs/reviews/*` と各validator implementation notesへ保持します。
+詳細証跡は `docs/reviews/*` と各validator implementation notesへ保持します。
 
 ## 1. Current public state
 
@@ -101,6 +101,7 @@ Phase 6B typed parser/AST v2 core: integrated
 Phase 6C active-checker structural migrations: complete
 Phase 6D-1 parser adapter/helper inventory: integrated
 Phase 6D-2 parser helper consumer decision matrix: integrated
+Phase 6D unified-runner corrective: integrated
 ```
 
 Phase 6C migrated active checker paths:
@@ -147,38 +148,36 @@ required_check_activation: confirmed
 workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ```
 
-## 6. Verified repository history
+## 6. Verified Phase 6D history
 
 ```text
-PR #81 Full R1 checker migration:
-  squash: 7a78231eebb8a49b2a49d2d201a1a9e6deabf618
-  workflow: 29234998011 / #329 / success
-
-PR #82 Full R1 closeout:
-  merged: true
-  squash: 34672e5c3fa8f970c0fa39d28a97ddd55988266a
-
 PR #83 adapter inventory:
-  source: 2a7e70aa25a112d2aadb0cb2f07d1eb3056e5060
-  squash: 1f26802db86a4286cdf09ef438f35ffd1f5a7a66
-  workflow: 29236201674 / #333 / success
+  tool/corpus integrated
+  unified runner connection absent at merge
 
-PR #84 adapter inventory closeout:
-  source: bd814a53295b221fdd0c3458d7b6e75c93449319
-  squash: 3fbffb0909f21d727224278e337ab62440963929
-  workflow: 29236502985 / #335 / success
+PR #84 inventory closeout:
+  merged
 
-PR #85 consumer decision matrix:
-  source: 62743085b2ea1b4708f69c02e97d6085afa750a9
-  squash/current main: 330f79694a50b509b02d9a43a7160ad8ab2650cb
-  workflow: 29236827894 / #337 / success
+PR #85 consumer matrix:
+  tool/corpus integrated
+  unified runner connection absent at merge
+
+PR #86 consumer matrix closeout:
+  merged / squash 1dcd3522f507b8e6c2d1edb4d2bef8c5f1ac7c24
+  stale Full R1 status corrected
+
+PR #87 unified-runner corrective:
+  source 20cce60e459bbb379599d69e5a1e1b1bae66f202
+  squash 724d31dfb1adbbba7488db4cb444c65047492d5d
+  workflow 29288377720 / #345 / success
 ```
 
-For runs #333, #335 and #337:
+PR #87 corrected:
 
 ```text
-KDSL Validation: success
-Packet Semantic Property: success
+run_all_samples.py now includes inventory and matrix runners
+Safety Gate direct-installer expectation removed
+current direct-installer boundary aligned to repository
 ```
 
 ## 7. Validator status
@@ -210,13 +209,13 @@ validator:
   adapter_consumer_matrix_cases: 5
 ```
 
-Latest verification:
+Latest verified workflow:
 
 ```text
-implementation PR: 85
-source head: 62743085b2ea1b4708f69c02e97d6085afa750a9
-squash commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
-workflow run: 29236827894 / #337 / success
+corrective PR: 87
+source head: 20cce60e459bbb379599d69e5a1e1b1bae66f202
+squash commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+workflow run: 29288377720 / #345 / success
 KDSL Validation: success
 Packet Semantic Property: success
 adapter inventory: 4 / failed 0
@@ -266,7 +265,7 @@ Retained compatibility surface:
 ```text
 Packet helper exports→semantic/property/normalization modules
 Normalization helper exports→round-trip/property modules
-Safety Gate helper exports→inheritance/graph/R1C optional/semantic modules
+Safety Gate helper APIs→inheritance/graph/R1C optional/semantic modules
 Full R1 legacy helper functions→parity comparison
 ```
 
@@ -299,12 +298,21 @@ retain-parity-only
 retain-semantic-api
 ```
 
-Known direct installer boundary:
+Verified direct installer boundary:
 
 ```text
 kdsl_packet.py -> install_packet
 kdsl_packet_normalization.py -> install_normalization
-kdsl_safety_gate.py -> install_safety_gate
+```
+
+Safety Gate:
+
+```text
+kdsl_safety_gate.py direct installer: absent
+Safety Gate helper-consumer inventory: retained
+```
+
+```text
 install_r1c recurrence -> prohibited
 unknown direct importer -> failure
 ```
@@ -320,8 +328,8 @@ Retirement gates:
 
 ```text
 G1 active checker independence: satisfied
-G2 direct installer inventory: integrated
-G3 helper-consumer decision matrix: integrated
+G2 direct installer inventory: integrated / unified-CI-verified
+G3 helper-consumer decision matrix: integrated / unified-CI-verified
 G4 consumer-specific mutation/property/repository corpus: incomplete
 G5 replacement API or explicit retention evidence: incomplete
 G6 post-removal per-family proof: absent
@@ -376,6 +384,7 @@ KDSL-CP漢 alias:=構造KEY位置のみ
 registry: kdsl-sg@0.1-draft
 AST v2 checker migration: integrated
 legacy-v2 parity guard: active
+direct kdsl_parser_adapter installer: absent
 hold/blocked gate削除禁止
 state:satisfied requires evidence and authority basis
 baseline/composition/protected-wording unchanged
@@ -439,7 +448,7 @@ hold/blocked gate削除禁止
 ```text
 consumer-specific mutation/property/repository corpus
 Packet/Normalization helper-consumer migration
-Safety Gate inheritance/graph/optional helper migration decision
+Safety Gate inheritance/graph/optional helper decision
 per-family installer removal proof
 legacy adapter retirement proof
 same-marker multi-envelope semantics
@@ -460,7 +469,7 @@ CompactPrompt architecture
 experimental heuristic validator helpers
 typed parser/AST v2 first slice
 all active checker structural inputs migrated to AST v2 CompatibilityViews under parity guards
-adapter inventory and consumer decision matrix integrated
+adapter inventory and consumer decision matrix integrated and unified-CI-verified
 ```
 
 Do not present as:
@@ -479,18 +488,12 @@ adapter-retirement-ready repository
 ## 17. Next safe steps
 
 ```text
-P0: Phase 6D-3 select one migrate-or-replace helper family
-P1: add consumer-specific mutation/property cases before import changes
-P2: migrate or replace that family and re-run inventory/matrix
+P0: Phase 6D-3A Packet Normalization consumer contract/mutation corpus
+P1: Phase 6D-3B migrate round-trip consumer to NormalizationCompatibilityView
+P2: re-run inventory/matrix and full suite
 P3: per-family installer removal trial after blocking consumers clear
 P4: legacy adapter retirement decision last
 Hold: stable/public-ready/tag/release/Release Assets
-```
-
-Recommended first family:
-
-```text
-Packet Normalization round-trip/property helper consumers
 ```
 
 Stop when:
