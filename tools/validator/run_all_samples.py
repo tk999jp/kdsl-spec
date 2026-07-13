@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parent.parent
 RUNNERS = (
-    ('core', 'run_samples.py'),
+    ('core-r1c-diagnostic-a', 'run_r1c_migration_diagnostic.py'),
     ('safety-gate', 'run_safety_gate_samples.py'),
     ('r1c-roundtrip', 'run_r1c_roundtrip_samples.py'),
     ('parser', 'run_parser_samples.py'),
