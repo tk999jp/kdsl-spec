@@ -1,10 +1,11 @@
 # KDSL / R1 Project Status
 
 status: canonical-project-status
-last_updated: 2026-07-12
-phase: phase5-public-hardening-complete
+last_updated: 2026-07-13
+phase: phase6a-semantic-parser-foundation-design
 repository: tk999jp/kdsl-spec
 default_branch: main
+tracking_issue: 55
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -125,6 +126,7 @@ Phase 2 Safety Semantics bounded slice: integrated
 Phase 3 R1C deep optional-block round-trip: integrated
 Phase 4 Packet / Normalization semantic properties: integrated
 Phase 5 Public-facing v2 hardening: complete
+Phase 6A Semantic Parser Foundation contract/design: active
 ```
 
 Phase 5 evidence:
@@ -176,23 +178,19 @@ repository_enforcement:
 Activation evidence:
 
 ```text
-U共有GitHub Settings画面:
-  ruleset created
-  status: Active
-  target: main
-  required check: KDSL Validation
-
 verification_pull_request: 53
 verification_head: b78ee593d6dfb42a6edfce53701c510b39f83067
 workflow_run: 252
 workflow_conclusion: success
 merge: not executed
 close_without_merge: completed
+activation_record_pull_request: 54
+activation_record_squash_commit: 9434628aefb966d0b66e9d865a956d961b551ef2
+issue_39: closed / completed
 ```
 
 ```text
 required_check_activation: confirmed
-issue_39_resolution_candidate: yes
 workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ```
 
@@ -208,8 +206,20 @@ validator:
   unified_command: python tools/validator/run_all_samples.py
   unified_expectations: 257
   failed: 0
+  parser_cases: 11
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
+```
+
+Current common parser baseline:
+
+```text
+DocumentNode / EnvelopeNode / FieldNode
+SourceSpan / ParseIssue / DiagnosticBag
+first matching envelope per marker
+nested mapping/list/record helper values
+legacy namespace adapters:
+  R1C / Packet / Normalization / Safety Gate
 ```
 
 Boundaries:
@@ -224,7 +234,51 @@ validator pass != release readiness
 required check active != stable/public-ready approval
 ```
 
-## 7. R1 / R1C status
+## 7. Phase 6A — Semantic Parser Foundation
+
+```text
+tracking_issue: 55
+design:
+  docs/design/kdsl-semantic-parser-v2.md
+review:
+  docs/reviews/kdsl-phase6a-semantic-parser-foundation.md
+status: contract/design active
+implementation_change: none
+semantic_policy_change: none
+```
+
+Selected direction:
+
+```text
+source text
+→ typed Document AST
+→ ordered header/envelope/field/value nodes
+→ raw + normalized channels
+→ explicit compatibility views
+→ existing semantic checkers
+```
+
+Phase split:
+
+```text
+6A: inventory / AST contract / compatibility / test plan
+6B: additive AST v2 core + corpus
+6C: checker migration with parity evidence
+6D: mutation/property/repository corpus + adapter retirement decision
+```
+
+Mandatory retention:
+
+```text
+protected wording raw text保持
+unknown schema/profile/alias/default推測禁止
+legacy expected exit保持
+Safety Gate/authority/RT semantics変更禁止
+Packet executable化禁止
+Packet normalization完了扱禁止
+```
+
+## 8. R1 / R1C status
 
 ```text
 canonical R1: spec/r1/r1-result-spec.md
@@ -244,7 +298,7 @@ NEXT:=提案, 実行許可扱禁止
 COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ```
 
-## 8. Packet status
+## 9. Packet status
 
 ```text
 schema: kdsl-packet@0.1-draft
@@ -267,7 +321,7 @@ normalization preview != executable target
 KDSL-Packet直接実行禁止
 ```
 
-## 9. Safety and authority boundaries
+## 10. Safety and authority boundaries
 
 ```text
 意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
@@ -283,9 +337,12 @@ unknown profile/mode/safety/lexicon/envelope/schema/registry/ID推測禁止
 hold/blocked gate削除禁止
 ```
 
-## 10. Known gaps
+## 11. Known gaps
 
 ```text
+typed document/header/nested-value AST
+multiple-envelope/context model
+legacy adapter retirement proof
 full YAML/KDSL semantic parser
 full natural-language negation/exception reasoning
 full semantic equivalence proof
@@ -297,7 +354,7 @@ canonical P1/P1L target schema
 stable/public-ready U approval
 ```
 
-## 11. Current positioning
+## 12. Current positioning
 
 Use as:
 
@@ -318,13 +375,15 @@ production-ready proof system
 approval/runtime/release substitute
 executable Packet specification
 independent canonical R1C standard
+complete semantic parser
 ```
 
-## 12. Next safe steps
+## 13. Next safe steps
 
 ```text
-P0: close Issue #39 after activation record integration
-P1: continue semantic/parser/safety proof maturation as separate phases
+P0: review and integrate Phase 6A design/compatibility contract / issue #55
+P1: Phase 6B additive AST v2 implementation and parser corpus
+P2: Phase 6C checker migration with legacy parity evidence
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 

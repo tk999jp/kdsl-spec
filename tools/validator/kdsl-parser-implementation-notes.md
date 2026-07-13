@@ -1,7 +1,9 @@
-# KDSL Common Parser / AST Phase 1
+# KDSL Common Parser / AST
 
-status: implementation-candidate
-phase: common parser / validator foundation
+status: phase1-integrated / phase6a-design-active
+phase1_pull_request: 38
+phase1_squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
+phase6_tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
@@ -16,7 +18,7 @@ parser/AST != RT:v
 parser/AST != release readiness
 ```
 
-## Core model
+## Phase 1 core model
 
 ```text
 DocumentNode
@@ -36,7 +38,7 @@ field order
 field duplicates
 source line/column spans
 inline and multiline values
-nested mapping/list/record structure
+nested mapping/list/record helper structures
 exact strings
 ```
 
@@ -66,7 +68,7 @@ source-span output
 legacy checker adapters
 ```
 
-## Checker migration
+## Checker migration baseline
 
 The following major semantic checkers use the common parser adapters for input extraction:
 
@@ -87,21 +89,55 @@ run_all_samples.py
   run_safety_gate_samples.py
   run_r1c_roundtrip_samples.py
   run_parser_samples.py
+  later Phase 2-4 suites
 ```
 
 The unified runner aggregates all suite totals and fails when any runner fails or omits a summary.
 
-## Known limits
+Current integrated checkpoint:
+
+```text
+unified expectations: 257 / failed 0
+parser/adapter suite: 11 / failed 0
+required workflow/check: KDSL Validation
+```
+
+## Phase 1 known limits
 
 ```text
 not a complete YAML parser
 not a complete JSON5 parser
 not a natural-language semantic parser
 first matching envelope per marker
+field-only AST
+nested source spans are not first-class nodes
+legacy namespace adapter remains
 no alias inference
 no unknown schema inference
 no implicit defaults
 ```
+
+## Phase 6A direction
+
+Design and review documents:
+
+```text
+docs/design/kdsl-semantic-parser-v2.md
+docs/reviews/kdsl-phase6a-semantic-parser-foundation.md
+```
+
+Selected direction:
+
+```text
+additive typed document/header/envelope/field/value AST
+raw + normalized value channels
+multiple-envelope/context representation
+explicit compatibility views
+checker-by-checker parity migration
+legacy adapter retirement only after evidence
+```
+
+Phase 6A changes design/status only. It does not implement AST v2 and does not change semantic policy.
 
 ## Exit codes
 
