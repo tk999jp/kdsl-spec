@@ -2,6 +2,11 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_compact_compat import (
+    CompactPromptCompatibilityView,
+    compare_compact_legacy_v2,
+)
+
 STANDARD_REQUIRED = ('Goal', 'Input', 'Output', 'Guard', 'Check')
 STANDARD_CONDITIONAL = ('Role', 'Rules', 'Style')
 KANJI_REQUIRED = ('目', '材', '出', '守', '確')
@@ -129,21 +134,29 @@ def emit(errors, warnings, info):
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
-    shorthand = detect_shorthand(text)
-    is_compact = bool(shorthand or detect_profile(text))
 
     errors = []
     warnings = []
     info = []
 
-    if not is_compact:
+    view = CompactPromptCompatibilityView.from_text(text)
+    parity_errors, _ = compare_compact_legacy_v2(text)
+    if parity_errors:
+        for item in parity_errors:
+            errors.append('CompactPrompt parser parity guard: ' + item)
+        return emit(errors, warnings, info)
+    info.append('CompactPrompt parser parity guard: pass')
+
+    if not view.is_compact:
         info.append('no CompactPrompt profile or shorthand detected')
         return emit(errors, warnings, info)
 
-    scope = extract_scope(text, shorthand)
-    mode = header_value(text, 'mode')
-    lexicon = header_value(text, 'lexicon')
-    safety = header_value(text, 'safety')
+    shorthand = view.shorthand
+    scope = view.scope
+    headers = view.header_values
+    mode = headers.get('mode')
+    lexicon = headers.get('lexicon')
+    safety = headers.get('safety')
 
     if mode and mode.lower() == 'dense-ja':
         errors.append('mode:dense-ja is not valid; use mode:dense with lexicon:kanji-v1')
@@ -161,7 +174,8 @@ def main(argv):
         if lexicon and lexicon.lower() != 'kanji-v1':
             errors.append('KDSL-CP漢 conflicts with explicit lexicon; expected lexicon:kanji-v1')
 
-    blocks, duplicates = parse_blocks(scope)
+    blocks = view.block_values
+    duplicates = list(view.duplicates)
     required = KANJI_REQUIRED if expected_kanji else STANDARD_REQUIRED
     other_keys = STANDARD_REQUIRED + STANDARD_CONDITIONAL if expected_kanji else KANJI_REQUIRED + KANJI_CONDITIONAL
 
@@ -203,6 +217,7 @@ def main(argv):
         else:
             info.append('adopted non-executable Packet marker detected')
 
+    info.append('CompactPrompt structural extraction: AST v2 compatibility view')
     info.append('CompactPrompt form: ' + ('kanji-v1' if expected_kanji else 'standard'))
     info.append('required blocks checked: ' + ', '.join(required))
     return emit(errors, warnings, info)
