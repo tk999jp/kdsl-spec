@@ -1,8 +1,11 @@
 # Parser Adapter Dependency Inventory Notes
 
-status: phase6d-inventory-integrated / retirement-blocked
+status: phase6d-inventory-integrated / unified-ci-verified / retirement-blocked
 inventory_tool: tools/validator/kdsl_parser_adapter_inventory.py
 inventory_runner: tools/validator/run_parser_adapter_inventory_samples.py
+corrective_pull_request: 87
+corrective_squash_commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+workflow: 29288377720 / 345 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
@@ -17,12 +20,17 @@ inventory pass != adapter retirement proof
 
 ## Direct adapter import policy
 
-Allowed direct installer imports are bounded to:
+Allowed direct installer imports are bounded to the current repository state:
 
 ```text
 kdsl_packet.py: install_packet
 kdsl_packet_normalization.py: install_normalization
-kdsl_safety_gate.py: install_safety_gate
+```
+
+Safety Gate direct installer status:
+
+```text
+kdsl_safety_gate.py: no direct kdsl_parser_adapter installer
 ```
 
 Failures:
@@ -62,7 +70,9 @@ kdsl_safety_gate:
   is_blank
 ```
 
-Imports from these modules are split into:
+Safety Gate remains in this list because structural-helper consumers are inventoried independently from direct adapter installers.
+
+Imports from helper modules are split into:
 
 ```text
 legacy structural helper consumer
@@ -84,6 +94,20 @@ ERRORS:
 RETIREMENT:
 BOUNDARY:
 ```
+
+## Verification
+
+```text
+inventory corpus: 4 / failed 0
+consumer matrix corpus: 5 / failed 0
+unified runners: 22
+unified expectations: 362 / failed 0
+workflow run: 29288377720 / #345
+KDSL Validation: success
+Packet Semantic Property: success
+```
+
+`run #345` is the first workflow that includes both Phase 6D dedicated runners in `run_all_samples.py`.
 
 ## Current retirement state
 
@@ -111,15 +135,15 @@ inventory pass != complete safety proof
 inventory pass != U approval
 inventory pass != RT:v
 inventory pass != execution authority
+inventory pass != adapter retirement proof
 inventory pass != release readiness
 ```
 
 ## Next work
 
 ```text
-consumer matrix
-migrate|replace|retain-with-reason decisions
 consumer-specific mutation/property cases
+migrate|replace|retain-with-reason execution per helper family
 per-family installer removal trials
 adapter file retirement decision last
 ```
