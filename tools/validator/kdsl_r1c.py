@@ -212,11 +212,6 @@ def main(argv):
     warnings = []
     info = []
 
-    parity_errors, _ = compare_r1c_legacy_v2(text)
-    if parity_errors:
-        errors.extend('R1C parser parity guard: ' + item for item in parity_errors)
-        return emit(errors, warnings, info)
-
     scope = extract_result_scope(text)
     if scope is None:
         info.append('no KDSL_RESULT block detected; R1C target not applicable')
@@ -229,6 +224,12 @@ def main(argv):
     if schema is None:
         info.append('KDSL_RESULT has no R1C SCHEMA marker; Full R1 fallback/out-of-scope')
         return emit(errors, warnings, info)
+
+    parity_errors, _ = compare_r1c_legacy_v2(text)
+    if parity_errors:
+        errors.extend('R1C parser parity guard: ' + item for item in parity_errors)
+        return emit(errors, warnings, info)
+
     if schema != SCHEMA_ID:
         errors.append('unknown R1C schema: ' + schema)
         return emit(errors, warnings, info)
