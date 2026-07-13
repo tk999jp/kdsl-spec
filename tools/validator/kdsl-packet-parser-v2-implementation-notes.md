@@ -1,18 +1,22 @@
 # Packet Parser v2 Compatibility Notes
 
-status: phase6c-compatibility-view-integrated / checker-migration-pending
+status: phase6c-compatibility-view-integrated / base-checker-migrated-under-parity-guard
 compatibility_view: tools/validator/kdsl_parser_v2_packet_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_packet_parity.py
 parity_runner: tools/validator/run_parser_v2_packet_parity_samples.py
-implementation_pull_request: 71
-implementation_squash_commit: 5b158c667a266ee1e10e2337eee9f0260f6b02ba
-workflow: 29232149425 / 309 / success
+active_checker: tools/validator/kdsl_packet.py
+migration_runner: tools/validator/run_packet_migration_samples.py
+compatibility_pull_request: 71
+compatibility_squash_commit: 5b158c667a266ee1e10e2337eee9f0260f6b02ba
+migration_pull_request: 73
+migration_squash_commit: 52675d02969123f7329727fdddfcf5e0813a377e
+latest_workflow: 29232739675 / 313 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
 
-Provide a source-spanned Packet structural view that matches the complete Phase 1 helper surface consumed by `kdsl_packet.py` before changing the active checker.
+Provide a source-spanned Packet structural view and use it as the active base checker's scope/entry/block input without changing Packet semantics, normalization state, authority, or executability.
 
 ```text
 parser parity != Packet semantic equivalence
@@ -21,31 +25,69 @@ parser parity != execution authority
 parser parity != Packet executability
 ```
 
-## Current active checker path
+## Active base checker path
 
 ```text
-tools/validator/kdsl_packet.py
-→ tools/validator/kdsl_parser_adapter.py
-→ install_packet(globals())
-→ Phase 1 structural helpers
-→ existing semantic/property checks
+input
+→ PacketCompatibilityView
+→ compare_packet_legacy_v2
+→ mismatch: fail before semantic validation
+→ match: AST v2 scope/entries/duplicates/blocks
+→ existing Packet validation
 ```
 
-The active checker has not switched to the v2 view.
+Consumed view channels:
+
+```text
+view.scope_lines
+view.entries
+view.duplicates
+view.values
+view.legacy_blocks
+```
+
+Output markers:
+
+```text
+Packet parser parity guard: pass
+Packet structural extraction: AST v2 compatibility view
+```
+
+## Retained helper API
+
+Dependent modules import structural helper functions from `kdsl_packet.py`:
+
+```text
+kdsl_packet_semantic.py
+kdsl_packet_property.py
+kdsl_packet_normalize.py
+kdsl_packet_roundtrip.py
+related normalization semantic helpers
+```
+
+Therefore:
+
+```text
+install_packet(globals()): retained
+helper exports: Phase 1-compatible
+active base checker scope/entry/block extraction: AST v2
+helper consumer migration: not claimed
+```
+
+The retained adapter export does not mean the base checker's primary structural input remains Phase 1.
 
 ## Compatibility view path
 
 ```text
-input
-→ independent legacy-compatible PACKET_DRAFT scope selection
+legacy-compatible PACKET_DRAFT scope selection
 → exact original scope retained
 → DocumentNodeV2 raw-envelope parse
-→ typed top-level Packet blocks
+→ PacketBlockNodeV2 records
 → legacy helper output reconstruction
 → Phase 1/AST v2 parity comparison
 ```
 
-## Compared helper contract
+Compared helpers:
 
 ```text
 extract_scope_lines
@@ -61,12 +103,12 @@ Compared outputs:
 ```text
 envelope presence
 exact scope lines
-top-level entries and relative lines
+top-level field order/value/relative line
 duplicate top-level fields
-raw block maps
-nested scalar maps and duplicates
-SG.id lists
-FLOW.op lists
+raw block boundaries
+nested scalar maps and duplicate order
+SG.id list
+FLOW.op list
 sequence items
 ```
 
@@ -81,44 +123,22 @@ PacketBlockNodeV2
 PacketCompatibilityView
 ```
 
-`PacketBlockNodeV2` retains:
-
-```text
-name
-inline value
-body lines
-raw text
-source span
-relative line
-```
-
-It exposes bounded compatibility helpers:
-
-```text
-nested_scalars()
-list_field()
-sequence_items()
-legacy_block
-```
-
 ## Fenced example boundary
-
-The repository Packet example is inside a Markdown fence.
 
 ```text
 AST v2 active-document→fenced Packet inactive
-Phase 1 Packet parser→first marker selected
+Phase 1 parser→first PACKET_DRAFT marker selected
 PacketCompatibilityView→same legacy-compatible scope selected
 selected scope→raw-envelope parse
 ```
 
 General parser fence behavior remains unchanged.
 
-## Semantic rules intentionally excluded
+## Semantic rules retained
 
 ```text
 SCHEMA/STATUS validity
-required Packet field/order rules
+required field/order rules
 BASE/TASK registry and ID validity
 TASK/FLOW composition
 SG registry/ID/composition
@@ -126,14 +146,13 @@ trigger-required gates
 AUTHORITY rails
 OUT result schema
 NORMALIZE required/target/state
-GOAL placeholders
-warnings for empty lists
+GOAL placeholder handling
+list warnings
+PKT:v1 prohibition
 Packet semantic properties
 ```
 
-These remain in the active Packet checker and property modules.
-
-## Critical Packet boundary
+Critical Packet boundary:
 
 ```text
 SCHEMA: kdsl-packet@0.1-draft
@@ -142,19 +161,20 @@ NORMALIZE.required: true
 NORMALIZE.state: not_normalized
 Packet executable: no
 normalization_required: yes
+normalization_completion: not_proven
 execution_authority: none
-PKT:v1: prohibited
 ```
 
-No CompatibilityView result may be interpreted as normalization completion or execution permission.
+No parser result grants edit, stage, commit, push, release, or execution permission.
 
 ## Verification
 
 ```text
 Packet structural parity: 8 / failed 0
-unified runners: 15
-unified expectations: 315 / failed 0
-workflow run: 29232149425 / #309
+Packet checker migration: 6 / failed 0
+unified runners: 16
+unified expectations: 321 / failed 0
+workflow run: 29232739675 / #313
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -162,26 +182,28 @@ Packet Semantic Property: success
 ## Exit codes
 
 ```text
-0: structural parity pass
-2: structural parity or usage failure
+0: pass
+1: semantic warning
+2: parser parity or semantic failure
 ```
 
 ## Current boundary
 
 ```text
 CompatibilityView: integrated
-parity corpus: integrated
-checker switch: pending
-Phase 1 adapter: active for Packet
-Packet Normalization adapter: active
+active base checker switch: integrated
+Phase 1/AST v2 parity guard: active
+helper exports for dependent modules: retained
+Packet Normalization checker migration: pending
 legacy adapter removal: prohibited
 ```
 
 ## Next step
 
 ```text
-Packet checker structural extraction→PacketCompatibilityView
-in-process Phase 1/AST v2 parity guard required
-Packet semantic/property boundaries unchanged
-non-executable/not_normalized/authority rails保持
+Packet Normalization compatibility view/parity pilot
+normalization draft remains non-executable
+semantic_equivalence:not_proven保持
+execution_authority:none保持
+checker switchはparity成立後
 ```
