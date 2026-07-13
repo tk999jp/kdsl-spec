@@ -30,6 +30,15 @@ def parse_summary(stdout):
     return total, failed
 
 
+def print_failure_output(proc):
+    if proc.stdout:
+        print('STDOUT:')
+        print(proc.stdout.rstrip())
+    if proc.stderr:
+        print('STDERR:')
+        print(proc.stderr.rstrip())
+
+
 def main():
     grand_total = 0
     grand_failed = 0
@@ -41,21 +50,26 @@ def main():
             text=True,
             capture_output=True,
         )
-        print(f'RUNNER: {name}')
-        if proc.stdout:
-            print(proc.stdout.rstrip())
-        if proc.stderr:
-            print('STDERR:')
-            print(proc.stderr.rstrip())
         total, failed = parse_summary(proc.stdout)
-        if total is None or failed is None:
+        summary_missing = total is None or failed is None
+        runner_failed = proc.returncode != 0 or summary_missing or bool(failed)
+
+        print(f'RUNNER: {name}')
+        if summary_missing:
             runner_failures += 1
-            print(f'RUNNER_SUMMARY_ERROR: {name}')
+            print('RUNNER_SUMMARY_ERROR')
         else:
             grand_total += total
             grand_failed += failed
+            print(f'  total: {total}')
+            print(f'  failed: {failed}')
+
         if proc.returncode != 0:
             runner_failures += 1
+            print(f'  exit: {proc.returncode}')
+
+        if runner_failed:
+            print_failure_output(proc)
 
     print('UNIFIED_SUMMARY:')
     print('  runners: ' + str(len(RUNNERS)))
