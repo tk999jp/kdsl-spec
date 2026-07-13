@@ -1,33 +1,36 @@
-from run_r1c_roundtrip_samples import BLOCKED, INVALID, NEEDS_USER, SUCCESS, run_cli
+import tempfile
+from pathlib import Path
+
+from run_r1c_roundtrip_samples import optional_doc, run_cli, safety_gate_doc
 
 
 def main():
-    results = [
-        run_cli(
-            'success example structural pass',
-            SUCCESS,
-            0,
-            ('STATUS: structural_pass', 'SEMANTIC_EQUIVALENCE: not_proven'),
-        ),
-        run_cli(
-            'blocked result structural pass',
-            BLOCKED,
-            0,
-            ('STATUS: structural_pass', 'RT state/basis preserved'),
-        ),
-        run_cli(
-            'needs-user result structural pass',
-            NEEDS_USER,
-            0,
-            ('STATUS: structural_pass', 'NEXT proposal_only boundary preserved'),
-        ),
-        run_cli(
-            'invalid R1C rejected',
-            INVALID,
-            2,
-            ('STATUS: fail', 'source R1C failed validator'),
-        ),
-    ]
+    results = []
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+
+        optional_path = tmp_path / 'optional.md'
+        optional_path.write_text(optional_doc(), encoding='utf-8')
+        results.append(
+            run_cli(
+                'optional evidence and authority structural pass',
+                optional_path,
+                0,
+                ('optional JSON blocks preserved',),
+            )
+        )
+
+        safety_path = tmp_path / 'safety.md'
+        safety_path.write_text(safety_gate_doc(), encoding='utf-8')
+        results.append(
+            run_cli(
+                'optional Safety Gates structural pass',
+                safety_path,
+                0,
+                ('STATUS: structural_pass', 'optional SAFETY_GATES registry/entry/order preserved'),
+            )
+        )
+
     failed = sum(not result for result in results)
     print('SUMMARY:')
     print(f'  total: {len(results)}')
