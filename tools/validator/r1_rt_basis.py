@@ -1,6 +1,11 @@
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_full_r1_compat import (
+    FullR1CompatibilityView,
+    compare_full_r1_legacy_v2,
+)
+
 VALID_BASIS = [
     'runtime確認済',
     '実機確認済',
@@ -98,19 +103,38 @@ def emit(errors, warnings, info):
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
+    view = FullR1CompatibilityView.from_text(text)
+    parity_errors, _ = compare_full_r1_legacy_v2(text)
 
-    if not has_result_envelope(text):
-        return emit([], [], ['no KDSL_RESULT envelope detected; R1 RT-basis target not applicable'])
+    if parity_errors:
+        return emit(
+            ['Full R1 parser parity guard: ' + item for item in parity_errors],
+            [],
+            [],
+        )
 
-    rt_value = find_field(text, 'RT')
+    if not view.has_result_envelope:
+        return emit(
+            [],
+            [],
+            [
+                'Full R1 parser parity guard: pass',
+                'no KDSL_RESULT envelope detected; R1 RT-basis target not applicable',
+            ],
+        )
+
+    rt_value = view.simple_value('RT')
     rt_v = is_rt_v(rt_value)
-    scoped_text = field_scope_text(text)
+    scoped_text = view.basis_scope_text
     valid = hits(scoped_text, VALID_BASIS)
     invalid = hits(scoped_text, INVALID_BASIS)
 
     errors = []
     warnings = []
-    info = []
+    info = [
+        'Full R1 parser parity guard: pass',
+        'Full R1 structural extraction: AST v2 compatibility view',
+    ]
 
     if not rt_value:
         warnings.append('RT field not found')
