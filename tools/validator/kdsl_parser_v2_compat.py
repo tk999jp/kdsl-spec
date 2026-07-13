@@ -6,6 +6,16 @@ from dataclasses import dataclass
 from kdsl_parser_v2 import DocumentNodeV2, EnvelopeNodeV2, FieldNodeV2
 
 _FIELD_RE = re.compile(r'^([A-Za-z][A-Za-z0-9_-]*)\s*:\s*(.*)$')
+_MARKER_RE = re.compile(r'^(\s*)KDSL_RESULT\s*:\s*$')
+_TOP_LEVEL_ENVELOPES = {
+    'KDSL_RESULT',
+    'PACKET_DRAFT',
+    'NORMALIZATION_DRAFT',
+    'KDSL_PROMPT',
+    'KDSL_PROMPT_PREVIEW',
+    'STRUCTURAL_ROUND_TRIP_RESULT',
+    'R1C_STRUCTURAL_ROUND_TRIP_RESULT',
+}
 
 
 @dataclass(frozen=True)
@@ -24,7 +34,15 @@ class R1CCompatibilityView:
 
     @classmethod
     def from_text(cls, text: str) -> 'R1CCompatibilityView | None':
-        document = DocumentNodeV2.parse(text, context='active-document')
+        scope_lines = _extract_legacy_compatible_scope(text)
+        if scope_lines is None:
+            return None
+
+        # Parse the selected scope as raw envelope input. This intentionally
+        # preserves Phase 1 behavior for repository examples whose active R1C
+        # envelope is placed inside a Markdown fence, while leaving the AST v2
+        # active-document fence policy unchanged.
+        document = DocumentNodeV2.parse('\n'.join(scope_lines), context='raw-envelope')
         envelopes = document.envelopes('KDSL_RESULT')
         if not envelopes:
             return None
@@ -40,7 +58,7 @@ class R1CCompatibilityView:
         return cls(
             document=document,
             envelope=envelope,
-            scope_lines=tuple(envelope.raw_text.split('\n')),
+            scope_lines=scope_lines,
             entries=entries,
             duplicates=tuple(_duplicate_field_names(envelope.fields)),
         )
@@ -52,6 +70,52 @@ class R1CCompatibilityView:
     @property
     def field_order(self) -> tuple[str, ...]:
         return tuple(key for key, _, _ in self.entries)
+
+
+def _extract_legacy_compatible_scope(text: str) -> tuple[str, ...] | None:
+    normalized = text.replace('\r\n', '\n').replace('\r', '\n')
+    lines = tuple(normalized.split('\n'))
+    start_index = None
+    base_indent = 0
+    for index, line in enumerate(lines):
+        match = _MARKER_RE.match(line)
+        if match:
+            start_index = index
+            base_indent = len(match.group(1))
+            break
+    if start_index is None:
+        return None
+
+    top_level = base_indent == 0
+    end_index = len(lines)
+    for index in range(start_index + 1, len(lines)):
+        line = lines[index]
+        stripped = line.strip()
+        if stripped == '```':
+            end_index = index
+            break
+        if _leading_spaces(line) <= base_indent and stripped.startswith('#'):
+            end_index = index
+            break
+        if not stripped:
+            continue
+        indent = _leading_spaces(line)
+        if indent < base_indent:
+            end_index = index
+            break
+        if not top_level and indent <= base_indent:
+            end_index = index
+            break
+        if top_level and indent == 0:
+            match = _FIELD_RE.match(line)
+            if (
+                match
+                and match.group(1) in _TOP_LEVEL_ENVELOPES
+                and match.group(1) != 'KDSL_RESULT'
+            ):
+                end_index = index
+                break
+    return tuple(lines[start_index:end_index])
 
 
 def _legacy_compatible_value(field_node: FieldNodeV2) -> str:
