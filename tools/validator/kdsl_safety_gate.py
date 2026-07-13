@@ -2,6 +2,11 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_safety_gate_compat import (
+    SafetyGateCompatibilityView,
+    compare_safety_gate_legacy_v2,
+)
+
 REGISTRY = 'kdsl-sg@0.1-draft'
 KNOWN_IDS = {
     'SG-DESIGN',
@@ -260,25 +265,29 @@ def emit(errors, warnings, info):
     return 2 if errors else (1 if warnings else 0)
 
 
-
-# Phase 1 common parser adapter. Semantic validation remains in this module.
-from kdsl_parser_adapter import install_safety_gate
-install_safety_gate(globals())
-
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
-    block = extract_gate_block(text)
 
     errors = []
     warnings = []
     info = []
 
+    view = SafetyGateCompatibilityView.from_text(text)
+    parity_errors, _ = compare_safety_gate_legacy_v2(text)
+    if parity_errors:
+        for item in parity_errors:
+            errors.append('Safety Gate parser parity guard: ' + item)
+        return emit(errors, warnings, info)
+    info.append('Safety Gate parser parity guard: pass')
+
+    block = view.block_text
     if block is None:
         info.append('no SAFETY_GATES block detected')
         return emit(errors, warnings, info)
 
-    registry, entries = parse_registry(block)
+    registry = view.registry
+    entries = view.entry_dicts
     if registry is None:
         errors.append('SAFETY_GATES registry is missing')
     elif registry != REGISTRY:
@@ -346,6 +355,7 @@ def main(argv):
 
     check_protected_wording(text, entry_by_id, errors)
 
+    info.append('Safety Gate structural extraction: AST v2 compatibility view')
     info.append('Safety Gate registry checked: ' + (registry or 'missing'))
     info.append('entries checked: ' + str(len(entries)))
     info.append('aggregate state: ' + aggregate_state(entries))
