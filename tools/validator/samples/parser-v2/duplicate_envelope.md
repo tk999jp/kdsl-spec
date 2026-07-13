@@ -1,0 +1,5 @@
+KDSL_RESULT:
+STATUS: success
+
+KDSL_RESULT:
+STATUS: blocked
