@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6a-semantic-parser-foundation-design
+phase: phase6b-semantic-parser-core-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -126,23 +126,16 @@ Phase 2 Safety Semantics bounded slice: integrated
 Phase 3 R1C deep optional-block round-trip: integrated
 Phase 4 Packet / Normalization semantic properties: integrated
 Phase 5 Public-facing v2 hardening: complete
-Phase 6A Semantic Parser Foundation contract/design: active
+Phase 6A Semantic Parser Foundation design: integrated
+Phase 6B additive typed parser/AST v2 core: integrated
 ```
 
 Phase 5 evidence:
 
 ```text
-slice1_pull_request: 50
-slice1_squash_commit: 49b6c865af046d44efc04a46d851aed55d222a61
-slice1_workflow_run: 239 / success
-
-slice2_pull_request: 51
-slice2_squash_commit: 442d53226c7d0fd000ed1f93efc28ccbb367b129
-slice2_workflow_run: 246 / success
-
-closeout_pull_request: 52
-closeout_squash_commit: 88f3d94b0c5915a74f3654e0407bffda3bb9f4c3
-status: public-facing hardening complete
+PR #50 / 49b6c865af046d44efc04a46d851aed55d222a61 / workflow #239 success
+PR #51 / 442d53226c7d0fd000ed1f93efc28ccbb367b129 / workflow #246 success
+PR #52 / 88f3d94b0c5915a74f3654e0407bffda3bb9f4c3 / workflow #250 success
 ```
 
 Phase 5 decision:
@@ -178,15 +171,11 @@ repository_enforcement:
 Activation evidence:
 
 ```text
-verification_pull_request: 53
-verification_head: b78ee593d6dfb42a6edfce53701c510b39f83067
-workflow_run: 252
-workflow_conclusion: success
-merge: not executed
-close_without_merge: completed
-activation_record_pull_request: 54
-activation_record_squash_commit: 9434628aefb966d0b66e9d865a956d961b551ef2
-issue_39: closed / completed
+verification PR: 53 / closed without merge
+verification workflow: #252 / success
+activation record PR: 54
+activation record squash: 9434628aefb966d0b66e9d865a956d961b551ef2
+issue #39: closed / completed
 ```
 
 ```text
@@ -204,22 +193,25 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_expectations: 257
+  unified_runners: 9
+  unified_expectations: 269
   failed: 0
-  parser_cases: 11
+  phase1_parser_cases: 11
+  phase6b_parser_v2_cases: 12
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
 
-Current common parser baseline:
+Latest verification:
 
 ```text
-DocumentNode / EnvelopeNode / FieldNode
-SourceSpan / ParseIssue / DiagnosticBag
-first matching envelope per marker
-nested mapping/list/record helper values
-legacy namespace adapters:
-  R1C / Packet / Normalization / Safety Gate
+implementation PR: 57
+source head: 549c8a7608ade2ea816dfc84d6e3b37cfa0705b0
+squash commit: 54c214587cedfc4af634edba9d3df7cdea30d524
+workflow run: 29222907053 / #257 / success
+jobs:
+  KDSL Validation: success
+  Packet Semantic Property: success
 ```
 
 Boundaries:
@@ -234,48 +226,69 @@ validator pass != release readiness
 required check active != stable/public-ready approval
 ```
 
-## 7. Phase 6A — Semantic Parser Foundation
+## 7. Semantic parser status
+
+### Phase 1 compatibility parser
 
 ```text
-tracking_issue: 55
-design:
-  docs/design/kdsl-semantic-parser-v2.md
+tools/validator/kdsl_parser.py
+tools/validator/kdsl_parser_adapter.py
+DocumentNode / EnvelopeNode / FieldNode
+SourceSpan / ParseIssue / DiagnosticBag
+legacy adapter consumers:
+  R1C / Packet / Packet Normalization / Safety Gate
+```
+
+Phase 1 parser remains active for existing semantic checkers.
+
+### Phase 6A design
+
+```text
+design: docs/design/kdsl-semantic-parser-v2.md
+review: docs/reviews/kdsl-phase6a-semantic-parser-foundation.md
+PR: 56
+squash: bedd63937a9ef746962836833d24ad77ff3f09d0
+status: integrated
+```
+
+### Phase 6B typed AST v2 core
+
+```text
+implementation:
+  tools/validator/kdsl_parser_v2.py
+  tools/validator/kdsl_parse_v2.py
+corpus:
+  tools/validator/run_parser_v2_samples.py
+  tools/validator/samples/parser-v2/*
 review:
-  docs/reviews/kdsl-phase6a-semantic-parser-foundation.md
-status: contract/design active
-implementation_change: none
-semantic_policy_change: none
+  docs/reviews/kdsl-phase6b-semantic-parser-core.md
+status: integrated / additive
 ```
 
-Selected direction:
+Implemented surface:
 
 ```text
-source text
-→ typed Document AST
-→ ordered header/envelope/field/value nodes
-→ raw + normalized channels
-→ explicit compatibility views
-→ existing semantic checkers
+ordered document children
+formal header nodes
+multiple envelope exposure
+raw + normalized value channels
+typed scalar/block/JSON/mapping/sequence/record nodes
+nested source spans
+duplicate envelope/field/mapping-key diagnostics
+invalid JSON/unclosed fence diagnostics
+active-document fence isolation
+CRLF normalization
+UTF-8/Japanese exact wording preservation
+unknown header values retained without inference
 ```
 
-Phase split:
+Compatibility boundary:
 
 ```text
-6A: inventory / AST contract / compatibility / test plan
-6B: additive AST v2 core + corpus
-6C: checker migration with parity evidence
-6D: mutation/property/repository corpus + adapter retirement decision
-```
-
-Mandatory retention:
-
-```text
-protected wording raw text保持
-unknown schema/profile/alias/default推測禁止
-legacy expected exit保持
-Safety Gate/authority/RT semantics変更禁止
-Packet executable化禁止
-Packet normalization完了扱禁止
+existing checker migration: none
+legacy namespace adapter: retained
+AST v2 compatibility views: pending
+legacy adapter removal: prohibited until parity evidence
 ```
 
 ## 8. R1 / R1C status
@@ -340,9 +353,10 @@ hold/blocked gate削除禁止
 ## 11. Known gaps
 
 ```text
-typed document/header/nested-value AST
-multiple-envelope/context model
+AST v2 compatibility views/checker migration
+legacy-vs-v2 parity proof
 legacy adapter retirement proof
+broader fence/context semantics beyond current first slice
 full YAML/KDSL semantic parser
 full natural-language negation/exception reasoning
 full semantic equivalence proof
@@ -365,6 +379,7 @@ Human-AI work contract design
 R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
+additive typed parser/AST v2 first slice
 ```
 
 Do not present as:
@@ -381,9 +396,10 @@ complete semantic parser
 ## 13. Next safe steps
 
 ```text
-P0: review and integrate Phase 6A design/compatibility contract / issue #55
-P1: Phase 6B additive AST v2 implementation and parser corpus
-P2: Phase 6C checker migration with legacy parity evidence
+P0: Phase 6C-1 R1CCompatibilityView pilot + legacy/v2 parity
+P1: Full R1 / CompactPrompt structural migration
+P2: Safety Gate / Packet / Normalization migration
+P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
