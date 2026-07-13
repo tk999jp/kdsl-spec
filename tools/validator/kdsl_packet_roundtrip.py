@@ -5,16 +5,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-from kdsl_packet_normalization import (
-    blocks_from_entries as normalization_blocks,
-    extract_multiline,
-    extract_scope as extract_normalization_scope,
-    parse_list_records,
-    parse_nested_lists,
-    parse_nested_scalars as parse_normalization_scalars,
-    parse_top_level as parse_normalization_top_level,
-)
 from kdsl_packet_normalize import PACKET_FIELDS, collect_data, load_text, unique
+from kdsl_parser_v2_normalization_compat import NormalizationCompatibilityView
 
 
 ROUND_TRIP_MARKER = 'STRUCTURAL_ROUND_TRIP_RESULT:'
@@ -74,29 +66,27 @@ def run_normalization_checker(text):
 
 
 def parse_normalization(text):
-    scope = extract_normalization_scope(text)
-    if scope is None:
+    view = NormalizationCompatibilityView.from_text(text)
+    if not view.present:
         raise ValueError('NORMALIZATION_DRAFT block not found')
-    entries, _ = parse_normalization_top_level(scope)
-    values = {key: value for key, value, _ in entries}
-    blocks = normalization_blocks(scope, entries)
-    source, _ = parse_normalization_scalars(blocks.get('SOURCE', {}))
-    target, _ = parse_normalization_scalars(blocks.get('TARGET', {}))
-    round_trip, _ = parse_normalization_scalars(blocks.get('ROUND_TRIP', {}))
-    authority, _ = parse_normalization_scalars(blocks.get('AUTHORITY', {}))
-    output, _ = parse_normalization_scalars(blocks.get('OUTPUT', {}))
+
+    source, _ = view.nested_scalars('SOURCE')
+    target, _ = view.nested_scalars('TARGET')
+    round_trip, _ = view.nested_scalars('ROUND_TRIP')
+    authority, _ = view.nested_scalars('AUTHORITY')
+    output, _ = view.nested_scalars('OUTPUT')
     return {
-        'values': values,
+        'values': view.values,
         'source': source,
         'target': target,
-        'map_records': parse_list_records(blocks.get('MAP', {})),
-        'preserve': parse_nested_lists(blocks.get('PRESERVE', {})),
-        'unresolved': parse_list_records(blocks.get('UNRESOLVED', {})),
-        'loss': parse_list_records(blocks.get('LOSS', {})),
+        'map_records': view.list_records('MAP'),
+        'preserve': view.nested_lists('PRESERVE'),
+        'unresolved': view.list_records('UNRESOLVED'),
+        'loss': view.list_records('LOSS'),
         'round_trip': round_trip,
         'authority': authority,
         'output': output,
-        'preview': extract_multiline(blocks.get('OUTPUT', {}), 'preview'),
+        'preview': view.multiline('OUTPUT', 'preview'),
     }
 
 
