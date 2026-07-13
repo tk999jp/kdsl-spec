@@ -1,6 +1,6 @@
 # KDSL Common Parser / AST
 
-status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated
+status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated / phase6c-r1c-compat-integrated
 phase1_pull_request: 38
 phase1_squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
 phase6a_pull_request: 56
@@ -8,6 +8,9 @@ phase6a_squash_commit: bedd63937a9ef746962836833d24ad77ff3f09d0
 phase6b_pull_request: 57
 phase6b_squash_commit: 54c214587cedfc4af634edba9d3df7cdea30d524
 phase6b_workflow_run: 29222907053 / 257 / success
+phase6c_r1c_pull_request: 59
+phase6c_r1c_squash_commit: e20ebde511ce860faf9224f0b5902c08309a0a6f
+phase6c_r1c_workflow_run: 29223392311 / 263 / success
 phase6_tracking_issue: 55
 validator_authority: non-authoritative
 
@@ -58,7 +61,7 @@ kdsl_packet_normalization.py
 kdsl_safety_gate.py
 ```
 
-Semantic rules remain in their checker modules. Phase 6B does not migrate these checkers and does not remove `kdsl_parser_adapter.py`.
+Semantic rules remain in their checker modules. Phase 6C-1 does not switch these checkers and does not remove `kdsl_parser_adapter.py`.
 
 ## Phase 6A design contract
 
@@ -126,21 +129,81 @@ UTF-8/Japanese exact wording preservation
 unknown header values retained without inference
 ```
 
+## Phase 6C-1 R1C compatibility view
+
+Implementation:
+
+```text
+tools/validator/kdsl_parser_v2_compat.py
+tools/validator/kdsl_parser_v2_r1c_parity.py
+tools/validator/run_parser_v2_r1c_parity_samples.py
+```
+
+Compatibility contract:
+
+```text
+KDSL_RESULT envelope presence
+legacy-compatible scope lines
+field order
+raw field values
+relative field line numbers
+duplicate field order
+```
+
+The compatibility view reconstructs legacy values from AST v2 raw source. It does not use normalized values to replace quoted/protected/multiline source text.
+
+### Fenced example corrective
+
+Initial parity runs exposed a real scope-selection difference:
+
+```text
+legacy parser: selects KDSL_RESULT inside repository Markdown fence
+AST v2 active-document: excludes fenced envelope
+```
+
+Correction:
+
+```text
+R1CCompatibilityView independently selects the first legacy-compatible R1C scope
+selected scope is parsed in AST v2 raw-envelope context
+AST v2 active-document fence policy remains unchanged
+```
+
+This is a compatibility-surface correction, not a general active-document semantic change.
+
 ## Verification
 
 ```text
 Phase 1 parser/adapter suite: 11 / failed 0
 Phase 6B parser-v2 suite: 12 / failed 0
-unified runners: 9
-unified expectations: 269 / failed 0
+Phase 6C R1C parity suite: 8 / failed 0
+unified runners: 10
+unified expectations: 277 / failed 0
 workflow: KDSL Validation
-workflow run: 29222907053 / #257 / success
+final workflow run: 29223392311 / #263 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
 ```
 
-The 269 total is the aggregate of the previously integrated 257 expectations and the successful 12-case parser-v2 runner. The unified runner rejects missing summaries and failed child runners.
+Corrective history:
+
+```text
+run #261: KDSL Validation failure / fenced scope mismatch
+run #262: KDSL Validation failure / compact failure output enabled
+run #263: success after compatibility scope correction
+```
+
+## Unified runner output policy
+
+```text
+successful child runner: compact total/failed summary
+failed or malformed child runner: full stdout/stderr
+missing summary: failure
+non-zero child exit: failure
+```
+
+Output compaction changes observability only and does not weaken the suite.
 
 ## Current limitations
 
@@ -148,33 +211,35 @@ The 269 total is the aggregate of the previously integrated 257 expectations and
 not a complete YAML parser
 not a complete JSON5 parser
 not a natural-language semantic parser
-Phase 1 first-match envelope API remains for existing checkers
-AST v2 compatibility views not implemented
-checker migration not started
+Phase 1 parser remains active for existing semantic checkers
+R1CCompatibilityView is not yet wired into kdsl_r1c.py
+Packet/Normalization/Safety Gate compatibility views not implemented
 legacy namespace adapter remains
-legacy-vs-v2 parity proof incomplete
+same-marker duplicate-envelope parity not proven
+legacy adapter retirement proof incomplete
 active-document/raw-envelope contexts are first slice only
 no alias inference
 no unknown schema inference
 no implicit defaults
 ```
 
-## Phase 6C next step
+## Phase 6C-2 next step
 
 ```text
-R1CCompatibilityView pilot
-legacy-vs-v2 field/order/value/raw-text parity
+switch kdsl_r1c.py structural extraction to explicit R1CCompatibilityView
+dual-run or parity guard during migration
 existing R1C expected exits retained
-legacy adapter retained until broader migration evidence
+legacy adapter retained for Packet/Normalization/Safety Gate
 ```
 
 Stop migration when:
 
 ```text
-RT/NEXT/COMMIT input changes
+R1C expected exits change
+RT/NEXT/COMMIT inputs change
 protected wording/raw text changes
+fenced/unfenced scope compatibility changes
 unknown schema/default inference is required
-legacy/v2 outputs or expected exits disagree
 ```
 
 ## Exit codes
