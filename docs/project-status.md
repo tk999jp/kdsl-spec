@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6b-semantic-parser-core-integrated
+phase: phase6c-r1c-compatibility-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -128,6 +128,7 @@ Phase 4 Packet / Normalization semantic properties: integrated
 Phase 5 Public-facing v2 hardening: complete
 Phase 6A Semantic Parser Foundation design: integrated
 Phase 6B additive typed parser/AST v2 core: integrated
+Phase 6C-1 R1C compatibility view/parity: integrated
 ```
 
 Phase 5 evidence:
@@ -193,11 +194,12 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 9
-  unified_expectations: 269
+  unified_runners: 10
+  unified_expectations: 277
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
+  phase6c_r1c_parity_cases: 8
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
@@ -205,13 +207,29 @@ validator:
 Latest verification:
 
 ```text
-implementation PR: 57
-source head: 549c8a7608ade2ea816dfc84d6e3b37cfa0705b0
-squash commit: 54c214587cedfc4af634edba9d3df7cdea30d524
-workflow run: 29222907053 / #257 / success
+implementation PR: 59
+source head: 0f974b0d91c0188761f779de16c4dc43d07a2551
+squash commit: e20ebde511ce860faf9224f0b5902c08309a0a6f
+workflow run: 29223392311 / #263 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
+```
+
+Corrective evidence:
+
+```text
+run #261: KDSL Validation failure / fenced example scope mismatch
+run #262: KDSL Validation failure / compact failure logging enabled
+run #263: success after R1C compatibility scope correction
+```
+
+Unified output policy:
+
+```text
+successful child runner→compact summary
+failed/malformed child runner→full stdout/stderr
+missing summary or non-zero exit→failure
 ```
 
 Boundaries:
@@ -262,6 +280,8 @@ corpus:
   tools/validator/samples/parser-v2/*
 review:
   docs/reviews/kdsl-phase6b-semantic-parser-core.md
+PR: 57
+squash: 54c214587cedfc4af634edba9d3df7cdea30d524
 status: integrated / additive
 ```
 
@@ -282,13 +302,46 @@ UTF-8/Japanese exact wording preservation
 unknown header values retained without inference
 ```
 
-Compatibility boundary:
+### Phase 6C-1 R1C compatibility view
 
 ```text
-existing checker migration: none
+implementation:
+  tools/validator/kdsl_parser_v2_compat.py
+  tools/validator/kdsl_parser_v2_r1c_parity.py
+corpus:
+  tools/validator/run_parser_v2_r1c_parity_samples.py
+review:
+  docs/reviews/kdsl-phase6c-r1c-compatibility-view.md
+PR: 59
+squash: e20ebde511ce860faf9224f0b5902c08309a0a6f
+status: integrated / bounded parity pilot
+```
+
+Compared contract:
+
+```text
+R1C envelope presence
+legacy-compatible scope lines
+field order/raw value/relative line
+field duplicate order
+fenced repository examples
+```
+
+Corrective boundary:
+
+```text
+R1CCompatibilityView selects legacy-compatible fenced scope
+selected scope→AST v2 raw-envelope context
+AST v2 active-document fence isolation remains unchanged
+```
+
+Migration boundary:
+
+```text
+R1C checker switch: not performed
 legacy namespace adapter: retained
-AST v2 compatibility views: pending
-legacy adapter removal: prohibited until parity evidence
+Packet/Normalization/Safety Gate compatibility views: pending
+legacy adapter removal: prohibited until broader parity evidence
 ```
 
 ## 8. R1 / R1C status
@@ -353,8 +406,11 @@ hold/blocked gate削除禁止
 ## 11. Known gaps
 
 ```text
-AST v2 compatibility views/checker migration
-legacy-vs-v2 parity proof
+R1C checker migration to explicit compatibility view
+Full R1 / CompactPrompt compatibility views
+Safety Gate / Packet / Normalization compatibility views
+same-marker duplicate-envelope parity
+legacy-v2 semantic-checker parity proof
 legacy adapter retirement proof
 broader fence/context semantics beyond current first slice
 full YAML/KDSL semantic parser
@@ -380,6 +436,7 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
+bounded R1C legacy-v2 structural parity helper
 ```
 
 Do not present as:
@@ -391,14 +448,15 @@ approval/runtime/release substitute
 executable Packet specification
 independent canonical R1C standard
 complete semantic parser
+semantic equivalence proof
 ```
 
 ## 13. Next safe steps
 
 ```text
-P0: Phase 6C-1 R1CCompatibilityView pilot + legacy/v2 parity
-P1: Full R1 / CompactPrompt structural migration
-P2: Safety Gate / Packet / Normalization migration
+P0: Phase 6C-2 switch R1C structural extraction with dual-run parity guard
+P1: Full R1 / CompactPrompt compatibility views and migration
+P2: Safety Gate / Packet / Normalization compatibility views and migration
 P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
