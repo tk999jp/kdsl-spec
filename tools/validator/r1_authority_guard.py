@@ -2,6 +2,11 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_full_r1_compat import (
+    FullR1CompatibilityView,
+    compare_full_r1_legacy_v2,
+)
+
 NEXT_MARKERS = [
     'none',
     'proposed:',
@@ -101,16 +106,35 @@ def emit(errors, warnings, info):
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
     text = load_text(path)
+    view = FullR1CompatibilityView.from_text(text)
+    parity_errors, _ = compare_full_r1_legacy_v2(text)
 
-    if not has_result_envelope(text):
-        return emit([], [], ['no KDSL_RESULT envelope detected; R1 authority target not applicable'])
+    if parity_errors:
+        return emit(
+            ['Full R1 parser parity guard: ' + item for item in parity_errors],
+            [],
+            [],
+        )
 
-    next_value = find_field(text, 'NEXT')
-    commit_value = find_field(text, 'COMMIT')
+    if not view.has_result_envelope:
+        return emit(
+            [],
+            [],
+            [
+                'Full R1 parser parity guard: pass',
+                'no KDSL_RESULT envelope detected; R1 authority target not applicable',
+            ],
+        )
+
+    next_value = view.continued_value('NEXT')
+    commit_value = view.continued_value('COMMIT')
 
     errors = []
     warnings = []
-    info = []
+    info = [
+        'Full R1 parser parity guard: pass',
+        'Full R1 structural extraction: AST v2 compatibility view',
+    ]
 
     if not next_value:
         errors.append('NEXT field missing')
