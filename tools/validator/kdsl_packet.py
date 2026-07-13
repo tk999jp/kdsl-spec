@@ -2,6 +2,8 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_packet_compat import PacketCompatibilityView, compare_packet_legacy_v2
+
 SCHEMA_ID = 'kdsl-packet@0.1-draft'
 BASE_REGISTRY = 'kdsl-packet-base@0.1-draft'
 TASK_REGISTRY = 'kdsl-packet-task@0.1-draft'
@@ -386,10 +388,11 @@ def validate_sg(block, task_id, text, errors):
     return valid_ids
 
 
-
-# Phase 1 common parser adapter. Semantic validation remains in this module.
+# Retained compatibility export for Packet semantic/normalization helper modules.
+# The active base checker below consumes PacketCompatibilityView directly.
 from kdsl_parser_adapter import install_packet
 install_packet(globals())
+
 
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
@@ -398,7 +401,15 @@ def main(argv):
     warnings = []
     info = []
 
-    scope = extract_packet_scope(text)
+    view = PacketCompatibilityView.from_text(text)
+    parity_errors, _ = compare_packet_legacy_v2(text)
+    if parity_errors:
+        for item in parity_errors:
+            errors.append('Packet parser parity guard: ' + item)
+        return emit(errors, warnings, info)
+    info.append('Packet parser parity guard: pass')
+
+    scope = list(view.scope_lines) if view.present else None
     schema_marker = re.search(r'^\s*SCHEMA\s*:\s*(\S+)\s*$', text, re.MULTILINE)
     if scope is None:
         if schema_marker and schema_marker.group(1) == SCHEMA_ID:
@@ -410,9 +421,10 @@ def main(argv):
         return emit(errors, warnings, info)
 
     packet_text = '\n'.join(scope)
-    entries, duplicates = parse_top_level(scope)
-    values = {key: value for key, value, _ in entries}
-    blocks = blocks_from_entries(scope, entries)
+    entries = list(view.entries)
+    duplicates = list(view.duplicates)
+    values = view.values
+    blocks = view.legacy_blocks
 
     for key in duplicates:
         errors.append('duplicate Packet field: ' + key)
@@ -475,6 +487,7 @@ def main(argv):
 
     if normalize.get('state') == 'not_normalized':
         info.append('non-executable normalization boundary checked')
+    info.append('Packet structural extraction: AST v2 compatibility view')
     info.append('Packet schema checked: ' + str(schema))
     info.append('BASE checked: ' + str(base_id))
     info.append('TASK checked: ' + str(task_id))
