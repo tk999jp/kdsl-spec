@@ -11,6 +11,7 @@ RUNNERS = (
     ('parser', 'run_parser_samples.py'),
     ('parser-v2', 'run_parser_v2_samples.py'),
     ('parser-v2-r1c-parity', 'run_parser_v2_r1c_parity_samples.py'),
+    ('parser-v2-compact-parity', 'run_parser_v2_compact_parity_samples.py'),
     ('safety-semantics', 'run_safety_semantics_samples.py'),
     ('safety-semantics-examples', 'run_safety_semantics_examples.py'),
     ('r1c-optional', 'run_r1c_optional_samples.py'),
