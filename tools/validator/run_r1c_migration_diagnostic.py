@@ -2,7 +2,6 @@ from run_samples import SAMPLES, run_sample
 
 SELECTED_NAMES = {
     'r1c repository success example valid',
-    'r1c repository blocked example valid',
 }
 
 
