@@ -11,6 +11,7 @@ RUNNERS = (
     ('parser', 'run_parser_samples.py'),
     ('parser-v2', 'run_parser_v2_samples.py'),
     ('parser-v2-r1c-parity', 'run_parser_v2_r1c_parity_samples.py'),
+    ('parser-v2-full-r1-parity', 'run_parser_v2_full_r1_parity_samples.py'),
     ('parser-v2-compact-parity', 'run_parser_v2_compact_parity_samples.py'),
     ('compact-checker-migration', 'run_compact_migration_samples.py'),
     ('parser-v2-safety-gate-parity', 'run_parser_v2_safety_gate_parity_samples.py'),
