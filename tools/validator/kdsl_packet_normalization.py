@@ -2,6 +2,11 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_normalization_compat import (
+    NormalizationCompatibilityView,
+    compare_normalization_legacy_v2,
+)
+
 SCHEMA_ID = 'kdsl-packet-normalization@0.1-draft'
 SOURCE_SCHEMA = 'kdsl-packet@0.1-draft'
 FULL_KDSL_SCHEMA = 'format:KDSL/profile:dev-prompt'
@@ -215,10 +220,11 @@ def validate_records(label, records, required_fields, errors):
             errors.append(f'{label} entry {index} missing fields: ' + ', '.join(missing))
 
 
-
-# Phase 1 common parser adapter. Semantic validation remains in this module.
+# Retain Phase 1 helper exports for round-trip/property import compatibility.
+# The active checker below consumes NormalizationCompatibilityView directly.
 from kdsl_parser_adapter import install_normalization
 install_normalization(globals())
+
 
 def main(argv):
     path = argv[1] if len(argv) > 1 else '-'
@@ -227,7 +233,15 @@ def main(argv):
     warnings = []
     info = []
 
-    scope = extract_scope(text)
+    view = NormalizationCompatibilityView.from_text(text)
+    parity_errors, _ = compare_normalization_legacy_v2(text)
+    if parity_errors:
+        for item in parity_errors:
+            errors.append('Normalization parser parity guard: ' + item)
+        return emit(errors, warnings, info)
+    info.append('Normalization parser parity guard: pass')
+
+    scope = list(view.scope_lines) if view.present else None
     schema_marker = re.search(r'^\s*SCHEMA\s*:\s*(\S+)\s*$', text, re.MULTILINE)
     if scope is None:
         if schema_marker and schema_marker.group(1) == SCHEMA_ID:
@@ -237,9 +251,10 @@ def main(argv):
         return emit(errors, warnings, info)
 
     normalization_text = '\n'.join(scope)
-    entries, duplicates = parse_top_level(scope)
-    values = {key: value for key, value, _ in entries}
-    blocks = blocks_from_entries(scope, entries)
+    entries = list(view.entries)
+    duplicates = list(view.duplicates)
+    values = view.values
+    blocks = view.legacy_blocks
     key_order = [key for key, _, _ in entries]
 
     for key in duplicates:
@@ -431,6 +446,7 @@ def main(argv):
         if marker != 'DESIGN_PREVIEW':
             errors.append('design-only target requires DESIGN_PREVIEW marker')
 
+    info.append('Normalization structural extraction: AST v2 compatibility view')
     info.append('normalization schema checked: ' + str(values.get('SCHEMA')))
     info.append('target checked: ' + str(kind) + '/' + str(resolution))
     info.append('MAP entries checked: ' + str(len(map_records)))
