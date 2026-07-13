@@ -60,6 +60,30 @@ CASES = (
         0,
         PASS_MARKERS,
     ),
+    SuiteCase(
+        'CompactPrompt profile-only form parity',
+        ('kdsl_parser_v2_compact_parity.py', 'samples/parser-v2/compact_profile_only.md'),
+        0,
+        PASS_MARKERS,
+    ),
+    SuiteCase(
+        'CompactPrompt duplicate block parity',
+        ('kdsl_parser_v2_compact_parity.py', 'samples/parser-v2/compact_duplicate_block.md'),
+        0,
+        PASS_MARKERS,
+    ),
+    SuiteCase(
+        'CompactPrompt mixed structural keys parity',
+        ('kdsl_parser_v2_compact_parity.py', 'samples/parser-v2/compact_mixed_keys.md'),
+        0,
+        PASS_MARKERS,
+    ),
+    SuiteCase(
+        'CompactPrompt fenced scope parity',
+        ('kdsl_parser_v2_compact_parity.py', 'samples/parser-v2/compact_fenced_scope.md'),
+        0,
+        PASS_MARKERS,
+    ),
 )
 
 
