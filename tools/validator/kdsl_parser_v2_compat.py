@@ -20,7 +20,7 @@ _TOP_LEVEL_ENVELOPES = {
 
 @dataclass(frozen=True)
 class R1CCompatibilityView:
-    """Phase 6C pilot view matching the Phase 1 R1C extraction contract.
+    """Phase 6C view matching the Phase 1 R1C extraction contract.
 
     This view is structural only. It does not validate R1C semantics, authority,
     RT evidence, NEXT, COMMIT, or Safety Gate meaning.
@@ -70,6 +70,63 @@ class R1CCompatibilityView:
     @property
     def field_order(self) -> tuple[str, ...]:
         return tuple(key for key, _, _ in self.entries)
+
+
+def compare_r1c_legacy_v2(text: str) -> tuple[list[str], list[str]]:
+    """Compare Phase 1 extraction and AST v2 compatibility extraction.
+
+    Local imports keep the additive AST v2 module independent from the Phase 1
+    implementation while allowing the migration guard to dual-run both paths.
+    """
+
+    from kdsl_parser import DocumentNode, parse_top_level_legacy
+
+    errors: list[str] = []
+    info: list[str] = []
+    legacy_document = DocumentNode.parse(text)
+    legacy_envelope = legacy_document.find_envelope('KDSL_RESULT')
+    view = R1CCompatibilityView.from_text(text)
+
+    legacy_present = legacy_envelope is not None
+    v2_present = view is not None
+    if legacy_present != v2_present:
+        errors.append(
+            f'envelope presence mismatch: legacy={legacy_present} v2={v2_present}'
+        )
+        return errors, info
+
+    if legacy_envelope is None or view is None:
+        info.append('KDSL_RESULT absent in both parsers')
+        return errors, info
+
+    legacy_scope = tuple(legacy_envelope.raw_lines)
+    legacy_entries, legacy_duplicates = parse_top_level_legacy(
+        legacy_scope,
+        'KDSL_RESULT',
+        combine_multiline_json=True,
+    )
+    legacy_entries_tuple = tuple(legacy_entries)
+    legacy_duplicates_tuple = tuple(legacy_duplicates)
+
+    if legacy_scope != view.scope_lines:
+        errors.append('scope line mismatch')
+    if legacy_entries_tuple != view.entries:
+        errors.append(
+            'entry mismatch: '
+            f'legacy={legacy_entries_tuple!r} v2={view.entries!r}'
+        )
+    if legacy_duplicates_tuple != view.duplicates:
+        errors.append(
+            'duplicate-field mismatch: '
+            f'legacy={legacy_duplicates_tuple!r} v2={view.duplicates!r}'
+        )
+
+    if not errors:
+        info.append('scope lines match')
+        info.append('field order/value/relative-line entries match')
+        info.append('duplicate field list matches')
+        info.append('raw-source compatibility retained')
+    return errors, info
 
 
 def _extract_legacy_compatible_scope(text: str) -> tuple[str, ...] | None:
