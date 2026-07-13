@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6c-r1c-checker-migration-integrated
+phase: phase6c-compact-compatibility-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -124,6 +124,7 @@ Phase 6A Semantic Parser Foundation design: integrated
 Phase 6B additive typed parser/AST v2 core: integrated
 Phase 6C-1 R1C compatibility view/parity: integrated
 Phase 6C-2 R1C checker migration: integrated
+Phase 6C-3 CompactPrompt compatibility view/parity: integrated
 ```
 
 Phase 5 evidence:
@@ -189,12 +190,13 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 10
-  unified_expectations: 279
+  unified_runners: 11
+  unified_expectations: 287
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
   phase6c_r1c_parity_cases: 10
+  phase6c_compact_parity_cases: 8
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
@@ -202,10 +204,10 @@ validator:
 Latest verification:
 
 ```text
-implementation PR: 61
-source head: 627fde4a718a40a762b6285884f756a9ccd60dc5
-squash commit: a81bb8cae5aefd4020c0df004c616d5e4f834cee
-workflow run: 29224617949 / #289 / success
+implementation PR: 63
+source head: 34ec6ef9895ecb21b2e32e8c6db36da0a14ab003
+squash commit: 2df06525265b7fdf56b449447967f5e681534615
+workflow run: 29224978552 / #293 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
@@ -242,7 +244,7 @@ DocumentNode / EnvelopeNode / FieldNode
 SourceSpan / ParseIssue / DiagnosticBag
 ```
 
-Remaining legacy adapter consumers:
+Remaining namespace-adapter consumers:
 
 ```text
 Packet
@@ -251,6 +253,7 @@ Safety Gate
 ```
 
 R1C is no longer a Phase 1 namespace-adapter consumer.
+CompactPrompt never used the namespace adapter; its current semantic checker remains regex/string based.
 
 ### Phase 6A design
 
@@ -295,42 +298,23 @@ UTF-8/Japanese exact wording preservation
 unknown header values retained without inference
 ```
 
-### Phase 6C-1 R1C compatibility view
+### Phase 6C R1C migration
 
 ```text
-implementation:
+compatibility view:
   tools/validator/kdsl_parser_v2_compat.py
+parity checker:
   tools/validator/kdsl_parser_v2_r1c_parity.py
-corpus:
-  tools/validator/run_parser_v2_r1c_parity_samples.py
-review:
-  docs/reviews/kdsl-phase6c-r1c-compatibility-view.md
-PR: 59
-squash: e20ebde511ce860faf9224f0b5902c08309a0a6f
-status: integrated / bounded parity pilot
-```
-
-Compared contract:
-
-```text
-R1C envelope presence
-legacy-compatible scope lines
-field order/raw value/relative line
-field duplicate order
-fenced repository examples
-```
-
-### Phase 6C-2 R1C checker migration
-
-```text
-implementation:
+semantic checker:
   tools/validator/kdsl_r1c.py
-  tools/validator/kdsl_parser_v2_compat.py
-review:
+reviews:
+  docs/reviews/kdsl-phase6c-r1c-compatibility-view.md
   docs/reviews/kdsl-phase6c-r1c-checker-migration.md
-PR: 61
-squash: a81bb8cae5aefd4020c0df004c616d5e4f834cee
-status: integrated
+PRs: 59 / 61
+squashes:
+  e20ebde511ce860faf9224f0b5902c08309a0a6f
+  a81bb8cae5aefd4020c0df004c616d5e4f834cee
+status: checker migrated under parity guard
 ```
 
 Current R1C path:
@@ -352,13 +336,41 @@ marker registry restored in finally
 same-marker divergence→semantic validation前にfail
 ```
 
+### Phase 6C CompactPrompt compatibility pilot
+
+```text
+compatibility view:
+  tools/validator/kdsl_parser_v2_compact_compat.py
+parity checker:
+  tools/validator/kdsl_parser_v2_compact_parity.py
+corpus:
+  tools/validator/run_parser_v2_compact_parity_samples.py
+review:
+  docs/reviews/kdsl-phase6c-compact-compatibility-view.md
+PR: 63
+squash: 2df06525265b7fdf56b449447967f5e681534615
+status: compatibility view/parity integrated
+```
+
+Compared contract:
+
+```text
+CompactPrompt detection
+KDSL-CP / KDSL-CP漢 shorthand
+legacy-compatible scope
+profile/mode/safety/lexicon headers
+standard/kanji-v1 block order/content
+duplicate block order
+```
+
 Migration boundary:
 
 ```text
-R1C semantic policy: unchanged
-legacy adapter file: retained
-Packet/Normalization/Safety Gate compatibility views: pending
-legacy adapter removal: prohibited until remaining parity evidence
+CompactPrompt checker switch: not performed
+CP-Lift semantics: unchanged
+restricted alias semantics: unchanged
+mode/safety/lexicon policy: unchanged
+Packet boundary checks: unchanged
 ```
 
 ## 8. R1 / R1C status
@@ -382,7 +394,28 @@ NEXT:=提案, 実行許可扱禁止
 COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ```
 
-## 9. Packet status
+## 9. CompactPrompt status
+
+```text
+profile: compact-prompt
+standard structure: Goal/Input/Output/Guard/Check
+kanji-v1 structure: 目/材/出/守/確
+semantic checker: tools/validator/kdsl_compact_prompt.py
+AST v2 compatibility view: integrated
+checker migration: pending
+```
+
+Critical boundaries:
+
+```text
+implementation/repo/runtime/public/data/source-of-truth/AI coding trigger→CP-Lift
+CP-Lift先:=profile:dev-prompt
+restricted kanji alias free-text使用禁止
+KDSL-CP漢 alias:=構造KEY位置のみ
+Packet draft:=non-executable
+```
+
+## 10. Packet status
 
 ```text
 schema: kdsl-packet@0.1-draft
@@ -405,7 +438,7 @@ normalization preview != executable target
 KDSL-Packet直接実行禁止
 ```
 
-## 10. Safety and authority boundaries
+## 11. Safety and authority boundaries
 
 ```text
 意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
@@ -421,11 +454,12 @@ unknown profile/mode/safety/lexicon/envelope/schema/registry/ID推測禁止
 hold/blocked gate削除禁止
 ```
 
-## 11. Known gaps
+## 12. Known gaps
 
 ```text
 Full R1 compatibility view/migration
-CompactPrompt compatibility view/migration
+CompactPrompt checker migration to CompatibilityView
+profile-only/no-shorthand CompactPrompt parity expansion
 Safety Gate compatibility view/migration
 Packet compatibility view/migration
 Packet Normalization compatibility view/migration
@@ -443,7 +477,7 @@ canonical P1/P1L target schema
 stable/public-ready U approval
 ```
 
-## 12. Current positioning
+## 13. Current positioning
 
 Use as:
 
@@ -455,7 +489,8 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
-R1C AST v2 compatibility extraction with legacy parity guard
+R1C AST v2 extraction under legacy parity guard
+CompactPrompt AST v2 structural parity pilot
 ```
 
 Do not present as:
@@ -470,12 +505,12 @@ complete semantic parser
 semantic equivalence proof
 ```
 
-## 13. Next safe steps
+## 14. Next safe steps
 
 ```text
-P0: Phase 6C-3 CompactPrompt header/structural compatibility inventory and pilot
-P1: Safety Gate compatibility view and migration
-P2: Packet / Packet Normalization compatibility views and migration
+P0: Phase 6C-4 CompactPrompt checker structural migration under parity guard
+P1: Safety Gate compatibility view/migration
+P2: Packet / Packet Normalization compatibility views/migration
 P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
