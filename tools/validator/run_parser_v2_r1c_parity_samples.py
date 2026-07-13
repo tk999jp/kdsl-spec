@@ -59,6 +59,15 @@ CASES = (
         0,
         PASS_MARKERS,
     ),
+    SuiteCase(
+        'R1C checker parity guard blocks unsupported same-marker divergence',
+        ('kdsl_r1c.py', 'samples/parser-v2/r1c_same_marker_duplicate.md'),
+        2,
+        (
+            'STATUS: fail',
+            'R1C parser parity guard: entry mismatch',
+        ),
+    ),
 )
 
 
