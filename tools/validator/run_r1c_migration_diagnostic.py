@@ -1,0 +1,28 @@
+from run_samples import SAMPLES, run_sample
+
+SELECTED_NAMES = {
+    'r1c repository success example valid',
+    'r1c repository blocked example valid',
+    'r1c repository needs-user example valid',
+    'r1c unknown schema',
+    'r1c missing required field',
+    'r1c short alias rejected',
+    'r1c invalid structured JSON',
+    'r1c invalid RT v basis',
+}
+
+
+def main():
+    selected = [sample for sample in SAMPLES if sample['name'] in SELECTED_NAMES]
+    failed = 0
+    for sample in selected:
+        if not run_sample(sample):
+            failed += 1
+    print('SUMMARY:')
+    print(f'  total: {len(selected)}')
+    print(f'  failed: {failed}')
+    return 1 if failed else 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
