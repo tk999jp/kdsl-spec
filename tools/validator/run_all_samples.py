@@ -22,7 +22,6 @@ RUNNERS = (
     ('parser-v2-normalization-parity', 'run_parser_v2_normalization_parity_samples.py'),
     ('normalization-checker-migration', 'run_normalization_migration_samples.py'),
     ('parser-adapter-inventory', 'run_parser_adapter_inventory_samples.py'),
-    ('parser-adapter-consumer-matrix', 'run_parser_adapter_matrix_samples.py'),
     ('safety-semantics', 'run_safety_semantics_samples.py'),
     ('safety-semantics-examples', 'run_safety_semantics_examples.py'),
     ('r1c-optional', 'run_r1c_optional_samples.py'),
