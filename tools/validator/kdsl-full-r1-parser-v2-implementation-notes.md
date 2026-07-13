@@ -1,24 +1,26 @@
 # Full R1 Parser v2 Compatibility Notes
 
-status: phase6c-compatibility-view-integrated / checker-migration-pending
+status: phase6c-compatibility-view-integrated / checkers-migrated-under-parity-guard
 compatibility_view: tools/validator/kdsl_parser_v2_full_r1_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_full_r1_parity.py
 parity_runner: tools/validator/run_parser_v2_full_r1_parity_samples.py
-implementation_pull_request: 79
-implementation_squash_commit: 191e7315482934fc474022f3a21d02f2457793be
-workflow: 29234411316 / 325 / success
+active_checkers:
+  - tools/validator/r1_required_blocks.py
+  - tools/validator/r1_rt_basis.py
+  - tools/validator/r1_authority_guard.py
+migration_runner: tools/validator/run_full_r1_migration_samples.py
+compatibility_pull_request: 79
+compatibility_squash_commit: 191e7315482934fc474022f3a21d02f2457793be
+migration_pull_request: 81
+migration_squash_commit: 7a78231eebb8a49b2a49d2d201a1a9e6deabf618
+migration_workflow: 29234998011 / 329 / success
+closeout_pull_request: 82
 tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
 
-Provide a source-spanned view matching the current structural inputs of:
-
-```text
-r1_required_blocks.py
-r1_rt_basis.py
-r1_authority_guard.py
-```
+Provide a source-spanned Full R1 structural view and use it in the required-block, RT-basis, and authority checkers without changing evidence or authority semantics.
 
 ```text
 parser parity != Full R1 semantic equivalence
@@ -27,11 +29,26 @@ parser parity != NEXT execution authority
 parser parity != COMMIT authority
 ```
 
-## Current checker behavior
+## Active checker pattern
 
-The three Full R1 checkers scan the whole document independently. They do not share a bounded `KDSL_RESULT` envelope parser.
+```text
+input
+→ FullR1CompatibilityView
+→ compare_full_r1_legacy_v2
+→ mismatch: fail before checker-specific semantic validation
+→ match: existing required/RT/authority validation
+```
 
-The CompatibilityView intentionally preserves:
+Output markers:
+
+```text
+Full R1 parser parity guard: pass
+Full R1 structural extraction: AST v2 compatibility view
+```
+
+## Whole-document compatibility
+
+The pre-migration Full R1 checkers scan the entire document rather than a bounded `KDSL_RESULT` envelope. Phase 6C preserves:
 
 ```text
 whole-document KDSL_RESULT presence
@@ -39,10 +56,10 @@ whole-document required-field presence
 first RT/VERIFY/S values
 RT basis-scope construction
 first NEXT/COMMIT values
-NEXT/COMMIT continuation lines
+NEXT/COMMIT continuation behavior
 ```
 
-No envelope-scope tightening is introduced by the parity pilot.
+No silent scope tightening was introduced.
 
 ## View model
 
@@ -51,16 +68,6 @@ DocumentNodeV2
 FullR1FieldNodeV2
 FullR1CompatibilityView
 SourceSpanV2
-```
-
-`FullR1FieldNodeV2` records:
-
-```text
-name
-simple_value
-continued_value
-raw_line
-span
 ```
 
 View channels:
@@ -75,28 +82,26 @@ basis_scope_text
 authority_values
 ```
 
-## Compared legacy functions
+## Checker-specific usage
 
 ```text
-r1_required_blocks.present
-r1_rt_basis.has_result_envelope
-r1_rt_basis.find_field
-r1_rt_basis.field_scope_text
-r1_authority_guard.has_result_envelope
-r1_authority_guard.find_field
+required blocks: view.has_result_envelope / view.present(name)
+RT basis: view.simple_value('RT') / view.basis_scope_text
+authority: view.continued_value('NEXT') / view.continued_value('COMMIT')
 ```
 
-## Semantic rules intentionally excluded
+Legacy helper functions remain in the checker modules so the parity checker can compare the old contract directly.
+
+## Semantic rules retained
 
 ```text
-required block validity decision
+required Full R1 field list
 RT:v detection
 accepted runtime basis vocabulary
 invalid basis vocabulary
-mixed basis warning
+mixed-basis warning
 NEXT proposal-only marker policy
 COMMIT actual/proposed/none policy
-execution authority
 ```
 
 Critical boundaries:
@@ -113,9 +118,10 @@ COMMIT:=actual or proposed message, not auto-commit authority
 
 ```text
 Full R1 structural parity: 8 / failed 0
-unified runners: 19
-unified expectations: 344 / failed 0
-workflow run: 29234411316 / #325
+Full R1 checker migration: 9 / failed 0
+unified runners at migration: 20
+unified expectations at migration: 353 / failed 0
+workflow run: 29234998011 / #329
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -124,16 +130,16 @@ Packet Semantic Property: success
 
 ```text
 CompatibilityView: integrated
-parity corpus: integrated
-three checker switches: pending
+three checker switches: integrated
+legacy parity guard: active
 whole-document compatibility: retained
-semantic/evidence/authority rules: unchanged
+RT/NEXT/COMMIT semantic/evidence/authority rules: unchanged
 ```
 
 ## Next step
 
 ```text
-migrate r1_required_blocks.py, r1_rt_basis.py, r1_authority_guard.py
-retain compare_full_r1_legacy_v2 guard
-preserve RT/NEXT/COMMIT semantics and exits
+Phase 6D remaining helper-consumer inventory and decision matrix
+consumer-specific mutation/property corpus
+legacy adapter retirement decision per helper family
 ```
