@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6c-packet-checker-migration-integrated
+phase: phase6c-normalization-compatibility-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -126,6 +126,7 @@ Phase 6C-5 Safety Gate compatibility view/parity: integrated
 Phase 6C-6 Safety Gate checker migration: integrated
 Phase 6C-7 Packet compatibility view/parity: integrated
 Phase 6C-8 Packet base checker migration: integrated
+Phase 6C-9 Packet Normalization compatibility view/parity: integrated
 ```
 
 Phase 5 public evidence:
@@ -185,8 +186,8 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 16
-  unified_expectations: 321
+  unified_runners: 17
+  unified_expectations: 329
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
@@ -197,6 +198,7 @@ validator:
   phase6c_safety_gate_checker_migration_cases: 4
   phase6c_packet_parity_cases: 8
   phase6c_packet_checker_migration_cases: 6
+  phase6c_normalization_parity_cases: 8
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
@@ -204,10 +206,10 @@ validator:
 Latest implementation verification:
 
 ```text
-implementation PR: 73
-source head: e764b8efa41fdb0f2512985a0750302d6d57aabb
-squash commit: 52675d02969123f7329727fdddfcf5e0813a377e
-workflow run: 29232739675 / #313 / success
+implementation PR: 75
+source head: c99a774ba7d58dcc7eac5e733cdc1d12a4b9e310
+squash commit: ceb8269c2f1b3fe84342bd0fcff6d36871385510
+workflow run: 29233236734 / #317 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
@@ -266,8 +268,14 @@ Safety Gate: AST v2 compatibility extraction + parity guard
 Packet base checker: AST v2 compatibility extraction + parity guard
 ```
 
+Compatibility pilot without checker switch:
+
 ```text
-legacy adapter removal: prohibited until Packet Normalization and helper-consumer migration evidence
+Packet Normalization: AST v2 CompatibilityView + parity corpus integrated
+```
+
+```text
+legacy adapter removal: prohibited until Normalization checker and helper-consumer migration evidence
 ```
 
 ### Phase 6B typed AST v2 core
@@ -279,8 +287,6 @@ implementation:
 corpus:
   tools/validator/run_parser_v2_samples.py
   tools/validator/samples/parser-v2/*
-review:
-  docs/reviews/kdsl-phase6b-semantic-parser-core.md
 PR: 57
 squash: 54c214587cedfc4af634edba9d3df7cdea30d524
 status: integrated / additive
@@ -324,15 +330,6 @@ PRs: 63 / 65
 status: checker migrated under parity guard
 ```
 
-Retained semantics:
-
-```text
-CP-Lift triggers and prohibition exception
-restricted alias rules
-required/empty/mixed/duplicate policy
-PKT:v1 and Packet non-executable checks
-```
-
 ### Safety Gate migration
 
 ```text
@@ -344,19 +341,6 @@ PRs: 67 / 69
 status: checker migrated under parity guard
 ```
 
-Retained semantics:
-
-```text
-registry/ID/state validity
-required fields
-satisfied evidence/authority basis
-blocked/na handling
-dev-prompt baseline
-composition/protected wording
-aggregate state
-inheritance/graph meaning
-```
-
 ### Packet migration
 
 ```text
@@ -364,25 +348,8 @@ compatibility view: tools/validator/kdsl_parser_v2_packet_compat.py
 parity checker: tools/validator/kdsl_parser_v2_packet_parity.py
 semantic checker: tools/validator/kdsl_packet.py
 migration suite: tools/validator/run_packet_migration_samples.py
-reviews:
-  docs/reviews/kdsl-phase6c-packet-compatibility-view.md
-  docs/reviews/kdsl-phase6c-packet-checker-migration.md
 PRs: 71 / 73
-squashes:
-  5b158c667a266ee1e10e2337eee9f0260f6b02ba
-  52675d02969123f7329727fdddfcf5e0813a377e
 status: base checker migrated under parity guard
-```
-
-Runtime path:
-
-```text
-input
-→ PacketCompatibilityView
-→ Phase 1 / AST v2 parity guard
-→ mismatch: semantic validation前にfail
-→ match: AST v2 scope/entries/duplicates/blocks
-→ existing Packet semantic validation
 ```
 
 Retained helper boundary:
@@ -392,17 +359,36 @@ install_packet(globals()): retained for imported helper API
 Packet semantic/property/normalization helper migration: not claimed
 ```
 
-Retained Packet semantics:
+### Packet Normalization compatibility pilot
 
 ```text
-SCHEMA/STATUS rules
-required field/order rules
-BASE/TASK/FLOW/SG registry and IDs
-FLOW/Safety Gate composition
-AUTHORITY rails
-OUT result schema
-NORMALIZE required/target/state
-PKT:v1 prohibition
+compatibility view: tools/validator/kdsl_parser_v2_normalization_compat.py
+parity checker: tools/validator/kdsl_parser_v2_normalization_parity.py
+parity suite: tools/validator/run_parser_v2_normalization_parity_samples.py
+review: docs/reviews/kdsl-phase6c-normalization-compatibility-view.md
+PR: 75
+squash: ceb8269c2f1b3fe84342bd0fcff6d36871385510
+status: compatibility view/parity integrated
+```
+
+Compared contract:
+
+```text
+NORMALIZATION_DRAFT presence/exact scope
+top-level order/value/relative line/duplicates
+raw block boundaries
+nested scalar maps and duplicates
+MAP/UNRESOLVED/LOSS records
+PRESERVE nested lists
+OUTPUT.preview block scalar
+```
+
+Migration boundary:
+
+```text
+normalization checker switch: not performed
+Phase 1 adapter: retained
+normalization semantic/equivalence/authority policy: unchanged
 ```
 
 ## 8. R1 / R1C status
@@ -460,25 +446,36 @@ baseline/composition/protected-wording requirements unchanged
 inheritance/graph semantics unchanged
 ```
 
-## 11. Packet status
+## 11. Packet / Normalization status
+
+Packet:
 
 ```text
 schema: kdsl-packet@0.1-draft
 status: v2-draft adopted
-stable: no
 executable: no
 normalization_required: yes
 packet_state: not_normalized
 PKT:v1: prohibited
-semantic_property_model: kdsl-packet-property@0.1-draft
-property_scope: selected bounded properties only
 semantic_equivalence: not_proven
 normalization_completion: not_proven
 execution_authority: none
 AST v2 base checker migration: integrated
 legacy-v2 parity guard: active
+```
+
+Normalization:
+
+```text
+schema: kdsl-packet-normalization@0.1-draft
+status: non-executable
+AST v2 compatibility view: integrated
+checker migration: pending
 structural parity: 8 / failed 0
-checker migration corpus: 6 / failed 0
+TARGET.executable: false
+ROUND_TRIP.semantic_equivalence: not_proven
+AUTHORITY.execution_authority: none
+normalization completion: not_proven
 ```
 
 ```text
@@ -509,7 +506,7 @@ hold/blocked gate削除禁止
 
 ```text
 Full R1 compatibility view/migration
-Packet Normalization compatibility view/migration
+Packet Normalization checker migration
 Packet helper-consumer structural migration decision
 inheritance/graph helper structural migration decision
 legacy adapter retirement proof
@@ -531,6 +528,7 @@ CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
 R1C / CompactPrompt / Safety Gate / Packet base checker AST v2 extraction under parity guards
+Packet Normalization AST v2 structural parity pilot
 ```
 
 Do not present as:
@@ -539,6 +537,7 @@ Do not present as:
 stable KDSL release
 public-ready guarantee
 Packet executable runtime contract
+normalization-complete target
 complete semantic parser
 semantic equivalence proof
 complete safety proof
@@ -547,11 +546,10 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6C-9 Packet Normalization compatibility view/parity pilot
-P1: Packet Normalization checker migration after parity evidence
-P2: Full R1 compatibility view/migration
-P3: helper-consumer migration decision
-P4: Phase 6D mutation/property/repository corpus and adapter-retirement decision
+P0: Phase 6C-10 Packet Normalization checker migration under parity guard
+P1: Full R1 compatibility view/migration
+P2: helper-consumer migration decision
+P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
@@ -559,12 +557,12 @@ Stop when:
 
 ```text
 existing checker exits change without specification approval
-Packet STATUS non-executable weakens
-NORMALIZE.required true weakens
-NORMALIZE.state not_normalized weakens
-authority rails or PKT:v1 policy changes
-normalization semantic_equivalence:not_proven weakens
-execution_authority:none weakens
+normalization STATUS non-executable weakens
+TARGET.executable false weakens
+ROUND_TRIP.semantic_equivalence not_proven weakens
+AUTHORITY.execution_authority none weakens
+executable target marker prohibition weakens
+Packet STATUS/normalization state/authority rails weaken
 protected wording/raw text changes
 RT/NEXT/COMMIT meaning changes
 unknown schema/default inference is required
