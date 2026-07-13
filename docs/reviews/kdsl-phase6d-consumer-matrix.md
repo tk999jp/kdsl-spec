@@ -1,10 +1,15 @@
 # Phase 6D-2 — Parser Helper Consumer Decision Matrix
 
 status: completed / integrated
-review_date: 2026-07-13
+review_date: 2026-07-14
 repository: tk999jp/kdsl-spec
 tracking_issue: 55
 implementation_pull_request: 85
+implementation_source_head: 62743085b2ea1b4708f69c02e97d6085afa750a9
+implementation_squash_commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
+workflow_run_id: 29236827894
+workflow_run_number: 337
+workflow_conclusion: success
 validator_authority: non-authoritative
 
 ## 1. Goal
@@ -62,7 +67,27 @@ nonstructural helper-module import→retain-semantic-api
 
 The classification is deterministic and emitted as text or JSON.
 
-## 5. Corpus
+## 5. Verification
+
+```text
+implementation PR: 85
+source head: 62743085b2ea1b4708f69c02e97d6085afa750a9
+squash commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
+workflow run: 29236827894 / #337
+KDSL Validation: success
+Packet Semantic Property: success
+```
+
+Corpus:
+
+```text
+adapter inventory: 4 / failed 0
+consumer matrix: 5 / failed 0
+unified runners: 22
+unified expectations: 362 / failed 0
+```
+
+Cases:
 
 ```text
 repository matrix assigns all decisions and remains blocked
@@ -70,15 +95,6 @@ legacy helper consumer→migrate-or-replace
 parity consumer→retain-parity-only
 semantic-only consumer→retain-semantic-api
 known direct installer→retain-temporarily
-```
-
-Expected integrated state:
-
-```text
-inventory corpus: 4 / failed 0
-consumer matrix corpus: 5 / failed 0
-unified runners: 22
-unified expectations: 362 / failed 0
 ```
 
 ## 6. Retirement interpretation
