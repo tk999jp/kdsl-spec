@@ -1,6 +1,6 @@
 # KDSL Common Parser / AST
 
-status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated / phase6c-r1c-migrated / phase6c-compact-compat-integrated
+status: phase1-integrated / phase6a-design-integrated / phase6b-core-integrated / phase6c-r1c-migrated / phase6c-compact-migrated
 phase1_pull_request: 38
 phase1_squash_commit: 701c1c6901bdf471ce979513da6dd2f215fd3b58
 phase6a_pull_request: 56
@@ -13,7 +13,9 @@ phase6c_r1c_checker_pull_request: 61
 phase6c_r1c_checker_squash_commit: a81bb8cae5aefd4020c0df004c616d5e4f834cee
 phase6c_compact_compat_pull_request: 63
 phase6c_compact_compat_squash_commit: 2df06525265b7fdf56b449447967f5e681534615
-latest_workflow: 29224978552 / 293 / success
+phase6c_compact_checker_pull_request: 65
+phase6c_compact_checker_squash_commit: 4d4a5f7b6580ecec44636f8e09e163540fb17770
+latest_workflow: 29230246858 / 297 / success
 phase6_tracking_issue: 55
 validator_authority: non-authoritative
 
@@ -50,12 +52,12 @@ DiagnosticBag
 Remaining namespace-adapter consumers:
 
 ```text
+kdsl_safety_gate.py
 kdsl_packet.py
 kdsl_packet_normalization.py
-kdsl_safety_gate.py
 ```
 
-`kdsl_r1c.py` no longer installs the Phase 1 namespace adapter.
+R1C no longer installs the Phase 1 namespace adapter. CompactPrompt never used that namespace adapter; it now uses an explicit AST v2 compatibility view.
 
 ## 3. Phase 6A design contract
 
@@ -166,9 +168,9 @@ marker registry restored in finally
 same-marker divergence→semantic validation前にfail
 ```
 
-## 6. Phase 6C CompactPrompt compatibility pilot
+## 6. Phase 6C CompactPrompt path
 
-Implementation:
+Compatibility implementation:
 
 ```text
 tools/validator/kdsl_parser_v2_compact_compat.py
@@ -176,10 +178,20 @@ tools/validator/kdsl_parser_v2_compact_parity.py
 tools/validator/run_parser_v2_compact_parity_samples.py
 ```
 
-Compatibility surface:
+Current checker path:
 
 ```text
-DocumentNodeV2 header structure
+input
+→ CompactPromptCompatibilityView
+→ legacy-v2 structural parity guard
+→ mismatch: fail before semantic validation
+→ match: AST v2 scope/header/block/duplicate extraction
+→ existing CompactPrompt semantic and safety validation
+```
+
+Migrated structural surface:
+
+```text
 CompactPrompt detection
 KDSL-CP / KDSL-CP漢 shorthand
 legacy-compatible scope
@@ -189,25 +201,20 @@ block order/content/source span
 duplicate block order
 ```
 
-Compared legacy functions:
+Retained semantic rules:
 
 ```text
-detect_profile
-detect_shorthand
-extract_scope
-header_value
-parse_blocks
+mode/safety/lexicon validity
+KDSL-CP漢 conflict checks
+required/empty block rules
+mixed-key and duplicate warnings
+restricted free-text alias detection
+CP-Lift triggers and prohibition-clause exception
+PKT:v1 prohibition
+PACKET_DRAFT non-executable checks
 ```
 
-Checker boundary:
-
-```text
-kdsl_compact_prompt.py switch: not performed
-CP-Lift semantics: unchanged
-restricted free-text alias semantics: unchanged
-mode/safety/lexicon decisions: unchanged
-Packet boundary checks: unchanged
-```
+Legacy extraction helpers remain only for the in-process parity guard.
 
 ## 7. Verification
 
@@ -215,14 +222,24 @@ Packet boundary checks: unchanged
 Phase 1 parser/adapter suite: 11 / failed 0
 Phase 6B parser-v2 suite: 12 / failed 0
 Phase 6C R1C parity suite: 10 / failed 0
-Phase 6C CompactPrompt parity suite: 8 / failed 0
-unified runners: 11
-unified expectations: 287 / failed 0
+Phase 6C CompactPrompt parity suite: 12 / failed 0
+CompactPrompt checker migration suite: 4 / failed 0
+unified runners: 12
+unified expectations: 295 / failed 0
 workflow: KDSL Validation
-workflow run: 29224978552 / #293 / success
+workflow run: 29230246858 / #297 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
+```
+
+Permanent CompactPrompt migration boundaries:
+
+```text
+profile-only/no-shorthand
+same-key duplicate warning
+mixed standard/kanji warning
+fenced scope excluding following notes
 ```
 
 ## 8. Unified runner output policy
@@ -244,8 +261,7 @@ not a complete JSON5 parser
 not a natural-language semantic parser
 R1C parity proves selected structural contract only
 R1C full semantic equivalence not proven
-CompactPrompt checker has not switched to CompatibilityView
-profile-only/no-shorthand CompactPrompt corpus remains limited
+CompactPrompt structural parity != meaning-preservation proof
 Full R1 compatibility view not implemented
 Safety Gate/Packet/Normalization compatibility views not implemented
 legacy namespace adapter remains for three checker families
@@ -259,8 +275,8 @@ no implicit defaults
 ## 10. Next migration order
 
 ```text
-CompactPrompt checker structural migration under parity guard
-Safety Gate compatibility view/migration
+Safety Gate compatibility view/parity pilot
+Safety Gate checker migration after parity evidence
 Packet compatibility view/migration
 Packet Normalization compatibility view/migration
 Phase 6D mutation/property/repository corpus
@@ -272,6 +288,7 @@ Stop migration when:
 ```text
 expected checker exits change without specification approval
 protected wording/raw text changes
+Safety Gate state/composition meaning changes
 CP-Lift or restricted-alias meaning changes
 RT/NEXT/COMMIT input changes
 unknown schema/default inference is required
