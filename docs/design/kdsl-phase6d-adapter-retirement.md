@@ -1,13 +1,14 @@
 # Phase 6D — Parser Adapter Retirement Gates
 
-status: design-draft / non-normative implementation plan
+status: design-draft / evidence-tracked / non-normative implementation plan
 repository: tk999jp/kdsl-spec
 tracking_issue: 55
-review_date: 2026-07-13
+last_reviewed: 2026-07-14
+latest_corrective: PR #87 / 724d31dfb1adbbba7488db4cb444c65047492d5d
 
 ## 1. Purpose
 
-Define an evidence-based path for deciding whether `tools/validator/kdsl_parser_adapter.py` and its installed helper exports can be migrated, explicitly retained, or removed after Phase 6C active-checker migration.
+Define an evidence-based path for deciding whether `tools/validator/kdsl_parser_adapter.py` and installed helper exports can be migrated, explicitly retained, or removed after Phase 6C active-checker migration.
 
 ```text
 active checker migration complete != adapter retirement proof
@@ -15,7 +16,7 @@ no direct checker dependency != no helper-consumer dependency
 CI pass before removal != CI pass after removal
 ```
 
-## 2. Current state entering Phase 6D
+## 2. Current state
 
 Phase 6C established:
 
@@ -25,31 +26,41 @@ active checker structural inputs→AST v2 CompatibilityViews
 legacy/AST v2 parity guards→active
 ```
 
-Remaining compatibility surface includes:
+Phase 6D established:
 
 ```text
-direct adapter installer imports
-checker-module helper re-exports
-semantic/property/round-trip helper consumers
-inheritance/graph/optional helper consumers
-standalone parity comparison helpers
+direct-installer inventory→integrated
+helper-consumer decision matrix→integrated
+inventory/matrix unified runner integration→verified by run #345
 ```
 
-These surfaces must not be treated as equivalent.
+Verified direct adapter installers:
+
+```text
+kdsl_packet.py -> install_packet
+kdsl_packet_normalization.py -> install_normalization
+```
+
+Safety Gate status:
+
+```text
+kdsl_safety_gate.py direct installer: absent
+Safety Gate helper-consumer inventory: retained
+```
 
 ## 3. Dependency classes
 
 ### A. Active checker structural input
 
 ```text
-status: migrated in Phase 6C
+status: migrated
 source: AST v2 CompatibilityView
 legacy path: parity comparison only
 ```
 
 ### B. Direct adapter installer
 
-A module imports one of:
+Potential installer symbols:
 
 ```text
 install_packet
@@ -58,7 +69,7 @@ install_safety_gate
 install_r1c
 ```
 
-Current direct installers are compatibility exports, not proof that the active checker still consumes Phase 1 structure.
+Current direct imports are only `install_packet` and `install_normalization`. Unknown direct importers fail. `install_r1c` recurrence fails.
 
 ### C. Legacy structural helper consumer
 
@@ -70,11 +81,9 @@ kdsl_packet_normalization
 kdsl_safety_gate
 ```
 
-Examples include scope, top-level, nested scalar, record, list, and multiline extraction helpers.
-
 ### D. Semantic API consumer
 
-A module imports constants or semantic functions from those checker modules without importing structural helpers.
+A module imports constants or semantic functions without using the bounded structural-helper set.
 
 ```text
 semantic dependency != adapter dependency
@@ -82,46 +91,54 @@ semantic dependency != adapter dependency
 
 ### E. Parity-only legacy helper
 
-Legacy helper functions retained solely so AST v2 parity code can compare the former contract.
+Legacy helper functions retained solely to compare the former extraction contract.
+
+## 4. Decision vocabulary
 
 ```text
-parity-only retention may remain until retirement proof is complete
+retain-temporarily
+migrate-or-replace
+retain-parity-only
+retain-semantic-api
 ```
 
-## 4. Retirement gates
+Blocking decisions:
+
+```text
+retain-temporarily
+migrate-or-replace
+```
+
+## 5. Retirement gates
 
 ### G1 — Active checker independence
 
 ```text
 all active checker structural inputs use AST v2 CompatibilityViews
-legacy parity guard executes before semantic validation
+parity guard executes before semantic validation
+state: satisfied
 ```
-
-Current state: satisfied.
 
 ### G2 — Direct installer inventory
 
 ```text
-all direct imports from kdsl_parser_adapter are enumerated
-unknown direct importer→CI failure
-install_r1c recurrence→CI failure
+all direct imports are enumerated
+unknown importer→failure
+install_r1c recurrence→failure
+state: integrated and unified-CI-verified
 ```
 
-Current state: pending implementation in Phase 6D-1.
-
-### G3 — Helper-consumer inventory
+### G3 — Helper-consumer decision matrix
 
 ```text
-all legacy structural helper importers are enumerated by file/module/symbol
-consumer classified as migrate|replace|retain-with-reason
-unknown consumer drift→CI failure or explicit review
+all discovered consumers receive one allowed decision
+unclassified dependency→failure
+state: integrated and unified-CI-verified
 ```
 
-Current state: pending.
+### G4 — Consumer-specific mutation/property/repository corpus
 
-### G4 — Mutation/property/repository corpus
-
-Each helper family requires cases that detect:
+Required detection classes:
 
 ```text
 scope drift
@@ -133,34 +150,41 @@ protected wording/raw text drift
 authority or non-executable boundary drift
 ```
 
-Current state: partial; active checker corpora exist, consumer-specific proof is incomplete.
-
-### G5 — Replacement API or explicit retention
-
-For each helper consumer:
-
 ```text
-migrate to CompatibilityView API
-or
-replace with dedicated non-adapter compatibility helper
-or
-retain with documented reason and bounded contract
+state: incomplete
 ```
 
-Silent deletion is prohibited.
+### G5 — Replacement API or explicit retention evidence
 
-### G6 — Removal candidate proof
-
-Only after G1–G5:
+Each blocking consumer must:
 
 ```text
-remove installer for one helper family
-run full unified suite and dedicated consumer corpus
+migrate to CompatibilityView/direct API
+or
+move to a dedicated compatibility module
+or
+be retained with bounded reason and evidence
+```
+
+```text
+state: incomplete
+```
+
+### G6 — Per-family removal candidate proof
+
+Only after G1–G5 for one helper family:
+
+```text
+remove its installer or installed-name dependency
+run dedicated consumer corpus
+run full unified suite
 verify no import/runtime failure
-record diff and workflow evidence
+record workflow evidence
 ```
 
-One family passing does not authorize removal of another family.
+```text
+state: absent
+```
 
 ### G7 — Adapter file retirement
 
@@ -169,66 +193,65 @@ One family passing does not authorize removal of another family.
 ```text
 no direct installer imports remain
 no consumer requires installed names
-parity comparison has an explicit replacement or retirement decision
+parity-only legacy strategy is explicitly decided
 full suite succeeds after removal
-repository status documents the result
+repository status records the result
 ```
 
-## 5. Current decision
+```text
+state: blocked
+```
+
+## 6. Verified validation state
+
+```text
+corrective PR: #87
+source head: 20cce60e459bbb379599d69e5a1e1b1bae66f202
+squash commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+workflow run: 29288377720 / #345
+KDSL Validation: success
+Packet Semantic Property: success
+adapter inventory: 4 / failed 0
+consumer matrix: 5 / failed 0
+unified runners: 22
+unified expectations: 362 / failed 0
+```
+
+## 7. Current decision
 
 ```text
 adapter_retirement: blocked
-reason:
-  helper-consumer inventory incomplete
-  replacement/retention decisions incomplete
-  post-removal corpus absent
+adapter_removal: not performed
 ```
 
-This is a safe progression state, not a failure of Phase 6C.
-
-## 6. Phase 6D-1 deliverable
-
-Add a non-authoritative inventory tool that:
+Reasons:
 
 ```text
-uses Python AST import analysis
-lists direct adapter importers and installer symbols
-lists structural helper consumers by source module and symbol
-fails on unknown direct adapter importers
-fails on install_r1c recurrence
-reports retirement blocked while compatibility dependencies remain
+direct installers remain
+migrate-or-replace consumers remain
+consumer-specific mutation/property proof incomplete
+post-removal proof absent
 ```
 
-The tool must not:
+## 8. Proposed migration order
 
 ```text
-rewrite imports
-remove adapter calls
-infer semantic equivalence
-claim adapter retirement readiness
-claim RT:v or execution authority
-```
-
-## 7. Proposed migration order
-
-```text
-1. inventory and freeze dependency graph
-2. Packet helper consumers
-3. Normalization helper consumers
-4. Safety Gate inheritance/graph/optional consumers
+1. Packet Normalization round-trip/property consumer contract corpus
+2. Packet Normalization consumer migration
+3. Packet helper consumers
+4. Safety Gate inheritance/graph/optional helper decisions
 5. parity-only helper strategy
-6. mutation/property/repository corpus
-7. per-family installer removal trials
-8. adapter file retirement decision
+6. per-family installer removal trials
+7. adapter file retirement decision
 ```
 
-The order may change only with explicit evidence and review.
-
-## 8. Safety and authority boundaries
+## 9. Safety and authority boundaries
 
 ```text
-validator/inventory pass != semantic equivalence
-inventory pass != adapter retirement proof
+inventory/matrix pass != consumer migration
+inventory/matrix pass != semantic equivalence
+inventory/matrix pass != complete safety proof
+inventory/matrix pass != adapter retirement proof
 CI pass != RT:v
 NEXT:=proposal, not execution authority
 COMMIT:=actual/proposed record, not auto-commit authority
@@ -239,29 +262,28 @@ Normalization execution_authority:none
 stable/public-ready/tag/release/Release Assets操作なし
 ```
 
-## 9. Stop conditions
+## 10. Stop conditions
 
 Stop and require review when:
 
 ```text
 unknown direct adapter importer appears
 helper symbol use cannot be classified
-consumer exit/output changes
+consumer exit/output changes unexpectedly
 protected wording/raw text changes
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundary weakens
 removal requires unknown defaults or schema inference
 ```
 
-## 10. Completion criteria
+## 11. Completion criteria
 
 Phase 6D is not complete until:
 
 ```text
-inventory committed
-consumer classifications recorded
-mutation/property corpus expanded
+consumer-specific corpus expanded
 per-family decisions recorded
+blocking consumers cleared or explicitly retained with evidence
+post-decision full CI recorded
 adapter retirement or explicit retention decision recorded
-post-decision full CI evidence recorded
 ```
