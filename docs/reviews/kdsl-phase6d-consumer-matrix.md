@@ -1,15 +1,18 @@
 # Phase 6D-2 — Parser Helper Consumer Decision Matrix
 
-status: completed / integrated
+status: completed / integrated / unified-CI-verified-after-corrective
 review_date: 2026-07-14
 repository: tk999jp/kdsl-spec
 tracking_issue: 55
 implementation_pull_request: 85
 implementation_source_head: 62743085b2ea1b4708f69c02e97d6085afa750a9
 implementation_squash_commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
-workflow_run_id: 29236827894
-workflow_run_number: 337
-workflow_conclusion: success
+corrective_pull_request: 87
+corrective_source_head: 20cce60e459bbb379599d69e5a1e1b1bae66f202
+corrective_squash_commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+verified_workflow_run_id: 29288377720
+verified_workflow_run_number: 345
+verified_workflow_conclusion: success
 validator_authority: non-authoritative
 
 ## 1. Goal
@@ -30,13 +33,10 @@ tools/validator/run_parser_adapter_matrix_samples.py
 tools/validator/samples/adapter-inventory/parity_consumer.py
 tools/validator/samples/adapter-inventory/semantic_consumer.py
 tools/validator/samples/adapter-inventory/allowed/kdsl_packet.py
-```
-
-Unified runner integration:
-
-```text
 tools/validator/run_all_samples.py
 ```
+
+PR #87 completed the unified runner integration.
 
 ## 3. Decision vocabulary
 
@@ -67,24 +67,28 @@ nonstructural helper-module import→retain-semantic-api
 
 The classification is deterministic and emitted as text or JSON.
 
-## 5. Verification
+## 5. Evidence correction and verification
+
+PR #85 integrated the matrix tool and dedicated runner, but did not connect it to `run_all_samples.py`. Therefore run #337 did not prove the matrix corpus inside the unified suite.
+
+PR #87 connected both Phase 6D runners and corrected a stale Safety Gate direct-installer expectation.
 
 ```text
-implementation PR: 85
-source head: 62743085b2ea1b4708f69c02e97d6085afa750a9
-squash commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
-workflow run: 29236827894 / #337
-KDSL Validation: success
-Packet Semantic Property: success
+run #341: initial unified connection exposed stale inventory assumption
+run #342: isolated inventory failure
+run #344: corrected inventory-only unified success
+run #345: inventory + matrix unified success
 ```
 
-Corpus:
+Final verified corpus:
 
 ```text
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
 unified runners: 22
 unified expectations: 362 / failed 0
+KDSL Validation: success
+Packet Semantic Property: success
 ```
 
 Cases:
@@ -168,34 +172,26 @@ consumer-specific behavior has not yet been migrated or mutation-tested
 
 ## 10. Next safe step
 
-Phase 6D-3:
+Phase 6D-3A:
 
 ```text
-select one migrate-or-replace helper family
-record exact consumer files/symbols
-add consumer-specific mutation/property tests
-migrate imports only after those tests exist
+select Packet Normalization round-trip/property helper family
+record exact consumer contract
+add mutation/property tests before changing imports
 ```
 
-Recommended first target:
+Phase 6D-3B:
 
 ```text
-Packet Normalization round-trip/property consumers
-```
-
-Selection reasons:
-
-```text
-existing NormalizationCompatibilityView
-bounded helper surface
-strong non-executable/not_proven/none invariants
-existing round-trip/property corpus
+migrate kdsl_packet_roundtrip.parse_normalization to NormalizationCompatibilityView
+retain non-executable/not_proven/none boundaries
+re-run inventory/matrix and full suite
 ```
 
 ## 11. Closeout decision
 
 ```text
-Phase 6D-2 consumer matrix: integrated
+Phase 6D-2 consumer matrix: integrated and unified-CI-verified
 adapter retirement: blocked
 adapter removal: not performed
 Issue #55: remain open
