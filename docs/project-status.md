@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-normalization-consumer-migration-integrated
+phase: phase6d-normalization-installer-removal-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: a031eb3b2b71d19a0f549d4f69c9cbcd73f984df
+verified_main_head: 1e488c6fedb792cd1a40a003b68c374af93b7dae
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -100,27 +100,11 @@ Phase 6A Semantic Parser Foundation design: integrated
 Phase 6B typed parser/AST v2 core: integrated
 Phase 6C active-checker structural migrations: complete
 Phase 6D-1 parser adapter/helper inventory: integrated
-Phase 6D-2 parser helper consumer decision matrix: integrated
+Phase 6D-2 helper consumer decision matrix: integrated
 Phase 6D unified-runner corrective: integrated
-Phase 6D-3A Normalization consumer contract corpus: integrated
+Phase 6D-3A Normalization consumer contract: integrated
 Phase 6D-3B Normalization round-trip consumer migration: integrated
-```
-
-Phase 6C migrated active checker paths:
-
-```text
-Full R1 required blocks / RT basis / authority
-R1C
-CompactPrompt
-Safety Gate
-Packet
-Packet Normalization
-```
-
-```text
-all active checker structural inputs→AST v2 CompatibilityView + legacy parity guard
-helper-export compatibility→partially retained
-semantic-equivalence proof→not complete
+Phase 6D-4 Normalization direct-installer removal: integrated
 ```
 
 ## 5. Repository enforcement
@@ -142,92 +126,31 @@ repository_enforcement:
 ```
 
 ```text
-verification PR: 53 / closed without merge
-activation record PR: 54
-activation squash: 9434628aefb966d0b66e9d865a956d961b551ef2
-issue #39: closed / completed
 required_check_activation: confirmed
 workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ```
 
-## 6. Verified Phase 6D evidence
+## 6. Latest verified implementation
 
 ```text
-PR #87 unified-runner corrective:
-  squash: 724d31dfb1adbbba7488db4cb444c65047492d5d
-  workflow: 29288377720 / #345 / success
-  verified runners/expectations: 22 / 362
-
-PR #88 corrective closeout:
-  squash: 2165b96157be224e0db1c790e96b2e85d6aae4fc
-  workflow: 29288749272 / #347 / success
-
-PR #89 Normalization consumer contract:
-  squash: 0ec72d29698679b1e09bd3258eaf3c16d8bd80af
-  workflow: 29288968298 / #349 / success
-  consumer contract: 10 / failed 0
-  verified runners/expectations: 23 / 372
-
-PR #90 Normalization consumer migration:
-  squash/current main: a031eb3b2b71d19a0f549d4f69c9cbcd73f984df
-  workflow: 29289185279 / #351 / success
-  consumer migration: 3 / failed 0
-  verified runners/expectations: 24 / 375
-```
-
-For runs #345, #347, #349 and #351:
-
-```text
+PR: 92
+source head: 6c0a27f5374e9374a0b698f2501ff7060218e69f
+squash commit: 1e488c6fedb792cd1a40a003b68c374af93b7dae
+workflow run: 29290086908 / #355
 KDSL Validation: success
 Packet Semantic Property: success
 ```
 
-## 7. Validator status
-
-```yaml
-validator:
-  maturity: experimental_heuristic_helpers
-  implementation: partial
-  authority: non_authoritative
-  workflow: .github/workflows/validator.yml
-  unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 24
-  unified_expectations: 375
-  failed: 0
-  phase1_parser_cases: 11
-  phase6b_parser_v2_cases: 12
-  r1c_parity_cases: 10
-  compact_parity_cases: 12
-  compact_migration_cases: 4
-  safety_gate_parity_cases: 8
-  safety_gate_migration_cases: 4
-  packet_parity_cases: 8
-  packet_migration_cases: 6
-  normalization_parity_cases: 8
-  normalization_migration_cases: 7
-  full_r1_parity_cases: 8
-  full_r1_migration_cases: 9
-  adapter_inventory_cases: 4
-  adapter_consumer_matrix_cases: 5
-  normalization_consumer_contract_cases: 10
-  normalization_consumer_migration_cases: 3
-```
-
-Latest verified workflow:
+Verified suites:
 
 ```text
-implementation PR: 90
-source head: 5a0cecc1130f9fe022a5cb574bda8c36f274dbee
-squash commit: a031eb3b2b71d19a0f549d4f69c9cbcd73f984df
-workflow run: 29289185279 / #351 / success
-KDSL Validation: success
-Packet Semantic Property: success
-consumer contract: 10 / failed 0
-consumer migration: 3 / failed 0
+Normalization installer-removal: 4 / failed 0
+Normalization consumer contract: 10 / failed 0
+Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 24
-unified expectations: 375 / failed 0
+unified runners: 25
+unified expectations: 379 / failed 0
 ```
 
 ```text
@@ -237,24 +160,30 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-inventory/matrix/contract/migration pass != adapter retirement proof
+inventory/matrix/contract/migration/removal pass != adapter file retirement proof
 ```
 
-## 8. Parser/checker migration state
+## 7. Parser/checker migration state
 
 Typed AST core:
 
 ```text
 tools/validator/kdsl_parser_v2.py
 tools/validator/kdsl_parse_v2.py
-DocumentNodeV2 / HeaderNode / EnvelopeNodeV2 / FieldNodeV2
-SourceSpanV2 / DiagnosticV2
-typed scalar/block/JSON/mapping/sequence/record nodes
-active-document fence isolation
-raw-envelope compatibility contexts
 ```
 
-Common active-checker pattern:
+Migrated active checker structural paths:
+
+```text
+Full R1 required blocks / RT basis / authority
+R1C
+CompactPrompt
+Safety Gate
+Packet
+Packet Normalization
+```
+
+Common checker pattern:
 
 ```text
 input
@@ -266,17 +195,7 @@ input
 
 No active checker remains solely on the Phase 1 structural path.
 
-## 9. Phase 6D dependency state
-
-Design and tools:
-
-```text
-docs/design/kdsl-phase6d-adapter-retirement.md
-docs/design/kdsl-phase6d-consumer-matrix.md
-docs/design/kdsl-phase6d-normalization-consumer-contract.md
-tools/validator/kdsl_parser_adapter_inventory.py
-tools/validator/kdsl_parser_adapter_matrix.py
-```
+## 8. Phase 6D dependency state
 
 Decision vocabulary:
 
@@ -287,57 +206,62 @@ retain-parity-only
 retain-semantic-api
 ```
 
-Verified direct installer boundary:
+Current direct installer boundary:
 
 ```text
 kdsl_packet.py -> install_packet
-kdsl_packet_normalization.py -> install_normalization
+kdsl_packet_normalization.py -> none
+kdsl_safety_gate.py -> none
 ```
 
-Safety Gate:
+Normalization family:
 
 ```text
-kdsl_safety_gate.py direct installer: absent
-Safety Gate helper-consumer inventory: retained
+active checker: NormalizationCompatibilityView
+round-trip consumer: NormalizationCompatibilityView
+property consumer: indirect parse_normalization API
+Normalization direct installer: removed
+local legacy helpers: retained for parity evidence
 ```
 
-Normalization consumer migration:
+Safety Gate family:
 
 ```text
-kdsl_packet_roundtrip.py structural import from kdsl_packet_normalization: removed
-kdsl_packet_roundtrip.py source: NormalizationCompatibilityView
-kdsl_packet_property.py indirect parse_normalization consumer: retained
-install_normalization: retained temporarily
+direct adapter installer: absent
+helper-consumer inventory/decision: retained for Phase 6D review
 ```
 
-Blocking decisions remain:
+Packet family:
 
 ```text
-retain-temporarily
-migrate-or-replace
+direct adapter installer: retained
+helper consumers: remain
+consumer-specific migration proof: pending
 ```
 
-Retirement gates:
+## 9. Adapter retirement gates
 
 ```text
 G1 active checker independence: satisfied
 G2 direct installer inventory: integrated / unified-CI-verified
 G3 helper-consumer decision matrix: integrated / unified-CI-verified
-G4 Normalization consumer contract/mutation corpus: satisfied for round-trip family
-G5 Normalization round-trip consumer migration: satisfied
-G6 Normalization installer removal proof: pending
-G7 adapter file retirement: blocked
+G4 Normalization consumer mutation/property corpus: satisfied
+G5 Normalization consumer migration: satisfied
+G6 Normalization installer removal proof: satisfied
+G7 Packet/Safety helper-family decisions: incomplete
+G8 adapter file retirement proof: blocked
 ```
 
 Current decision:
 
 ```text
-adapter_retirement: blocked
-adapter_removal: not performed
-Normalization installer removal: pending
+Normalization installer removal: complete
+Packet installer removal: not started
+adapter file retirement: blocked
+adapter file removal: not performed
 ```
 
-## 10. R1 / R1C status
+## 10. R1 / R1C boundaries
 
 ```text
 canonical R1: spec/r1/r1-result-spec.md
@@ -355,13 +279,12 @@ COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 未確認/未実行→確認済/実行済扱禁止
 ```
 
-## 11. CompactPrompt status
+## 11. CompactPrompt boundaries
 
 ```text
 standard: Goal/Input/Output/Guard/Check
 kanji-v1: 目/材/出/守/確
 AST v2 checker migration: integrated
-legacy-v2 parity guard: active
 CP-Lift/restricted-alias rules: unchanged
 ```
 
@@ -371,20 +294,18 @@ CP-Lift先:=profile:dev-prompt
 KDSL-CP漢 alias:=構造KEY位置のみ
 ```
 
-## 12. Safety Gate status
+## 12. Safety Gate boundaries
 
 ```text
 registry: kdsl-sg@0.1-draft
 AST v2 checker migration: integrated
-legacy-v2 parity guard: active
-direct kdsl_parser_adapter installer: absent
 hold/blocked gate削除禁止
 state:satisfied requires evidence and authority basis
 baseline/composition/protected-wording unchanged
 inheritance/graph semantics unchanged
 ```
 
-## 13. Packet / Normalization status
+## 13. Packet / Normalization boundaries
 
 Packet:
 
@@ -398,7 +319,6 @@ PKT:v1: prohibited
 semantic_equivalence: not_proven
 normalization_completion: not_proven
 execution_authority: none
-AST v2 checker migration: integrated
 ```
 
 Normalization:
@@ -406,8 +326,6 @@ Normalization:
 ```text
 schema: kdsl-packet-normalization@0.1-draft
 status: non-executable
-AST v2 checker migration: integrated
-round-trip consumer AST v2 migration: integrated
 TARGET.executable: false
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
@@ -415,7 +333,7 @@ normalization completion: not_proven
 ```
 
 ```text
-Registry/lint/validator/property/parity/contract/migration pass != Packet executable
+Registry/lint/validator/property/parity/contract/migration/removal pass != Packet executable
 normalization preview != executable target
 KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
@@ -440,11 +358,11 @@ hold/blocked gate削除禁止
 ## 15. Known gaps
 
 ```text
-Normalization installer removal proof
-Packet helper-consumer migration
+Packet helper-consumer contract/migration
+Packet installer removal proof
 Safety Gate inheritance/graph/optional helper decision
-per-family installer removal proof
-legacy adapter retirement proof
+parity-only legacy helper strategy
+legacy adapter file retirement proof
 same-marker multi-envelope semantics
 complete semantic equivalence proof
 complete Safety Gate proof
@@ -462,8 +380,8 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 typed parser/AST v2 first slice
-all active checker structural inputs migrated to AST v2 CompatibilityViews under parity guards
-Normalization round-trip consumer migrated under contract/mutation evidence
+all active checker structural inputs migrated to AST v2 CompatibilityViews
+Normalization checker/consumer/installer migration complete under bounded evidence
 ```
 
 Do not present as:
@@ -482,19 +400,19 @@ adapter-retirement-ready repository
 ## 17. Next safe steps
 
 ```text
-P0: Phase 6D-4 Normalization installer removal trial
-P1: update inventory to Packet-only direct installer boundary
-P2: run contract/migration/checker/property/full suites
-P3: continue Packet and Safety helper families
-P4: legacy adapter retirement decision last
+P0: Phase 6D-5 Packet helper-consumer contract inventory
+P1: Packet consumer-specific mutation/property corpus
+P2: Packet consumer migration before install_packet removal
+P3: Safety Gate helper-family explicit decision
+P4: adapter file retirement decision last
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-unknown Normalization helper consumer appears
-checker/round-trip/property exit changes
+unknown helper consumer appears
+existing checker/consumer exits change
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
