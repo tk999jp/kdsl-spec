@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-13
-phase: phase6c-safety-gate-checker-migration-integrated
+phase: phase6c-packet-compatibility-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
@@ -124,6 +124,7 @@ Phase 6C-3 CompactPrompt compatibility view/parity: integrated
 Phase 6C-4 CompactPrompt checker structural migration: integrated
 Phase 6C-5 Safety Gate compatibility view/parity: integrated
 Phase 6C-6 Safety Gate checker structural migration: integrated
+Phase 6C-7 Packet compatibility view/parity: integrated
 ```
 
 Phase 5 public evidence:
@@ -183,8 +184,8 @@ validator:
   workflow: .github/workflows/validator.yml
   workflow_name: KDSL Validation
   unified_command: python tools/validator/run_all_samples.py
-  unified_runners: 14
-  unified_expectations: 307
+  unified_runners: 15
+  unified_expectations: 315
   failed: 0
   phase1_parser_cases: 11
   phase6b_parser_v2_cases: 12
@@ -193,6 +194,7 @@ validator:
   phase6c_compact_checker_migration_cases: 4
   phase6c_safety_gate_parity_cases: 8
   phase6c_safety_gate_checker_migration_cases: 4
+  phase6c_packet_parity_cases: 8
   required_check_activation: active
   required_check_ruleset: Protect main with KDSL Validation
 ```
@@ -200,10 +202,10 @@ validator:
 Latest implementation verification:
 
 ```text
-implementation PR: 69
-source head: fda782f69eb020f50a6670d7529c8a830c116d4e
-squash commit: bfc034c44473232cee5107c53483a0b080e25a46
-workflow run: 29231502084 / #305 / success
+implementation PR: 71
+source head: 4cd323da5908b4023c8c6c1bf1deb53703e69a37
+squash commit: 5b158c667a266ee1e10e2337eee9f0260f6b02ba
+workflow run: 29232149425 / #309 / success
 jobs:
   KDSL Validation: success
   Packet Semantic Property: success
@@ -240,7 +242,7 @@ DocumentNode / EnvelopeNode / FieldNode
 SourceSpan / ParseIssue / DiagnosticBag
 ```
 
-Remaining active namespace-adapter consumers:
+Active namespace-adapter consumers:
 
 ```text
 Packet
@@ -255,8 +257,14 @@ CompactPrompt: AST v2 compatibility extraction + legacy parity guard
 Safety Gate: AST v2 compatibility extraction + legacy parity guard
 ```
 
+Compatibility pilot without checker switch:
+
 ```text
-legacy adapter removal: prohibited until Packet/Normalization migration evidence
+Packet: AST v2 compatibility view + parity corpus integrated
+```
+
+```text
+legacy adapter removal: prohibited until Packet/Normalization checker migration evidence
 ```
 
 ### Phase 6B typed AST v2 core
@@ -305,13 +313,6 @@ PRs: 59 / 61
 status: checker migrated under parity guard
 ```
 
-```text
-AST v2 compatibility extraction
-→ Full R1 fallback when R1C schema absent
-→ legacy-v2 parity guard when R1C schema present
-→ existing R1C semantic validation
-```
-
 ### CompactPrompt migration
 
 ```text
@@ -346,20 +347,7 @@ reviews:
   docs/reviews/kdsl-phase6c-safety-gate-compatibility-view.md
   docs/reviews/kdsl-phase6c-safety-gate-checker-migration.md
 PRs: 67 / 69
-squashes:
-  604e4e1f8f8c601f7054b15b38e3c5db40d88056
-  bfc034c44473232cee5107c53483a0b080e25a46
 status: checker migrated under parity guard
-```
-
-Runtime path:
-
-```text
-input
-→ SafetyGateCompatibilityView
-→ Phase 1 / AST v2 parity guard
-→ mismatch: semantic validation前にfail
-→ match: existing Safety Gate semantic validation
 ```
 
 Retained semantics:
@@ -381,6 +369,37 @@ Helper boundary:
 extract_gate_block / parse_registry helper API retained
 inheritance/graph helper migration: not claimed
 active checker namespace-adapter use: removed
+```
+
+### Packet compatibility pilot
+
+```text
+compatibility view: tools/validator/kdsl_parser_v2_packet_compat.py
+parity checker: tools/validator/kdsl_parser_v2_packet_parity.py
+parity suite: tools/validator/run_parser_v2_packet_parity_samples.py
+review: docs/reviews/kdsl-phase6c-packet-compatibility-view.md
+PR: 71
+squash: 5b158c667a266ee1e10e2337eee9f0260f6b02ba
+status: compatibility view/parity integrated
+```
+
+Compared contract:
+
+```text
+PACKET_DRAFT presence/exact scope
+top-level field order/value/relative line/duplicates
+raw block boundaries
+nested scalar values/duplicates
+SG.id and FLOW.op lists
+SRC/READ/TGT/OBS/NON/STOP/VERIFY sequences
+```
+
+Migration boundary:
+
+```text
+Packet checker switch: not performed
+Phase 1 adapter: retained
+Packet semantic/property policy: unchanged
 ```
 
 ## 8. R1 / R1C status
@@ -418,7 +437,6 @@ implementation/repo/runtime/public/data/source-of-truth/AI coding trigger→CP-L
 CP-Lift先:=profile:dev-prompt
 restricted kanji alias free-text使用禁止
 KDSL-CP漢 alias:=構造KEY位置のみ
-Packet draft:=non-executable
 ```
 
 ## 10. Safety Gate status
@@ -431,8 +449,6 @@ legacy-v2 parity guard: active
 structural parity: 8 / failed 0
 checker migration corpus: 4 / failed 0
 ```
-
-Critical boundaries:
 
 ```text
 hold/blocked gate削除禁止
@@ -456,12 +472,17 @@ property_scope: selected bounded properties only
 semantic_equivalence: not_proven
 normalization_completion: not_proven
 execution_authority: none
+AST v2 compatibility view: integrated
+checker migration: pending
+structural parity: 8 / failed 0
 ```
 
 ```text
-Registry/lint/validator/property pass != Packet executable
+Registry/lint/validator/property/parity pass != Packet executable
 normalization preview != executable target
 KDSL-Packet直接実行禁止
+FLOW-CHANGE != edit authority
+Packet records authority != execution authority
 ```
 
 ## 12. Safety and authority boundaries
@@ -484,7 +505,7 @@ hold/blocked gate削除禁止
 
 ```text
 Full R1 compatibility view/migration
-Packet compatibility view/migration
+Packet checker migration to CompatibilityView
 Packet Normalization compatibility view/migration
 inheritance/graph helper structural migration decision
 legacy adapter retirement proof
@@ -506,6 +527,7 @@ CompactPrompt architecture
 experimental heuristic validator helpers
 additive typed parser/AST v2 first slice
 R1C / CompactPrompt / Safety Gate AST v2 extraction under parity guards
+Packet AST v2 structural parity pilot
 ```
 
 Do not present as:
@@ -522,11 +544,10 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6C-7 Packet compatibility view/parity pilot
-P1: Packet checker migration after parity evidence
-P2: Packet Normalization compatibility view/migration
-P3: Full R1 compatibility view/migration
-P4: Phase 6D mutation/property/repository corpus and adapter-retirement decision
+P0: Phase 6C-8 Packet checker structural migration under parity guard
+P1: Packet Normalization compatibility view/migration
+P2: Full R1 compatibility view/migration
+P3: Phase 6D mutation/property/repository corpus and adapter-retirement decision
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
@@ -534,8 +555,10 @@ Stop when:
 
 ```text
 existing checker exits change without specification approval
-Packet executable/non-executable boundary weakens
-Packet not_normalized boundary weakens
+Packet STATUS non-executable weakens
+NORMALIZE.required true weakens
+NORMALIZE.state not_normalized weakens
+authority rails or PKT:v1 policy changes
 protected wording/raw text changes
 RT/NEXT/COMMIT meaning changes
 unknown schema/default inference is required
