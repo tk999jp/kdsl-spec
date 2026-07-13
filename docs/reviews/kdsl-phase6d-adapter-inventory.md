@@ -1,10 +1,13 @@
 # Phase 6D-1 — Parser Adapter Dependency Inventory
 
-status: completed / integrated
-review_date: 2026-07-13
+status: completed / integrated / unified-CI-verified-after-corrective
+review_date: 2026-07-14
 repository: tk999jp/kdsl-spec
 tracking_issue: 55
 implementation_pull_request: 83
+corrective_pull_request: 87
+corrective_squash_commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+verified_workflow: 29288377720 / 345 / success
 validator_authority: non-authoritative
 
 ## 1. Goal
@@ -26,13 +29,10 @@ tools/validator/run_parser_adapter_inventory_samples.py
 tools/validator/samples/adapter-inventory/unauthorized_direct.py
 tools/validator/samples/adapter-inventory/prohibited_r1c.py
 tools/validator/samples/adapter-inventory/helper_consumer.py
-```
-
-Unified runner integration:
-
-```text
 tools/validator/run_all_samples.py
 ```
+
+`run_all_samples.py` integration and direct-installer correction were completed by PR #87.
 
 ## 3. Inventory classes
 
@@ -43,34 +43,36 @@ C. nonstructural module consumer
 D. prohibited installer recurrence
 ```
 
-Known direct installer boundary:
+Verified direct installer boundary:
 
 ```text
 kdsl_packet.py -> install_packet
 kdsl_packet_normalization.py -> install_normalization
-kdsl_safety_gate.py -> install_safety_gate
+```
+
+Safety Gate:
+
+```text
+kdsl_safety_gate.py direct installer: absent
+Safety Gate helper-consumer symbols: still inventoried
 ```
 
 Unknown direct importers fail. `install_r1c` recurrence fails.
 
-## 4. Current decision
+## 4. Evidence correction
+
+PR #83 integrated the inventory tool and dedicated runner but did not connect the runner to the unified suite. Its original inventory also expected a stale Safety Gate direct installer.
+
+PR #87 corrected both issues.
 
 ```text
-adapter_retirement: blocked
+run #341: failure exposed stale installer expectation
+run #342: isolated inventory failure
+run #344: corrected inventory runner success
+run #345: inventory + matrix unified success
 ```
 
-Reasons:
-
-```text
-direct installer compatibility exports remain
-legacy structural helper consumers remain
-per-consumer migrate/replace/retain decisions are incomplete
-post-removal mutation/property corpus is absent
-```
-
-This is an expected safe progression state, not a regression.
-
-## 5. Corpus
+## 5. Verified corpus
 
 ```text
 repository dependency inventory is known
@@ -79,27 +81,44 @@ install_r1c recurrence is rejected
 legacy structural helper consumer is classified
 ```
 
-Expected integrated validation state:
-
 ```text
 inventory corpus: 4 / failed 0
-unified runners: 21
-unified expectations: 357 / failed 0
+consumer matrix corpus: 5 / failed 0
+unified runners: 22
+unified expectations: 362 / failed 0
+KDSL Validation: success
+Packet Semantic Property: success
 ```
 
 ## 6. Retirement gates
 
 ```text
 G1 active checker independence: satisfied
-G2 direct installer inventory: integrated
-G3 helper-consumer inventory: first bounded slice integrated
+G2 direct installer inventory: integrated / unified-CI-verified
+G3 helper-consumer decision matrix: integrated / unified-CI-verified
 G4 mutation/property/repository corpus: incomplete
 G5 replacement API or explicit retention: incomplete
 G6 per-family post-removal proof: absent
 G7 adapter file retirement: blocked
 ```
 
-## 7. Safety and authority boundary
+## 7. Current decision
+
+```text
+adapter_retirement: blocked
+adapter_removal: not performed
+```
+
+Reasons:
+
+```text
+direct installer compatibility exports remain
+legacy structural helper consumers remain
+consumer-specific mutation/property evidence incomplete
+post-removal proof absent
+```
+
+## 8. Safety and authority boundary
 
 ```text
 inventory pass != adapter retirement proof
@@ -124,43 +143,17 @@ Normalization execution_authority:none
 stable/public-ready/tag/release/Release Assets操作なし
 ```
 
-## 8. Known limitations
-
-```text
-inventory recognizes a bounded known structural-helper symbol set
-runtime/dynamic imports are not proven absent
-consumer semantic dependence is not inferred
-mutation/property evidence is incomplete
-adapter removal was not attempted
-```
-
 ## 9. Next safe step
 
-Phase 6D-2:
-
 ```text
-record the exact helper-consumer matrix
-classify each consumer as migrate|replace|retain-with-reason
-select one low-risk helper family for additive direct-CompatibilityView migration
-add consumer-specific mutation/property cases before changing imports
-```
-
-Recommended first family:
-
-```text
-Packet Normalization round-trip/property helper consumers
-```
-
-Alternative:
-
-```text
-Safety Gate inheritance/graph helpers if consumer contracts are more self-contained
+Phase 6D-3A: Packet Normalization round-trip/property consumer contract corpus
+Phase 6D-3B: consumer migration after contract proof
 ```
 
 ## 10. Closeout decision
 
 ```text
-Phase 6D-1 inventory: integrated
+Phase 6D-1 inventory: integrated and unified-CI-verified
 adapter retirement: blocked
 adapter removal: not performed
 Issue #55: remain open

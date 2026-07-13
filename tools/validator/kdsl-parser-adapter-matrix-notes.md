@@ -1,12 +1,14 @@
 # Parser Adapter Consumer Decision Matrix Notes
 
-status: phase6d-consumer-matrix-integrated / retirement-blocked
+status: phase6d-consumer-matrix-integrated / unified-ci-verified / retirement-blocked
 matrix_tool: tools/validator/kdsl_parser_adapter_matrix.py
 matrix_runner: tools/validator/run_parser_adapter_matrix_samples.py
 inventory_tool: tools/validator/kdsl_parser_adapter_inventory.py
 implementation_pull_request: 85
 implementation_squash_commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
-workflow: 29236827894 / 337 / success
+corrective_pull_request: 87
+corrective_squash_commit: 724d31dfb1adbbba7488db4cb444c65047492d5d
+verified_workflow: 29288377720 / 345 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
@@ -65,15 +67,19 @@ reason
 
 ## Verification
 
+PR #85 integrated the matrix tool and dedicated runner. PR #87 connected it to the unified suite and corrected the direct-installer inventory.
+
 ```text
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
 unified runners: 22
 unified expectations: 362 / failed 0
-workflow run: 29236827894 / #337
+workflow run: 29288377720 / #345
 KDSL Validation: success
 Packet Semantic Property: success
 ```
+
+Previous run #337 succeeded for the then-current 20-runner suite; it was not the unified proof for the inventory/matrix corpora.
 
 ## Retirement state
 
