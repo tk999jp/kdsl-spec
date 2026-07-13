@@ -1,31 +1,38 @@
 # Packet Normalization Parser v2 Compatibility Notes
 
-status: phase6c-compatibility-view-integrated / checker-migrated-under-parity-guard
+status: checker-migrated / round-trip-consumer-migrated / installer-removal-pending
 compatibility_view: tools/validator/kdsl_parser_v2_normalization_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_normalization_parity.py
-parity_runner: tools/validator/run_parser_v2_normalization_parity_samples.py
 active_checker: tools/validator/kdsl_packet_normalization.py
-migration_runner: tools/validator/run_normalization_migration_samples.py
-compatibility_pull_request: 75
-compatibility_squash_commit: ceb8269c2f1b3fe84342bd0fcff6d36871385510
-migration_pull_request: 77
-migration_squash_commit: 01f7c7c29aae98b1dfbb95ae416446c9e5b5f823
-latest_workflow: 29233820287 / 321 / success
+round_trip_consumer: tools/validator/kdsl_packet_roundtrip.py
 tracking_issue: 55
 validator_authority: non-authoritative
 
-## Purpose
-
-Provide a source-spanned structural view and use it as the active Packet Normalization checker's scope/entry/block input without changing normalization semantics, equivalence, authority, or executability.
+## Integrated history
 
 ```text
-parser parity != semantic equivalence
-parser parity != normalization completion
-parser parity != execution authority
-parser parity != executable target
+compatibility PR: 75
+compatibility squash: ceb8269c2f1b3fe84342bd0fcff6d36871385510
+checker migration PR: 77
+checker migration squash: 01f7c7c29aae98b1dfbb95ae416446c9e5b5f823
+consumer contract PR: 89
+consumer contract squash: 0ec72d29698679b1e09bd3258eaf3c16d8bd80af
+consumer migration PR: 90
+consumer migration squash: a031eb3b2b71d19a0f549d4f69c9cbcd73f984df
+latest workflow: 29289185279 / 351 / success
 ```
 
-## Active checker path
+## 1. Purpose
+
+Provide a source-spanned Normalization structural view used by both the active checker and the round-trip consumer without changing semantic, equivalence, authority, or executability rules.
+
+```text
+parser/consumer migration != semantic equivalence
+parser/consumer migration != normalization completion
+parser/consumer migration != execution authority
+```
+
+## 2. Active checker path
 
 ```text
 input
@@ -36,7 +43,7 @@ input
 → existing normalization semantic validation
 ```
 
-Consumed channels:
+Active checker channels:
 
 ```text
 view.scope_lines
@@ -46,27 +53,65 @@ view.values
 view.legacy_blocks
 ```
 
-Output markers:
+## 3. Round-trip consumer path
+
+Before Phase 6D-3B:
 
 ```text
-Normalization parser parity guard: pass
-Normalization structural extraction: AST v2 compatibility view
+kdsl_packet_roundtrip.parse_normalization
+→ structural helpers imported from kdsl_packet_normalization
 ```
 
-## Retained helper API
-
-Round-trip and property modules import normalization helper functions from `kdsl_packet_normalization.py`.
+Current path:
 
 ```text
-install_normalization(globals()): retained
-helper exports: Phase 1-compatible
-active checker scope/entry/block extraction: AST v2
-helper consumer migration: not claimed
+kdsl_packet_roundtrip.parse_normalization
+→ NormalizationCompatibilityView
+→ values/nested scalars/records/lists/multiline
+→ unchanged returned dictionary
 ```
 
-The retained adapter export does not mean the active checker remains on the Phase 1 structural path.
+Returned contract:
 
-## Compatibility view contract
+```text
+values
+source
+target
+map_records
+preserve
+unresolved
+loss
+round_trip
+authority
+output
+preview
+```
+
+`kdsl_packet_property.py` remains an indirect consumer of `parse_normalization`.
+
+## 4. Contract and mutation evidence
+
+```text
+consumer contract: 10 / failed 0
+consumer migration: 3 / failed 0
+```
+
+Covered behavior:
+
+```text
+nested scalars
+record/list order
+fenced scope
+blocked P1 artifact
+missing envelope
+last-wins duplicate scalar behavior
+preview block text
+unsafe value extraction without coercion
+static import migration
+valid/blocked runtime contracts
+```
+
+## 5. Compatibility view contract
 
 ```text
 NORMALIZATION_DRAFT presence/exact scope
@@ -78,41 +123,7 @@ PRESERVE nested lists
 OUTPUT.preview block scalar
 ```
 
-Phase 1 helpers compared:
-
-```text
-extract_scope_lines
-parse_top_level_legacy
-blocks_from_entries_legacy
-parse_nested_scalars_legacy
-parse_list_records_legacy
-parse_nested_lists_legacy
-extract_multiline_legacy
-```
-
-AST v2 data:
-
-```text
-DocumentNodeV2
-EnvelopeNodeV2
-FieldNodeV2
-SourceSpanV2
-NormalizationBlockNodeV2
-NormalizationCompatibilityView
-```
-
-## Fenced example boundary
-
-```text
-AST v2 active-document→fenced normalization inactive
-Phase 1 parser→first NORMALIZATION_DRAFT marker selected
-NormalizationCompatibilityView→same legacy-compatible scope selected
-selected scope→raw-envelope parse
-```
-
-General AST v2 fence behavior remains unchanged.
-
-## Semantic rules retained
+## 6. Semantic rules retained
 
 ```text
 SCHEMA/STATUS validity
@@ -142,41 +153,60 @@ PKT:v1 prohibited
 normalization completion: not_proven
 ```
 
-## Verification
+## 7. Final verification
 
 ```text
 Normalization structural parity: 8 / failed 0
 Normalization checker migration: 7 / failed 0
-unified runners: 18
-unified expectations: 336 / failed 0
-workflow run: 29233820287 / #321
+Normalization consumer contract: 10 / failed 0
+Normalization consumer migration: 3 / failed 0
+adapter inventory: 4 / failed 0
+consumer matrix: 5 / failed 0
+unified runners: 24
+unified expectations: 375 / failed 0
+workflow run: 29289185279 / #351
 KDSL Validation: success
 Packet Semantic Property: success
 ```
 
-## Exit codes
+## 8. Current dependency boundary
+
+```text
+active checker: AST v2 CompatibilityView
+round-trip consumer: AST v2 CompatibilityView
+property consumer: indirect parse_normalization API
+install_normalization(globals()): retained temporarily
+local legacy helper definitions: retained temporarily
+Normalization installer removal proof: pending
+```
+
+The retained installer does not mean the active checker or round-trip consumer remains on the Phase 1 structural path.
+
+## 9. Exit codes
 
 ```text
 0: pass
-1: semantic warning
+1: semantic warning or blocked round-trip
 2: parser parity or semantic failure
 ```
 
-## Current boundary
+## 10. Next step
 
 ```text
-CompatibilityView: integrated
-active checker switch: integrated
-Phase 1/AST v2 parity guard: active
-helper exports for dependent modules: retained
-normalization semantic/equivalence/authority policy: unchanged
-legacy adapter removal: prohibited
+Phase 6D-4 Normalization installer removal trial
+remove install_normalization only
+retain local helper definitions during trial
+update direct-installer inventory to Packet-only
+run contract/migration/checker/property/full suites
 ```
 
-## Next step
+## 11. Trust boundary
 
 ```text
-Full R1 compatibility inventory/view/parity pilot
-preserve RT/NEXT/COMMIT evidence and authority rules
-helper-consumer migration decision after broader evidence
+validator/contract/migration pass != semantic equivalence
+validator/contract/migration pass != complete safety proof
+validator/contract/migration pass != adapter retirement proof
+validator/contract/migration pass != RT:v
+validator/contract/migration pass != execution authority
+CI pass != release readiness
 ```
