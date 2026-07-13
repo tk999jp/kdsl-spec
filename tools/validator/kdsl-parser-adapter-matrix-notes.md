@@ -4,6 +4,9 @@ status: phase6d-consumer-matrix-integrated / retirement-blocked
 matrix_tool: tools/validator/kdsl_parser_adapter_matrix.py
 matrix_runner: tools/validator/run_parser_adapter_matrix_samples.py
 inventory_tool: tools/validator/kdsl_parser_adapter_inventory.py
+implementation_pull_request: 85
+implementation_squash_commit: 330f79694a50b509b02d9a43a7160ad8ab2650cb
+workflow: 29236827894 / 337 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
@@ -60,6 +63,18 @@ decision
 reason
 ```
 
+## Verification
+
+```text
+adapter inventory: 4 / failed 0
+consumer matrix: 5 / failed 0
+unified runners: 22
+unified expectations: 362 / failed 0
+workflow run: 29236827894 / #337
+KDSL Validation: success
+Packet Semantic Property: success
+```
+
 ## Retirement state
 
 Blocking records:
@@ -77,16 +92,6 @@ state: blocked
 
 A future `candidate` result remains insufficient without consumer-specific tests and post-removal full CI.
 
-## Corpus
-
-```text
-repository decision matrix
-migrate-or-replace fixture
-retain-parity-only fixture
-retain-semantic-api fixture
-retain-temporarily fixture
-```
-
 ## Boundaries
 
 ```text
@@ -103,7 +108,7 @@ matrix pass != release readiness
 
 ```text
 select one migrate-or-replace family
-add mutation/property evidence
+add consumer-specific mutation/property evidence
 migrate or replace imports
 re-run inventory and matrix
 attempt installer removal only after blocking records are cleared per family
