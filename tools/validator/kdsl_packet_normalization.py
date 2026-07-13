@@ -220,10 +220,8 @@ def validate_records(label, records, required_fields, errors):
             errors.append(f'{label} entry {index} missing fields: ' + ', '.join(missing))
 
 
-# Retain Phase 1 helper exports for round-trip/property import compatibility.
-# The active checker below consumes NormalizationCompatibilityView directly.
-from kdsl_parser_adapter import install_normalization
-install_normalization(globals())
+# Local legacy helper definitions remain for parity comparison.
+# The active checker and round-trip consumer use NormalizationCompatibilityView directly.
 
 
 def main(argv):

@@ -8,7 +8,6 @@ from pathlib import Path
 ADAPTER_MODULE = 'kdsl_parser_adapter'
 ALLOWED_DIRECT_IMPORTS = {
     'kdsl_packet.py': {'install_packet'},
-    'kdsl_packet_normalization.py': {'install_normalization'},
 }
 PROHIBITED_INSTALLERS = {'install_r1c'}
 

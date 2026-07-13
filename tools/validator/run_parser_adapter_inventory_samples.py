@@ -61,7 +61,6 @@ def main() -> int:
                     'STATUS: pass',
                     'MODE: repository',
                     'kdsl_packet.py <- kdsl_parser_adapter: install_packet',
-                    'kdsl_packet_normalization.py <- kdsl_parser_adapter: install_normalization',
                     'LEGACY_STRUCTURAL_HELPER_CONSUMERS:',
                     'state: blocked',
                     boundary,
