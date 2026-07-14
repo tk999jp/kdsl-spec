@@ -30,7 +30,7 @@ RUNNERS = (
     ('packet-normalize-consumer-migration', 'run_packet_normalize_migration_samples.py'),
     ('packet-semantic-consumer-contract', 'run_packet_semantic_contract_samples.py'),
     ('packet-semantic-consumer-migration', 'run_packet_semantic_migration_samples.py'),
-    ('packet-installer-readiness', 'run_packet_installer_readiness_samples.py'),
+    ('packet-installer-removal', 'run_packet_installer_removal_samples.py'),
     ('safety-semantics', 'run_safety_semantics_samples.py'),
     ('safety-semantics-examples', 'run_safety_semantics_examples.py'),
     ('r1c-optional', 'run_r1c_optional_samples.py'),
