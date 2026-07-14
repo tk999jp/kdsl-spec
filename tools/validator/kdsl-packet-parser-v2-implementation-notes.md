@@ -1,31 +1,37 @@
 # Packet Parser v2 Compatibility Notes
 
-status: phase6c-compatibility-view-integrated / base-checker-migrated-under-parity-guard
+status: active-checker-and-runtime-consumers-migrated / direct-installer-removed
 compatibility_view: tools/validator/kdsl_parser_v2_packet_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_packet_parity.py
 parity_runner: tools/validator/run_parser_v2_packet_parity_samples.py
 active_checker: tools/validator/kdsl_packet.py
-migration_runner: tools/validator/run_packet_migration_samples.py
+checker_migration_runner: tools/validator/run_packet_migration_samples.py
+normalize_consumer: tools/validator/kdsl_packet_normalize.py
+semantic_consumer: tools/validator/kdsl_packet_semantic.py
+normalize_migration_runner: tools/validator/run_packet_normalize_migration_samples.py
+semantic_migration_runner: tools/validator/run_packet_semantic_migration_samples.py
+installer_removal_runner: tools/validator/run_packet_installer_removal_samples.py
 compatibility_pull_request: 71
-compatibility_squash_commit: 5b158c667a266ee1e10e2337eee9f0260f6b02ba
-migration_pull_request: 73
-migration_squash_commit: 52675d02969123f7329727fdddfcf5e0813a377e
-latest_workflow: 29232739675 / 313 / success
+checker_migration_pull_request: 73
+normalize_migration_pull_request: 96
+semantic_migration_pull_request: 100
+installer_removal_pull_request: 104
+installer_removal_squash_commit: 4701a5fce31dc6c5d11bd40bd6a0de5abbb343fe
+latest_workflow: 29333878799 / 379 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
 
-Provide a source-spanned Packet structural view and use it as the active base checker's scope/entry/block input without changing Packet semantics, normalization state, authority, or executability.
+Provide source-spanned Packet extraction for the active checker and runtime consumers without changing Packet semantics, normalization state, authority, or executability.
 
 ```text
-parser parity != Packet semantic equivalence
-parser parity != normalization completion
-parser parity != execution authority
-parser parity != Packet executability
+parser/consumer migration != semantic equivalence proof
+installer removal != adapter file retirement proof
+validator/CI pass != Packet execution authority
 ```
 
-## Active base checker path
+## Active checker path
 
 ```text
 input
@@ -36,7 +42,7 @@ input
 → existing Packet validation
 ```
 
-Consumed view channels:
+Consumed channels:
 
 ```text
 view.scope_lines
@@ -44,6 +50,8 @@ view.entries
 view.duplicates
 view.values
 view.legacy_blocks
+view.nested_scalars
+view.sequence_items
 ```
 
 Output markers:
@@ -53,28 +61,48 @@ Packet parser parity guard: pass
 Packet structural extraction: AST v2 compatibility view
 ```
 
-## Retained helper API
+## Runtime consumer paths
 
-Dependent modules import structural helper functions from `kdsl_packet.py`:
-
-```text
-kdsl_packet_semantic.py
-kdsl_packet_property.py
-kdsl_packet_normalize.py
-kdsl_packet_roundtrip.py
-related normalization semantic helpers
-```
-
-Therefore:
+Packet normalization mapper:
 
 ```text
-install_packet(globals()): retained
-helper exports: Phase 1-compatible
-active base checker scope/entry/block extraction: AST v2
-helper consumer migration: not claimed
+kdsl_packet_normalize.collect_data
+→ PacketCompatibilityView
+→ existing returned dictionary
+→ existing normalization emission/property paths
 ```
 
-The retained adapter export does not mean the base checker's primary structural input remains Phase 1.
+Packet semantic checker:
+
+```text
+kdsl_packet_semantic.parse_packet
+→ PacketCompatibilityView
+→ existing SG/FLOW record parsing
+→ existing semantic/property decisions
+```
+
+Runtime consumers no longer import legacy structural helpers from `kdsl_packet`.
+
+Retained nonstructural imports include constants, `load_text`, and `unquote`.
+
+## Direct installer state
+
+Removed from `kdsl_packet.py`:
+
+```text
+from kdsl_parser_adapter import install_packet
+install_packet(globals())
+```
+
+Current direct adapter installer allowlist:
+
+```text
+empty
+```
+
+Any future direct `kdsl_parser_adapter` import is rejected by the inventory tool.
+
+Local legacy helper functions remain in `kdsl_packet.py` only for parity evidence and must not be treated as the active checker or runtime-consumer path.
 
 ## Compatibility view path
 
@@ -84,21 +112,10 @@ legacy-compatible PACKET_DRAFT scope selection
 → DocumentNodeV2 raw-envelope parse
 → PacketBlockNodeV2 records
 → legacy helper output reconstruction
-→ Phase 1/AST v2 parity comparison
+→ legacy/AST v2 parity comparison
 ```
 
-Compared helpers:
-
-```text
-extract_scope_lines
-parse_top_level_legacy
-blocks_from_entries_legacy
-parse_nested_scalars_legacy
-parse_list_field_legacy
-parse_sequence_items_legacy
-```
-
-Compared outputs:
+Compared legacy outputs:
 
 ```text
 envelope presence
@@ -112,22 +129,11 @@ FLOW.op list
 sequence items
 ```
 
-## AST v2 data used
-
-```text
-DocumentNodeV2
-EnvelopeNodeV2
-FieldNodeV2
-SourceSpanV2
-PacketBlockNodeV2
-PacketCompatibilityView
-```
-
 ## Fenced example boundary
 
 ```text
 AST v2 active-document→fenced Packet inactive
-Phase 1 parser→first PACKET_DRAFT marker selected
+legacy parser→first PACKET_DRAFT marker selected
 PacketCompatibilityView→same legacy-compatible scope selected
 selected scope→raw-envelope parse
 ```
@@ -148,8 +154,11 @@ OUT result schema
 NORMALIZE required/target/state
 GOAL placeholder handling
 list warnings
+OBS classification
+FLOW/Authority consistency
+VERIFY requirement-vs-evidence rules
 PKT:v1 prohibition
-Packet semantic properties
+Packet semantic/property rules
 ```
 
 Critical Packet boundary:
@@ -165,45 +174,59 @@ normalization_completion: not_proven
 execution_authority: none
 ```
 
-No parser result grants edit, stage, commit, push, release, or execution permission.
+No parser, consumer, inventory, or removal result grants edit, stage, commit, push, release, or execution permission.
 
 ## Verification
 
 ```text
 Packet structural parity: 8 / failed 0
 Packet checker migration: 6 / failed 0
-unified runners: 16
-unified expectations: 321 / failed 0
-workflow run: 29232739675 / #313
+Packet normalize contract: 10 / failed 0
+Packet normalize migration: 4 / failed 0
+Packet semantic contract: 10 / failed 0
+Packet semantic migration: 4 / failed 0
+Packet installer removal: 4 / failed 0
+adapter inventory: 4 / failed 0
+consumer matrix: 5 / failed 0
+unified runners: 30
+unified expectations: 411 / failed 0
+workflow run: 29333878799 / #379
 KDSL Validation: success
 Packet Semantic Property: success
-```
-
-## Exit codes
-
-```text
-0: pass
-1: semantic warning
-2: parser parity or semantic failure
 ```
 
 ## Current boundary
 
 ```text
 CompatibilityView: integrated
-active base checker switch: integrated
-Phase 1/AST v2 parity guard: active
-helper exports for dependent modules: retained
-Packet Normalization checker migration: pending
-legacy adapter removal: prohibited
+active base checker migration: integrated
+runtime Packet consumer migrations: integrated
+legacy parity guard: active
+Packet direct installer: removed
+direct adapter imports: none
+kdsl_parser_adapter.py file: retained
+Safety Gate helper-family decision: pending
+parity-only helper strategy: pending
+adapter file retirement: blocked
 ```
 
 ## Next step
 
 ```text
-Packet Normalization compatibility view/parity pilot
-normalization draft remains non-executable
-semantic_equivalence:not_proven保持
-execution_authority:none保持
-checker switchはparity成立後
+inventory Safety Gate inheritance/graph/optional helper consumers
+add consumer-specific contract evidence
+record migrate|replace|retain decisions
+make adapter file retirement decision only after all helper families are resolved
+```
+
+## Trust boundary
+
+```text
+parity/contract/migration/removal pass != semantic equivalence
+validator pass != complete safety proof
+validator pass != U approval
+validator pass != RT:v
+validator pass != execution authority
+validator pass != adapter file retirement proof
+CI pass != release readiness
 ```
