@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-packet-semantic-migration-integrated
+phase: phase6d-packet-installer-readiness-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 047380b1b7f2a7c47b8ed7f74e7a73f016e08b9e
+verified_main_head: 4d667ea026e962b7e108a7b37d2f5aa180bb28c8
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -93,6 +93,7 @@ Phase 6D-5A Packet normalize consumer contract: integrated
 Phase 6D-5B Packet normalize consumer migration: integrated
 Phase 6D-6A Packet semantic consumer contract: integrated
 Phase 6D-6B Packet semantic consumer migration: integrated
+Phase 6D-7A Packet installer readiness: integrated
 ```
 
 ## 5. Repository enforcement
@@ -117,10 +118,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 100
-source head: 41dea6754eade558ea226e38c9078244c73165cb
-squash commit: 047380b1b7f2a7c47b8ed7f74e7a73f016e08b9e
-workflow run: 29330823674 / #371
+PR: 102
+source head: 4aa4a3e64eb1714c581794f6164eb6f9f34224fa
+squash commit: 4d667ea026e962b7e108a7b37d2f5aa180bb28c8
+workflow run: 29331728324 / #375
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -128,6 +129,7 @@ Packet Semantic Property: success
 Verified suites:
 
 ```text
+Packet installer readiness: 4 / failed 0
 Packet semantic consumer contract: 10 / failed 0
 Packet semantic consumer migration: 4 / failed 0
 Packet normalize contract: 10 / failed 0
@@ -137,8 +139,8 @@ Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 29
-unified expectations: 407 / failed 0
+unified runners: 30
+unified expectations: 411 / failed 0
 ```
 
 ```text
@@ -148,7 +150,7 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-contract/migration/removal pass != adapter file retirement proof
+readiness/contract/migration/removal pass != adapter file retirement proof
 ```
 
 ## 7. Parser/checker state
@@ -198,23 +200,31 @@ Packet normalize family:
 
 ```text
 consumer: kdsl_packet_normalize.collect_data()
-contract/mutation evidence: integrated
 structural extraction: PacketCompatibilityView
 legacy structural imports from kdsl_packet: removed
 nonstructural imports retained: load_text / unquote
-consumer migration: integrated
+contract/migration: integrated
 ```
 
 Packet semantic family:
 
 ```text
 consumer: kdsl_packet_semantic.parse_packet()
-contract/mutation evidence: integrated
 structural extraction: PacketCompatibilityView
 legacy structural imports from kdsl_packet: removed
 constants/nonstructural imports retained
-consumer migration: integrated
+contract/migration: integrated
 semantic decisions/exits: unchanged
+```
+
+Packet installer readiness:
+
+```text
+direct installer: kdsl_packet.py -> install_packet
+runtime legacy structural consumers from kdsl_packet: none
+nonstructural consumers: separately classified
+readiness corpus: integrated
+installer removal: not performed
 ```
 
 Safety Gate helper family:
@@ -236,9 +246,10 @@ G6 Packet collect_data contract: satisfied
 G7 Packet collect_data migration: satisfied
 G8 Packet semantic consumer contract: satisfied
 G9 Packet semantic consumer migration: satisfied
-G10 Packet installer removal: pending exact inventory proof
-G11 Safety Gate helper decision: pending
-G12 adapter file retirement proof: blocked
+G10 Packet installer readiness: satisfied
+G11 Packet installer removal: pending bounded trial
+G12 Safety Gate helper decision: pending
+G13 adapter file retirement proof: blocked
 ```
 
 Current decision:
@@ -247,7 +258,9 @@ Current decision:
 Normalization installer removal: complete
 Packet normalize consumer migration: complete
 Packet semantic consumer migration: complete
-Packet installer removal: not started
+Packet runtime structural consumers: none
+Packet installer removal trial: authorized as bounded next phase
+install_packet: retained
 adapter file retirement: blocked
 adapter file removal: not performed
 ```
@@ -299,7 +312,7 @@ normalization completion: not_proven
 ```
 
 ```text
-Registry/lint/validator/property/parity/contract/migration/removal pass != Packet executable
+Registry/lint/validator/property/parity/readiness/contract/migration/removal pass != Packet executable
 normalization preview != executable target
 KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
@@ -308,7 +321,6 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-exact Packet helper-consumer inventory after migrations
 Packet installer removal proof
 Safety Gate inheritance/graph/optional helper decision
 parity-only legacy helper strategy
@@ -332,6 +344,7 @@ experimental heuristic validator helpers
 all active checker structural inputs migrated to AST v2 CompatibilityViews
 Normalization checker/consumer/installer migration complete
 Packet normalize and semantic consumer contract/migration complete
+Packet installer removal readiness proven
 ```
 
 Do not present as:
@@ -350,19 +363,20 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-7 exact Packet helper-consumer inventory after migrations
-P1: separate parity-only and semantic/nonstructural consumers
-P2: Packet install_packet removal trial only if no runtime structural consumer remains
-P3: Safety Gate helper-family decision
-P4: adapter file retirement decision last
+P0: Phase 6D-7B remove only install_packet import/call from kdsl_packet.py
+P1: update direct-installer inventory to none
+P2: replace readiness runner with installer-removal corpus
+P3: retain all Packet base/semantic/normalize/property suites
+P4: Safety Gate helper-family decision
+P5: adapter file retirement decision last
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-unknown Packet structural consumer remains
-semantic/property exit behavior changes
+Packet checker/semantic/property/normalization exit behavior changes
+unknown Packet structural consumer appears
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
