@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-packet-semantic-contract-integrated
+phase: phase6d-packet-semantic-migration-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: c9215183e460b51ae108b335d26c51afaa5a54ec
+verified_main_head: 047380b1b7f2a7c47b8ed7f74e7a73f016e08b9e
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -92,6 +92,7 @@ Phase 6D-4 Normalization installer removal: integrated
 Phase 6D-5A Packet normalize consumer contract: integrated
 Phase 6D-5B Packet normalize consumer migration: integrated
 Phase 6D-6A Packet semantic consumer contract: integrated
+Phase 6D-6B Packet semantic consumer migration: integrated
 ```
 
 ## 5. Repository enforcement
@@ -116,10 +117,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 98
-source head: 9adbf7730be99cb1835eb4706f42cda67a776fb3
-squash commit: c9215183e460b51ae108b335d26c51afaa5a54ec
-workflow run: 29330186762 / #367
+PR: 100
+source head: 41dea6754eade558ea226e38c9078244c73165cb
+squash commit: 047380b1b7f2a7c47b8ed7f74e7a73f016e08b9e
+workflow run: 29330823674 / #371
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -128,6 +129,7 @@ Verified suites:
 
 ```text
 Packet semantic consumer contract: 10 / failed 0
+Packet semantic consumer migration: 4 / failed 0
 Packet normalize contract: 10 / failed 0
 Packet normalize migration: 4 / failed 0
 Normalization installer-removal: 4 / failed 0
@@ -135,8 +137,8 @@ Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 28
-unified expectations: 403 / failed 0
+unified runners: 29
+unified expectations: 407 / failed 0
 ```
 
 ```text
@@ -208,9 +210,10 @@ Packet semantic family:
 ```text
 consumer: kdsl_packet_semantic.parse_packet()
 contract/mutation evidence: integrated
-return surface: frozen by 10-case corpus
-structural imports from kdsl_packet: retained
-consumer migration: pending
+structural extraction: PacketCompatibilityView
+legacy structural imports from kdsl_packet: removed
+constants/nonstructural imports retained
+consumer migration: integrated
 semantic decisions/exits: unchanged
 ```
 
@@ -232,8 +235,8 @@ G5 Normalization installer removal: satisfied
 G6 Packet collect_data contract: satisfied
 G7 Packet collect_data migration: satisfied
 G8 Packet semantic consumer contract: satisfied
-G9 Packet semantic consumer migration: pending
-G10 Packet installer removal: pending
+G9 Packet semantic consumer migration: satisfied
+G10 Packet installer removal: pending exact inventory proof
 G11 Safety Gate helper decision: pending
 G12 adapter file retirement proof: blocked
 ```
@@ -243,8 +246,7 @@ Current decision:
 ```text
 Normalization installer removal: complete
 Packet normalize consumer migration: complete
-Packet semantic consumer contract: complete
-Packet semantic consumer migration: not started
+Packet semantic consumer migration: complete
 Packet installer removal: not started
 adapter file retirement: blocked
 adapter file removal: not performed
@@ -306,7 +308,7 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-Packet semantic consumer migration
+exact Packet helper-consumer inventory after migrations
 Packet installer removal proof
 Safety Gate inheritance/graph/optional helper decision
 parity-only legacy helper strategy
@@ -329,8 +331,7 @@ CompactPrompt architecture
 experimental heuristic validator helpers
 all active checker structural inputs migrated to AST v2 CompatibilityViews
 Normalization checker/consumer/installer migration complete
-Packet normalize consumer contract/migration complete
-Packet semantic consumer contract evidence integrated
+Packet normalize and semantic consumer contract/migration complete
 ```
 
 Do not present as:
@@ -349,9 +350,9 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-6B migrate Packet semantic parse_packet() to PacketCompatibilityView
-P1: retain 10-case return contract and existing semantic/property exits
-P2: Packet installer removal trial after all structural consumers are resolved
+P0: Phase 6D-7 exact Packet helper-consumer inventory after migrations
+P1: separate parity-only and semantic/nonstructural consumers
+P2: Packet install_packet removal trial only if no runtime structural consumer remains
 P3: Safety Gate helper-family decision
 P4: adapter file retirement decision last
 Hold: stable/public-ready/tag/release/Release Assets
@@ -360,7 +361,7 @@ Hold: stable/public-ready/tag/release/Release Assets
 Stop when:
 
 ```text
-Packet semantic return surface changes
+unknown Packet structural consumer remains
 semantic/property exit behavior changes
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
