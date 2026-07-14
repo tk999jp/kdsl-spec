@@ -54,16 +54,15 @@ def main() -> int:
         snapshot = repository_snapshot(Path(raw_tmp))
         results.append(
             run_case(
-                'repository dependency matrix assigns decisions and remains blocked',
+                'repository dependency matrix assigns remaining consumer decisions',
                 snapshot,
                 0,
                 (
                     'STATUS: pass',
                     'MODE: repository',
-                    '=> retain-temporarily',
                     '=> migrate-or-replace',
                     '=> retain-semantic-api',
-                    'state: blocked',
+                    'RETIREMENT:',
                     boundary,
                 ),
             )
@@ -110,12 +109,12 @@ def main() -> int:
     )
     results.append(
         run_case(
-            'known direct installer is retained temporarily',
+            'retired Packet installer recurrence is rejected',
             FIXTURES / 'allowed' / 'kdsl_packet.py',
-            0,
+            2,
             (
-                'STATUS: pass',
-                'kdsl_packet.py <- kdsl_parser_adapter: install_packet => retain-temporarily',
+                'STATUS: fail',
+                'unauthorized direct adapter import: install_packet',
                 'state: blocked',
                 boundary,
             ),
