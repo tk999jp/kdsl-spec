@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-packet-installer-removal-integrated
+phase: phase6d-safety-gate-consumer-contract-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 4701a5fce31dc6c5d11bd40bd6a0de5abbb343fe
+verified_main_head: 9a943ebe46f4ef8128e875029802a4ca86af9008
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -93,6 +93,7 @@ Phase 6D-5 Packet normalize consumer contract/migration: integrated
 Phase 6D-6 Packet semantic consumer contract/migration: integrated
 Phase 6D-7A Packet installer readiness: integrated
 Phase 6D-7B Packet installer removal: integrated
+Phase 6D-8A Safety Gate consumer contract/inventory: integrated
 ```
 
 ## 5. Repository enforcement
@@ -117,10 +118,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 104
-source head: fb14d11e41b73615b5fdd5beb50b3c8bc159c3da
-squash commit: 4701a5fce31dc6c5d11bd40bd6a0de5abbb343fe
-workflow run: 29333878799 / #379
+PR: 106
+source head: 890dacc1010a22f8b12d7cac2f0eea26ccb03cdc
+squash commit: 9a943ebe46f4ef8128e875029802a4ca86af9008
+workflow run: 29375379658 / #383
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -128,6 +129,7 @@ Packet Semantic Property: success
 Verified suites:
 
 ```text
+Safety Gate consumer contract: 8 / failed 0
 Packet installer removal: 4 / failed 0
 Packet semantic consumer contract: 10 / failed 0
 Packet semantic consumer migration: 4 / failed 0
@@ -138,9 +140,11 @@ Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 30
-unified expectations: 411 / failed 0
+unified runners: 31
+unified expectations: 419 / failed 0
 ```
+
+The 31/419 total is derived from the previously verified 30/411 suite plus the integrated eight-case Safety Gate consumer contract runner. The successful unified job confirms all runner summaries were present with zero failures.
 
 ```text
 validator未実行→pass扱禁止
@@ -195,41 +199,50 @@ direct installer: removed
 local parity helpers: retained
 ```
 
-Packet normalize family:
+Packet family:
 
 ```text
-consumer: kdsl_packet_normalize.collect_data()
-structural extraction: PacketCompatibilityView
+normalize consumer: PacketCompatibilityView
+semantic consumer: PacketCompatibilityView
 legacy structural imports from kdsl_packet: removed
-nonstructural imports retained: load_text / unquote
-contract/migration: integrated
-```
-
-Packet semantic family:
-
-```text
-consumer: kdsl_packet_semantic.parse_packet()
-structural extraction: PacketCompatibilityView
-legacy structural imports from kdsl_packet: removed
-constants/nonstructural imports retained
-contract/migration: integrated
-semantic decisions/exits: unchanged
-```
-
-Packet installer state:
-
-```text
+nonstructural/constants imports retained
 install_packet import/call: removed
 runtime structural consumers from kdsl_packet: none
 local legacy helper functions: parity evidence only
-Packet installer removal corpus: integrated
 ```
 
 Safety Gate helper family:
 
 ```text
 direct adapter installer: absent
-inheritance/graph/optional helper decision: pending
+consumer contract/inventory: integrated
+runtime consumers:
+  kdsl_safety_semantics.py
+  kdsl_safety_gate_inheritance.py
+  kdsl_safety_gate_graph.py
+  kdsl_r1c_optional.py
+structural migration target: SafetyGateCompatibilityView
+semantic utility/constants imports: retain temporarily
+consumer migrations: pending
+```
+
+Per-consumer decision:
+
+```text
+kdsl_safety_semantics.py:
+  extract_gate_block/parse_registry → migrate
+
+kdsl_safety_gate_inheritance.py:
+  extract_gate_block/parse_registry → migrate
+  aggregate_state/authority_is_unverified/is_blank/REGISTRY → retain temporarily
+
+kdsl_safety_gate_graph.py:
+  extract_gate_block/parse_registry → migrate
+  aggregate_state/authority_is_unverified/is_blank/REGISTRY → retain temporarily
+
+kdsl_r1c_optional.py:
+  embedded parse_registry → migrate
+  constants/authority_is_unverified/is_blank → retain temporarily
 ```
 
 ## 9. Adapter retirement gates
@@ -244,9 +257,13 @@ G6 Packet normalize contract/migration: satisfied
 G7 Packet semantic contract/migration: satisfied
 G8 Packet installer readiness: satisfied
 G9 Packet installer removal: satisfied
-G10 Safety Gate helper-family decision: pending
-G11 parity-only legacy helper strategy: pending
-G12 adapter file retirement proof: blocked
+G10 Safety Gate consumer contract/inventory: satisfied
+G11 Safety semantics structural migration: pending
+G12 Safety Gate inheritance/graph structural migration: pending
+G13 R1C optional SAFETY_GATES structural migration: pending
+G14 semantic utility location/retention decision: pending
+G15 parity-only legacy helper strategy: pending
+G16 adapter file retirement proof: blocked
 ```
 
 Current decision:
@@ -255,6 +272,8 @@ Current decision:
 Normalization installer removal: complete
 Packet installer removal: complete
 direct adapter imports: none
+Safety Gate consumer set: frozen
+Safety Gate structural consumer migration: not started
 kdsl_parser_adapter.py file: retained
 adapter file retirement: blocked
 adapter file removal: not performed
@@ -316,7 +335,10 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-Safety Gate inheritance/graph/optional helper-family decision
+Safety semantics structural migration
+Safety Gate inheritance/graph structural migration
+R1C optional SAFETY_GATES structural migration
+Safety Gate semantic utility location/retention decision
 parity-only legacy helper strategy
 legacy adapter file retirement or explicit retention decision
 same-marker multi-envelope semantics
@@ -338,6 +360,7 @@ experimental heuristic validator helpers
 all active checker structural inputs migrated to AST v2 CompatibilityViews
 Normalization and Packet runtime consumers migrated
 Normalization and Packet direct installers removed
+Safety Gate runtime consumer contract frozen
 ```
 
 Do not present as:
@@ -356,11 +379,12 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-8 Safety Gate helper-consumer inventory
-P1: classify runtime structural / parity-only / semantic API uses
-P2: add consumer-specific contract evidence before helper changes
-P3: record migrate|replace|retain decisions
-P4: decide kdsl_parser_adapter.py retirement or explicit retention last
+P0: Phase 6D-8B migrate kdsl_safety_semantics structural input
+P1: preserve semantic atom/concept decisions and exit behavior
+P2: Phase 6D-8C migrate inheritance/graph structural input
+P3: Phase 6D-8D migrate R1C optional embedded SAFETY_GATES parsing
+P4: decide semantic utility location/retention
+P5: decide parity-only helpers and adapter-file retirement last
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
