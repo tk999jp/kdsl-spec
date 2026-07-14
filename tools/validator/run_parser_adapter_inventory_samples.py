@@ -54,15 +54,15 @@ def main() -> int:
         snapshot = repository_snapshot(Path(raw_tmp))
         results.append(
             run_case(
-                'repository adapter/helper inventory is known and retirement remains blocked',
+                'repository adapter/helper inventory has no direct installer and remains bounded',
                 snapshot,
                 0,
                 (
                     'STATUS: pass',
                     'MODE: repository',
-                    'kdsl_packet.py <- kdsl_parser_adapter: install_packet',
+                    'DIRECT_ADAPTER_IMPORTERS:',
                     'LEGACY_STRUCTURAL_HELPER_CONSUMERS:',
-                    'state: blocked',
+                    'RETIREMENT:',
                     boundary,
                 ),
             )
