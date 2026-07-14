@@ -6,9 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ADAPTER_MODULE = 'kdsl_parser_adapter'
-ALLOWED_DIRECT_IMPORTS = {
-    'kdsl_packet.py': {'install_packet'},
-}
+ALLOWED_DIRECT_IMPORTS: dict[str, set[str]] = {}
 PROHIBITED_INSTALLERS = {'install_r1c'}
 
 LEGACY_HELPERS = {
