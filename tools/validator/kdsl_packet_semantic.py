@@ -5,18 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from kdsl_packet import (
-    AUTHORITY_RAILS,
-    KNOWN_SG_IDS,
-    SG_REGISTRY,
-    blocks_from_entries,
-    extract_packet_scope,
-    load_text,
-    parse_nested_scalars,
-    parse_sequence_items,
-    parse_top_level,
-    unquote,
-)
+from kdsl_packet import AUTHORITY_RAILS, KNOWN_SG_IDS, SG_REGISTRY, load_text, unquote
+from kdsl_parser_v2_packet_compat import PacketCompatibilityView
 from kdsl_safety_semantics import check_semantics
 
 MODEL_ID = 'kdsl-packet-semantic@0.1-draft'
@@ -81,24 +71,22 @@ def run_base_checker(path: str) -> tuple[int, str]:
 
 
 def parse_packet(text: str) -> dict:
-    scope = extract_packet_scope(text)
-    if scope is None:
+    view = PacketCompatibilityView.from_text(text)
+    if not view.present:
         raise ValueError('PACKET_DRAFT block not found')
-    entries, duplicates = parse_top_level(scope)
-    values = {key: value for key, value, _ in entries}
-    blocks = blocks_from_entries(scope, entries)
-    authority, _ = parse_nested_scalars(blocks.get('AUTHORITY', {}))
-    normalize, _ = parse_nested_scalars(blocks.get('NORMALIZE', {}))
+    authority, _ = view.nested_scalars('AUTHORITY')
+    normalize, _ = view.nested_scalars('NORMALIZE')
+    blocks = view.legacy_blocks
     return {
-        'scope': scope,
-        'duplicates': duplicates,
-        'values': values,
+        'scope': list(view.scope_lines),
+        'duplicates': list(view.duplicates),
+        'values': view.values,
         'blocks': blocks,
         'authority': authority,
         'normalize': normalize,
-        'obs': parse_sequence_items(blocks.get('OBS', {})),
-        'stop': parse_sequence_items(blocks.get('STOP', {})),
-        'verify': parse_sequence_items(blocks.get('VERIFY', {})),
+        'obs': view.sequence_items('OBS'),
+        'stop': view.sequence_items('STOP'),
+        'verify': view.sequence_items('VERIFY'),
         'sg_records': parse_records(blocks.get('SG', {})),
         'flow_records': parse_records(blocks.get('FLOW', {})),
     }
@@ -258,8 +246,7 @@ def validate_packet_semantics(text: str) -> tuple[list[str], list[str], list[str
     info: list[str] = []
     data = parse_packet(text)
 
-    sg_block = data['blocks'].get('SG', {})
-    registry, _ = parse_nested_scalars(sg_block)
+    registry, _ = PacketCompatibilityView.from_text(text).nested_scalars('SG')
     if registry.get('registry') != SG_REGISTRY:
         errors.append('SG.registry must be ' + SG_REGISTRY)
 
