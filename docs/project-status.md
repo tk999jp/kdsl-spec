@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-14
-phase: phase6d-packet-installer-readiness-integrated
+phase: phase6d-packet-installer-removal-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 4d667ea026e962b7e108a7b37d2f5aa180bb28c8
+verified_main_head: 4701a5fce31dc6c5d11bd40bd6a0de5abbb343fe
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -89,11 +89,10 @@ Phase 6D-2 consumer decision matrix: integrated
 Phase 6D unified-runner corrective: integrated
 Phase 6D-3 Normalization consumer contract/migration: integrated
 Phase 6D-4 Normalization installer removal: integrated
-Phase 6D-5A Packet normalize consumer contract: integrated
-Phase 6D-5B Packet normalize consumer migration: integrated
-Phase 6D-6A Packet semantic consumer contract: integrated
-Phase 6D-6B Packet semantic consumer migration: integrated
+Phase 6D-5 Packet normalize consumer contract/migration: integrated
+Phase 6D-6 Packet semantic consumer contract/migration: integrated
 Phase 6D-7A Packet installer readiness: integrated
+Phase 6D-7B Packet installer removal: integrated
 ```
 
 ## 5. Repository enforcement
@@ -118,10 +117,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 102
-source head: 4aa4a3e64eb1714c581794f6164eb6f9f34224fa
-squash commit: 4d667ea026e962b7e108a7b37d2f5aa180bb28c8
-workflow run: 29331728324 / #375
+PR: 104
+source head: fb14d11e41b73615b5fdd5beb50b3c8bc159c3da
+squash commit: 4701a5fce31dc6c5d11bd40bd6a0de5abbb343fe
+workflow run: 29333878799 / #379
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -129,12 +128,12 @@ Packet Semantic Property: success
 Verified suites:
 
 ```text
-Packet installer readiness: 4 / failed 0
+Packet installer removal: 4 / failed 0
 Packet semantic consumer contract: 10 / failed 0
 Packet semantic consumer migration: 4 / failed 0
 Packet normalize contract: 10 / failed 0
 Packet normalize migration: 4 / failed 0
-Normalization installer-removal: 4 / failed 0
+Normalization installer removal: 4 / failed 0
 Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
@@ -178,13 +177,13 @@ No active checker remains solely on the Phase 1 structural path.
 
 ## 8. Phase 6D dependency state
 
-Current direct adapter installer boundary:
+Direct adapter installer boundary:
 
 ```text
-kdsl_packet.py -> install_packet
-kdsl_packet_normalization.py -> none
-kdsl_safety_gate.py -> none
+none
 ```
+
+Any future direct import from `kdsl_parser_adapter` is an inventory failure.
 
 Normalization family:
 
@@ -217,14 +216,13 @@ contract/migration: integrated
 semantic decisions/exits: unchanged
 ```
 
-Packet installer readiness:
+Packet installer state:
 
 ```text
-direct installer: kdsl_packet.py -> install_packet
-runtime legacy structural consumers from kdsl_packet: none
-nonstructural consumers: separately classified
-readiness corpus: integrated
-installer removal: not performed
+install_packet import/call: removed
+runtime structural consumers from kdsl_packet: none
+local legacy helper functions: parity evidence only
+Packet installer removal corpus: integrated
 ```
 
 Safety Gate helper family:
@@ -238,29 +236,26 @@ inheritance/graph/optional helper decision: pending
 
 ```text
 G1 active checker independence: satisfied
-G2 direct installer inventory: integrated / CI-verified
+G2 direct installer inventory: satisfied / direct imports none
 G3 consumer decision matrix: integrated / CI-verified
 G4 Normalization family contract/migration: satisfied
 G5 Normalization installer removal: satisfied
-G6 Packet collect_data contract: satisfied
-G7 Packet collect_data migration: satisfied
-G8 Packet semantic consumer contract: satisfied
-G9 Packet semantic consumer migration: satisfied
-G10 Packet installer readiness: satisfied
-G11 Packet installer removal: pending bounded trial
-G12 Safety Gate helper decision: pending
-G13 adapter file retirement proof: blocked
+G6 Packet normalize contract/migration: satisfied
+G7 Packet semantic contract/migration: satisfied
+G8 Packet installer readiness: satisfied
+G9 Packet installer removal: satisfied
+G10 Safety Gate helper-family decision: pending
+G11 parity-only legacy helper strategy: pending
+G12 adapter file retirement proof: blocked
 ```
 
 Current decision:
 
 ```text
 Normalization installer removal: complete
-Packet normalize consumer migration: complete
-Packet semantic consumer migration: complete
-Packet runtime structural consumers: none
-Packet installer removal trial: authorized as bounded next phase
-install_packet: retained
+Packet installer removal: complete
+direct adapter imports: none
+kdsl_parser_adapter.py file: retained
 adapter file retirement: blocked
 adapter file removal: not performed
 ```
@@ -321,10 +316,9 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-Packet installer removal proof
-Safety Gate inheritance/graph/optional helper decision
+Safety Gate inheritance/graph/optional helper-family decision
 parity-only legacy helper strategy
-legacy adapter file retirement proof
+legacy adapter file retirement or explicit retention decision
 same-marker multi-envelope semantics
 complete semantic equivalence proof
 complete Safety Gate proof
@@ -342,9 +336,8 @@ R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
 all active checker structural inputs migrated to AST v2 CompatibilityViews
-Normalization checker/consumer/installer migration complete
-Packet normalize and semantic consumer contract/migration complete
-Packet installer removal readiness proven
+Normalization and Packet runtime consumers migrated
+Normalization and Packet direct installers removed
 ```
 
 Do not present as:
@@ -363,20 +356,20 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-7B remove only install_packet import/call from kdsl_packet.py
-P1: update direct-installer inventory to none
-P2: replace readiness runner with installer-removal corpus
-P3: retain all Packet base/semantic/normalize/property suites
-P4: Safety Gate helper-family decision
-P5: adapter file retirement decision last
+P0: Phase 6D-8 Safety Gate helper-consumer inventory
+P1: classify runtime structural / parity-only / semantic API uses
+P2: add consumer-specific contract evidence before helper changes
+P3: record migrate|replace|retain decisions
+P4: decide kdsl_parser_adapter.py retirement or explicit retention last
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-Packet checker/semantic/property/normalization exit behavior changes
-unknown Packet structural consumer appears
+Safety Gate inheritance/graph/optional behavior changes
+unknown structural consumer appears
+semantic/property exit behavior changes
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
