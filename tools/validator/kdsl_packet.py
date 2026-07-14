@@ -388,10 +388,7 @@ def validate_sg(block, task_id, text, errors):
     return valid_ids
 
 
-# Retained compatibility export for Packet semantic/normalization helper modules.
-# The active base checker below consumes PacketCompatibilityView directly.
-from kdsl_parser_adapter import install_packet
-install_packet(globals())
+# Local legacy helper functions above are retained only for parity evidence.
 
 
 def main(argv):
