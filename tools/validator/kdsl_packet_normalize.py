@@ -4,16 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from kdsl_packet import (
-    blocks_from_entries,
-    extract_packet_scope,
-    load_text,
-    parse_list_field,
-    parse_nested_scalars,
-    parse_sequence_items,
-    parse_top_level,
-    unquote,
-)
+from kdsl_packet import load_text, unquote
+from kdsl_parser_v2_packet_compat import PacketCompatibilityView
 
 NORMALIZATION_SCHEMA = 'kdsl-packet-normalization@0.1-draft'
 PACKET_SCHEMA = 'kdsl-packet@0.1-draft'
@@ -205,31 +197,30 @@ def build_design_preview(data):
 
 
 def collect_data(text):
-    scope = extract_packet_scope(text)
-    if scope is None:
+    view = PacketCompatibilityView.from_text(text)
+    if not view.present:
         raise ValueError('PACKET_DRAFT block not found')
-    entries, _ = parse_top_level(scope)
-    values = {key: value for key, value, _ in entries}
-    blocks = blocks_from_entries(scope, entries)
 
-    base, _ = parse_nested_scalars(blocks.get('BASE', {}))
-    task, _ = parse_nested_scalars(blocks.get('TASK', {}))
-    authority, _ = parse_nested_scalars(blocks.get('AUTHORITY', {}))
-    normalize, _ = parse_nested_scalars(blocks.get('NORMALIZE', {}))
-    out, _ = parse_nested_scalars(blocks.get('OUT', {}))
+    values = view.values
+    blocks = view.legacy_blocks
+    base, _ = view.nested_scalars('BASE')
+    task, _ = view.nested_scalars('TASK')
+    authority, _ = view.nested_scalars('AUTHORITY')
+    normalize, _ = view.nested_scalars('NORMALIZE')
+    out, _ = view.nested_scalars('OUT')
 
     return {
         'values': values,
         'base_id': base.get('id', ''),
         'task_id': task.get('id', ''),
-        'src': parse_sequence_items(blocks.get('SRC', {})),
-        'read': parse_sequence_items(blocks.get('READ', {})),
-        'tgt': parse_sequence_items(blocks.get('TGT', {})),
-        'obs': parse_sequence_items(blocks.get('OBS', {})),
+        'src': view.sequence_items('SRC'),
+        'read': view.sequence_items('READ'),
+        'tgt': view.sequence_items('TGT'),
+        'obs': view.sequence_items('OBS'),
         'goal': unquote(values.get('GOAL', '')),
-        'non': parse_sequence_items(blocks.get('NON', {})),
-        'stop': parse_sequence_items(blocks.get('STOP', {})),
-        'verify': parse_sequence_items(blocks.get('VERIFY', {})),
+        'non': view.sequence_items('NON'),
+        'stop': view.sequence_items('STOP'),
+        'verify': view.sequence_items('VERIFY'),
         'sg_records': parse_records(blocks.get('SG', {})),
         'flow_records': parse_records(blocks.get('FLOW', {})),
         'authority': authority,
