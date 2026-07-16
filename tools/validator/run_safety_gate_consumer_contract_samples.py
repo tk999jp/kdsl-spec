@@ -7,11 +7,7 @@ from kdsl_parser_v2_safety_gate_compat import SafetyGateCompatibilityView
 
 ROOT = Path(__file__).resolve().parent
 
-CONSUMERS = {
-    'kdsl_safety_semantics.py': {
-        'structural': {'extract_gate_block', 'parse_registry'},
-        'semantic': set(),
-    },
+HELPER_CONSUMERS = {
     'kdsl_safety_gate_inheritance.py': {
         'structural': {'extract_gate_block', 'parse_registry'},
         'semantic': {'REGISTRY', 'aggregate_state', 'authority_is_unverified', 'is_blank'},
@@ -31,6 +27,10 @@ CONSUMERS = {
             'is_blank',
         },
     },
+}
+
+MIGRATED_CONSUMERS = {
+    'kdsl_safety_semantics.py': {'SafetyGateCompatibilityView'},
 }
 
 WRAPPERS = {
@@ -66,8 +66,8 @@ def main() -> int:
     }
     results.append(
         record(
-            'exact Safety Gate runtime consumer set',
-            actual_consumers == set(CONSUMERS),
+            'exact remaining Safety Gate helper consumer set',
+            actual_consumers == set(HELPER_CONSUMERS),
             'actual=' + repr(sorted(actual_consumers)),
         )
     )
@@ -76,18 +76,11 @@ def main() -> int:
     structural_detail: list[str] = []
     semantic_ok = True
     semantic_detail: list[str] = []
-    for filename, expected in CONSUMERS.items():
+    for filename, expected in HELPER_CONSUMERS.items():
         imported = imports_from(ROOT / filename, 'kdsl_safety_gate')
-        structural = imported & {
-            'extract_gate_block',
-            'parse_registry',
-            'aggregate_state',
-            'authority_is_unverified',
-            'is_blank',
-        }
         expected_structural = expected['structural']
         expected_semantic = expected['semantic']
-        actual_structural = structural & {'extract_gate_block', 'parse_registry'}
+        actual_structural = imported & {'extract_gate_block', 'parse_registry'}
         actual_semantic = imported - actual_structural
         if actual_structural != expected_structural:
             structural_ok = False
@@ -98,14 +91,14 @@ def main() -> int:
 
     results.append(
         record(
-            'exact structural helper imports per consumer',
+            'exact structural helper imports per remaining consumer',
             structural_ok,
             '; '.join(structural_detail),
         )
     )
     results.append(
         record(
-            'exact semantic utility imports per consumer',
+            'exact semantic utility imports per remaining consumer',
             semantic_ok,
             '; '.join(semantic_detail),
         )
@@ -154,20 +147,34 @@ def main() -> int:
         )
     )
 
+    semantics_gate_imports = imports_from(ROOT / 'kdsl_safety_semantics.py', 'kdsl_safety_gate')
+    semantics_compat_imports = imports_from(
+        ROOT / 'kdsl_safety_semantics.py',
+        'kdsl_parser_v2_safety_gate_compat',
+    )
+    results.append(
+        record(
+            'Safety semantics uses only the compatibility view for structural extraction',
+            not semantics_gate_imports
+            and semantics_compat_imports == MIGRATED_CONSUMERS['kdsl_safety_semantics.py'],
+            'compat=' + repr(sorted(semantics_compat_imports)),
+        )
+    )
+
+    all_consumers = set(HELPER_CONSUMERS) | set(MIGRATED_CONSUMERS)
     no_adapter = all(
         not imports_from(ROOT / filename, 'kdsl_parser_adapter')
-        for filename in CONSUMERS
+        for filename in all_consumers
     )
-    results.append(record('Safety Gate consumers have no direct adapter import', no_adapter))
-
     wrappers_clean = all(
         not imports_from(ROOT / filename, 'kdsl_safety_gate')
+        and not imports_from(ROOT / filename, 'kdsl_parser_v2_safety_gate_compat')
         for filename in WRAPPERS
     )
     results.append(
         record(
-            'runner and wrapper modules are not direct helper consumers',
-            wrappers_clean,
+            'consumers have no adapter import and wrappers remain indirect',
+            no_adapter and wrappers_clean,
         )
     )
 
