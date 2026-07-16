@@ -9,11 +9,11 @@ ROOT = Path(__file__).resolve().parent
 
 HELPER_CONSUMERS = {
     'kdsl_safety_gate_inheritance.py': {
-        'structural': {'extract_gate_block', 'parse_registry'},
+        'structural': set(),
         'semantic': {'REGISTRY', 'aggregate_state', 'authority_is_unverified', 'is_blank'},
     },
     'kdsl_safety_gate_graph.py': {
-        'structural': {'extract_gate_block', 'parse_registry'},
+        'structural': set(),
         'semantic': {'REGISTRY', 'aggregate_state', 'authority_is_unverified', 'is_blank'},
     },
     'kdsl_r1c_optional.py': {
@@ -31,6 +31,8 @@ HELPER_CONSUMERS = {
 
 MIGRATED_CONSUMERS = {
     'kdsl_safety_semantics.py': {'SafetyGateCompatibilityView'},
+    'kdsl_safety_gate_inheritance.py': {'SafetyGateCompatibilityView'},
+    'kdsl_safety_gate_graph.py': {'SafetyGateCompatibilityView'},
 }
 
 WRAPPERS = {
@@ -104,20 +106,33 @@ def main() -> int:
         )
     )
 
-    graph_imports = imports_from(ROOT / 'kdsl_safety_gate_graph.py', 'kdsl_safety_gate')
-    inheritance_imports = imports_from(ROOT / 'kdsl_safety_gate_inheritance.py', 'kdsl_safety_gate')
+    graph_gate_imports = imports_from(ROOT / 'kdsl_safety_gate_graph.py', 'kdsl_safety_gate')
+    inheritance_gate_imports = imports_from(ROOT / 'kdsl_safety_gate_inheritance.py', 'kdsl_safety_gate')
+    graph_compat_imports = imports_from(
+        ROOT / 'kdsl_safety_gate_graph.py',
+        'kdsl_parser_v2_safety_gate_compat',
+    )
+    inheritance_compat_imports = imports_from(
+        ROOT / 'kdsl_safety_gate_inheritance.py',
+        'kdsl_parser_v2_safety_gate_compat',
+    )
     results.append(
         record(
-            'graph and inheritance share the same Safety Gate helper boundary',
-            graph_imports == inheritance_imports,
-            'shared=' + repr(sorted(graph_imports & inheritance_imports)),
+            'graph and inheritance share migrated structural and retained semantic boundaries',
+            graph_gate_imports == inheritance_gate_imports
+            and graph_gate_imports == HELPER_CONSUMERS['kdsl_safety_gate_graph.py']['semantic']
+            and graph_compat_imports == {'SafetyGateCompatibilityView'}
+            and inheritance_compat_imports == {'SafetyGateCompatibilityView'},
+            'semantic=' + repr(sorted(graph_gate_imports))
+            + ' graph_compat=' + repr(sorted(graph_compat_imports))
+            + ' inheritance_compat=' + repr(sorted(inheritance_compat_imports)),
         )
     )
 
     r1c_imports = imports_from(ROOT / 'kdsl_r1c_optional.py', 'kdsl_safety_gate')
     results.append(
         record(
-            'R1C optional embedded parser boundary is mixed structural and semantic',
+            'R1C optional remains the only mixed structural and semantic helper consumer',
             'parse_registry' in r1c_imports
             and {'KNOWN_IDS', 'KNOWN_STATES', 'REGISTRY', 'REQUIRED_FIELDS'} <= r1c_imports
             and {'authority_is_unverified', 'is_blank'} <= r1c_imports,
@@ -147,17 +162,27 @@ def main() -> int:
         )
     )
 
-    semantics_gate_imports = imports_from(ROOT / 'kdsl_safety_semantics.py', 'kdsl_safety_gate')
-    semantics_compat_imports = imports_from(
-        ROOT / 'kdsl_safety_semantics.py',
-        'kdsl_parser_v2_safety_gate_compat',
-    )
+    migrated_ok = True
+    migrated_detail: list[str] = []
+    for filename, expected in MIGRATED_CONSUMERS.items():
+        gate_imports = imports_from(ROOT / filename, 'kdsl_safety_gate')
+        compat_imports = imports_from(
+            ROOT / filename,
+            'kdsl_parser_v2_safety_gate_compat',
+        )
+        structural_gate_imports = gate_imports & {'extract_gate_block', 'parse_registry'}
+        if structural_gate_imports or compat_imports != expected:
+            migrated_ok = False
+        migrated_detail.append(
+            filename
+            + ': legacy_structural=' + repr(sorted(structural_gate_imports))
+            + ' compat=' + repr(sorted(compat_imports))
+        )
     results.append(
         record(
-            'Safety semantics uses only the compatibility view for structural extraction',
-            not semantics_gate_imports
-            and semantics_compat_imports == MIGRATED_CONSUMERS['kdsl_safety_semantics.py'],
-            'compat=' + repr(sorted(semantics_compat_imports)),
+            'migrated consumers use CompatibilityView without legacy structural helpers',
+            migrated_ok,
+            '; '.join(migrated_detail),
         )
     )
 
