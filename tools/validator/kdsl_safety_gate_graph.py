@@ -6,13 +6,12 @@ from collections import defaultdict, deque
 from pathlib import Path
 from typing import Iterable
 
+from kdsl_parser_v2_safety_gate_compat import SafetyGateCompatibilityView
 from kdsl_safety_gate import (
     REGISTRY,
     aggregate_state,
     authority_is_unverified,
-    extract_gate_block,
     is_blank,
-    parse_registry,
 )
 from kdsl_safety_semantics import (
     REEVALUATION_RE,
@@ -57,15 +56,14 @@ def read_node(path: Path, node_id: str, errors: list[str]) -> dict[str, dict[str
         errors.append(f'{node_id}: file not found: {path}')
         return {}
     text = load_text(path)
-    block = extract_gate_block(text)
-    if block is None:
+    view = SafetyGateCompatibilityView.from_text(text)
+    if not view.present:
         errors.append(f'{node_id}: no SAFETY_GATES block detected')
         return {}
-    registry, entries = parse_registry(block)
-    if registry != REGISTRY:
-        errors.append(f'{node_id}: unknown or missing Safety Gate registry: {registry}')
+    if view.registry != REGISTRY:
+        errors.append(f'{node_id}: unknown or missing Safety Gate registry: {view.registry}')
     mapped: dict[str, dict[str, str]] = {}
-    for entry in entries:
+    for entry in view.entry_dicts:
         gate_id = entry.get('id', '').strip()
         if not gate_id:
             continue
