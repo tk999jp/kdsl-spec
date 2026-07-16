@@ -2,13 +2,12 @@ import re
 import sys
 from pathlib import Path
 
+from kdsl_parser_v2_safety_gate_compat import SafetyGateCompatibilityView
 from kdsl_safety_gate import (
     REGISTRY,
     aggregate_state,
     authority_is_unverified,
-    extract_gate_block,
     is_blank,
-    parse_registry,
 )
 from kdsl_safety_semantics import REEVALUATION_RE, scope_relation
 
@@ -43,15 +42,14 @@ def emit(errors, warnings, info):
 
 
 def entry_map(text, label, errors):
-    block = extract_gate_block(text)
-    if block is None:
+    view = SafetyGateCompatibilityView.from_text(text)
+    if not view.present:
         errors.append(label + ': no SAFETY_GATES block detected')
         return {}
-    registry, entries = parse_registry(block)
-    if registry != REGISTRY:
-        errors.append(label + ': unknown or missing Safety Gate registry: ' + str(registry))
+    if view.registry != REGISTRY:
+        errors.append(label + ': unknown or missing Safety Gate registry: ' + str(view.registry))
     mapped = {}
-    for entry in entries:
+    for entry in view.entry_dicts:
         gate_id = entry.get('id', '').strip()
         if gate_id:
             mapped[gate_id] = entry
