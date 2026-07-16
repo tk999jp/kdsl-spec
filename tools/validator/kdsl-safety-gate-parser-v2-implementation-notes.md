@@ -1,28 +1,31 @@
 # Safety Gate Parser v2 Compatibility Notes
 
-status: phase6c-compatibility-view-integrated / checker-migrated-under-parity-guard
+status: active-checker-and-safety-semantics-consumer-migrated
 compatibility_view: tools/validator/kdsl_parser_v2_safety_gate_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_safety_gate_parity.py
 parity_runner: tools/validator/run_parser_v2_safety_gate_parity_samples.py
 active_checker: tools/validator/kdsl_safety_gate.py
-migration_runner: tools/validator/run_safety_gate_migration_samples.py
-compatibility_pull_request: 67
-compatibility_squash_commit: 604e4e1f8f8c601f7054b15b38e3c5db40d88056
-migration_pull_request: 69
-migration_squash_commit: bfc034c44473232cee5107c53483a0b080e25a46
-latest_workflow: 29231502084 / 305 / success
+checker_migration_runner: tools/validator/run_safety_gate_migration_samples.py
+consumer_contract_runner: tools/validator/run_safety_gate_consumer_contract_samples.py
+safety_semantics_consumer: tools/validator/kdsl_safety_semantics.py
+safety_semantics_migration_runner: tools/validator/run_safety_semantics_migration_samples.py
+checker_migration_pull_request: 69
+safety_semantics_migration_pull_request: 108
+safety_semantics_migration_squash_commit: 36dcdbedb717772dda618972d7c4eca09b41aa07
+required_check: KDSL Validation / Ruleset-enforced merge accepted
+workflow_metadata: unavailable / repeated GitHub connector 502
 tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
 
-Provide a source-spanned Safety Gate structural view and use it in the active checker without changing canonical Safety Gate semantics.
+Provide a source-spanned Safety Gate structural view for the active checker and migrated consumers without changing canonical Safety Gate semantics, authority, or runtime evidence rules.
 
 ```text
-parser parity != Safety Gate semantic equivalence
-parser parity != safety proof
-parser parity != authority
-parser parity != RT:v
+parser/consumer migration != Safety Gate semantic equivalence
+parser/consumer migration != complete safety proof
+parser/consumer migration != authority
+parser/consumer migration != RT:v
 ```
 
 ## Active checker path
@@ -35,24 +38,64 @@ input
 → match: existing registry/state/composition/protected-wording checks
 ```
 
-The active checker no longer installs the Phase 1 namespace adapter.
+The active checker does not install the Phase 1 namespace adapter.
 
 ```text
-install_safety_gate(globals()): removed from kdsl_safety_gate.py
+install_safety_gate(globals()): removed
 ```
 
-## Compatibility view path
+## Safety semantics consumer path
+
+Phase 6D-8B moved only gate-ID extraction:
+
+```text
+input
+→ SafetyGateCompatibilityView.from_text(text)
+→ view.entry_dicts
+→ ordered gate ID list
+→ existing bounded semantic analysis
+```
+
+Removed from `kdsl_safety_semantics.py`:
+
+```text
+extract_gate_block
+parse_registry
+```
+
+Retained unchanged:
+
+```text
+semantic requirement registry
+semantic atom model
+weakening detection
+scope relation helpers
+exit codes/output markers
+FULL_SEMANTIC_EQUIVALENCE:not_proven
+EXECUTION_AUTHORITY:none
+```
+
+## Compatibility view contract
 
 ```text
 first legacy-compatible SAFETY_GATES scope selection
-→ exact original scope retained
-→ view-local dedent
-→ DocumentNodeV2 raw-envelope parse
-→ registry and typed record extraction
-→ Phase 1 output parity comparison
+exact original scope retained
+view-local dedent
+DocumentNodeV2 raw-envelope parse
+registry and typed record extraction
 ```
 
-Compared contract:
+Consumed channels:
+
+```text
+view.present
+view.block_text
+view.registry
+view.entry_dicts
+view.entry_field_orders
+```
+
+Compared checker contract:
 
 ```text
 block presence
@@ -63,21 +106,7 @@ record field order
 record values
 ```
 
-AST v2 data:
-
-```text
-DocumentNodeV2
-EnvelopeNodeV2
-FieldNodeV2
-RecordSequenceNode
-MappingNode
-SourceSpanV2
-SafetyGateEntryNodeV2
-```
-
 ## Fenced example boundary
-
-The repository example is inside a Markdown fence.
 
 ```text
 AST v2 active-document: fenced example inactive
@@ -85,42 +114,54 @@ Phase 1 parser: first SAFETY_GATES marker selected
 CompatibilityView: independently selects the same legacy-compatible scope
 ```
 
-The selected copy is locally dedented and parsed as `raw-envelope`. General AST v2 fence and indentation behavior is unchanged.
+The selected copy is locally dedented and parsed as `raw-envelope`. General AST v2 fence behavior is unchanged.
 
-## Checker-consumed values
+## Remaining helper consumers
 
-```text
-view.block_text
-view.registry
-view.entry_dicts
-```
-
-Legacy-v2 guard:
+### Inheritance
 
 ```text
-compare_safety_gate_legacy_v2(text)
+file: tools/validator/kdsl_safety_gate_inheritance.py
+structural pending:
+  extract_gate_block
+  parse_registry
+semantic utilities retained temporarily:
+  REGISTRY
+  aggregate_state
+  authority_is_unverified
+  is_blank
 ```
 
-Output markers:
+### Graph
 
 ```text
-Safety Gate parser parity guard: pass
-Safety Gate structural extraction: AST v2 compatibility view
+file: tools/validator/kdsl_safety_gate_graph.py
+structural pending:
+  extract_gate_block
+  parse_registry
+semantic utilities retained temporarily:
+  REGISTRY
+  aggregate_state
+  authority_is_unverified
+  is_blank
 ```
 
-## Retained helper API
-
-The following module-level helpers remain because inheritance, graph, R1C optional-block, and semantic modules import them:
+### R1C optional
 
 ```text
-extract_gate_block
-parse_registry
-aggregate_state
-authority_is_unverified
-is_blank
+file: tools/validator/kdsl_r1c_optional.py
+structural pending:
+  parse_registry
+semantic/constants retained temporarily:
+  KNOWN_IDS
+  KNOWN_STATES
+  REGISTRY
+  REQUIRED_FIELDS
+  authority_is_unverified
+  is_blank
 ```
 
-Retention of these helpers does not restore namespace-adapter use in the active checker. Their separate migration is not claimed by Phase 6C-6.
+Retention of semantic utilities does not restore namespace-adapter use. There are no direct `kdsl_parser_adapter` imports.
 
 ## Semantic checks retained
 
@@ -136,56 +177,69 @@ protected wording
 aggregate state
 inheritance transitions
 graph semantics
+R1C optional Safety Gate deep lint
 ```
 
-## Fail-closed divergence case
-
-A structure with records but no `entries:` field is accepted by loose Phase 1 line scanning but cannot be represented by the typed Safety Gate record field.
+## Migration corpus
 
 ```text
-legacy-v2 mismatch→parity guard failure
-semantic validation→not entered
+Safety Gate consumer contract: 8 cases
+Safety semantics migration: 4 cases
 ```
 
-This is a structural stop condition, not schema inference or automatic correction.
-
-## Verification
+Safety semantics cases:
 
 ```text
-Safety Gate parity: 8 / failed 0
-Safety Gate checker migration: 4 / failed 0
-unified runners: 14
-unified expectations: 307 / failed 0
-workflow run: 29231502084 / #305
-KDSL Validation: success
-Packet Semantic Property: success
+CompatibilityView import boundary
+ID order and duplicate preservation
+repository bounded-semantics pass
+weakened evidence boundary fail
 ```
+
+Expected unified state:
+
+```text
+unified runners: 32
+unified expectations: 423 / failed 0
+```
+
+Evidence basis:
+
+```text
+PR #108 merged under active Ruleset
+required status context: KDSL Validation
+run_all_samples.py fails on missing summary/nonzero/failed case
+```
+
+Exact workflow run ID and individual job payload remain unconfirmed because the GitHub connector repeatedly returned HTTP 502. No run number is inferred or fabricated.
 
 ## Exit codes
 
 ```text
 0: pass
 1: semantic warning
-2: parser parity or semantic failure
+2: structural or semantic failure
 ```
 
 ## Current boundary
 
 ```text
 CompatibilityView: integrated
-active checker switch: integrated
-legacy-v2 parity guard: active
-Safety Gate semantic policy: unchanged
-inheritance/graph helper migration: not claimed
-remaining namespace-adapter consumers: Packet / Packet Normalization
-legacy adapter removal: prohibited
+active checker migration: integrated
+Safety semantics structural migration: integrated
+inheritance/graph structural migration: pending
+R1C optional embedded SAFETY_GATES migration: pending
+semantic utility location/retention decision: pending
+parity-only helper strategy: pending
+kdsl_parser_adapter.py retirement: blocked
 ```
 
 ## Next step
 
 ```text
-Packet compatibility view/parity pilot
-Packet executable:no保持
-Packet state:not_normalized保持
-checker switchはparity成立後
+Phase 6D-8C inheritance/graph contract and structural migration
+→ Phase 6D-8D R1C optional embedded SAFETY_GATES migration
+→ semantic utility retention/location decision
+→ parity-only helper strategy
+→ adapter file retirement or explicit retention last
 ```
