@@ -18,6 +18,7 @@ RUNNERS = (
     ('parser-v2-safety-gate-parity', 'run_parser_v2_safety_gate_parity_samples.py'),
     ('safety-gate-checker-migration', 'run_safety_gate_migration_samples.py'),
     ('safety-gate-consumer-contract', 'run_safety_gate_consumer_contract_samples.py'),
+    ('safety-semantics-consumer-migration', 'run_safety_semantics_migration_samples.py'),
     ('parser-v2-packet-parity', 'run_parser_v2_packet_parity_samples.py'),
     ('packet-checker-migration', 'run_packet_migration_samples.py'),
     ('parser-v2-normalization-parity', 'run_parser_v2_normalization_parity_samples.py'),
