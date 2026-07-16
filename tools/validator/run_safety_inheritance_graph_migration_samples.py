@@ -158,7 +158,7 @@ def main() -> int:
                         'SG-AUTHORITY',
                         'satisfied',
                         reason='confirmed',
-                        evidence='none',
+                        evidence='',
                         authority='none',
                     )
                 ]
