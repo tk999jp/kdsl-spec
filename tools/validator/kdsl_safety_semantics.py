@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-from kdsl_safety_gate import extract_gate_block, parse_registry
+from kdsl_parser_v2_safety_gate_compat import SafetyGateCompatibilityView
 
 MODEL_ID = 'kdsl-safety-language@0.1-draft'
 
@@ -281,11 +281,8 @@ def analyze_atoms(text: str) -> list[SemanticAtom]:
 
 
 def gate_ids_from_text(text: str) -> list[str]:
-    block = extract_gate_block(text)
-    if block is None:
-        return []
-    _, entries = parse_registry(block)
-    return [entry.get('id', '').strip() for entry in entries if entry.get('id')]
+    view = SafetyGateCompatibilityView.from_text(text)
+    return [entry.get('id', '').strip() for entry in view.entry_dicts if entry.get('id')]
 
 
 def check_semantics(text: str, gate_ids: Iterable[str]) -> tuple[list[str], list[str], list[str], list[SemanticAtom]]:
