@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase7a-p1-p1l-contract-design-active
+phase: phase7a-p1-p1l-contract-design-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
-verified_main_head: aa6530dd7a288b65e98c50ce01a1cbc8863454b2
+verified_main_head: 32b663132941138f8fe6e45d017f6c18046a671e
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -88,7 +88,7 @@ Phase 6C active-checker structural migrations: complete
 Phase 6D consumer/property/repository migration and proof: complete
 Phase 6D-9A adapter zero-reference readiness: integrated
 Phase 6D-9B parser adapter removal/post-deletion proof: integrated
-Phase 7A P1/P1L ownership and contract design: active
+Phase 7A P1/P1L ownership and contract design: integrated
 ```
 
 ## 5. Repository enforcement
@@ -113,15 +113,15 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 116
-source head: 2846bfc36eeb4cdd1036389350b09e7ddfc5a2c9
-squash commit: 53e70450d244382356ce8f8904db464e3720f8ed
-workflow run: 29545763627 / #410
+PR: 119
+source head: 2347725e1fea1323be00e153ff42a4bfa1bdd6de
+squash commit: 32b663132941138f8fe6e45d017f6c18046a671e
+workflow run: 29579900564 / #414
 KDSL Validation: success
 Packet Semantic Property: success
 ```
 
-Verified suites:
+Verified suites remain:
 
 ```text
 adapter removal: 7 / failed 0
@@ -150,7 +150,7 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-post-deletion pass != release/public-ready proof
+design integration pass != canonical schema adoption
 ```
 
 ## 7. Parser/checker state
@@ -175,6 +175,8 @@ input
 ```
 
 No active checker remains solely on the Phase 1 structural path.
+
+P1/P1L parser/checker is not yet implemented.
 
 ## 8. Runtime consumer state
 
@@ -285,6 +287,7 @@ TARGET.executable: false
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
 normalization completion: not_proven
+P1/P1L target resolution: blocked until canonical schema adoption and separate integration
 ```
 
 ```text
@@ -294,23 +297,9 @@ KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
 ```
 
-## 13. Phase 6 completion / Phase 7 start
+## 13. Phase 7A design state
 
-Phase 6 completed:
-
-```text
-AST v2 contract and typed core
-source-span/raw-normalized preservation
-checker-specific CompatibilityViews
-active checker migration
-runtime structural consumer migration
-property/repository corpus expansion
-namespace installer removal
-legacy namespace adapter removal
-post-deletion repository verification
-```
-
-Phase 7A active design direction:
+Integrated design direction:
 
 ```text
 P1L:=lossless structured normalized contract schema candidate
@@ -318,19 +307,43 @@ P1:=compact serialization profile subordinate to P1L candidate
 P1/P1L valid != executable
 profile completion != inference
 authority/runtime binding separate from structural validity
-Packet P1/P1L target remains blocked until canonical adoption and integration
 ```
 
-Not proven / non-goals:
+Phase 7A recorded:
 
 ```text
+candidate schema IDs: kdsl-p1l@0.1-draft / kdsl-p1@0.1-draft
+P1L candidate envelope and required fields
+P1 compact field-map candidate
+explicit/profile_completed/lossy/blocked normalization states
+mandatory authority rails
+runtime requirement vs R1 result-state separation
+P1↔P1L structural round-trip model
+legacy MidFD P1 compatibility boundary
+Packet normalization dependency
+```
+
+Unresolved evidence retained:
+
+```text
+legacy loss=L meaning
+legacy AP/H abbreviations
+operational P1 explicit authority rails
+operational P1L concrete syntax
+K1/PF1 canonical runtime-control schema
+```
+
+Not proven / not adopted:
+
+```text
+canonical P1L schema
+canonical P1 compact schema
+P1/P1L parser/validator
+P1/P1L runtime binding
 complete semantic equivalence
 complete natural-language interpretation
 complete safety proof
-arbitrary cross-document proof
 Packet normalization completion
-canonical P1/P1L target schema adoption
-P1/P1L runtime binding
 Packet executable promotion
 stable/public-ready promotion
 ```
@@ -347,7 +360,7 @@ experimental heuristic validator helpers
 typed AST v2 structural foundation
 all active checker and known runtime structural consumers migrated
 legacy namespace adapter retired
-P1/P1L canonical contract design in progress
+P1/P1L canonical contract design completed
 ```
 
 Do not present as:
@@ -367,7 +380,7 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: review and integrate Phase 7A P1/P1L ownership/contract design
+P0: obtain explicit U approval to adopt the Phase 7A ownership direction as canonical v2-draft schemas
 P1: Phase 7B canonical P1L schema + subordinate P1 compact schema + lint/examples
 P2: Phase 7C parser/validator first slice and round-trip corpus
 P3: Phase 7D Packet normalization integration under non-executable preview boundary
