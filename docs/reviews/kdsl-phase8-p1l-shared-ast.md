@@ -1,6 +1,6 @@
 # Phase 8 — Shared AST v2 P1L First-Class Integration Review
 
-status: integrated / closeout alignment pending
+status: integrated / closeout validation candidate
 review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 128
@@ -8,9 +8,12 @@ implementation_pull_request: 129
 closeout_pull_request: 130
 implementation_source_head: 3285995a4c31c749537e190956f53c38bf35c627
 implementation_squash_commit: a9e27531b7dc2d9bca68de5284a76616956a7242
+closeout_alignment_head: e843fa7da102a39c4834d5816536cd3956a79726
 workflow_run_id: 29613070208
 workflow_run_number: 449
 workflow_conclusion: success
+closeout_targeted_run_id: 29613547376
+closeout_targeted_conclusion: success
 
 ## 1. Goal
 
@@ -52,12 +55,25 @@ Packet→P1L/P1 normalization corpus: 17 / failed 0
 
 ## 4. Required checks
 
+Implementation review head:
+
 ```text
 workflow run: 29613070208 / #449
 KDSL Validation: success
 Packet Semantic Property: success
 Packet P1 Normalization Property: success
 ```
+
+Closeout targeted verification:
+
+```text
+workflow run: 29613547376
+shared P1L compatibility corpus: success
+P1L/P1 contract corpus: success
+Packet→P1L/P1 normalization corpus: success
+```
+
+Required repository checks must still succeed on the closeout review head before merge.
 
 ## 5. Corrective history
 
