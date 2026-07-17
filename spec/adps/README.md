@@ -66,7 +66,9 @@ lint: adopted v2-draft
 examples: adopted explanatory corpus
 parser/validator: Phase 7C first bounded slice integrated
 P1L/P1 round-trip corpus: 14 expectations / failed 0
-shared parser core registration: not integrated / checker-local bootstrap only
+shared parser core P1L registration: Phase 8 first-class integrated
+checker-local P1L bootstrap: removed
+shared P1L compatibility corpus: 10 expectations / failed 0
 Packet→P1L/P1 normalization: Phase 7D target-specific first slice integrated
 Packet P1 normalization corpus: 17 expectations / failed 0
 Packet preview markers: P1L_PREVIEW / P1_PREVIEW
@@ -83,6 +85,7 @@ python tools/validator/kdsl_validate.py --target p1l <file>
 python tools/validator/kdsl_validate.py --target p1 <file>
 python tools/validator/kdsl_validate.py --target p1-contract <file>
 python tools/validator/kdsl_p1_roundtrip.py <file>
+python tools/validator/run_p1_shared_ast_samples.py
 python tools/validator/kdsl_validate.py --target packet-p1-normalization <packet-file>
 python tools/validator/kdsl_packet_normalize_p1.py <packet-file>
 python tools/validator/kdsl_packet_p1_property.py <packet-file> [normalization-file]
