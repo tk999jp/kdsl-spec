@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from kdsl_p1_contract import (
+from kdsl_p1_bootstrap import (
     P1_SCHEMA_ID,
     P1L_SCHEMA_ID,
     compare_models,
@@ -18,7 +18,7 @@ from kdsl_p1_contract import (
 def round_trip_text(text: str):
     source = parse_contract(text, require=True)
     if source.errors or source.model is None:
-        return source, None, ['source contract failed validation']
+        return source, None, ['source contract failed validation', *source.errors]
 
     try:
         rendered = render_p1(source.model)
