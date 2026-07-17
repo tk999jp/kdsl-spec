@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase6d-safety-inheritance-graph-migration-integrated
+phase: phase6d-r1c-optional-safety-migration-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 01d9de06f6af12ae7b06ba35a83405457a447817
+verified_main_head: dfbaaa40580c43d563650acbf21b5ece75bc3fb7
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -96,6 +96,7 @@ Phase 6D-7B Packet installer removal: integrated
 Phase 6D-8A Safety Gate consumer contract/inventory: integrated
 Phase 6D-8B Safety semantics structural migration: integrated
 Phase 6D-8C Safety Gate inheritance/graph structural migration: integrated
+Phase 6D-8D R1C optional Safety Gate structural migration: integrated
 ```
 
 ## 5. Repository enforcement
@@ -120,10 +121,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 110
-source head: 01abc0d87ee26ca4b6dc53e57ad432a30a6f5098
-squash commit: 01d9de06f6af12ae7b06ba35a83405457a447817
-workflow run: 29543232320 / #392
+PR: 112
+source head: f675f2bd6187a1717175110d8a4d6cd3d8a01a4d
+squash commit: dfbaaa40580c43d563650acbf21b5ece75bc3fb7
+workflow run: 29543907368 / #396
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -134,6 +135,7 @@ Verified suites:
 Safety Gate consumer contract: 8 / failed 0
 Safety semantics migration: 4 / failed 0
 Safety inheritance/graph migration: 6 / failed 0
+R1C optional Safety Gate migration: 6 / failed 0
 Packet installer removal: 4 / failed 0
 Packet semantic consumer contract: 10 / failed 0
 Packet semantic consumer migration: 4 / failed 0
@@ -144,18 +146,8 @@ Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 33
-unified expectations: 429 / failed 0
-```
-
-Corrective evidence:
-
-```text
-run #391: failure
-cause: migration fixture used evidence:none, which is nonblank by existing contract
-fix: fixture changed to actual blank evidence
-implementation semantics changed: no
-run #392: success
+unified runners: 34
+unified expectations: 435 / failed 0
 ```
 
 ```text
@@ -245,24 +237,29 @@ kdsl_safety_gate_inheritance.py:
 kdsl_safety_gate_graph.py:
   structural extraction: SafetyGateCompatibilityView
   graph order/transition/scope/evidence/authority logic: unchanged
+
+kdsl_r1c_optional.py:
+  embedded SAFETY_GATES parsing: SafetyGateCompatibilityView
+  EVIDENCE/AUTHORITY/ANNUNCIATOR/Safety Gate deep lint: unchanged
 ```
 
-Temporarily retained semantic utilities:
+Structural dependency result:
 
 ```text
+legacy Safety Gate structural helper consumers: none
+direct kdsl_parser_adapter imports: none
+```
+
+Temporarily retained semantic utilities/constants:
+
+```text
+KNOWN_IDS
+KNOWN_STATES
 REGISTRY
+REQUIRED_FIELDS
 aggregate_state
 authority_is_unverified
 is_blank
-```
-
-Remaining structural helper consumer:
-
-```text
-kdsl_r1c_optional.py:
-  parse_registry → pending migration
-  KNOWN_IDS/KNOWN_STATES/REGISTRY/REQUIRED_FIELDS → retain temporarily
-  authority_is_unverified/is_blank → retain temporarily
 ```
 
 ## 9. Adapter retirement gates
@@ -280,10 +277,11 @@ G9 Packet installer removal: satisfied
 G10 Safety Gate consumer contract/inventory: satisfied
 G11 Safety semantics structural migration: satisfied
 G12 Safety Gate inheritance/graph structural migration: satisfied
-G13 R1C optional SAFETY_GATES structural migration: pending
+G13 R1C optional SAFETY_GATES structural migration: satisfied
 G14 semantic utility location/retention decision: pending
 G15 parity-only legacy helper strategy: pending
-G16 adapter file retirement proof: blocked
+G16 adapter file retirement readiness: pending
+G17 adapter file retirement/removal: blocked
 ```
 
 Current decision:
@@ -292,11 +290,10 @@ Current decision:
 Normalization installer removal: complete
 Packet installer removal: complete
 direct adapter imports: none
-Safety semantics migration: complete
-Safety inheritance/graph migration: complete
-remaining Safety Gate structural consumers: 1
+known runtime structural consumers migrated: complete
+legacy Safety Gate structural consumers: none
 kdsl_parser_adapter.py file: retained
-adapter file retirement: blocked
+adapter file retirement: blocked pending readiness proof
 adapter file removal: not performed
 ```
 
@@ -356,9 +353,9 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-R1C optional SAFETY_GATES structural migration
 Safety Gate semantic utility location/retention decision
 parity-only legacy helper strategy
+adapter file zero-reference/readiness proof
 legacy adapter file retirement or explicit retention decision
 same-marker multi-envelope semantics
 complete semantic equivalence proof
@@ -379,8 +376,7 @@ experimental heuristic validator helpers
 all active checker structural inputs migrated to AST v2 CompatibilityViews
 Normalization and Packet runtime consumers migrated
 Normalization and Packet direct installers removed
-Safety Gate consumer contract frozen
-Safety semantics/inheritance/graph structural consumers migrated
+all known Safety Gate structural consumers migrated
 ```
 
 Do not present as:
@@ -399,20 +395,20 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-8D freeze R1C optional embedded SAFETY_GATES contract
-P1: migrate parse_safety_gates_model to SafetyGateCompatibilityView
-P2: retain constants/semantic utilities temporarily
-P3: decide semantic utility location/retention
-P4: decide parity-only helpers and adapter-file retirement last
+P0: Phase 6D-9 inventory actual references to kdsl_parser_adapter.py
+P1: inventory parity-only helper requirements
+P2: classify semantic utilities as retained internal API or dedicated-module candidates
+P3: add adapter-retirement readiness corpus
+P4: remove adapter file only after zero-reference proof and full CI
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-R1C optional evidence/authority/output behavior changes
-Safety Gate inheritance/graph behavior changes
+Safety Gate optional/evidence/authority behavior changes
 unknown structural consumer appears
+parity evidence is lost
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
