@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase7b-p1-p1l-schema-adopted-alignment-pending
+phase: phase7b-p1-p1l-schema-adoption-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
@@ -47,6 +47,7 @@ R1: spec/r1/*
 Lint: spec/lint/*
 Bridge: spec/bridge/*
 Registry/Packet: spec/registry/* / spec/packet/*
+Glossary: spec/glossary.md / spec/glossary-v2-draft.md
 ```
 
 ```text
@@ -96,7 +97,7 @@ Phase 6D-9A adapter zero-reference readiness: integrated
 Phase 6D-9B parser adapter removal/post-deletion proof: integrated
 Phase 7A P1/P1L ownership and contract design: integrated
 Phase 7B P1L/P1 canonical schema/lint/examples/Bridge: integrated
-Phase 7B manifest/glossary alignment: pending
+Phase 7B manifest/glossary/index/review/status alignment: integrated
 ```
 
 ## 5. Repository enforcement
@@ -189,6 +190,7 @@ P1L/P1:
 ```text
 canonical schema: adopted
 lint contract: adopted
+examples: adopted explanatory corpus
 parser/checker: not implemented
 round-trip runner: not implemented
 validator pass: not available
@@ -261,14 +263,6 @@ post-deletion full unified suite: pass
 adapter retirement: complete
 ```
 
-Parity strategy:
-
-```text
-direct legacy-parser/checker-local comparison paths retained
-local parity helpers retained where required
-adapter removal did not remove parity evidence
-```
-
 ## 10. R1 / authority boundaries
 
 ```text
@@ -288,6 +282,7 @@ pending|user_required|not_applicable
 ```text
 P1L/P1でRT:v/fail/blk結果claim禁止
 P1L/P1 AUTHORITY missing/implicit→blocked
+read/edit/stage/commit/push/release/public_repo/destructive_ops全rail必須
 PLAN/step/opcode != authority
 ```
 
@@ -327,7 +322,7 @@ TARGET.executable: false
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
 normalization completion: not_proven
-P1/P1L target schema: now present
+P1/P1L target schema: present
 Packet→P1L/P1 mapping/integration: not implemented
 P1L_PREVIEW/P1_PREVIEW: not adopted
 ```
@@ -351,6 +346,11 @@ P1 schema: spec/adps/kdsl-p1-compact-contract-schema.md
 P1 schema ID: kdsl-p1@0.1-draft
 lint: spec/lint/kdsl-p1-p1l-lint.md
 Bridge v0.3
+ADPS index: spec/adps/README.md
+manifest ownership: synchronized
+canonical glossary: synchronized
+v2-draft glossary: synchronized
+adoption review: docs/reviews/kdsl-phase7b-p1-p1l-schema-adoption.md
 normal example: explicit P1L investigate
 profile-completed P1 example
 unknown-profile blocked example
@@ -434,10 +434,9 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: complete Phase 7B manifest/glossary alignment and closeout evidence
-P1: Phase 7C P1L/P1 parser/validator first slice and round-trip corpus
-P2: Phase 7D Packet normalization integration under P1L_PREVIEW/P1_PREVIEW non-executable boundary
-P3: K1/PF1 canonical runtime-control design only under separate approval
+P0: Phase 7C P1L/P1 parser/validator first slice and round-trip corpus
+P1: Phase 7D Packet normalization integration under P1L_PREVIEW/P1_PREVIEW non-executable boundary
+P2: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
