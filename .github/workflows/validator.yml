@@ -34,6 +34,24 @@ jobs:
       - name: Show Python version
         run: python --version
 
+      - name: Capture adapter readiness diagnostics
+        shell: bash
+        run: |
+          set +e
+          python tools/validator/run_parser_adapter_retirement_readiness_samples.py > adapter-readiness.log 2>&1
+          printf '%s\n' "$?" > adapter-readiness.exit
+          exit 0
+
+      - name: Upload adapter readiness diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: adapter-readiness-diagnostics
+          path: |
+            adapter-readiness.log
+            adapter-readiness.exit
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Run unified validator suite
         run: python tools/validator/run_all_samples.py
 
