@@ -2,356 +2,127 @@
 
 status: v2-draft
 canonical: no
-source_alignment: docs/design/kdsl-v2-direction.md / spec/manifest.md / spec/adps/*
+source_alignment: spec/manifest.md / spec/adps/* / spec/packet/* / spec/bridge/*
 
-This file supplements `spec/glossary.md` for v2-draft terms. It does not replace the v1.1 glossary.
+This file supplements `spec/glossary.md`. It does not replace canonical Core/R1/Bridge meanings.
 
-## Architecture axes
-
-### profile
+## 1. Architecture axes
 
 ```text
 profile:=用途別運用仕様
-```
-
-Examples:
-
-```text
-compact-prompt
-dev-prompt
-converter
-lint
-```
-
-### mode
-
-```text
 mode:=圧縮強度
-```
-
-Canonical values remain:
-
-```text
-readable|min|dense|lock
-```
-
-### safety
-
-```text
 safety:=安全保持強度
+lexicon:=宣言済み語彙/alias集合
+envelope:=prompt/resultを包む契約形式
 ```
-
-Canonical values remain:
 
 ```text
-normal|lock-critical|lock-all
+profile: compact-prompt|dev-prompt|converter|lint
+mode: readable|min|dense|lock
+safety: normal|lock-critical|lock-all
+lexicon: standard|kanji-v1
+envelope: plain|packet-draft|result
 ```
-
-### lexicon
-
-```text
-lexicon:=profile内で使用する宣言済み語彙/alias集合
-```
-
-Constraints:
 
 ```text
 lexicon != mode
 lexicon != profile
-unknown lexicon推測禁止
-lexiconで保護語上書禁止
+unknown profile/mode/safety/lexicon/envelope推測禁止
 ```
 
-### envelope
-
-```text
-envelope:=prompt/resultを包む入出力契約形式
-```
-
-Draft values:
-
-```text
-plain
-packet-draft
-result
-```
-
-## CompactPrompt terms
+## 2. CompactPrompt terms
 
 ### KDSL-CP
 
 ```text
-KDSL-CP:=profile:compact-promptの短縮名
+KDSL-CP:=profile:compact-prompt
 ```
 
-Use:
-
-```text
-一般LLM
-Project files
-単体prompt
-```
-
-Non-use:
-
-```text
-AI coding tool実装契約
-repo操作
-runtime verification
-release/tag/Release Assets操作
-```
+一般LLM/Project files/単体prompt向け。実装・repo・runtime・public操作を含む場合はCP-Lift必須。
 
 ### KDSL-CP漢
 
 ```text
-KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1 の宣言済み短縮構成
+KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
 ```
 
-It is not a new mode.
+新しいmodeではない。
 
 ### kanji-v1
 
 ```text
-kanji-v1:=KDSL-CP向け漢字構造alias lexicon
+kanji-v1:=KDSL-CP向け構造漢字alias lexicon
+keys: 役/目/材/出/則/守/調/確
 ```
 
-Structural keys:
-
-```text
-役/目/材/出/則/守/調/確
-```
-
-Constraints:
-
-```text
-構造aliasはKEY位置のみ
-free-text一字aliasは原則禁止
-禁/不/実/要は標準free-text aliasではない
-```
-
-### Guard
-
-```text
-Guard:=禁止/未確認扱い/safety gateを記述するblock
-```
-
-### Check
-
-```text
-Check:=出力直前のself-lint block
-```
-
-Check is not a chain-of-thought disclosure request.
+構造KEY位置のみ。Core保護語の一字短縮・上書は禁止。
 
 ### CP-Lift
 
 ```text
-CP-Lift:=KDSL-CPの適用範囲を超えたpromptをFull KDSL dev-promptへ昇格する境界処理
+CP-Lift:=KDSL-CP適用外の実装/repo/runtime/public操作をprofile:dev-promptへ昇格する境界処理
 ```
 
-Triggers include implementation, repository operations, runtime verification, rollback/revert, public history, tags, Release Assets, data migration, and source-of-truth changes.
+## 3. Safety Gate terms
 
-## Safety Gate Registry terms
-
-### Registry
+### Registry / SG
 
 ```text
 Registry:=既存正本意味を参照するID/state/composition集合
-```
-
-Constraints:
-
-```text
-Registry != 新しい実行権限
-Registry ID != permission
-Registry state != execution authority
-Registry reference != protected wording削除許可
-unknown registry/ID推測禁止
-```
-
-### kdsl-sg@0.1-draft
-
-```text
-kdsl-sg@0.1-draft:=KDSL v2-draft Safety Gate Registry
-```
-
-Source:
-
-```text
-spec/registry/kdsl-safety-gate-registry.md
-```
-
-Status:
-
-```text
-v2-draft adopted
-stable/public-ready: no
-Safety Gate validator: first heuristic slice integrated
-```
-
-Priority:
-
-```text
-Core/R1/Bridge safety meaning > Registry mapping > Profile usage > Example/Tool
-```
-
-### SG
-
-```text
 SG:=Safety Gate Registry entry/reference
+registry: kdsl-sg@0.1-draft
 ```
-
-Current IDs:
 
 ```text
-SG-DESIGN
-SG-SCOPE
-SG-EVIDENCE
-SG-RUNTIME
-SG-AUTHORITY
-SG-ROLLBACK
-SG-PUBLIC
-SG-DATA
-SG-KDSL-DP
-SG-STOP
+Registry != authority
+SG ID != permission
+SG ID-only compression禁止
+unknown SG ID/state→blocked
+hold/blocked gate削除禁止
 ```
-
-No one-character SG aliases are defined.
 
 ### SG state
 
-Allowed states:
-
 ```text
-hold
-satisfied
-blocked
-na
+hold:=前提/evidence/承認未充足
+satisfied:=必要根拠とauthorityがexact scope内で充足
+blocked:=違反/衝突/停止条件発火
+na:=非該当を理由付きで確認
 ```
 
-Definitions:
-
 ```text
-hold:=gate適用中, 前提/evidence/承認未充足, 関連操作禁止
-satisfied:=必要根拠と必要authorityがexact scope内で充足
-blocked:=違反/衝突/停止条件発火, 作業停止
-na:=非該当を理由付きで確認済み
-```
-
-Constraints:
-
-```text
-state省略→hold
-unknown state→blocked
-unknown SG ID→blocked
-required gate欠落→blocked
-satisfied根拠不足→blocked
-na理由なし→blocked
 state:satisfied != unrelated authority
-```
-
-### Safety Gate inheritance
-
-```text
-parent hold/blocked→child Phase/Sliceへ継承必須
-scope拡大→satisfied再評価
-summary/view→hold/blocked保持
-parent na→child自動na禁止
-```
-
-### Safety Gate composition
-
-```text
-Safety Gate composition:=複数gateを加算的に適用する規則
-```
-
-Source:
-
-```text
-spec/registry/kdsl-safety-gate-composition.md
-```
-
-Rules:
-
-```text
-specialized gate != broader gate解除
 single gate satisfied != composite safety satisfied
-any blocked→operation blocked
-no blocked + any hold→operation hold
-all applicable satisfied→gate prerequisites satisfied
-gate prerequisites satisfied != automatic execution permission
+validator/property pass != complete safety proof
 ```
 
-Representative composition:
+## 4. ADPS contract terms
+
+### KDSL-DP
 
 ```text
-rollback/revert/未push破棄
-→ SG-DESIGN/SG-ROLLBACK/SG-SCOPE/SG-EVIDENCE/SG-AUTHORITY/SG-STOP
-
-runtime claim/RT:v
-→ SG-EVIDENCE/SG-RUNTIME
+KDSL-DP:=ADPS向けAuthoring形式。実行指示ではない
 ```
-
-### Typed non-substitution
 
 ```text
-U承認 != runtime evidence
-runtime evidence != commit/push/release authority
-CI/validator pass != semantic equivalence
-CI/validator pass != U承認
-NEXT != execution authority
-COMMIT.proposed != commit authority
-satisfied gate != unrelated gate satisfaction
+KDSL-DP直接実行禁止
+KDSL-DPをAI coding toolへ直接実装指示として渡すこと禁止
+KDSL-DP→P1L/P1正規化必須
 ```
-
-### SG ID-only compression
-
-```text
-SG ID-only compression:=SG IDだけでcritical natural-language safety wordingを置換すること
-```
-
-Current rule:
-
-```text
-禁止
-current Full KDSL:=SG ID + complete protected wording
-```
-
-## ADPS contract terms
 
 ### P1L
 
 ```text
-P1L:=KDSL-DP等から正規化されたlossless structured contract candidate
+P1L:=lossless structured normalized contract candidate
 schema: kdsl-p1l@0.1-draft
 ```
 
-Source:
-
 ```text
-spec/adps/kdsl-p1l-contract-schema.md
-```
-
-Status:
-
-```text
-v2-draft adopted
 STATUS: contract-candidate
 executable: no
-BINDING.state default: unbound
+BINDING.state: unbound
 BINDING.executable: false
-parser/validator: not implemented
-```
-
-Required boundary:
-
-```text
-P1L valid != executable
-P1L lint/round-trip pass != authority
-profile completion != inference
-unknown profile/alias/preset→blocked
-all authority rails explicit
-RUNTIME pre-execution disposition != R1 result RT
+P1L valid/lint/round-trip pass != authority
 ```
 
 ### P1
@@ -361,44 +132,26 @@ P1:=canonical P1Lのreversible compact serialization
 schema: kdsl-p1@0.1-draft
 ```
 
-Source:
-
 ```text
-spec/adps/kdsl-p1-compact-contract-schema.md
-```
-
-Ownership:
-
-```text
-P1L > P1 > P1/P1L lint > validator/example
 P1 != independent canonical contract
-```
-
-Canonical marker:
-
-```text
 P1|SCHEMA=kdsl-p1@0.1-draft|STATUS=contract-candidate|...
+P1→P1L再構成不能→blocked / P1L fallback
 ```
 
-Canonical values are ordered compact JSON segments. Missing/unknown/repeated/out-of-order segments or non-reconstructable P1L projections are blocked.
-
-### P1 Authority rails
+### P1 authority rails
 
 ```text
 read/edit/stage/commit/push/release/public_repo/destructive_ops
 ```
 
-Rules:
-
 ```text
 missing/implicit rail→blocked
 read allow != edit allow
-edit allow != commit allow
 commit allow != push allow
 push allow != release allow
-PLAN/FLOW != authority
 not_requested != allow
 propose_only != operation authority
+PLAN/FLOW != authority
 ```
 
 ### Profile completion
@@ -408,41 +161,33 @@ profile completion:=exact profile id/revision/digestとfield-specific default ev
 ```
 
 ```text
-profile_completed valueはP1L/P1 canonical projectionへ展開必須
-similar-name/memory/convention completionは禁止
-unknown alias/preset inferenceは禁止
-critical authority completion from unstated defaultsは禁止
+profile completion != inference
+completed valueはcanonical projectionへ展開必須
+similar-name/memory/convention completion禁止
+unknown alias/preset/profile→blocked
 ```
 
 ### P1L/P1 normalization state
 
 ```text
-explicit
-profile_completed
-lossy
-blocked
+explicit|profile_completed|lossy|blocked
 ```
 
 ```text
 critical unresolved/loss→blocked
 lossy→runtime binding禁止
 semantic_equivalence:not_proven固定
-structural_pass != semantic equivalence/safety proof/authority
+structural_pass != semantic equivalence|safety proof|authority
 ```
 
-### P1L/P1 BINDING
+### BINDING
 
 ```text
-BINDING:=schema validityとruntime execution readinessを分離するblock
-```
-
-```text
+BINDING:=contract validityとruntime execution readinessを分離するblock
 state: unbound|bound|blocked
-executable:false under v0.1 draft
-schema/lint pass→BINDING unchanged
-runtime control valid != authority sufficient
-authority sufficient != executed
 ```
+
+`kdsl-p1l@0.1-draft` / `kdsl-p1@0.1-draft`では`executable:false`固定。
 
 ### Legacy operational P1
 
@@ -451,91 +196,40 @@ legacy operational P1:=project-local `P1|M:...|T:F|...` forms
 ```
 
 ```text
-legacy form != automatic kdsl-p1@0.1-draft conformance
+legacy form != kdsl-p1@0.1-draft conformance
 loss=P→exact compatibility evidence時のみprofile_completed候補
 loss=L意味推測禁止
 AP/H意味推測禁止
 Authority rails不在→canonical promotion blocked
 ```
 
-## Packet terms
+## 5. Packet terms
 
-### KDSL-Packet
+### KDSL-Packet / PACKET_DRAFT
 
 ```text
-KDSL-Packet:=v2-draft adoptedのnon-executable authoring/transport envelope
+KDSL-Packet:=non-executable authoring/transport envelope
 schema: kdsl-packet@0.1-draft
+marker: PACKET_DRAFT
 ```
 
-Current status:
-
 ```text
-v2-draft adopted
-canonical/stable/executable: no
-validator: first heuristic slice integrated
-normalization required: yes
-normalization contract: v2-draft adopted
-```
-
-### PACKET_DRAFT
-
-```text
-PACKET_DRAFT:=KDSL-Packet authoring recordの非実行top-level marker
-```
-
-Required marker:
-
-```text
-SCHEMA: kdsl-packet@0.1-draft
 STATUS: non-executable
 NORMALIZE.required: true
 NORMALIZE.state: not_normalized
-```
-
-Constraints:
-
-```text
 AI coding tool直接投入禁止
-valid-looking/lint-looking != executable
 PKT:v1使用禁止
-unknown schema/registry/ID/opcode推測禁止
 ```
 
-### Packet BASE
+### BASE / TASK / FLOW
 
 ```text
-BASE:=normalization/source-contract classification
-registry: kdsl-packet-base@0.1-draft
+BASE:=normalization baseline classification
+TASK:=task/risk classification
+FLOW:=ordered semantic work-state labels
 ```
 
-```text
-BASE-DESIGN-ONLY
-BASE-KDSL-DEV
-BASE-ADPS-P1
-BASE ID != permission/normalization completion
-```
-
-### Packet TASK
-
-```text
-TASK:=work-risk/task-class classification
-registry: kdsl-packet-task@0.1-draft
-```
-
-TASK ID selects minimum gate expectations but does not satisfy gates or grant authority.
-
-### Packet FLOW
-
-```text
-FLOW:=ordered semantic work-state transition labels
-registry: kdsl-packet-flow@0.1-draft
-```
-
-```text
-FLOW opcode != command
-FLOW opcode != authority
-one-character opcode未定義
-```
+ID/opcodeはauthority・command・success claimではない。
 
 ### NORMALIZATION_DRAFT
 
@@ -544,129 +238,147 @@ NORMALIZATION_DRAFT:=Packet source→target mapping/loss/round-trip evidence art
 schema: kdsl-packet-normalization@0.1-draft
 ```
 
-Current status:
-
 ```text
-v2-draft adopted
-non-executable
-validator/mapper: first bounded slices integrated
-P1L/P1 schemas: adopted
-Packet→P1L/P1 mapping: not implemented
-```
-
-Required boundary:
-
-```text
-STATUS:non-executable
+STATUS: non-executable
 TARGET.executable:false
-semantic_equivalence:not_proven
+ROUND_TRIP.semantic_equivalence:not_proven
 AUTHORITY.execution_authority:none
+Packet source remains not_normalized
 ```
 
-### KDSL_PROMPT_PREVIEW
+### Packet→P1L/P1 normalization
 
 ```text
-KDSL_PROMPT_PREVIEW:=Full KDSL target mappingを確認する非実行preview marker
-KDSL_PROMPT_PREVIEW != KDSL_PROMPT
+contract: kdsl-packet-p1-normalization@0.1-draft
+applicable BASE: BASE-ADPS-P1
+NORMALIZE.target: P1L|P1
 ```
 
-It must not be passed directly to an AI coding tool as an implementation contract.
-
-### P1L_PREVIEW / P1_PREVIEW
+Phase 7D target-specific first sliceで統合済み。
 
 ```text
-P1L_PREVIEW/P1_PREVIEW:=将来のPacket→P1L/P1 mappingで使用候補の非実行preview marker
+TARGET.resolution: resolved
+TARGET.executable: false
+P1L/P1 model/property first slice pass required
+Packet normalized-state promotion: not implemented
 ```
 
-Current status:
+Authority mapping:
 
 ```text
-not adopted
-Packet integration not implemented
+read/edit/stage/commit/push/release:=source exact copy
+public_repo:=forbid
+destructive_ops:=forbid
+```
+
+追加2 railは明示的な非拡張safety floorであり、hidden defaultやpermission grantではない。
+
+### P1L_PREVIEW
+
+```text
+P1L_PREVIEW:=canonical P1L projectionをJSONで保持する非実行preview marker
+```
+
+```text
 P1L_PREVIEW != P1L:
+canonical top-level P1L marker露出禁止
+```
+
+### P1_PREVIEW
+
+```text
+P1_PREVIEW:=canonical P1 serializationをJSON stringで保持する非実行preview marker
+```
+
+```text
 P1_PREVIEW != P1|
+canonical top-level P1 marker露出禁止
 ```
 
 ### Structural round-trip
 
 ```text
-structural round-trip:=required fields/order/exact stringsをtarget projectionから再構成して比較する検査
+structural round-trip:=required fields/order/exact strings/authority railsを再構成比較する検査
 ```
 
 ```text
 structural_pass != semantic equivalence
-structural_pass != safety proof
-structural_pass != authority/normalization completion/runtime binding
+structural_pass != complete safety proof
+structural_pass != runtime binding
+structural_pass != authority
+structural_pass != Packet normalized
 ```
 
-### Normalization loss
+## 6. Result terms
+
+### R1 / R1C
 
 ```text
-render_only:=表示差のみ候補
-critical:=scope/safety/authority/order/exact string等の損失
-```
-
-Critical loss or blocked unresolved items prohibit target preview/execution.
-
-### Packet NORMALIZE
-
-```text
-NORMALIZE:=PacketからFull KDSLまたはP1/P1Lへの別artifact変換要求
-```
-
-```text
-required:true固定
-Packet内state:not_normalized固定
-KDSL-DP→P1/P1L正規化必須
-P1L/P1 schema adoption alone != Packet mapping completion
-normalization未検証→実行禁止
-```
-
-## Result serialization profiles
-
-### R1C
-
-```text
+R1:=execution evidence/result-reporting specification
 R1C:=canonical R1/KDSL_RESULTのcompact serialization profile
 schema: kdsl-r1c@0.1-draft
 ```
 
-Current status:
-
 ```text
-v2-draft adopted
-canonical R1 replacement: no
-stable/public-ready: no
-validator: first heuristic slice integrated
-```
-
-Ownership:
-
-```text
-spec/r1/r1-result-spec.md > spec/r1/r1c-compact-result-schema.md
-canonical R1と競合→canonical R1優先
-R1C != 独立canonical結果仕様
-```
-
-Required boundary:
-
-```text
-KDSL_RESULT envelope保持
-STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
-short field alias禁止
-required field省略禁止
-implicit default禁止
+R1C != independent canonical result spec
+required fields省略禁止
 round-trip不成立→Full R1 fallback
-RT:v/NEXT/COMMIT意味変更禁止
-validator pass != semantic equivalence/canonical R1適合証明
 ```
 
-## Release strategy
+### RT
+
+```text
+p=runtime確認未完了
+u=U実機確認待ち
+v=対象環境runtime確認済
+na=runtime対象なし
+fail=runtime確認失敗
+blk=runtime確認不能
+```
+
+P1L/P1 pre-execution disposition:
+
+```text
+pending↔p
+user_required↔u
+not_applicable↔na
+```
+
+`v/fail/blk`はR1/R1Cの実行結果。P1L/P1/previewで自己申告禁止。
+
+### NEXT / COMMIT
+
+```text
+NEXT:=次候補の提案。次task実行許可ではない
+COMMIT:=実行済commitまたは推奨message。commit authorityではない
+```
+
+## 7. Tool / trust terms
+
+### Validator / Property checker
+
+```text
+Validator/Property checker:=形式/整合性/欠落/round-trip/propertyを検査する補助器
+```
+
+```text
+validator/property未実行→pass扱禁止
+pass != semantic equivalence
+pass != complete safety proof
+pass != runtime binding
+pass != execution authority
+pass != Packet normalized
+pass != RT:v
+pass != U承認
+pass != release readiness
+```
+
+## 8. Release strategy
 
 ```text
 v1.1.0-rc1:=experimental historical baseline
-v1.1.0 stable:=当面保留
+v1.1.0 stable:=hold
 v2-draft:=優先設計線
 ```
 
-This status does not authorize tag, release, or Release Assets operations.
+この状態はtag/release/Release Assets操作を許可しない。
