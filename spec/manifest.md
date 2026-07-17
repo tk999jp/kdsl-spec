@@ -233,9 +233,11 @@ Validator state:
 
 ```text
 parser/validator/round-trip:=Phase 7C bounded first slice integrated
-P1L marker:=checker-local AST v2 registration
-shared first-class P1L registration:=not integrated
-corpus:=14 / failed 0
+P1L marker:=shared AST v2 first-class registration
+shared first-class P1L registration:=Phase 8 integrated
+checker-local bootstrap:=removed
+P1L/P1 corpus:=14 / failed 0
+shared P1L compatibility corpus:=10 / failed 0
 validator pass != runtime binding|authority|RT:v
 ```
 
@@ -494,6 +496,7 @@ kdsl-r1c@0.1-draft:=adopted subordinate
 kdsl-p1l@0.1-draft:=adopted canonical structured contract / non-executable
 kdsl-p1@0.1-draft:=adopted subordinate serialization / non-executable
 P1L/P1 validator/round-trip:=Phase 7C first bounded slice integrated
+P1L shared AST v2 first-class registration:=Phase 8 integrated
 P1L/P1 runtime binding:=not implemented
 kdsl-packet@0.1-draft:=adopted authoring schema / non-executable
 kdsl-packet-normalization@0.1-draft:=adopted / non-executable

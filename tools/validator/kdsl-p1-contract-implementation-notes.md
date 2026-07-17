@@ -1,6 +1,6 @@
 # P1L / P1 Contract Validator Implementation Notes
 
-status: Phase 8 shared AST integration candidate
+status: Phase 8 shared AST integration integrated
 implementation_date: 2026-07-17
 schema_sources:
   - spec/adps/kdsl-p1l-contract-schema.md
@@ -11,13 +11,11 @@ lint_source:
 ## Components
 
 ```text
-kdsl_p1_contract.py
-  bounded P1L/P1 parser, model validation, canonical P1 rendering
-
 kdsl_parser_v2.py
   shared first-class P1L envelope registration
 
 kdsl_p1_contract.py
+  bounded P1L/P1 parser, model validation, canonical P1 rendering
   owns legacy colon-P1 rejection without parser-registration side effects
 
 kdsl_p1l.py / kdsl_p1.py / kdsl_p1_auto.py
@@ -105,7 +103,7 @@ no legacy loss=L/AP/H inference
 no K1/PF1 validation
 no runtime binding
 no executable transformer
-no Packet→P1L/P1 mapping
+no Packet normalized-state promotion
 no semantic equivalence proof
 ```
 
@@ -139,6 +137,19 @@ Packet Semantic Property: success
 ```
 
 Initial run #426 failed inside the new P1 corpus. The legacy colon syntax boundary was corrected without changing existing Packet or parser behavior; run #427 succeeded.
+
+Phase 8 integration evidence:
+
+```text
+implementation PR: 129
+source head: 3285995a4c31c749537e190956f53c38bf35c627
+squash commit: a9e27531b7dc2d9bca68de5284a76616956a7242
+workflow run: 29613070208 / #449
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+shared P1L compatibility corpus: 10 / failed 0
+```
 
 ## Phase 8 compatibility corpus
 

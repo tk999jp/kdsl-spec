@@ -125,6 +125,19 @@ BINDING.executable: false
 P1L valid/lint/round-trip pass != authority
 ```
 
+### P1L shared AST recognition
+
+```text
+P1L shared AST recognition:=typed AST v2が`P1L:`をfirst-class structural envelopeとして認識する状態
+```
+
+```text
+shared AST recognition != P1L schema validity
+shared AST recognition != runtime binding
+shared AST recognition != execution authority
+P1 compact serializationはdedicated scanner対象でありAST envelopeではない
+```
+
 ### P1
 
 ```text

@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase8-p1l-shared-ast-integration-candidate
+phase: phase8-p1l-shared-ast-integrated-closeout-candidate
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 128
-verified_main_head: 729f2000e1341dd9624f5d0f60cb9c0abcf040f0
+verified_main_head: a9e27531b7dc2d9bca68de5284a76616956a7242
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -92,7 +92,7 @@ Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
 Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
-Phase 8 shared AST v2 P1L first-class integration: candidate
+Phase 8 shared AST v2 P1L first-class integration: integrated / closeout candidate
 ```
 
 ## 5. Repository enforcement
@@ -112,13 +112,23 @@ deletions: restricted
 ## 6. Latest verified implementation
 
 ```text
-PR: 125
-source head: df86e547b63a0499c74f412118ed34df93d836c6
-squash commit: 222b8483ec12e09d5316a7124f3f611dbb5e507c
-workflow run: 29585279349 / #433
+PR: 129
+source head: 3285995a4c31c749537e190956f53c38bf35c627
+squash commit: a9e27531b7dc2d9bca68de5284a76616956a7242
+workflow run: 29613070208 / #449
 KDSL Validation: success
 Packet Semantic Property: success
 Packet P1 Normalization Property: success
+Phase 8 shared P1L compatibility corpus: 10 / failed 0
+```
+
+Phase 7 Packet→P1L/P1 implementation proof:
+
+```text
+PR: 125
+squash commit: 222b8483ec12e09d5316a7124f3f611dbb5e507c
+workflow run: 29585279349 / #433
+all required jobs: success
 ```
 
 Closeout alignment proof:
@@ -139,9 +149,10 @@ Verified current additions:
 
 ```text
 P1L/P1 contract corpus: 14 / failed 0
+P1L shared AST compatibility corpus: 10 / failed 0
 Packet→P1L/P1 normalization corpus: 17 / failed 0
-unified runners: 37
-unified expectations: 473 / failed 0
+unified runners: 38
+unified expectations: 483 / failed 0
 ```
 
 Corrective record:
@@ -151,6 +162,7 @@ Phase 7C run #426 failed→legacy colon classification correction→run #427 suc
 Phase 7D run #430/#431 unified failure→legacy structural helper import detected
 property checker migrated to NormalizationCompatibilityView→run #433 all jobs success
 Phase 7 closeout audit detected canonical glossary over-compression→canonical glossary restored / v2 detailed terms preserved→run #435 success
+Phase 8 branch diagnostics exposed runner self-match/newline/indentation generation defects before commit→clean runner generation and final cleanup→run #449 success
 ```
 
 ```text
@@ -169,7 +181,7 @@ P1L schema: kdsl-p1l@0.1-draft / adopted v2-draft
 P1 schema: kdsl-p1@0.1-draft / adopted subordinate serialization
 P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
-shared AST v2 P1L marker registration: first-class candidate / compatibility corpus required
+shared AST v2 P1L marker registration: first-class integrated / bootstrap removed / compatibility corpus 10 failed 0
 runtime binding: not implemented
 K1/PF1 canonical schema: absent
 BINDING.state: unbound
@@ -232,6 +244,8 @@ Parser ownership:
 ```text
 Packet P1 property checker uses NormalizationCompatibilityView
 legacy normalization structural helper consumers: none
+P1L shared parser registration: first-class integrated
+P1L checker-local bootstrap consumers: none
 shared parser adapter retirement remains complete
 ```
 
@@ -274,6 +288,7 @@ KDSL v2-draft specification repository
 R1 evidence/result-reporting specification
 CompactPrompt architecture
 typed AST v2 structural foundation
+P1L shared first-class AST envelope recognition
 P1L canonical v2-draft structured contract schema
 P1 subordinate compact serialization
 P1L/P1 bounded validator/round-trip first slice
@@ -296,9 +311,8 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: merge final status synchronization and close tracking issue #118
-P1: shared AST v2 first-class P1L integration only under separate compatibility review
-P2: K1/PF1 canonical runtime-control design only under separate approval
+P0: merge Phase 8 closeout alignment and close tracking issue #128
+P1: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
