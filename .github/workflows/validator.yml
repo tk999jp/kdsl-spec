@@ -53,3 +53,20 @@ jobs:
 
       - name: Run Packet semantic/property suite
         run: python tools/validator/run_packet_semantic_property_samples.py
+
+  packet-p1-normalization:
+    name: Packet P1 Normalization Property
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Run Packet P1 normalization corpus
+        run: python tools/validator/run_packet_p1_normalization_samples.py
