@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase6d-safety-semantics-migration-integrated
+phase: phase6d-safety-inheritance-graph-migration-integrated
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: 36dcdbedb717772dda618972d7c4eca09b41aa07
+verified_main_head: 01d9de06f6af12ae7b06ba35a83405457a447817
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -95,6 +95,7 @@ Phase 6D-7A Packet installer readiness: integrated
 Phase 6D-7B Packet installer removal: integrated
 Phase 6D-8A Safety Gate consumer contract/inventory: integrated
 Phase 6D-8B Safety semantics structural migration: integrated
+Phase 6D-8C Safety Gate inheritance/graph structural migration: integrated
 ```
 
 ## 5. Repository enforcement
@@ -116,23 +117,23 @@ deletions: restricted
 workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ```
 
-## 6. Latest integrated implementation
+## 6. Latest verified implementation
 
 ```text
-PR: 108
-source head: 5f429dc94078cb7af51da0162fb1a57bc76e1516
-squash commit: 36dcdbedb717772dda618972d7c4eca09b41aa07
-required check: KDSL Validation
-required check evidence: active Ruleset accepted squash merge
-workflow run ID: unavailable / GitHub connector repeated HTTP 502
-individual workflow job payload: unconfirmed
+PR: 110
+source head: 01abc0d87ee26ca4b6dc53e57ad432a30a6f5098
+squash commit: 01d9de06f6af12ae7b06ba35a83405457a447817
+workflow run: 29543232320 / #392
+KDSL Validation: success
+Packet Semantic Property: success
 ```
 
-Expected integrated suites under the required unified job:
+Verified suites:
 
 ```text
 Safety Gate consumer contract: 8 / failed 0
 Safety semantics migration: 4 / failed 0
+Safety inheritance/graph migration: 6 / failed 0
 Packet installer removal: 4 / failed 0
 Packet semantic consumer contract: 10 / failed 0
 Packet semantic consumer migration: 4 / failed 0
@@ -143,18 +144,18 @@ Normalization consumer contract: 10 / failed 0
 Normalization consumer migration: 3 / failed 0
 adapter inventory: 4 / failed 0
 consumer matrix: 5 / failed 0
-unified runners: 32
-unified expectations: 423 / failed 0
+unified runners: 33
+unified expectations: 429 / failed 0
 ```
 
-Evidence interpretation:
+Corrective evidence:
 
 ```text
-run_all_samples.py includes 32 runners
-new migration runner contributes 4 expectations
-unified runner fails on missing summary/nonzero/failed case
-Ruleset-required KDSL Validation accepted before merge
-exact run number and separate job payload are not inferred
+run #391: failure
+cause: migration fixture used evidence:none, which is nonblank by existing contract
+fix: fixture changed to actual blank evidence
+implementation semantics changed: no
+run #392: success
 ```
 
 ```text
@@ -230,30 +231,38 @@ direct adapter installer: absent
 consumer contract/inventory: integrated
 ```
 
-Safety semantics consumer:
+Migrated Safety Gate consumers:
 
 ```text
-file: kdsl_safety_semantics.py
-structural extraction: SafetyGateCompatibilityView
-legacy structural imports from kdsl_safety_gate: removed
-semantic requirement/atom/scope logic: unchanged
-migration corpus: integrated
-```
+kdsl_safety_semantics.py:
+  structural extraction: SafetyGateCompatibilityView
+  semantic requirement/atom/scope logic: unchanged
 
-Remaining helper consumers:
-
-```text
 kdsl_safety_gate_inheritance.py:
-  extract_gate_block/parse_registry → pending migration
-  REGISTRY/aggregate_state/authority_is_unverified/is_blank → retain temporarily
+  structural extraction: SafetyGateCompatibilityView
+  transition/scope/evidence/authority logic: unchanged
 
 kdsl_safety_gate_graph.py:
-  extract_gate_block/parse_registry → pending migration
-  REGISTRY/aggregate_state/authority_is_unverified/is_blank → retain temporarily
+  structural extraction: SafetyGateCompatibilityView
+  graph order/transition/scope/evidence/authority logic: unchanged
+```
 
+Temporarily retained semantic utilities:
+
+```text
+REGISTRY
+aggregate_state
+authority_is_unverified
+is_blank
+```
+
+Remaining structural helper consumer:
+
+```text
 kdsl_r1c_optional.py:
-  embedded parse_registry → pending migration
-  constants/authority_is_unverified/is_blank → retain temporarily
+  parse_registry → pending migration
+  KNOWN_IDS/KNOWN_STATES/REGISTRY/REQUIRED_FIELDS → retain temporarily
+  authority_is_unverified/is_blank → retain temporarily
 ```
 
 ## 9. Adapter retirement gates
@@ -270,7 +279,7 @@ G8 Packet installer readiness: satisfied
 G9 Packet installer removal: satisfied
 G10 Safety Gate consumer contract/inventory: satisfied
 G11 Safety semantics structural migration: satisfied
-G12 Safety Gate inheritance/graph structural migration: pending
+G12 Safety Gate inheritance/graph structural migration: satisfied
 G13 R1C optional SAFETY_GATES structural migration: pending
 G14 semantic utility location/retention decision: pending
 G15 parity-only legacy helper strategy: pending
@@ -284,7 +293,8 @@ Normalization installer removal: complete
 Packet installer removal: complete
 direct adapter imports: none
 Safety semantics migration: complete
-remaining Safety Gate structural consumers: 3
+Safety inheritance/graph migration: complete
+remaining Safety Gate structural consumers: 1
 kdsl_parser_adapter.py file: retained
 adapter file retirement: blocked
 adapter file removal: not performed
@@ -346,7 +356,6 @@ FLOW-CHANGE != edit authority
 ## 13. Known gaps
 
 ```text
-Safety Gate inheritance/graph structural migration
 R1C optional SAFETY_GATES structural migration
 Safety Gate semantic utility location/retention decision
 parity-only legacy helper strategy
@@ -371,7 +380,7 @@ all active checker structural inputs migrated to AST v2 CompatibilityViews
 Normalization and Packet runtime consumers migrated
 Normalization and Packet direct installers removed
 Safety Gate consumer contract frozen
-Safety semantics structural consumer migrated
+Safety semantics/inheritance/graph structural consumers migrated
 ```
 
 Do not present as:
@@ -390,21 +399,20 @@ adapter-retirement-ready repository
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-8C add inheritance/graph consumer contract evidence
-P1: migrate only inheritance/graph structural extraction
-P2: retain semantic utility/constants temporarily
-P3: Phase 6D-8D migrate R1C optional embedded SAFETY_GATES parsing
-P4: decide semantic utility location/retention
-P5: decide parity-only helpers and adapter-file retirement last
+P0: Phase 6D-8D freeze R1C optional embedded SAFETY_GATES contract
+P1: migrate parse_safety_gates_model to SafetyGateCompatibilityView
+P2: retain constants/semantic utilities temporarily
+P3: decide semantic utility location/retention
+P4: decide parity-only helpers and adapter-file retirement last
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-Safety Gate inheritance/graph/optional behavior changes
+R1C optional evidence/authority/output behavior changes
+Safety Gate inheritance/graph behavior changes
 unknown structural consumer appears
-semantic/property exit behavior changes
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
