@@ -1,8 +1,9 @@
 # Phase 8 — Shared AST v2 P1L First-Class Integration
 
-status: implementation-candidate
+status: validation-candidate
 tracking_issue: 128
 base: main@220547f0aa8f5c5ef95dec5387f7942f50fc9511
+implementation_head: fac700a82986144d49d8077c078e75f4c7b5d0ef
 
 ## Goal
 
@@ -26,6 +27,17 @@ P1 compact line remains dedicated-scanner input, not AST envelope
 legacy colon P1 remains blocked
 Packet P1 normalization/property consumers remain unchanged semantically
 ```
+
+## Targeted validation
+
+```text
+Phase 8 shared AST compatibility corpus: success
+P1L/P1 contract corpus: 14 / failed 0
+Packet→P1L/P1 normalization corpus: 17 / failed 0
+clean branch implementation job: 29612877656 / success
+```
+
+The targeted result is implementation evidence only. Required repository checks must still run on the review head before merge.
 
 ## Non-executable boundary
 
