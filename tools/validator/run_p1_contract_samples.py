@@ -4,7 +4,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from kdsl_p1_contract import (
+from kdsl_p1_bootstrap import (
     compare_models,
     parse_contract,
     parse_p1_line,
@@ -197,7 +197,7 @@ def main():
         results.append(
             run_cli(
                 'mixed P1L and P1 source rejected',
-                'kdsl_p1_contract.py',
+                'kdsl_p1_auto.py',
                 mixed,
                 2,
                 ('mixed P1L and P1 contract sources are not allowed',),
