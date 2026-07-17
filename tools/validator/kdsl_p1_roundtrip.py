@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from kdsl_p1_bootstrap import (
+from kdsl_p1_contract import (
     P1_SCHEMA_ID,
     P1L_SCHEMA_ID,
     compare_models,

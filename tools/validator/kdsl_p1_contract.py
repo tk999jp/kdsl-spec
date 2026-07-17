@@ -313,9 +313,10 @@ def parse_p1_line(line: str) -> ContractParseResult:
 
 def split_p1_segments(line: str) -> list[tuple[str, str]]:
     stripped = line.strip()
-    if not stripped.startswith('P1|'):
-        if stripped.startswith('P1|M:') or '|T:' in stripped:
+    if stripped.startswith('P1|') and '|SCHEMA=' not in stripped:
+        if re.search(r'(?:^|\|)[A-Z][A-Z0-9]*:', stripped[3:]):
             raise ValueError('legacy operational P1 colon syntax is not kdsl-p1@0.1-draft')
+    if not stripped.startswith('P1|'):
         raise ValueError('P1 compact contract must start with P1|')
 
     parts: list[str] = []

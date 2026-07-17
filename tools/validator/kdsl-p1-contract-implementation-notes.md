@@ -1,6 +1,6 @@
 # P1L / P1 Contract Validator Implementation Notes
 
-status: Phase 7C first slice integrated
+status: Phase 8 shared AST integration candidate
 implementation_date: 2026-07-17
 schema_sources:
   - spec/adps/kdsl-p1l-contract-schema.md
@@ -14,9 +14,11 @@ lint_source:
 kdsl_p1_contract.py
   bounded P1L/P1 parser, model validation, canonical P1 rendering
 
-kdsl_p1_bootstrap.py
-  checker-local P1L marker registration into AST v2
-  shared parser core is not modified in the first slice
+kdsl_parser_v2.py
+  shared first-class P1L envelope registration
+
+kdsl_p1_contract.py
+  owns legacy colon-P1 rejection without parser-registration side effects
 
 kdsl_p1l.py / kdsl_p1.py / kdsl_p1_auto.py
   CLI target wrappers
@@ -64,16 +66,16 @@ Corpus:
 
 ## Parser architecture
 
-Phase 7C intentionally avoids changing shared AST v2 parser ownership.
+Phase 8 promotes P1L marker recognition into shared AST v2 after compatibility and consumer review.
 
 ```text
-checker process
-→ kdsl_p1_bootstrap registers P1L marker
-→ DocumentNodeV2 raw-envelope parse
-→ P1L schema-specific model validation
+shared DocumentNodeV2
+→ recognizes P1L in raw-envelope context
+→ preserves active-document fence isolation
+→ P1L schema-specific model validation remains in kdsl_p1_contract.py
 ```
 
-This bounded registration is transitional. A later parser-integration phase may make P1L a shared first-class envelope only after compatibility and consumer review.
+P1 compact serialization remains a dedicated delimiter-aware scanner and is not promoted to an AST envelope.
 
 P1 is a one-line ordered JSON serialization and is parsed by a dedicated delimiter-aware scanner. `|` inside JSON strings is not treated as a segment separator.
 
@@ -137,3 +139,16 @@ Packet Semantic Property: success
 ```
 
 Initial run #426 failed inside the new P1 corpus. The legacy colon syntax boundary was corrected without changing existing Packet or parser behavior; run #427 succeeded.
+
+## Phase 8 compatibility corpus
+
+```text
+shared P1L marker registration
+canonical field-order projection
+active-document fence isolation
+duplicate envelope detection
+legacy colon-P1 rejection ownership
+P1 compact non-envelope boundary
+bootstrap file/import inventory
+known consumer migration
+```

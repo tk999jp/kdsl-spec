@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from kdsl_p1_bootstrap import (
+from kdsl_p1_contract import (
     P1L_SCHEMA_ID,
     P1_SCHEMA_ID,
     ContractParseResult,

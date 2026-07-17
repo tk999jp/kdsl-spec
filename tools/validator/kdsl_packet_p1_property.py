@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from kdsl_p1_bootstrap import ContractParseResult, compare_models, parse_p1_line, validate_model
+from kdsl_p1_contract import ContractParseResult, compare_models, parse_p1_line, validate_model
 from kdsl_packet_normalize import collect_data, load_text
 from kdsl_packet_normalize_p1 import (
     NORMALIZATION_SCHEMA,

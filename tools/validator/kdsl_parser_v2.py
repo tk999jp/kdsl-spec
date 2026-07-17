@@ -10,6 +10,7 @@ LIST_ITEM_RE = re.compile(r'^-\s*(.*)$')
 FENCE_RE = re.compile(r'^\s*```')
 
 KNOWN_ENVELOPES = {
+    'P1L',
     'KDSL_RESULT',
     'PACKET_DRAFT',
     'NORMALIZATION_DRAFT',
