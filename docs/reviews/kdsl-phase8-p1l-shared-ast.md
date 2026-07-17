@@ -5,6 +5,7 @@ review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 128
 implementation_pull_request: 129
+closeout_pull_request: 130
 implementation_source_head: 3285995a4c31c749537e190956f53c38bf35c627
 implementation_squash_commit: a9e27531b7dc2d9bca68de5284a76616956a7242
 workflow_run_id: 29613070208
