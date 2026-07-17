@@ -134,7 +134,7 @@ Project Status:
 | `spec/registry/kdsl-packet-base-registry.md` | Registry draft | Packet normalization baseline IDs | v2 draft adopted / non-executable |
 | `spec/registry/kdsl-packet-task-registry.md` | Registry draft | Packet task-class IDs / minimum gate sets | v2 draft adopted / non-executable |
 | `spec/registry/kdsl-packet-flow-registry.md` | Registry draft | Packet semantic flow opcodes | v2 draft adopted / non-executable |
-| `spec/adps/README.md` | ADPS index | P1L/P1 schema・lint・境界の参照索引 | v2 draft adopted index |
+| `spec/adps/README.md` | ADPS index | P1L/P1 schema・lint・validator・境界の参照索引 | v2 draft adopted index |
 | `spec/adps/kdsl-p1l-contract-schema.md` | ADPS contract schema | lossless structured normalized contract / authority・binding分離 | v2 draft adopted / non-executable |
 | `spec/adps/kdsl-p1-compact-contract-schema.md` | ADPS compact serialization | canonical P1Lのreversible compact serialization | v2 draft adopted subordinate / non-executable |
 | `spec/packet/kdsl-packet-schema.md` | Packet authoring schema draft | PACKET_DRAFT fields / normalization / authority boundary | v2 draft adopted / non-executable |
@@ -156,7 +156,7 @@ Project Status:
 | `spec/glossary-v2-draft.md` | Glossary draft | KDSL-CP/Lexicon/SG/R1C/Packet/P1L/P1 draft terms | v2 draft |
 | `templates/*` | Templates | 再利用部品 | No |
 | `examples/*` | Examples | 理解補助/運用例 | No |
-| `tools/validator/*` | Tools | experimental heuristic lint helpers | No |
+| `tools/validator/*` | Tools | experimental heuristic lint/parser/round-trip helpers | No |
 | `docs/reviews/*` | Review | 判断記録 | No |
 
 ## 4. Canonical ownership
@@ -270,6 +270,9 @@ subordinate P1:
 
 lint:
   spec/lint/kdsl-p1-p1l-lint.md
+
+validator notes:
+  tools/validator/kdsl-p1-contract-implementation-notes.md
 ```
 
 Ownership rules:
@@ -294,6 +297,16 @@ P1L/P1 lint/round-trip pass != authority
 profile completion != inference
 all authority rails explicit
 BINDING.executable:false
+```
+
+Validator state:
+
+```text
+P1L/P1 parser/validator/round-trip:=Phase 7C first bounded slice integrated
+P1L marker:=checker-local AST v2 registration
+shared AST v2 first-class P1L registration:=not integrated
+corpus:=14 / failed 0
+validator pass != runtime binding/authority/RT:v
 ```
 
 Legacy boundary:
@@ -408,6 +421,7 @@ Core/Profile/R1/Bridge meaning > Packet schema > normalization contract/lint > E
 NORMALIZATION_DRAFT:=non-executable mapping/loss/round-trip evidence
 KDSL_PROMPT_PREVIEW != KDSL_PROMPT
 P1/P1L target schema:=adopted
+P1/P1L validator first slice:=integrated
 Packet→P1L/P1 mapping/integration未実装→TARGET remains blocked / preview禁止
 semantic_equivalence:not_proven固定
 AUTHORITY.execution_authority:none固定
@@ -455,6 +469,7 @@ current Packet:
   normalization contract/lint:=v2-draft adopted
   normalization validator/mapper/round-trip proof:=not implemented
   P1L/P1 schema:=v2-draft adopted
+  P1L/P1 validator:=first bounded slice integrated
   Packet→P1L/P1 integration:=not implemented
   executable:=no
   PKT:v1使用禁止
@@ -488,6 +503,7 @@ Registry IDで保護語置換禁止
 P1でP1L required meaning省略禁止
 repository現在状態はdocs/project-status.mdと矛盾禁止
 example/template/designを正本扱禁止
+validator/toolをauthority/RT:v証明扱い禁止
 ```
 
 ## 6. Update policy
@@ -515,6 +531,8 @@ Packet adopted ID/opcode意味変更→breaking候補または新ID必須
 Packet authority/normalization非実行境界弱化→breaking/prohibited
 normalization schema/map/loss/round-trip意味変更→breaking候補
 P1/P1L unresolved→schema adopted変更:=Phase 7B approved adoption
+P1L/P1 validator未実装→first slice変更:=Phase 7C integrated
+shared parser marker registration変更→separate compatibility/consumer review必須
 Packet P1/P1L target blocked→resolved変更:=separate mapping/property adoption必須
 example追加→patch候補
 validator heuristic改善→patch/compatible候補
@@ -597,7 +615,8 @@ canonical R1 replacement:=none
 kdsl-p1l@0.1-draft:=v2-draft canonical structured contract adopted / non-executable
 kdsl-p1@0.1-draft:=v2-draft subordinate compact serialization adopted / non-executable
 P1L/P1 lint:=v2-draft adopted
-P1L/P1 parser/validator/round-trip runner:=not implemented
+P1L/P1 parser/validator/round-trip runner:=Phase 7C first bounded slice integrated
+P1L shared AST v2 first-class registration:=not integrated
 P1L/P1 runtime binding:=not implemented
 kdsl-packet@0.1-draft:=v2-draft authoring schema adopted
 Packet BASE/TASK/FLOW registries:=v2-draft adopted
