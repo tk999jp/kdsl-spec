@@ -1,6 +1,6 @@
 # Phase 8 — Shared AST v2 P1L First-Class Integration Review
 
-status: integrated / closeout merged / final status patch pending
+status: integrated / closeout merged / final status validation candidate
 review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 128
@@ -11,6 +11,7 @@ implementation_source_head: 3285995a4c31c749537e190956f53c38bf35c627
 implementation_squash_commit: a9e27531b7dc2d9bca68de5284a76616956a7242
 closeout_alignment_head: 9613cc1d4943da9be446104dd740f705d3dd5b97
 closeout_squash_commit: cdb907d139bf562bc6cca9c4fdb436d12d802ea6
+final_status_patch_head: 4804b6e224174deb9eb5fa345322c20c89a226ba
 workflow_run_id: 29613070208
 workflow_run_number: 449
 workflow_conclusion: success
@@ -19,6 +20,8 @@ closeout_targeted_conclusion: success
 closeout_workflow_run_id: 29613621345
 closeout_workflow_run_number: 455
 closeout_workflow_conclusion: success
+final_status_targeted_run_id: 29614006521
+final_status_targeted_conclusion: success
 
 ## 1. Goal
 
@@ -87,7 +90,16 @@ Packet Semantic Property: success
 Packet P1 Normalization Property: success
 ```
 
-Final project-status review must still pass repository-required checks before Phase 8 is marked complete.
+Final-status targeted verification:
+
+```text
+workflow run: 29614006521
+shared P1L compatibility corpus: success
+P1L/P1 contract corpus: success
+Packet→P1L/P1 normalization corpus: success
+```
+
+Required repository checks must still succeed on the final-status review head before Phase 8 is closed.
 
 ## 5. Corrective history
 
