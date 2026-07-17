@@ -5,19 +5,10 @@ import json
 import re
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from typing import Any
 
 from kdsl_p1_bootstrap import ContractParseResult, compare_models, parse_p1_line, validate_model
-from kdsl_packet_normalization import (
-    PACKET_SOURCE_FIELDS,
-    REQUIRED_KEYS,
-    extract_multiline,
-    parse_list_records,
-    parse_nested_lists,
-    parse_nested_scalars,
-)
 from kdsl_packet_normalize import collect_data, load_text
 from kdsl_packet_normalize_p1 import (
     NORMALIZATION_SCHEMA,
@@ -35,6 +26,40 @@ from kdsl_parser_v2_normalization_compat import (
     compare_normalization_legacy_v2,
 )
 
+REQUIRED_KEYS = (
+    'SCHEMA',
+    'STATUS',
+    'SOURCE',
+    'TARGET',
+    'MAP',
+    'PRESERVE',
+    'UNRESOLVED',
+    'LOSS',
+    'ROUND_TRIP',
+    'AUTHORITY',
+    'OUTPUT',
+)
+PACKET_SOURCE_FIELDS = frozenset(
+    {
+        'SCHEMA',
+        'STATUS',
+        'BASE',
+        'TASK',
+        'SRC',
+        'READ',
+        'TGT',
+        'OBS',
+        'GOAL',
+        'NON',
+        'SG',
+        'STOP',
+        'FLOW',
+        'VERIFY',
+        'OUT',
+        'AUTHORITY',
+        'NORMALIZE',
+    }
+)
 MAP_MODES = {
     source: (
         'structured'
@@ -80,10 +105,6 @@ def generate_normalization(path: str) -> tuple[int, str]:
     return proc.returncode, proc.stdout.strip() or proc.stderr.strip()
 
 
-def parse_output_preview(block: dict[str, Any]) -> str:
-    return extract_multiline(block, 'preview')
-
-
 def validate_preview(
     kind: str,
     marker: str,
@@ -113,8 +134,9 @@ def validate_preview(
         validation = ContractParseResult(kind='P1L', model=model)
         validate_model(model, validation)
         errors.extend('P1L preview model: ' + item for item in validation.errors)
-        errors.extend(compare_models(expected_model, model))
-        if not validation.errors and not compare_models(expected_model, model):
+        mismatches = compare_models(expected_model, model)
+        errors.extend(mismatches)
+        if not validation.errors and not mismatches:
             info.append('P1L preview canonical projection preserved')
         return
 
@@ -136,9 +158,9 @@ def validate_preview(
         return
     parsed = parse_p1_line(p1_line)
     errors.extend('P1 preview contract: ' + item for item in parsed.errors)
-    if parsed.model is not None:
-        errors.extend(compare_models(expected_model, parsed.model))
-    if not parsed.errors and parsed.model is not None and not compare_models(expected_model, parsed.model):
+    mismatches = compare_models(expected_model, parsed.model) if parsed.model is not None else []
+    errors.extend(mismatches)
+    if not parsed.errors and parsed.model is not None and not mismatches:
         info.append('P1 preview serialization reconstructs canonical P1L projection')
 
 
@@ -165,7 +187,6 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
         return errors, info
 
     values = view.values
-    blocks = view.legacy_blocks
     key_order = [key for key, _, _ in view.entries]
     if tuple(key_order) != REQUIRED_KEYS:
         errors.append('normalization required field order mismatch')
@@ -174,7 +195,7 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
     if values.get('STATUS') != 'non-executable':
         errors.append('normalization status must be non-executable')
 
-    source, source_duplicates = parse_nested_scalars(blocks.get('SOURCE', {}))
+    source, source_duplicates = view.nested_scalars('SOURCE')
     if source_duplicates:
         errors.append('duplicate SOURCE fields: ' + ', '.join(source_duplicates))
     expected_digest = 'sha256:' + hashlib.sha256(source_text.encode('utf-8')).hexdigest()
@@ -188,7 +209,7 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
         if source.get(key) != expected:
             errors.append(f'SOURCE.{key} mismatch')
 
-    target, target_duplicates = parse_nested_scalars(blocks.get('TARGET', {}))
+    target, target_duplicates = view.nested_scalars('TARGET')
     if target_duplicates:
         errors.append('duplicate TARGET fields: ' + ', '.join(target_duplicates))
     kind = data['normalize_target']
@@ -202,7 +223,7 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
         if target.get(key) != expected:
             errors.append(f'TARGET.{key} mismatch')
 
-    map_records = parse_list_records(blocks.get('MAP', {}))
+    map_records = view.list_records('MAP')
     map_by_source: dict[str, dict[str, str]] = {}
     for record in map_records:
         source_name = record.get('source', '')
@@ -227,7 +248,7 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
     if 'public_repo/destructive_ops explicitly narrowed to forbid' not in authority_evidence:
         errors.append('AUTHORITY safety-floor mapping evidence missing')
 
-    preserve = parse_nested_lists(blocks.get('PRESERVE', {}))
+    preserve = view.nested_lists('PRESERVE')
     expected_preserve = {
         'exact_strings': exact_strings(data),
         'protected_wording': protected_wording(expected_model),
@@ -238,18 +259,14 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
         if actual != expected:
             errors.append('PRESERVE.' + key + ' missing or changed')
 
-    unresolved = parse_list_records(blocks.get('UNRESOLVED', {}))
-    loss = parse_list_records(blocks.get('LOSS', {}))
-    if blocks.get('UNRESOLVED', {}).get('value') == '[]':
-        unresolved = []
-    if blocks.get('LOSS', {}).get('value') == '[]':
-        loss = []
+    unresolved = [] if values.get('UNRESOLVED') == '[]' else view.list_records('UNRESOLVED')
+    loss = [] if values.get('LOSS') == '[]' else view.list_records('LOSS')
     if unresolved:
         errors.append('resolved P1L/P1 normalization must have UNRESOLVED:[]')
     if loss:
         errors.append('resolved P1L/P1 normalization must have LOSS:[]')
 
-    round_trip, _ = parse_nested_scalars(blocks.get('ROUND_TRIP', {}))
+    round_trip, _ = view.nested_scalars('ROUND_TRIP')
     if round_trip != {
         'state': 'structural_pass',
         'structural_equivalence': 'pass',
@@ -257,14 +274,14 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
     }:
         errors.append('ROUND_TRIP boundary mismatch')
 
-    authority, _ = parse_nested_scalars(blocks.get('AUTHORITY', {}))
+    authority, _ = view.nested_scalars('AUTHORITY')
     if authority != {'source_rails_preserved': 'true', 'execution_authority': 'none'}:
         errors.append('normalization AUTHORITY boundary mismatch')
 
-    output, _ = parse_nested_scalars(blocks.get('OUTPUT', {}))
+    output, _ = view.nested_scalars('OUTPUT')
     if output.get('executable') != 'false':
         errors.append('OUTPUT.executable must be false')
-    preview = parse_output_preview(blocks.get('OUTPUT', {}))
+    preview = view.multiline('OUTPUT', 'preview')
     if not preview:
         errors.append('resolved P1L/P1 normalization requires preview')
     else:
@@ -294,6 +311,7 @@ def validate_property(source_text: str, normalization_text: str) -> tuple[list[s
                 'P1L/P1 preview remains non-executable',
                 'Packet source remains not_normalized',
                 'semantic equivalence remains not_proven',
+                'NormalizationCompatibilityView structural path used',
             ]
         )
     return errors, info
