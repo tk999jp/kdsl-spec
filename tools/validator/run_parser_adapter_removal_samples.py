@@ -11,7 +11,6 @@ from kdsl_parser_adapter_inventory import classify, find_python_files
 from kdsl_parser_adapter_matrix import build_matrix
 
 ROOT = Path(__file__).resolve().parent
-REPO_ROOT = ROOT.parent.parent
 ADAPTER = ROOT / 'kdsl_parser_adapter.py'
 INSTALLERS = {
     'install_r1c',
@@ -45,15 +44,6 @@ def loaded_installer_names(path: Path) -> set[str]:
     return found
 
 
-def defined_functions(path: Path) -> set[str]:
-    tree = ast.parse(path.read_text(encoding='utf-8'), filename=str(path))
-    return {
-        node.name
-        for node in tree.body
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-    }
-
-
 def record(name: str, ok: bool, detail: str = '') -> bool:
     print(('PASS' if ok else 'FAIL') + ': ' + name)
     if detail:
@@ -72,12 +62,11 @@ def repository_snapshot(tmp: Path) -> Path:
 def main() -> int:
     results: list[bool] = []
 
-    adapter_functions = defined_functions(ADAPTER)
     results.append(
         record(
-            'adapter file exposes only the known installer functions',
-            adapter_functions == INSTALLERS,
-            'functions=' + repr(sorted(adapter_functions)),
+            'parser adapter file is absent',
+            not ADAPTER.exists(),
+            'path=' + str(ADAPTER),
         )
     )
 
@@ -85,7 +74,7 @@ def main() -> int:
     direct_importers = {
         path.name: sorted(imports_from(path, 'kdsl_parser_adapter'))
         for path in top_level_files
-        if path != ADAPTER and imports_from(path, 'kdsl_parser_adapter')
+        if imports_from(path, 'kdsl_parser_adapter')
     }
     results.append(
         record(
@@ -98,11 +87,11 @@ def main() -> int:
     installer_consumers = {
         path.name: sorted(loaded_installer_names(path))
         for path in top_level_files
-        if path != ADAPTER and loaded_installer_names(path)
+        if loaded_installer_names(path)
     }
     results.append(
         record(
-            'no installer function is loaded outside the adapter module',
+            'no installer function is loaded after adapter deletion',
             not installer_consumers,
             'consumers=' + repr(installer_consumers),
         )
@@ -116,7 +105,7 @@ def main() -> int:
     }
     results.append(
         record(
-            'parity modules are independent of kdsl_parser_adapter',
+            'parity modules remain independent after adapter deletion',
             len(parity_files) >= 5 and not parity_importers,
             'parity_files=' + repr([path.name for path in parity_files])
             + ' importers=' + repr(parity_importers),
@@ -131,7 +120,7 @@ def main() -> int:
 
     results.append(
         record(
-            'repository inventory has no direct or legacy structural consumers',
+            'repository inventory remains direct and structural empty',
             not inventory.errors
             and not inventory.direct_adapter
             and not inventory.legacy_consumers
@@ -145,7 +134,7 @@ def main() -> int:
     decisions = {item.decision for item in matrix.records}
     results.append(
         record(
-            'consumer matrix has no blocking record and retains semantic APIs only',
+            'consumer matrix remains semantic-only and nonblocking',
             not matrix.errors
             and not matrix.blocking_records
             and bool(matrix.records)
@@ -184,7 +173,7 @@ def guarded(name, *args, **kwargs):
 builtins.__import__ = guarded
 for module in MODULES:
     __import__(module)
-print("adapter-deny import guard: pass")
+print("post-deletion adapter-deny import guard: pass")
 '''
     proc = subprocess.run(
         [
@@ -198,8 +187,9 @@ print("adapter-deny import guard: pass")
     )
     results.append(
         record(
-            'key runtime modules import while adapter imports are denied',
-            proc.returncode == 0 and 'adapter-deny import guard: pass' in proc.stdout,
+            'key runtime modules import after adapter deletion',
+            proc.returncode == 0
+            and 'post-deletion adapter-deny import guard: pass' in proc.stdout,
             'exit=' + str(proc.returncode)
             + ' stdout=' + repr(proc.stdout.strip())
             + ' stderr=' + repr(proc.stderr.strip()),
@@ -211,10 +201,10 @@ print("adapter-deny import guard: pass")
     print('  total: ' + str(len(results)))
     print('  failed: ' + str(failed))
     print('RETIREMENT:')
-    print('  state: ' + ('blocked' if failed else 'bounded-removal-trial-candidate'))
+    print('  state: ' + ('blocked' if failed else 'post-deletion-proof-candidate'))
     print(
-        'BOUNDARY: readiness pass != adapter deletion/post-deletion proof/'
-        'semantic equivalence/complete safety proof/U approval/RT:v/authority/release readiness'
+        'BOUNDARY: post-deletion pass != semantic equivalence/complete safety proof/'
+        'U approval/RT:v/authority/release readiness'
     )
     return 1 if failed else 0
 
