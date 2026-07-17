@@ -382,3 +382,135 @@ v2-draft:=優先設計線
 ```
 
 この状態はtag/release/Release Assets操作を許可しない。
+
+## 9. Preserved detailed v2 terms
+
+### Guard / Check
+
+```text
+Guard:=禁止/未確認扱い/safety gateを記述するblock
+Check:=出力直前のself-lint block
+Check != chain-of-thought disclosure request
+```
+
+### Safety Gate IDs
+
+```text
+SG-DESIGN
+SG-SCOPE
+SG-EVIDENCE
+SG-RUNTIME
+SG-AUTHORITY
+SG-ROLLBACK
+SG-PUBLIC
+SG-DATA
+SG-KDSL-DP
+SG-STOP
+```
+
+一字SG aliasは未定義。
+
+### Safety Gate inheritance
+
+```text
+parent hold/blocked→child Phase/Sliceへ継承必須
+scope拡大→satisfied再評価
+summary/view→hold/blocked保持
+parent na→child自動na禁止
+```
+
+### Safety Gate composition
+
+```text
+specialized gate != broader gate解除
+single gate satisfied != composite safety satisfied
+any blocked→operation blocked
+no blocked + any hold→operation hold
+all applicable satisfied→gate prerequisites satisfied
+gate prerequisites satisfied != automatic execution permission
+```
+
+Representative composition:
+
+```text
+rollback/revert/未push破棄
+→ SG-DESIGN/SG-ROLLBACK/SG-SCOPE/SG-EVIDENCE/SG-AUTHORITY/SG-STOP
+
+runtime claim/RT:v
+→ SG-EVIDENCE/SG-RUNTIME
+```
+
+### Typed non-substitution
+
+```text
+U承認 != runtime evidence
+runtime evidence != commit/push/release authority
+CI/validator pass != semantic equivalence
+CI/validator pass != U承認
+NEXT != execution authority
+COMMIT.proposed != commit authority
+satisfied gate != unrelated gate satisfaction
+```
+
+### SG ID-only compression
+
+```text
+SG ID-only compression:=SG IDだけでcritical natural-language safety wordingを置換すること
+current rule: 禁止
+current Full KDSL:=SG ID + complete protected wording
+```
+
+### Packet registries
+
+```text
+BASE registry: kdsl-packet-base@0.1-draft
+BASE-DESIGN-ONLY|BASE-KDSL-DEV|BASE-ADPS-P1
+BASE ID != permission|normalization completion
+
+TASK registry: kdsl-packet-task@0.1-draft
+TASK ID selects minimum gate expectations but does not satisfy gates or grant authority
+
+FLOW registry: kdsl-packet-flow@0.1-draft
+FLOW opcode != command|authority
+one-character opcode未定義
+```
+
+### KDSL_PROMPT_PREVIEW
+
+```text
+KDSL_PROMPT_PREVIEW:=Full KDSL target mappingを確認する非実行preview marker
+KDSL_PROMPT_PREVIEW != KDSL_PROMPT
+AI coding toolへ実装契約として直接投入禁止
+```
+
+### Normalization loss
+
+```text
+render_only:=表示差のみ候補
+critical:=scope/safety/authority/order/exact string等の損失
+critical lossまたはblocked unresolved→target preview/execution禁止
+```
+
+### Packet NORMALIZE
+
+```text
+NORMALIZE:=PacketからFull KDSLまたはP1L/P1への別artifact変換要求
+required:true固定
+Packet内state:not_normalized固定
+KDSL-DP→P1L/P1正規化必須
+P1L/P1 schema adoption alone != Packet mapping completion
+normalization未検証→実行禁止
+```
+
+### R1C required boundary
+
+```text
+KDSL_RESULT envelope保持
+STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
+short field alias禁止
+required field省略禁止
+implicit default禁止
+round-trip不成立→Full R1 fallback
+RT:v/NEXT/COMMIT意味変更禁止
+validator pass != semantic equivalence|canonical R1適合証明
+```
