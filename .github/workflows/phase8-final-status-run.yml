@@ -1,0 +1,102 @@
+name: Phase 8 Final Status Runner
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/kdsl-phase8-final-status
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Finalize Phase 8 operational status
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/project-status.md')
+          content = path.read_text(encoding='utf-8')
+
+          def replace_once(old, new):
+              global content
+              count = content.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected one replacement, found {count}: {old!r}')
+              content = content.replace(old, new, 1)
+
+          replace_once(
+              'phase: phase8-p1l-shared-ast-integrated-closeout-candidate',
+              'phase: phase8-p1l-shared-ast-complete',
+          )
+          replace_once(
+              'verified_main_head: a9e27531b7dc2d9bca68de5284a76616956a7242',
+              'verified_main_head: cdb907d139bf562bc6cca9c4fdb436d12d802ea6',
+          )
+          replace_once(
+              'Phase 8 shared AST v2 P1L first-class integration: integrated / closeout candidate',
+              'Phase 8 shared AST v2 P1L first-class integration: complete',
+          )
+          replace_once(
+              '''Phase 7 Packet→P1L/P1 implementation proof:
+
+```text
+PR: 125''',
+              '''Phase 8 closeout proof:
+
+```text
+PR: 130
+source head: 9613cc1d4943da9be446104dd740f705d3dd5b97
+squash commit: cdb907d139bf562bc6cca9c4fdb436d12d802ea6
+workflow run: 29613621345 / #455
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+```
+
+Phase 7 Packet→P1L/P1 implementation proof:
+
+```text
+PR: 125''',
+          )
+          replace_once(
+              '''P0: merge Phase 8 closeout alignment and close tracking issue #128
+P1: K1/PF1 canonical runtime-control design only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+              '''P0: close tracking issue #128 after final-status PR merge
+P1: K1/PF1 canonical runtime-control design only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+          )
+
+          path.write_text(content, encoding='utf-8')
+          Path('.github/workflows/phase8-final-status-run.yml').unlink()
+          PY
+
+      - name: Run bounded final-status verification
+        run: |
+          python tools/validator/run_p1_shared_ast_samples.py
+          python tools/validator/run_p1_contract_samples.py
+          python tools/validator/run_packet_p1_normalization_samples.py
+
+      - name: Commit final status
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Docs: finalize Phase 8 project status"
+          git push origin HEAD:agent/kdsl-phase8-final-status
