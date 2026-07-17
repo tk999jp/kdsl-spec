@@ -4,7 +4,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from kdsl_p1_bootstrap import (
+from kdsl_p1_contract import (
     compare_models,
     parse_contract,
     parse_p1_line,

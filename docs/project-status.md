@@ -2,10 +2,10 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase7-canonical-p1-p1l-contract-complete
+phase: phase8-p1l-shared-ast-integration-candidate
 repository: tk999jp/kdsl-spec
 default_branch: main
-tracking_issue: 118
+tracking_issue: 128
 verified_main_head: 729f2000e1341dd9624f5d0f60cb9c0abcf040f0
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
@@ -92,6 +92,7 @@ Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
 Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
+Phase 8 shared AST v2 P1L first-class integration: candidate
 ```
 
 ## 5. Repository enforcement
@@ -168,7 +169,7 @@ P1L schema: kdsl-p1l@0.1-draft / adopted v2-draft
 P1 schema: kdsl-p1@0.1-draft / adopted subordinate serialization
 P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
-shared AST v2 P1L marker registration: checker-local bootstrap only
+shared AST v2 P1L marker registration: first-class candidate / compatibility corpus required
 runtime binding: not implemented
 K1/PF1 canonical schema: absent
 BINDING.state: unbound

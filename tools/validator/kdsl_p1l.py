@@ -1,6 +1,6 @@
 import sys
 
-from kdsl_p1_bootstrap import cli_main
+from kdsl_p1_contract import cli_main
 
 
 if __name__ == '__main__':
