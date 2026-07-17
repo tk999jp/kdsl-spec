@@ -1,4 +1,3 @@
-\
 from pathlib import Path
 
 from kdsl_parser_v2 import DocumentNodeV2, KNOWN_ENVELOPES
