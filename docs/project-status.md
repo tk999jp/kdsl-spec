@@ -2,34 +2,29 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase7c-p1-p1l-validator-first-slice-complete
+phase: phase7-canonical-p1-p1l-contract-complete-candidate
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
-verified_main_head: b808325c957c9f403fed461dfdbb9e3ce5d547b1
+verified_main_head: 222b8483ec12e09d5316a7124f3f611dbb5e507c
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
 詳細証跡は `docs/reviews/*` と各validator implementation notesへ保持します。
 
-## 1. Current public state
+## 1. Public / release state
 
-```yaml
-current_public_state:
-  repository_visibility: public
-  published_release: v1.1.0-rc1
-  release_class: experimental_preview
-  release_type: prerelease
-  public_ready: no
-  stable_release: none
-  release_assets: none
-  license: MIT
+```text
+repository_visibility: public
+published_release: v1.1.0-rc1
+release_class: experimental_preview
+public_ready: no
+stable_release: none
+Release Assets: none
+license: MIT
 ```
 
 ```text
-public: yes
-public-ready: no
-stable: no
 既存tag移動禁止
 Release Assets操作禁止
 stable/public-ready化→別途U明示承認必須
@@ -43,41 +38,42 @@ specification map: spec/manifest.md
 Core: spec/core/*
 Profiles: spec/profiles/*
 ADPS/P1L/P1: spec/adps/*
+Packet/Normalization: spec/packet/*
 R1: spec/r1/*
 Lint: spec/lint/*
 Bridge: spec/bridge/*
-Registry/Packet: spec/registry/* / spec/packet/*
+Registry: spec/registry/*
 Glossary: spec/glossary.md / spec/glossary-v2-draft.md
 ```
 
 ```text
-Core/Profile/ADPS/R1/Lint/Bridge canonical指定file:=仕様正本
 P1L:=spec/adps/kdsl-p1l-contract-schema.md
 P1:=spec/adps/kdsl-p1-compact-contract-schema.md
-P1/P1L index:=spec/adps/README.md
-docs/project-status.md:=運用状態正本
-Design/Template/Example/Tool:=補助資料
+Packet→P1L/P1:=spec/packet/kdsl-packet-p1-normalization-contract.md
+P1L/P1 lint:=spec/lint/kdsl-p1-p1l-lint.md
+Packet→P1L/P1 lint:=spec/lint/kdsl-packet-p1-normalization-lint.md
 validator結果:=非権威的heuristic evidence
 ```
 
-## 3. Architecture
+## 3. Architecture and boundaries
 
 ```text
-format: KDSL
-profile: compact-prompt|dev-prompt|converter|lint
-mode: readable|min|dense|lock
-safety: normal|lock-critical|lock-all
-lexicon: standard|kanji-v1
-envelope: plain|packet-draft|result
+KDSL:=LLM直投入可能な安全gate保持型半構造化prompt記法
+KDSL-DP:=ADPS authoring form / direct execution prohibited
+P1L:=lossless structured normalized contract / non-executable
+P1:=P1L subordinate reversible compact serialization / non-executable
+KDSL-Packet:=non-executable authoring/transport envelope
+R1/KDSL_RESULT:=execution evidence/result reporting
 ```
 
 ```text
-KDSL-CP:=profile:compact-prompt
-KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
-KDSL-R1:=envelope:result / KDSL_RESULT
-KDSL-Packet:=v2-draft authoring envelope / non-executable
-P1L:=lossless structured normalized contract / non-executable
-P1:=P1L subordinate compact serialization / non-executable
+KDSL-DP直接実行禁止
+KDSL-DP→P1L/P1正規化必須
+P1L/P1 valid|lint|round-trip pass != executable|authority
+Packet valid|property pass != normalized|executable
+build/diff/lint/test/CI pass != RT:v
+NEXT:=提案, 実行許可扱禁止
+COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 ```
 
 ## 4. Integrated phase summary
@@ -89,16 +85,13 @@ Phase 2 Safety Semantics: integrated bounded slice
 Phase 3 R1C optional-block round-trip: integrated
 Phase 4 Packet / Normalization semantic properties: integrated
 Phase 5 Public-facing v2 hardening: complete
-Phase 6A contract/compatibility design: integrated
-Phase 6B typed AST v2 core: integrated
-Phase 6C active-checker structural migrations: complete
-Phase 6D consumer/property/repository migration and proof: complete
-Phase 6D-9A adapter zero-reference readiness: integrated
-Phase 6D-9B parser adapter removal/post-deletion proof: integrated
+Phase 6 Semantic Parser Foundation / adapter retirement: complete
 Phase 7A P1/P1L ownership and contract design: integrated
-Phase 7B P1L/P1 canonical schema/lint/examples/Bridge: integrated
-Phase 7B manifest/glossary/index/review/status alignment: integrated
+Phase 7B canonical P1L/P1 schema/lint/examples/alignment: integrated
 Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
+Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
+Phase 7D manifest/glossary/index/review/status alignment: integrated
+Phase 7 canonical P1/P1L contract scope: completion candidate
 ```
 
 ## 5. Repository enforcement
@@ -107,7 +100,6 @@ Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 ruleset: Protect main with KDSL Validation
 ruleset_id: 18832171
 status: active
-target: main
 PR required: yes
 merge method: squash
 required check: KDSL Validation
@@ -116,294 +108,147 @@ force push: blocked
 deletions: restricted
 ```
 
-```text
-workflow success != semantic equivalence/safety proof/RT:v/release readiness
-```
-
 ## 6. Latest verified implementation
 
 ```text
-PR: 123
-source head: 497bdd45942caa687c74890cdb2f94ecf36bb8a7
-squash commit: b808325c957c9f403fed461dfdbb9e3ce5d547b1
-workflow run: 29583167723 / #427
+PR: 125
+source head: df86e547b63a0499c74f412118ed34df93d836c6
+squash commit: 222b8483ec12e09d5316a7124f3f611dbb5e507c
+workflow run: 29585279349 / #433
 KDSL Validation: success
 Packet Semantic Property: success
+Packet P1 Normalization Property: success
 ```
 
-Verified suites:
+Verified current additions:
 
 ```text
 P1L/P1 contract corpus: 14 / failed 0
-adapter removal: 7 / failed 0
-Safety Gate consumer contract: 8 / failed 0
-Safety semantics migration: 4 / failed 0
-Safety inheritance/graph migration: 6 / failed 0
-R1C optional Safety Gate migration: 6 / failed 0
-Packet installer removal: 4 / failed 0
-Packet semantic consumer contract: 10 / failed 0
-Packet semantic consumer migration: 4 / failed 0
-Packet normalize contract: 10 / failed 0
-Packet normalize migration: 4 / failed 0
-Normalization installer removal: 4 / failed 0
-Normalization consumer contract: 10 / failed 0
-Normalization consumer migration: 3 / failed 0
-adapter inventory: 4 / failed 0
-consumer matrix: 5 / failed 0
-unified runners: 36
-unified expectations: 456 / failed 0
+Packet→P1L/P1 normalization corpus: 17 / failed 0
+unified runners: 37
+unified expectations: 473 / failed 0
 ```
 
 Corrective record:
 
 ```text
-run #426: new P1 corpus failed
-cause: legacy colon P1 classification marker mismatch
-correction: checker-local bootstrap classifies legacy colon P1 before canonical dispatch
-run #427: success
+Phase 7C run #426 failed→legacy colon classification correction→run #427 success
+Phase 7D run #430/#431 unified failure→legacy structural helper import detected
+property checker migrated to NormalizationCompatibilityView→run #433 all jobs success
 ```
 
 ```text
-validator未実行→pass扱禁止
-validator pass != semantic equivalence
-validator pass != complete safety proof
-validator pass != U承認
-validator pass != RT:v
-validator pass != release readiness
-P1L/P1 validator pass != runtime binding/execution authority
+validator/property/CI pass != semantic equivalence
+validator/property/CI pass != complete safety proof
+validator/property/CI pass != runtime binding
+validator/property/CI pass != execution authority
+validator/property/CI pass != RT:v
+validator/property/CI pass != release readiness
 ```
 
-## 7. Parser/checker state
-
-Pre-Phase-7 active checker structural inputs use checker-specific AST v2 CompatibilityViews under legacy parity guards:
+## 7. P1L / P1 state
 
 ```text
-Full R1 required blocks / RT basis / authority
-R1C
-CompactPrompt
-Safety Gate
-Packet
-Packet Normalization
-```
-
-```text
-input
-→ AST v2 CompatibilityView
-→ legacy/AST v2 structural parity guard
-→ mismatch: semantic validation前にfail
-→ match: existing semantic validation
-```
-
-P1L/P1 first slice:
-
-```text
-P1L parser: DocumentNodeV2 raw-envelope parse under checker-local marker registration
-P1 parser: dedicated ordered JSON segment scanner
-shared AST v2 P1L marker registration: not integrated
-P1L/P1 schema checker: integrated first slice
-P1L→P1→P1L round-trip: integrated first slice
-CLI targets: p1l|p1|p1-contract
-unified runner: integrated
-```
-
-First-slice coverage:
-
-```text
-top-level/nested field order
-source/profile evidence shape
-profile completion vs inference
-scope/context classification
-Runtime pre-execution disposition
-all eight Authority rails
-Normalization/Binding boundaries
-pipe inside JSON strings
-Windows path exact preservation
-legacy colon P1 rejection
-mixed P1L/P1 rejection
-```
-
-## 8. Runtime consumer state
-
-Normalization:
-
-```text
-checker/round-trip consumer: NormalizationCompatibilityView
-property consumer: indirect parse_normalization API
-install_normalization: removed
-```
-
-Packet:
-
-```text
-normalize/semantic consumers: PacketCompatibilityView
-install_packet: removed
-runtime structural consumers from kdsl_packet: none
-local legacy helpers: parity evidence only
-```
-
-Safety Gate:
-
-```text
-active checker: SafetyGateCompatibilityView + parity guard
-safety semantics: SafetyGateCompatibilityView
-inheritance: SafetyGateCompatibilityView
-graph: SafetyGateCompatibilityView
-R1C optional embedded SAFETY_GATES: SafetyGateCompatibilityView
-install_safety_gate: removed
-legacy structural consumers: none
-```
-
-P1L/P1:
-
-```text
-runtime binding implementation: none
+P1L schema: kdsl-p1l@0.1-draft / adopted v2-draft
+P1 schema: kdsl-p1@0.1-draft / adopted subordinate serialization
+P1L/P1 parser/validator: first bounded slice integrated
+P1L→P1→P1L structural round-trip: integrated first slice
+shared AST v2 P1L marker registration: checker-local bootstrap only
+runtime binding: not implemented
 K1/PF1 canonical schema: absent
-BINDING.state default: unbound
+BINDING.state: unbound
 BINDING.executable: false
-runtime consumers: none
-validator/round-trip pass does not change binding
 ```
 
-## 9. Adapter retirement state
+Required authority rails:
 
 ```text
-tools/validator/kdsl_parser_adapter.py: removed
-direct adapter imports: none
-installer function consumers: none
-legacy structural helper consumers: none
-parity modules depending on adapter: none
-consumer matrix blocking_records: 0
-post-deletion key runtime import guard: pass
-post-deletion full unified suite: pass
-adapter retirement: complete
+read/edit/stage/commit/push/release/public_repo/destructive_ops
 ```
 
-## 10. R1 / authority boundaries
+Legacy boundary:
 
 ```text
-RT:v=対象環境runtime確認済のみ
-build/diff/lint/test/CI pass != RT:v
-NEXT:=提案, 実行許可扱禁止
-COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
-未確認/未実行→確認済/実行済扱禁止
+project-local colon P1:=legacy operational evidence
+loss=P→exact compatibility evidence時のみprofile_completed候補
+loss=L意味推測禁止
+AP/H意味推測禁止
+missing Authority rails→canonical promotion blocked
 ```
 
-P1L/P1 pre-execution runtime values:
+## 8. Packet→P1L/P1 normalization state
+
+Integrated target-specific path:
 
 ```text
-pending|user_required|not_applicable
-```
-
-```text
-P1L/P1でRT:v/fail/blk結果claim禁止
-P1L/P1 AUTHORITY missing/implicit→blocked
-read/edit/stage/commit/push/release/public_repo/destructive_ops全rail必須
-PLAN/step/opcode != authority
-```
-
-Validator output remains:
-
-```text
-EXECUTABLE:no
-SEMANTIC_EQUIVALENCE:not_proven
-EXECUTION_AUTHORITY:none
-```
-
-## 11. CompactPrompt / Safety boundaries
-
-```text
-CP-Lift trigger保持
-KDSL-CP漢 alias:=構造KEY位置のみ
-hold/blocked gate削除禁止
-state:satisfied requires evidence and authority basis
-baseline/composition/protected-wording unchanged
-inheritance/graph semantics unchanged
-P1 profile completion != inference
-Safety Gate ID/presetのみでprotected wording置換禁止
-```
-
-## 12. Packet / Normalization boundaries
-
-Packet:
-
-```text
-schema: kdsl-packet@0.1-draft
-status: non-executable
-normalization_required: yes
-packet_state: not_normalized
-PKT:v1: prohibited
-semantic_equivalence: not_proven
-execution_authority: none
-```
-
-Normalization:
-
-```text
-schema: kdsl-packet-normalization@0.1-draft
-status: non-executable
+BASE: BASE-ADPS-P1
+NORMALIZE.target: P1L|P1
+TARGET.resolution: resolved
 TARGET.executable: false
+OUTPUT.marker: P1L_PREVIEW|P1_PREVIEW
+SOURCE.packet_status: non-executable
+SOURCE.normalize_state: not_normalized
+ROUND_TRIP.structural_equivalence: pass
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
-normalization completion: not_proven
-P1/P1L target schema: present
-P1/P1L validator first slice: present
-Packet→P1L/P1 mapping/integration: not implemented
-P1L_PREVIEW/P1_PREVIEW: not adopted
 ```
 
+Preview boundary:
+
 ```text
-P1/P1L schema/validator adoption alone != Packet target resolution complete
-Registry/lint/validator/property/parity/readiness/contract/migration/removal pass != Packet executable
+P1L_PREVIEW != P1L:
+P1_PREVIEW != P1|
 normalization preview != executable target
-KDSL-Packet直接実行禁止
-FLOW-CHANGE != edit authority
 ```
 
-## 13. Phase 7C state
-
-Integrated:
+Authority mapping:
 
 ```text
-tools/validator/kdsl_p1_contract.py
-tools/validator/kdsl_p1_bootstrap.py
-tools/validator/kdsl_p1l.py
-tools/validator/kdsl_p1.py
-tools/validator/kdsl_p1_auto.py
-tools/validator/kdsl_p1_roundtrip.py
-tools/validator/run_p1_contract_samples.py
-kdsl_validate targets: p1l|p1|p1-contract
-unified runner integration
-implementation notes
-review evidence
+read/edit/stage/commit/push/release:=source rails copied exactly
+public_repo:=forbid
+destructive_ops:=forbid
 ```
+
+The two added rails are explicit non-widening safety floors, not hidden defaults or permission grants.
 
 Parser ownership:
 
 ```text
-shared AST v2 core unchanged
-P1L marker registered only in bounded checker process
-P1 dedicated scanner handles JSON nesting/string escaping
-checker-local registration is transitional, not permanent proof
+Packet P1 property checker uses NormalizationCompatibilityView
+legacy normalization structural helper consumers: none
+shared parser adapter retirement remains complete
 ```
 
-Not implemented / not proven:
+## 9. Phase 7 completion interpretation
+
+Completed:
 
 ```text
-shared AST v2 first-class P1L integration
-arbitrary external Profile content verification
-complete protected-wording semantic proof
-P1L/P1 semantic equivalence
+P1L/P1 ownership and contract design
+canonical P1L structured schema
+canonical subordinate P1 serialization
+P1L/P1 lint and examples
+P1L/P1 bounded parser/validator/round-trip first slice
+Packet→P1L/P1 target-specific mapper/property
+P1L_PREVIEW/P1_PREVIEW non-executable boundary
+manifest/glossary/index/review/status alignment
+```
+
+Not included:
+
+```text
+Packet normalized-state promotion
+P1L/P1 runtime binding
+K1/PF1 canonical runtime-control schema
+executable transformer
+AI coding tool direct execution from P1L/P1/preview
+complete semantic equivalence
 complete natural-language interpretation
 complete safety proof
-runtime binding
-K1/PF1 canonical schema
-Packet→P1L/P1 normalization mapping
-Packet normalization completion
-Packet executable promotion
 stable/public-ready promotion
 ```
 
-## 14. Current positioning
+## 10. Current positioning
 
 Use as:
 
@@ -412,10 +257,10 @@ KDSL v2-draft specification repository
 R1 evidence/result-reporting specification
 CompactPrompt architecture
 typed AST v2 structural foundation
-legacy namespace adapter retired
 P1L canonical v2-draft structured contract schema
-P1 canonical v2-draft subordinate compact serialization
-P1/P1L bounded parser/validator/round-trip first slice
+P1 subordinate compact serialization
+P1L/P1 bounded validator/round-trip first slice
+Packet→P1L/P1 non-executable preview normalization first slice
 experimental heuristic validator helpers
 ```
 
@@ -425,32 +270,31 @@ Do not present as:
 stable KDSL release
 public-ready guarantee
 P1L/P1 executable runtime contract
-P1L/P1 semantic-equivalence proof
-P1L/P1 complete safety proof
-Packet executable runtime contract
-normalization-complete target
+Packet normalized/executable runtime contract
+semantic equivalence proof
+complete safety proof
 complete semantic parser
 ```
 
-## 15. Next safe steps
+## 11. Next safe steps
 
 ```text
-P0: Phase 7D Packet normalization integration under P1L_PREVIEW/P1_PREVIEW non-executable boundary
-P1: shared AST v2 first-class P1L integration only after compatibility/consumer review
-P2: K1/PF1 canonical runtime-control design only under separate approval
+P0: merge Phase 7D closeout/alignment after required checks
+P1: synchronize verified_main_head and close tracking issue #118
+P2: shared AST v2 first-class P1L integration only under separate compatibility review
+P3: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-P1L/P1 ownership becomes ambiguous
 unknown legacy alias/profile/preset meaning must be inferred
 critical authority rail becomes implicit
 profile defaults lack exact revision/digest evidence
-P1 compact round-trip loses protected wording or exact strings
-RUNTIME contract field claims RT:v without evidence
-Packet normalization becomes executable
+P1 round-trip loses protected wording or exact strings
+preview emits canonical executable-looking P1L:/P1| marker
+Packet source becomes normalized/executable
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 ```
