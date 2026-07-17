@@ -54,15 +54,17 @@ def main() -> int:
         snapshot = repository_snapshot(Path(raw_tmp))
         results.append(
             run_case(
-                'repository dependency matrix assigns remaining consumer decisions',
+                'repository dependency matrix has semantic API decisions only',
                 snapshot,
                 0,
                 (
                     'STATUS: pass',
                     'MODE: repository',
-                    '=> migrate-or-replace',
                     '=> retain-semantic-api',
-                    'RETIREMENT:',
+                    'migrate-or-replace: 0',
+                    'retain-temporarily: 0',
+                    'state: candidate',
+                    'blocking_records: 0',
                     boundary,
                 ),
             )
