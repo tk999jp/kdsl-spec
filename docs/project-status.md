@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase6d-adapter-retirement-readiness-integrated
+phase: phase6-semantic-parser-foundation-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 55
-verified_main_head: ed928bfddd7a412acd420ba1622addd788cd6f50
+verified_main_head: 53e70450d244382356ce8f8904db464e3720f8ed
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -82,22 +82,12 @@ Phase 2 Safety Semantics: integrated bounded slice
 Phase 3 R1C optional-block round-trip: integrated
 Phase 4 Packet / Normalization semantic properties: integrated
 Phase 5 Public-facing v2 hardening: complete
-Phase 6A/6B semantic parser foundation/core: integrated
+Phase 6A contract/compatibility design: integrated
+Phase 6B typed AST v2 core: integrated
 Phase 6C active-checker structural migrations: complete
-Phase 6D-1 adapter/helper inventory: integrated
-Phase 6D-2 consumer decision matrix: integrated
-Phase 6D unified-runner corrective: integrated
-Phase 6D-3 Normalization consumer contract/migration: integrated
-Phase 6D-4 Normalization installer removal: integrated
-Phase 6D-5 Packet normalize consumer contract/migration: integrated
-Phase 6D-6 Packet semantic consumer contract/migration: integrated
-Phase 6D-7A Packet installer readiness: integrated
-Phase 6D-7B Packet installer removal: integrated
-Phase 6D-8A Safety Gate consumer contract/inventory: integrated
-Phase 6D-8B Safety semantics structural migration: integrated
-Phase 6D-8C Safety Gate inheritance/graph structural migration: integrated
-Phase 6D-8D R1C optional Safety Gate structural migration: integrated
-Phase 6D-9A parser adapter retirement readiness: integrated
+Phase 6D consumer/property/repository migration and proof: complete
+Phase 6D-9A adapter zero-reference readiness: integrated
+Phase 6D-9B parser adapter removal/post-deletion proof: integrated
 ```
 
 ## 5. Repository enforcement
@@ -122,10 +112,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 114
-source head: f31ecb5d0626644a6b1867c5390ca246adf2b3bd
-squash commit: ed928bfddd7a412acd420ba1622addd788cd6f50
-workflow run: 29545316817 / #406
+PR: 116
+source head: 2846bfc36eeb4cdd1036389350b09e7ddfc5a2c9
+squash commit: 53e70450d244382356ce8f8904db464e3720f8ed
+workflow run: 29545763627 / #410
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -133,7 +123,7 @@ Packet Semantic Property: success
 Verified suites:
 
 ```text
-adapter retirement readiness: 7 / failed 0
+adapter removal: 7 / failed 0
 Safety Gate consumer contract: 8 / failed 0
 Safety semantics migration: 4 / failed 0
 Safety inheritance/graph migration: 6 / failed 0
@@ -152,16 +142,6 @@ unified runners: 35
 unified expectations: 442 / failed 0
 ```
 
-Corrective record:
-
-```text
-run #400: semantic utilities misclassified as structural
-run #401/#402/#403: readiness passed; stale repository matrix expectation remained
-semantic classification and repository matrix expectation corrected
-temporary diagnostic artifact workflow removed before final verification
-run #406: success
-```
-
 ```text
 validator未実行→pass扱禁止
 validator pass != semantic equivalence
@@ -169,7 +149,7 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-readiness pass != adapter deletion/post-deletion proof
+post-deletion pass != release/public-ready proof
 ```
 
 ## 7. Parser/checker state
@@ -195,25 +175,17 @@ input
 
 No active checker remains solely on the Phase 1 structural path.
 
-## 8. Dependency and adapter state
+## 8. Runtime consumer state
+
+Normalization:
 
 ```text
-direct kdsl_parser_adapter imports: none
-installer function consumers outside adapter: none
-legacy structural helper consumers: none
-parity modules depending on adapter: none
-key runtime modules import with adapter denied: pass
+checker/round-trip consumer: NormalizationCompatibilityView
+property consumer: indirect parse_normalization API
+install_normalization: removed
 ```
 
-Normalization family:
-
-```text
-checker/consumer: NormalizationCompatibilityView
-direct installer: removed
-local parity helpers: retained
-```
-
-Packet family:
+Packet:
 
 ```text
 normalize/semantic consumers: PacketCompatibilityView
@@ -222,15 +194,19 @@ runtime structural consumers from kdsl_packet: none
 local legacy helpers: parity evidence only
 ```
 
-Safety Gate family:
+Safety Gate:
 
 ```text
-active checker and known structural consumers: SafetyGateCompatibilityView
-direct installer: absent
+active checker: SafetyGateCompatibilityView + parity guard
+safety semantics: SafetyGateCompatibilityView
+inheritance: SafetyGateCompatibilityView
+graph: SafetyGateCompatibilityView
+R1C optional embedded SAFETY_GATES: SafetyGateCompatibilityView
+install_safety_gate: removed
 legacy structural consumers: none
 ```
 
-Retained semantic internal API:
+Retained bounded semantic internal API:
 
 ```text
 KNOWN_IDS
@@ -242,47 +218,26 @@ authority_is_unverified
 is_blank
 ```
 
+## 9. Adapter retirement state
+
+```text
+tools/validator/kdsl_parser_adapter.py: removed
+direct adapter imports: none
+installer function consumers: none
+legacy structural helper consumers: none
+parity modules depending on adapter: none
+consumer matrix blocking_records: 0
+post-deletion key runtime import guard: pass
+post-deletion full unified suite: pass
+adapter retirement: complete
+```
+
 Parity strategy:
 
 ```text
 direct legacy-parser/checker-local comparison paths retained
-kdsl_parser_adapter.py is not parity evidence
-```
-
-Adapter file:
-
-```text
-path: tools/validator/kdsl_parser_adapter.py
-exports: install_r1c/install_packet/install_normalization/install_safety_gate
-runtime consumers: none
-state: bounded-removal-trial-candidate
-file removal: not performed
-```
-
-## 9. Adapter retirement gates
-
-```text
-G1 active checker independence: satisfied
-G2 direct installer inventory: satisfied
-G3 consumer decision matrix: satisfied / blocking_records:0
-G4 Normalization family migration/removal: satisfied
-G5 Packet family migration/removal: satisfied
-G6 Safety Gate structural consumers migrated: satisfied
-G7 semantic utility retention decision: satisfied / bounded internal API
-G8 parity strategy: satisfied / adapter-independent
-G9 zero-reference/readiness corpus: satisfied
-G10 bounded adapter deletion trial: pending
-G11 post-deletion full repository proof: pending
-G12 adapter retirement completion: blocked
-```
-
-Current decision:
-
-```text
-readiness state: bounded-removal-trial-candidate
-kdsl_parser_adapter.py file: retained
-adapter deletion: not performed
-adapter retirement: blocked until post-deletion proof
+local parity helpers retained where required
+adapter removal did not remove parity evidence
 ```
 
 ## 10. R1 / authority boundaries
@@ -338,17 +293,33 @@ KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
 ```
 
-## 13. Known gaps
+## 13. Phase 6 completion
+
+Completed:
 
 ```text
-bounded kdsl_parser_adapter.py deletion trial
-post-deletion full repository proof
-adapter retirement closeout decision
-same-marker multi-envelope semantics
-complete semantic equivalence proof
-complete Safety Gate proof
+AST v2 contract and typed core
+source-span/raw-normalized preservation
+checker-specific CompatibilityViews
+active checker migration
+runtime structural consumer migration
+property/repository corpus expansion
+namespace installer removal
+legacy namespace adapter removal
+post-deletion repository verification
+```
+
+Not proven / non-goals:
+
+```text
+complete semantic equivalence
+complete natural-language interpretation
+complete safety proof
+arbitrary cross-document proof
+Packet normalization completion
 canonical P1/P1L target schema
-stable/public-ready U approval
+Packet executable promotion
+stable/public-ready promotion
 ```
 
 ## 14. Current positioning
@@ -360,10 +331,9 @@ KDSL v2-draft specification repository
 R1 evidence/result-reporting specification
 CompactPrompt architecture
 experimental heuristic validator helpers
-all active checker structural inputs migrated to AST v2 CompatibilityViews
-known runtime structural consumers migrated
-Normalization and Packet direct installers removed
-adapter zero-reference readiness proven
+typed AST v2 structural foundation
+all active checker and known runtime structural consumers migrated
+legacy namespace adapter retired
 ```
 
 Do not present as:
@@ -376,26 +346,23 @@ normalization-complete target
 complete semantic parser
 semantic equivalence proof
 complete safety proof
-adapter removal completed
 ```
 
 ## 15. Next safe steps
 
 ```text
-P0: Phase 6D-9B delete only tools/validator/kdsl_parser_adapter.py
-P1: replace readiness corpus with post-deletion corpus
-P2: preserve semantic internal API and parity paths
-P3: run complete unified suite
-P4: record adapter retirement only after post-deletion success
+P0: close Phase 6 tracking issue after closeout PR
+P1: define next phase from remaining non-goal/gap priorities
+P2: same-marker multi-envelope semantics only under separate design approval
+P3: canonical P1/P1L schema only under separate phase
 Hold: stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-hidden adapter import appears
 parity evidence is lost
-semantic utility behavior changes
+semantic utility behavior changes unintentionally
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
 unknown schema/default inference is required
