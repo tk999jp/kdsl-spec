@@ -1,0 +1,66 @@
+name: Phase 8 Corrected Diagnostic Artifact
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/kdsl-phase8-p1l-shared-ast
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Reproduce corrected commit patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('.github/workflows/phase8-p1l-commit-patch.yml')
+          text = source.read_text(encoding='utf-8')
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "          PY\n"
+          start = text.index(start_marker) + len(start_marker)
+          end = text.index(end_marker, start)
+          lines = text[start:end].splitlines()
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
+          exec(compile(script, str(source), 'exec'), {'__name__': '__main__'})
+          PY
+
+      - name: Capture corrected targeted runner outputs
+        shell: bash
+        run: |
+          mkdir -p artifacts/phase8-corrected-diagnostic
+          set +e
+          failed=0
+          for script in \
+            tools/validator/run_p1_shared_ast_samples.py \
+            tools/validator/run_p1_contract_samples.py \
+            tools/validator/run_packet_p1_normalization_samples.py
+          do
+            name=$(basename "$script" .py)
+            python "$script" > "artifacts/phase8-corrected-diagnostic/$name.txt" 2>&1
+            rc=$?
+            echo "$rc" > "artifacts/phase8-corrected-diagnostic/$name.exit"
+            if [ "$rc" -ne 0 ]; then failed=1; fi
+          done
+          echo "$failed" > artifacts/phase8-corrected-diagnostic/overall.exit
+          exit 0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase8-p1l-corrected-diagnostic
+          path: artifacts/phase8-corrected-diagnostic
+          if-no-files-found: error
