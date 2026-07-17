@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from kdsl_parser_v2_safety_gate_compat import SafetyGateCompatibilityView
 from kdsl_r1c import SCHEMA_ID, extract_result_scope, parse_top_level
 from kdsl_safety_gate import (
     KNOWN_IDS,
@@ -14,7 +15,6 @@ from kdsl_safety_gate import (
     REQUIRED_FIELDS,
     authority_is_unverified,
     is_blank,
-    parse_registry,
 )
 
 EVIDENCE_KEYS = ('observed', 'inferred', 'not_observed', 'unverified')
@@ -236,11 +236,11 @@ def safety_gate_standalone(value: str) -> str:
 
 
 def parse_safety_gates_model(value: str) -> dict[str, Any]:
-    registry, entries = parse_registry(safety_gate_standalone(value))
+    view = SafetyGateCompatibilityView.from_text(safety_gate_standalone(value))
     return {
-        'registry': registry,
-        'entries': [dict(entry) for entry in entries],
-        'entry_field_order': [list(entry.keys()) for entry in entries],
+        'registry': view.registry,
+        'entries': [dict(entry) for entry in view.entry_dicts],
+        'entry_field_order': [list(order) for order in view.entry_field_orders],
     }
 
 
