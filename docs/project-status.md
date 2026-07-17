@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase7a-p1-p1l-contract-design-integrated
+phase: phase7b-p1-p1l-schema-adopted-alignment-pending
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
-verified_main_head: 32b663132941138f8fe6e45d017f6c18046a671e
+verified_main_head: 80edbce75ad4eb42b8aeeb9c268d47b0523d9311
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -42,6 +42,7 @@ operational status: docs/project-status.md
 specification map: spec/manifest.md
 Core: spec/core/*
 Profiles: spec/profiles/*
+ADPS/P1L/P1: spec/adps/*
 R1: spec/r1/*
 Lint: spec/lint/*
 Bridge: spec/bridge/*
@@ -49,7 +50,10 @@ Registry/Packet: spec/registry/* / spec/packet/*
 ```
 
 ```text
-Core/Profile/R1/Lint/Bridge canonical指定file:=仕様正本
+Core/Profile/ADPS/R1/Lint/Bridge canonical指定file:=仕様正本
+P1L:=spec/adps/kdsl-p1l-contract-schema.md
+P1:=spec/adps/kdsl-p1-compact-contract-schema.md
+P1/P1L index:=spec/adps/README.md
 docs/project-status.md:=運用状態正本
 Design/Template/Example/Tool:=補助資料
 validator結果:=非権威的heuristic evidence
@@ -71,6 +75,8 @@ KDSL-CP:=profile:compact-prompt
 KDSL-CP漢:=profile:compact-prompt + mode:dense + lexicon:kanji-v1
 KDSL-R1:=envelope:result / KDSL_RESULT
 KDSL-Packet:=v2-draft authoring envelope / non-executable
+P1L:=lossless structured normalized contract / non-executable
+P1:=P1L subordinate compact serialization / non-executable
 ```
 
 ## 4. Integrated phase summary
@@ -89,6 +95,8 @@ Phase 6D consumer/property/repository migration and proof: complete
 Phase 6D-9A adapter zero-reference readiness: integrated
 Phase 6D-9B parser adapter removal/post-deletion proof: integrated
 Phase 7A P1/P1L ownership and contract design: integrated
+Phase 7B P1L/P1 canonical schema/lint/examples/Bridge: integrated
+Phase 7B manifest/glossary alignment: pending
 ```
 
 ## 5. Repository enforcement
@@ -113,10 +121,10 @@ workflow success != semantic equivalence/safety proof/RT:v/release readiness
 ## 6. Latest verified implementation
 
 ```text
-PR: 119
-source head: 2347725e1fea1323be00e153ff42a4bfa1bdd6de
-squash commit: 32b663132941138f8fe6e45d017f6c18046a671e
-workflow run: 29579900564 / #414
+PR: 121
+source head: 84e15427fe7aa7fc8e0bae554c4b40becf7a9cb0
+squash commit: 80edbce75ad4eb42b8aeeb9c268d47b0523d9311
+workflow run: 29581426216 / #418
 KDSL Validation: success
 Packet Semantic Property: success
 ```
@@ -150,12 +158,12 @@ validator pass != complete safety proof
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
-design integration pass != canonical schema adoption
+P1L/P1 schema adoption != runtime binding/execution authority
 ```
 
 ## 7. Parser/checker state
 
-All active checker structural inputs use checker-specific AST v2 CompatibilityViews under legacy parity guards:
+All pre-Phase-7 active checker structural inputs use checker-specific AST v2 CompatibilityViews under legacy parity guards:
 
 ```text
 Full R1 required blocks / RT basis / authority
@@ -176,7 +184,15 @@ input
 
 No active checker remains solely on the Phase 1 structural path.
 
-P1/P1L parser/checker is not yet implemented.
+P1L/P1:
+
+```text
+canonical schema: adopted
+lint contract: adopted
+parser/checker: not implemented
+round-trip runner: not implemented
+validator pass: not available
+```
 
 ## 8. Runtime consumer state
 
@@ -221,6 +237,16 @@ authority_is_unverified
 is_blank
 ```
 
+P1L/P1:
+
+```text
+runtime binding implementation: none
+K1/PF1 canonical schema: absent
+BINDING.state default: unbound
+BINDING.executable: false
+runtime consumers: none
+```
+
 ## 9. Adapter retirement state
 
 ```text
@@ -253,6 +279,18 @@ COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 未確認/未実行→確認済/実行済扱禁止
 ```
 
+P1L/P1 pre-execution runtime values:
+
+```text
+pending|user_required|not_applicable
+```
+
+```text
+P1L/P1でRT:v/fail/blk結果claim禁止
+P1L/P1 AUTHORITY missing/implicit→blocked
+PLAN/step/opcode != authority
+```
+
 ## 11. CompactPrompt / Safety boundaries
 
 ```text
@@ -262,6 +300,8 @@ hold/blocked gate削除禁止
 state:satisfied requires evidence and authority basis
 baseline/composition/protected-wording unchanged
 inheritance/graph semantics unchanged
+P1 profile completion != inference
+Safety Gate ID/presetのみでprotected wording置換禁止
 ```
 
 ## 12. Packet / Normalization boundaries
@@ -287,59 +327,71 @@ TARGET.executable: false
 ROUND_TRIP.semantic_equivalence: not_proven
 AUTHORITY.execution_authority: none
 normalization completion: not_proven
-P1/P1L target resolution: blocked until canonical schema adoption and separate integration
+P1/P1L target schema: now present
+Packet→P1L/P1 mapping/integration: not implemented
+P1L_PREVIEW/P1_PREVIEW: not adopted
 ```
 
 ```text
+P1/P1L schema adoption alone != Packet target resolution complete
 Registry/lint/validator/property/parity/readiness/contract/migration/removal pass != Packet executable
 normalization preview != executable target
 KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
 ```
 
-## 13. Phase 7A design state
+## 13. Phase 7B schema state
 
-Integrated design direction:
+Adopted:
 
 ```text
-P1L:=lossless structured normalized contract schema candidate
-P1:=compact serialization profile subordinate to P1L candidate
-P1/P1L valid != executable
-profile completion != inference
-authority/runtime binding separate from structural validity
+P1L schema: spec/adps/kdsl-p1l-contract-schema.md
+P1L schema ID: kdsl-p1l@0.1-draft
+P1 schema: spec/adps/kdsl-p1-compact-contract-schema.md
+P1 schema ID: kdsl-p1@0.1-draft
+lint: spec/lint/kdsl-p1-p1l-lint.md
+Bridge v0.3
+normal example: explicit P1L investigate
+profile-completed P1 example
+unknown-profile blocked example
+authority-missing blocked example
 ```
 
-Phase 7A recorded:
+Ownership:
 
 ```text
-candidate schema IDs: kdsl-p1l@0.1-draft / kdsl-p1@0.1-draft
-P1L candidate envelope and required fields
-P1 compact field-map candidate
-explicit/profile_completed/lossy/blocked normalization states
-mandatory authority rails
-runtime requirement vs R1 result-state separation
-P1↔P1L structural round-trip model
-legacy MidFD P1 compatibility boundary
-Packet normalization dependency
+P1L:=lossless structured normalized contract schema
+P1:=P1L subordinate reversible compact serialization
+P1 != independent canonical contract
 ```
 
-Unresolved evidence retained:
+P1 canonical serialization:
 
 ```text
-legacy loss=L meaning
-legacy AP/H abbreviations
-operational P1 explicit authority rails
-operational P1L concrete syntax
-K1/PF1 canonical runtime-control schema
+ordered JSON segments
+all required P1L projections present
+unknown/missing/repeated/out-of-order segment→blocked
+exact Unicode/path/command/API preservation required
 ```
 
-Not proven / not adopted:
+Legacy compatibility retained:
 
 ```text
-canonical P1L schema
-canonical P1 compact schema
-P1/P1L parser/validator
-P1/P1L runtime binding
+project-local colon P1:=legacy operational evidence
+loss=P→exact evidence時のみprofile_completed候補
+loss=L意味推測禁止
+AP/H意味推測禁止
+Authority rails absent→canonical promotion blocked
+```
+
+Not implemented / not proven:
+
+```text
+P1L/P1 parser/validator
+P1↔P1L automated round-trip proof
+runtime binding
+K1/PF1 canonical schema
+Packet→P1L/P1 normalization mapping
 complete semantic equivalence
 complete natural-language interpretation
 complete safety proof
@@ -356,11 +408,13 @@ Use as:
 KDSL v2-draft specification repository
 R1 evidence/result-reporting specification
 CompactPrompt architecture
-experimental heuristic validator helpers
 typed AST v2 structural foundation
-all active checker and known runtime structural consumers migrated
+all pre-Phase-7 active checker and known runtime structural consumers migrated
 legacy namespace adapter retired
-P1/P1L canonical contract design completed
+P1L canonical v2-draft structured contract schema
+P1 canonical v2-draft subordinate compact serialization
+P1/P1L lint contract and explanatory corpus
+experimental heuristic validator helpers
 ```
 
 Do not present as:
@@ -368,8 +422,8 @@ Do not present as:
 ```text
 stable KDSL release
 public-ready guarantee
-canonical P1/P1L schema already adopted
-P1/P1L executable runtime contract
+P1L/P1 executable runtime contract
+P1L/P1 parser-validated contract
 Packet executable runtime contract
 normalization-complete target
 complete semantic parser
@@ -380,11 +434,11 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: obtain explicit U approval to adopt the Phase 7A ownership direction as canonical v2-draft schemas
-P1: Phase 7B canonical P1L schema + subordinate P1 compact schema + lint/examples
-P2: Phase 7C parser/validator first slice and round-trip corpus
-P3: Phase 7D Packet normalization integration under non-executable preview boundary
-Hold: K1/PF1 invention, executable promotion, stable/public-ready/tag/release/Release Assets
+P0: complete Phase 7B manifest/glossary alignment and closeout evidence
+P1: Phase 7C P1L/P1 parser/validator first slice and round-trip corpus
+P2: Phase 7D Packet normalization integration under P1L_PREVIEW/P1_PREVIEW non-executable boundary
+P3: K1/PF1 canonical runtime-control design only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
