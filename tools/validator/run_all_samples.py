@@ -9,6 +9,7 @@ RUNNERS = (
     ('safety-gate', 'run_safety_gate_samples.py'),
     ('r1c-roundtrip', 'run_r1c_roundtrip_samples.py'),
     ('p1-contract', 'run_p1_contract_samples.py'),
+    ('packet-p1-normalization', 'run_packet_p1_normalization_samples.py'),
     ('parser', 'run_parser_samples.py'),
     ('parser-v2', 'run_parser_v2_samples.py'),
     ('parser-v2-r1c-parity', 'run_parser_v2_r1c_parity_samples.py'),
