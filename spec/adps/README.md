@@ -18,6 +18,9 @@ P1 subordinate compact serialization:
 
 Lint:
   spec/lint/kdsl-p1-p1l-lint.md
+
+Validator implementation notes:
+  tools/validator/kdsl-p1-contract-implementation-notes.md
 ```
 
 ## Ownership
@@ -52,11 +55,30 @@ P1L schema: adopted v2-draft
 P1 compact schema: adopted v2-draft
 lint: adopted v2-draft
 examples: adopted explanatory corpus
-parser/validator: not implemented
+parser/validator: Phase 7C first bounded slice integrated
+round-trip corpus: 14 expectations / failed 0
+shared parser core registration: not integrated / checker-local bootstrap only
 runtime binding: not implemented
 K1/PF1 canonical schema: absent
 Packet→P1L/P1 normalization integration: not implemented
 Packet executable promotion: prohibited
+```
+
+Validator targets:
+
+```text
+python tools/validator/kdsl_validate.py --target p1l <file>
+python tools/validator/kdsl_validate.py --target p1 <file>
+python tools/validator/kdsl_validate.py --target p1-contract <file>
+python tools/validator/kdsl_p1_roundtrip.py <file>
+```
+
+```text
+validator pass != semantic equivalence
+validator pass != complete safety proof
+validator pass != runtime binding
+validator pass != execution authority
+validator pass != RT:v
 ```
 
 ## Examples
