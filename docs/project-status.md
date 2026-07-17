@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase7d-packet-p1-normalization-integrated-closeout-alignment-pending
+phase: phase7-canonical-p1-p1l-contract-complete-candidate
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
@@ -90,7 +90,8 @@ Phase 7A P1/P1L ownership and contract design: integrated
 Phase 7B canonical P1L/P1 schema/lint/examples/alignment: integrated
 Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
-Phase 7D manifest/glossary final alignment: pending
+Phase 7D manifest/glossary/index/review/status alignment: integrated
+Phase 7 canonical P1/P1L contract scope: completion candidate
 ```
 
 ## 5. Repository enforcement
@@ -218,7 +219,22 @@ legacy normalization structural helper consumers: none
 shared parser adapter retirement remains complete
 ```
 
-## 9. Still not implemented / not proven
+## 9. Phase 7 completion interpretation
+
+Completed:
+
+```text
+P1L/P1 ownership and contract design
+canonical P1L structured schema
+canonical subordinate P1 serialization
+P1L/P1 lint and examples
+P1L/P1 bounded parser/validator/round-trip first slice
+Packet→P1L/P1 target-specific mapper/property
+P1L_PREVIEW/P1_PREVIEW non-executable boundary
+manifest/glossary/index/review/status alignment
+```
+
+Not included:
 
 ```text
 Packet normalized-state promotion
@@ -263,8 +279,8 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: synchronize spec/manifest.md and both glossary files for Phase 7D
-P1: close Phase 7 tracking issue after alignment PR
+P0: merge Phase 7D closeout/alignment after required checks
+P1: synchronize verified_main_head and close tracking issue #118
 P2: shared AST v2 first-class P1L integration only under separate compatibility review
 P3: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
