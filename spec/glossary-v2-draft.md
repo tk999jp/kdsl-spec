@@ -2,7 +2,7 @@
 
 status: v2-draft
 canonical: no
-source_alignment: docs/design/kdsl-v2-direction.md / spec/manifest.md
+source_alignment: docs/design/kdsl-v2-direction.md / spec/manifest.md / spec/adps/*
 
 This file supplements `spec/glossary.md` for v2-draft terms. It does not replace the v1.1 glossary.
 
@@ -317,6 +317,147 @@ Current rule:
 current Full KDSL:=SG ID + complete protected wording
 ```
 
+## ADPS contract terms
+
+### P1L
+
+```text
+P1L:=KDSL-DP等から正規化されたlossless structured contract candidate
+schema: kdsl-p1l@0.1-draft
+```
+
+Source:
+
+```text
+spec/adps/kdsl-p1l-contract-schema.md
+```
+
+Status:
+
+```text
+v2-draft adopted
+STATUS: contract-candidate
+executable: no
+BINDING.state default: unbound
+BINDING.executable: false
+parser/validator: not implemented
+```
+
+Required boundary:
+
+```text
+P1L valid != executable
+P1L lint/round-trip pass != authority
+profile completion != inference
+unknown profile/alias/preset→blocked
+all authority rails explicit
+RUNTIME pre-execution disposition != R1 result RT
+```
+
+### P1
+
+```text
+P1:=canonical P1Lのreversible compact serialization
+schema: kdsl-p1@0.1-draft
+```
+
+Source:
+
+```text
+spec/adps/kdsl-p1-compact-contract-schema.md
+```
+
+Ownership:
+
+```text
+P1L > P1 > P1/P1L lint > validator/example
+P1 != independent canonical contract
+```
+
+Canonical marker:
+
+```text
+P1|SCHEMA=kdsl-p1@0.1-draft|STATUS=contract-candidate|...
+```
+
+Canonical values are ordered compact JSON segments. Missing/unknown/repeated/out-of-order segments or non-reconstructable P1L projections are blocked.
+
+### P1 Authority rails
+
+```text
+read/edit/stage/commit/push/release/public_repo/destructive_ops
+```
+
+Rules:
+
+```text
+missing/implicit rail→blocked
+read allow != edit allow
+edit allow != commit allow
+commit allow != push allow
+push allow != release allow
+PLAN/FLOW != authority
+not_requested != allow
+propose_only != operation authority
+```
+
+### Profile completion
+
+```text
+profile completion:=exact profile id/revision/digestとfield-specific default evidenceによる機械的補完
+```
+
+```text
+profile_completed valueはP1L/P1 canonical projectionへ展開必須
+similar-name/memory/convention completionは禁止
+unknown alias/preset inferenceは禁止
+critical authority completion from unstated defaultsは禁止
+```
+
+### P1L/P1 normalization state
+
+```text
+explicit
+profile_completed
+lossy
+blocked
+```
+
+```text
+critical unresolved/loss→blocked
+lossy→runtime binding禁止
+semantic_equivalence:not_proven固定
+structural_pass != semantic equivalence/safety proof/authority
+```
+
+### P1L/P1 BINDING
+
+```text
+BINDING:=schema validityとruntime execution readinessを分離するblock
+```
+
+```text
+state: unbound|bound|blocked
+executable:false under v0.1 draft
+schema/lint pass→BINDING unchanged
+runtime control valid != authority sufficient
+authority sufficient != executed
+```
+
+### Legacy operational P1
+
+```text
+legacy operational P1:=project-local `P1|M:...|T:F|...` forms
+```
+
+```text
+legacy form != automatic kdsl-p1@0.1-draft conformance
+loss=P→exact compatibility evidence時のみprofile_completed候補
+loss=L意味推測禁止
+AP/H意味推測禁止
+Authority rails不在→canonical promotion blocked
+```
+
 ## Packet terms
 
 ### KDSL-Packet
@@ -408,7 +549,9 @@ Current status:
 ```text
 v2-draft adopted
 non-executable
-validator/mapper: not implemented
+validator/mapper: first bounded slices integrated
+P1L/P1 schemas: adopted
+Packet→P1L/P1 mapping: not implemented
 ```
 
 Required boundary:
@@ -429,16 +572,31 @@ KDSL_PROMPT_PREVIEW != KDSL_PROMPT
 
 It must not be passed directly to an AI coding tool as an implementation contract.
 
+### P1L_PREVIEW / P1_PREVIEW
+
+```text
+P1L_PREVIEW/P1_PREVIEW:=将来のPacket→P1L/P1 mappingで使用候補の非実行preview marker
+```
+
+Current status:
+
+```text
+not adopted
+Packet integration not implemented
+P1L_PREVIEW != P1L:
+P1_PREVIEW != P1|
+```
+
 ### Structural round-trip
 
 ```text
-structural round-trip:=Packet required fields/order/exact stringsをtarget projectionから再構成して比較する検査
+structural round-trip:=required fields/order/exact stringsをtarget projectionから再構成して比較する検査
 ```
 
 ```text
 structural_pass != semantic equivalence
 structural_pass != safety proof
-structural_pass != authority/normalization completion
+structural_pass != authority/normalization completion/runtime binding
 ```
 
 ### Normalization loss
@@ -460,6 +618,7 @@ NORMALIZE:=PacketからFull KDSLまたはP1/P1Lへの別artifact変換要求
 required:true固定
 Packet内state:not_normalized固定
 KDSL-DP→P1/P1L正規化必須
+P1L/P1 schema adoption alone != Packet mapping completion
 normalization未検証→実行禁止
 ```
 

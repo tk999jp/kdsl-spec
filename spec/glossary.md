@@ -3,7 +3,7 @@
 目的: kdsl-spec内で使う主要用語を定義し、表記揺れと誤解を減らす。
 
 status: draft-main-v2-sync
-source_alignment: spec/core v1.1-v2-sync / manifest v2-draft-sync / bridge v0.2 / R1 v0.1-draft
+source_alignment: spec/core v1.1-v2-sync / manifest v2-draft-sync / bridge v0.3 / P1L-P1 v0.1-draft / R1 v0.1-draft
 
 ## Core terms
 
@@ -84,17 +84,91 @@ KDSL-DPをAI coding toolへ実装指示として渡すこと禁止
 KDSL本体の直投入前提をKDSL-DPへ自動継承禁止
 ```
 
-### P1 / P1L
+### P1L
 
 ```text
-P1/P1L:=KDSL-DPから正規化された実行契約候補
+P1L:=KDSL-DP等から正規化されたlossless structured contract candidate
+schema: kdsl-p1l@0.1-draft
+```
+
+正本:
+
+```text
+spec/adps/kdsl-p1l-contract-schema.md
 ```
 
 制約:
 
 ```text
-P1/P1L valid != executable
-P1/P1L正規化必須
+P1L valid != executable
+P1L lint/round-trip pass != execution authority
+PROFILE completion != inference
+all AUTHORITY rails explicit
+BINDING.executable:false
+RUNTIME pre-execution disposition != R1 result RT
+```
+
+### P1
+
+```text
+P1:=canonical P1Lに従属するreversible compact serialization
+schema: kdsl-p1@0.1-draft
+```
+
+正本:
+
+```text
+spec/adps/kdsl-p1-compact-contract-schema.md
+```
+
+制約:
+
+```text
+P1 != 独立canonical contract
+P1 valid != executable
+P1→P1L再構成不能→blocked/P1L fallback
+unknown profile/alias/preset推測禁止
+implicit default禁止
+```
+
+Legacy boundary:
+
+```text
+project-local `P1|M:...|T:F|...`:=legacy operational evidence
+loss=P→exact compatibility evidence時のみprofile_completed候補
+loss=L意味推測禁止
+AP/H意味推測禁止
+Authority rails不在→canonical promotion blocked
+```
+
+### P1L / P1 normalization
+
+```text
+KDSL-DP
+→ normalize
+P1L
+→ optional compact serialization
+P1
+→ separate runtime binding/authority evaluation
+```
+
+```text
+KDSL-DP→P1L/P1正規化必須
+P1L/P1 schema/lint pass != runtime binding
+P1L/P1 structural_pass != semantic equivalence/safety proof/authority
+```
+
+### P1L / P1 BINDING
+
+```text
+BINDING:=contract validityとruntime execution readinessを分離するblock
+```
+
+```text
+state: unbound|bound|blocked
+executable:false under kdsl-p1l@0.1-draft / kdsl-p1@0.1-draft
+runtime control valid != authority sufficient
+authority sufficient != executed
 ```
 
 ### K1 / PF1
@@ -107,6 +181,7 @@ K1/PF1:=Runtime Control系の実行制御層
 
 ```text
 詳細仕様は本repoでは未整備
+P1L/P1 schema adoptionで自動生成/推測禁止
 ```
 
 ### R1
@@ -133,6 +208,7 @@ KDSL_PROMPT:=AI coding tool向けKDSL作業契約block
 先頭固定
 前置き自然文禁止
 D禁止時は出力禁止
+P1L/P1 validのみで生成許可扱い禁止
 ```
 
 ### KDSL_RESULT
@@ -188,6 +264,19 @@ fail=runtime確認失敗
 blk=runtime確認不能
 ```
 
+P1L/P1 pre-execution disposition:
+
+```text
+pending↔p
+user_required↔u
+not_applicable↔na
+```
+
+```text
+v/fail/blk:=R1/R1C result only
+P1L/P1で実行前result claim禁止
+```
+
 ### RT:v
 
 ```text
@@ -213,6 +302,7 @@ unit test pass
 静的確認
 推測
 validator pass
+P1L/P1 structural validity
 ```
 
 ### 未確認
@@ -263,6 +353,8 @@ OBSERVED:=ログ/実機/実行結果/差分などにより観測された事実
 INFERRED:=観測から推論したが直接観測ではない内容
 ```
 
+P1L/P1 normalizationでINFERREDをOBSERVEDへ昇格禁止。
+
 ### NOT_OBSERVED
 
 ```text
@@ -292,16 +384,16 @@ UNVERIFIED→RT:v根拠禁止
 ### Authority
 
 ```text
-Authority:=read/edit/stage/commit/push/release等の許可状態
+Authority:=read/edit/stage/commit/push/release/public_repo/destructive_opsの許可状態
 ```
 
 ### AUTHORITY
 
 ```text
-AUTHORITY:=R1/KDSL_PROMPT内で権限状態を明示するblock
+AUTHORITY:=R1/KDSL_PROMPT/P1L/P1内で権限状態を明示するblock
 ```
 
-推奨key:
+P1L/P1 required keys:
 
 ```text
 read
@@ -324,6 +416,19 @@ allow_once
 propose_only
 not_requested
 not_applicable
+```
+
+制約:
+
+```text
+missing/implicit rail→blocked
+read allow != edit allow
+edit allow != commit allow
+commit allow != push allow
+push allow != release allow
+not_requested != allow
+propose_only != operation authority
+PLAN/FLOW != authority
 ```
 
 ### NEXT
@@ -408,6 +513,7 @@ validator未実行→pass扱禁止
 validator pass != RT:v
 validator pass != U承認
 validator pass != 実装妥当性保証
+validator pass != P1L/P1 runtime binding/authority
 ```
 
 ## Actor terms
@@ -421,13 +527,13 @@ U:=ユーザー
 ### OrchestratorLLM
 
 ```text
-OrchestratorLLM:=統括LLM。意図整理/KDSL生成/R1検収/安全gate管理を行う
+OrchestratorLLM:=統括LLM。意図整理/KDSL生成/P1L-P1正規化/R1検収/safety gate管理を行う
 ```
 
 ### AI tool
 
 ```text
-AI tool:=Codex等のAI coding tool。KDSL_PROMPT範囲内で調査/編集/検証/報告する
+AI tool:=Codex等のAI coding tool。runtime binding/authorityを満たしたKDSL_PROMPT範囲内で調査/編集/検証/報告する
 ```
 
 ### SkillAgentTool
