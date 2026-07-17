@@ -17,7 +17,7 @@ HELPER_CONSUMERS = {
         'semantic': {'REGISTRY', 'aggregate_state', 'authority_is_unverified', 'is_blank'},
     },
     'kdsl_r1c_optional.py': {
-        'structural': {'parse_registry'},
+        'structural': set(),
         'semantic': {
             'KNOWN_IDS',
             'KNOWN_STATES',
@@ -33,6 +33,7 @@ MIGRATED_CONSUMERS = {
     'kdsl_safety_semantics.py': {'SafetyGateCompatibilityView'},
     'kdsl_safety_gate_inheritance.py': {'SafetyGateCompatibilityView'},
     'kdsl_safety_gate_graph.py': {'SafetyGateCompatibilityView'},
+    'kdsl_r1c_optional.py': {'SafetyGateCompatibilityView'},
 }
 
 WRAPPERS = {
@@ -68,7 +69,7 @@ def main() -> int:
     }
     results.append(
         record(
-            'exact remaining Safety Gate helper consumer set',
+            'exact remaining Safety Gate semantic helper consumer set',
             actual_consumers == set(HELPER_CONSUMERS),
             'actual=' + repr(sorted(actual_consumers)),
         )
@@ -93,7 +94,7 @@ def main() -> int:
 
     results.append(
         record(
-            'exact structural helper imports per remaining consumer',
+            'no remaining consumer imports legacy Safety Gate structural helpers',
             structural_ok,
             '; '.join(structural_detail),
         )
@@ -129,14 +130,19 @@ def main() -> int:
         )
     )
 
-    r1c_imports = imports_from(ROOT / 'kdsl_r1c_optional.py', 'kdsl_safety_gate')
+    r1c_gate_imports = imports_from(ROOT / 'kdsl_r1c_optional.py', 'kdsl_safety_gate')
+    r1c_compat_imports = imports_from(
+        ROOT / 'kdsl_r1c_optional.py',
+        'kdsl_parser_v2_safety_gate_compat',
+    )
     results.append(
         record(
-            'R1C optional remains the only mixed structural and semantic helper consumer',
-            'parse_registry' in r1c_imports
-            and {'KNOWN_IDS', 'KNOWN_STATES', 'REGISTRY', 'REQUIRED_FIELDS'} <= r1c_imports
-            and {'authority_is_unverified', 'is_blank'} <= r1c_imports,
-            'imports=' + repr(sorted(r1c_imports)),
+            'R1C optional uses CompatibilityView and retains only semantic helpers',
+            'parse_registry' not in r1c_gate_imports
+            and r1c_gate_imports == HELPER_CONSUMERS['kdsl_r1c_optional.py']['semantic']
+            and r1c_compat_imports == {'SafetyGateCompatibilityView'},
+            'semantic=' + repr(sorted(r1c_gate_imports))
+            + ' compat=' + repr(sorted(r1c_compat_imports)),
         )
     )
 
@@ -180,7 +186,7 @@ def main() -> int:
         )
     results.append(
         record(
-            'migrated consumers use CompatibilityView without legacy structural helpers',
+            'all migrated consumers use CompatibilityView without legacy structural helpers',
             migrated_ok,
             '; '.join(migrated_detail),
         )
