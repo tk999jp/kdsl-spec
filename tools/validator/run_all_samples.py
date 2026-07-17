@@ -27,7 +27,7 @@ RUNNERS = (
     ('normalization-checker-migration', 'run_normalization_migration_samples.py'),
     ('parser-adapter-inventory', 'run_parser_adapter_inventory_samples.py'),
     ('parser-adapter-consumer-matrix', 'run_parser_adapter_matrix_samples.py'),
-    ('parser-adapter-retirement-readiness', 'run_parser_adapter_retirement_readiness_samples.py'),
+    ('parser-adapter-removal', 'run_parser_adapter_removal_samples.py'),
     ('normalization-consumer-contract', 'run_normalization_consumer_contract_samples.py'),
     ('normalization-consumer-migration', 'run_normalization_consumer_migration_samples.py'),
     ('normalization-installer-removal', 'run_normalization_installer_removal_samples.py'),
