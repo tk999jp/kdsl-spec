@@ -1,11 +1,12 @@
 # Phase 8 — Shared AST v2 P1L First-Class Integration Review
 
-status: integrated / closeout merged / final status pending
+status: integrated / closeout merged / final status patch pending
 review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 128
 implementation_pull_request: 129
 closeout_pull_request: 130
+final_status_pull_request: 131
 implementation_source_head: 3285995a4c31c749537e190956f53c38bf35c627
 implementation_squash_commit: a9e27531b7dc2d9bca68de5284a76616956a7242
 closeout_alignment_head: 9613cc1d4943da9be446104dd740f705d3dd5b97
