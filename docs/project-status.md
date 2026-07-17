@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase8-p1l-shared-ast-integrated-closeout-candidate
+phase: phase8-p1l-shared-ast-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 128
-verified_main_head: a9e27531b7dc2d9bca68de5284a76616956a7242
+verified_main_head: cdb907d139bf562bc6cca9c4fdb436d12d802ea6
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -92,7 +92,7 @@ Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
 Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
-Phase 8 shared AST v2 P1L first-class integration: integrated / closeout candidate
+Phase 8 shared AST v2 P1L first-class integration: complete
 ```
 
 ## 5. Repository enforcement
@@ -120,6 +120,18 @@ KDSL Validation: success
 Packet Semantic Property: success
 Packet P1 Normalization Property: success
 Phase 8 shared P1L compatibility corpus: 10 / failed 0
+```
+
+Phase 8 closeout proof:
+
+```text
+PR: 130
+source head: 9613cc1d4943da9be446104dd740f705d3dd5b97
+squash commit: cdb907d139bf562bc6cca9c4fdb436d12d802ea6
+workflow run: 29613621345 / #455
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
 ```
 
 Phase 7 Packet→P1L/P1 implementation proof:
@@ -311,7 +323,7 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: merge Phase 8 closeout alignment and close tracking issue #128
+P0: close tracking issue #128 after final-status PR merge
 P1: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
