@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-17
-phase: phase6-semantic-parser-foundation-complete
+phase: phase7a-p1-p1l-contract-design-active
 repository: tk999jp/kdsl-spec
 default_branch: main
-tracking_issue: 55
-verified_main_head: 53e70450d244382356ce8f8904db464e3720f8ed
+tracking_issue: 118
+verified_main_head: aa6530dd7a288b65e98c50ce01a1cbc8863454b2
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -88,6 +88,7 @@ Phase 6C active-checker structural migrations: complete
 Phase 6D consumer/property/repository migration and proof: complete
 Phase 6D-9A adapter zero-reference readiness: integrated
 Phase 6D-9B parser adapter removal/post-deletion proof: integrated
+Phase 7A P1/P1L ownership and contract design: active
 ```
 
 ## 5. Repository enforcement
@@ -293,9 +294,9 @@ KDSL-Packet直接実行禁止
 FLOW-CHANGE != edit authority
 ```
 
-## 13. Phase 6 completion
+## 13. Phase 6 completion / Phase 7 start
 
-Completed:
+Phase 6 completed:
 
 ```text
 AST v2 contract and typed core
@@ -309,6 +310,17 @@ legacy namespace adapter removal
 post-deletion repository verification
 ```
 
+Phase 7A active design direction:
+
+```text
+P1L:=lossless structured normalized contract schema candidate
+P1:=compact serialization profile subordinate to P1L candidate
+P1/P1L valid != executable
+profile completion != inference
+authority/runtime binding separate from structural validity
+Packet P1/P1L target remains blocked until canonical adoption and integration
+```
+
 Not proven / non-goals:
 
 ```text
@@ -317,7 +329,8 @@ complete natural-language interpretation
 complete safety proof
 arbitrary cross-document proof
 Packet normalization completion
-canonical P1/P1L target schema
+canonical P1/P1L target schema adoption
+P1/P1L runtime binding
 Packet executable promotion
 stable/public-ready promotion
 ```
@@ -334,6 +347,7 @@ experimental heuristic validator helpers
 typed AST v2 structural foundation
 all active checker and known runtime structural consumers migrated
 legacy namespace adapter retired
+P1/P1L canonical contract design in progress
 ```
 
 Do not present as:
@@ -341,6 +355,8 @@ Do not present as:
 ```text
 stable KDSL release
 public-ready guarantee
+canonical P1/P1L schema already adopted
+P1/P1L executable runtime contract
 Packet executable runtime contract
 normalization-complete target
 complete semantic parser
@@ -351,19 +367,23 @@ complete safety proof
 ## 15. Next safe steps
 
 ```text
-P0: close Phase 6 tracking issue after closeout PR
-P1: define next phase from remaining non-goal/gap priorities
-P2: same-marker multi-envelope semantics only under separate design approval
-P3: canonical P1/P1L schema only under separate phase
-Hold: stable/public-ready/tag/release/Release Assets
+P0: review and integrate Phase 7A P1/P1L ownership/contract design
+P1: Phase 7B canonical P1L schema + subordinate P1 compact schema + lint/examples
+P2: Phase 7C parser/validator first slice and round-trip corpus
+P3: Phase 7D Packet normalization integration under non-executable preview boundary
+Hold: K1/PF1 invention, executable promotion, stable/public-ready/tag/release/Release Assets
 ```
 
 Stop when:
 
 ```text
-parity evidence is lost
-semantic utility behavior changes unintentionally
+P1L/P1 ownership becomes ambiguous
+unknown legacy alias/profile/preset meaning must be inferred
+critical authority rail becomes implicit
+profile defaults lack exact revision/digest evidence
+P1 compact round-trip loses protected wording or exact strings
+RUNTIME contract field claims RT:v without evidence
+Packet normalization becomes executable
 RT/NEXT/COMMIT meaning changes
 Packet/Normalization/Safety/CP-Lift boundaries weaken
-unknown schema/default inference is required
 ```
