@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 REPO_ROOT = ROOT.parent.parent
 RUNNERS = (
+    ('parser-adapter-retirement-readiness', 'run_parser_adapter_retirement_readiness_samples.py'),
     ('core', 'run_samples.py'),
     ('safety-gate', 'run_safety_gate_samples.py'),
     ('r1c-roundtrip', 'run_r1c_roundtrip_samples.py'),
@@ -27,7 +28,6 @@ RUNNERS = (
     ('normalization-checker-migration', 'run_normalization_migration_samples.py'),
     ('parser-adapter-inventory', 'run_parser_adapter_inventory_samples.py'),
     ('parser-adapter-consumer-matrix', 'run_parser_adapter_matrix_samples.py'),
-    ('parser-adapter-retirement-readiness', 'run_parser_adapter_retirement_readiness_samples.py'),
     ('normalization-consumer-contract', 'run_normalization_consumer_contract_samples.py'),
     ('normalization-consumer-migration', 'run_normalization_consumer_migration_samples.py'),
     ('normalization-installer-removal', 'run_normalization_installer_removal_samples.py'),
