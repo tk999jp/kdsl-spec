@@ -30,9 +30,6 @@ LEGACY_HELPERS = {
     'kdsl_safety_gate': {
         'extract_gate_block',
         'parse_registry',
-        'aggregate_state',
-        'authority_is_unverified',
-        'is_blank',
     },
 }
 
