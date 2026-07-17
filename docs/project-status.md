@@ -1,12 +1,12 @@
 # KDSL / R1 Project Status
 
 status: canonical-project-status
-last_updated: 2026-07-17
-phase: phase7-canonical-p1-p1l-contract-complete-candidate
+last_updated: 2026-07-18
+phase: phase7-canonical-p1-p1l-contract-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 118
-verified_main_head: 222b8483ec12e09d5316a7124f3f611dbb5e507c
+verified_main_head: 729f2000e1341dd9624f5d0f60cb9c0abcf040f0
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -91,7 +91,7 @@ Phase 7B canonical P1L/P1 schema/lint/examples/alignment: integrated
 Phase 7C P1L/P1 parser/validator/round-trip first slice: integrated
 Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
 Phase 7D manifest/glossary/index/review/status alignment: integrated
-Phase 7 canonical P1/P1L contract scope: completion candidate
+Phase 7 canonical P1/P1L contract scope: complete
 ```
 
 ## 5. Repository enforcement
@@ -120,6 +120,20 @@ Packet Semantic Property: success
 Packet P1 Normalization Property: success
 ```
 
+Closeout alignment proof:
+
+```text
+PR: 126
+source head: e6061bf730ebfe1b5eeb45582e03f8c30181f99d
+squash commit: 729f2000e1341dd9624f5d0f60cb9c0abcf040f0
+workflow run: 29592332244 / #435
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+preservation audit: pass-with-correction
+canonical glossary: unchanged from verified pre-closeout main
+```
+
 Verified current additions:
 
 ```text
@@ -135,6 +149,7 @@ Corrective record:
 Phase 7C run #426 failed→legacy colon classification correction→run #427 success
 Phase 7D run #430/#431 unified failure→legacy structural helper import detected
 property checker migrated to NormalizationCompatibilityView→run #433 all jobs success
+Phase 7 closeout audit detected canonical glossary over-compression→canonical glossary restored / v2 detailed terms preserved→run #435 success
 ```
 
 ```text
@@ -232,6 +247,7 @@ P1L/P1 bounded parser/validator/round-trip first slice
 Packet→P1L/P1 target-specific mapper/property
 P1L_PREVIEW/P1_PREVIEW non-executable boundary
 manifest/glossary/index/review/status alignment
+preservation audit and canonical glossary restoration
 ```
 
 Not included:
@@ -279,10 +295,9 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: merge Phase 7D closeout/alignment after required checks
-P1: synchronize verified_main_head and close tracking issue #118
-P2: shared AST v2 first-class P1L integration only under separate compatibility review
-P3: K1/PF1 canonical runtime-control design only under separate approval
+P0: merge final status synchronization and close tracking issue #118
+P1: shared AST v2 first-class P1L integration only under separate compatibility review
+P2: K1/PF1 canonical runtime-control design only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
