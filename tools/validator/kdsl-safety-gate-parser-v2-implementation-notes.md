@@ -1,6 +1,6 @@
 # Safety Gate Parser v2 Compatibility Notes
 
-status: active-checker-and-three-runtime-consumers-migrated
+status: active-checker-and-all-known-structural-consumers-migrated
 compatibility_view: tools/validator/kdsl_parser_v2_safety_gate_compat.py
 parity_checker: tools/validator/kdsl_parser_v2_safety_gate_parity.py
 parity_runner: tools/validator/run_parser_v2_safety_gate_parity_samples.py
@@ -8,15 +8,16 @@ active_checker: tools/validator/kdsl_safety_gate.py
 consumer_contract_runner: tools/validator/run_safety_gate_consumer_contract_samples.py
 safety_semantics_migration_runner: tools/validator/run_safety_semantics_migration_samples.py
 inheritance_graph_migration_runner: tools/validator/run_safety_inheritance_graph_migration_samples.py
-latest_implementation_pull_request: 110
-latest_implementation_squash_commit: 01d9de06f6af12ae7b06ba35a83405457a447817
-latest_workflow: 29543232320 / 392 / success
+r1c_optional_migration_runner: tools/validator/run_r1c_optional_safety_migration_samples.py
+latest_implementation_pull_request: 112
+latest_implementation_squash_commit: dfbaaa40580c43d563650acbf21b5ece75bc3fb7
+latest_workflow: 29543907368 / 396 / success
 tracking_issue: 55
 validator_authority: non-authoritative
 
 ## Purpose
 
-Provide a source-spanned Safety Gate structural view for the active checker and migrated runtime consumers without changing canonical Safety Gate semantics, authority, or runtime-evidence rules.
+Provide a source-spanned Safety Gate structural view for the active checker and known runtime consumers without changing canonical Safety Gate semantics, authority, or runtime-evidence rules.
 
 ```text
 parser/consumer migration != Safety Gate semantic equivalence
@@ -69,7 +70,17 @@ node text
 → existing graph-order/transition/scope/evidence/authority checks
 ```
 
-Removed structural imports from these consumers:
+### R1C optional
+
+```text
+embedded SAFETY_GATES value
+→ standalone SAFETY_GATES envelope
+→ SafetyGateCompatibilityView.from_text(...)
+→ view.registry / view.entry_dicts / view.entry_field_orders
+→ existing optional deep-lint checks
+```
+
+Removed structural imports from known consumers:
 
 ```text
 extract_gate_block
@@ -107,12 +118,15 @@ record field order
 record values
 ```
 
-## Retained semantic utilities
+## Retained semantic utilities and constants
 
-Inheritance and graph continue to import:
+Known consumers continue to import a bounded semantic API from `kdsl_safety_gate`:
 
 ```text
+KNOWN_IDS
+KNOWN_STATES
 REGISTRY
+REQUIRED_FIELDS
 aggregate_state
 authority_is_unverified
 is_blank
@@ -120,22 +134,12 @@ is_blank
 
 These are semantic utilities/constants, not structural parser-adapter dependencies.
 
-## Remaining structural helper consumer
+Current structural dependency result:
 
 ```text
-file: tools/validator/kdsl_r1c_optional.py
-structural pending:
-  parse_registry
-semantic/constants retained temporarily:
-  KNOWN_IDS
-  KNOWN_STATES
-  REGISTRY
-  REQUIRED_FIELDS
-  authority_is_unverified
-  is_blank
+direct kdsl_parser_adapter imports: none
+legacy Safety Gate structural helper consumers: none
 ```
-
-R1C optional is now the only direct legacy Safety Gate structural-helper consumer.
 
 ## Semantic checks retained
 
@@ -152,7 +156,7 @@ bounded semantic atoms/weakening detection
 aggregate state
 inheritance transitions
 graph semantics and topological ordering
-R1C optional Safety Gate deep lint
+R1C optional EVIDENCE/AUTHORITY/ANNUNCIATOR/Safety Gate deep lint
 ```
 
 ## Migration corpus
@@ -161,36 +165,28 @@ R1C optional Safety Gate deep lint
 Safety Gate consumer contract: 8 cases
 Safety semantics migration: 4 cases
 inheritance/graph migration: 6 cases
+R1C optional Safety Gate migration: 6 cases
 ```
 
-Inheritance/graph cases:
+R1C optional cases:
 
 ```text
 CompatibilityView import boundary
-inheritance hold preserved
-hold->satisfied missing evidence/authority rejected
-repository multi-generation graph pass
-graph cycle rejected
-graph missing inherited hold gate rejected
-```
-
-Corrective evidence:
-
-```text
-run #391: fixture failure because evidence:none is nonblank by contract
-fixture corrected to actual empty value
-implementation semantics unchanged
-run #392: success
+model shape and field-order preservation
+duplicate entry-order preservation
+repository deep optional example pass
+unknown state rejection
+satisfied evidence/authority rejection
 ```
 
 Verified state:
 
 ```text
-workflow run: 29543232320 / #392
+workflow run: 29543907368 / #396
 KDSL Validation: success
 Packet Semantic Property: success
-unified runners: 33
-unified expectations: 429 / failed 0
+unified runners: 34
+unified expectations: 435 / failed 0
 ```
 
 ## Exit codes
@@ -208,16 +204,17 @@ CompatibilityView: integrated
 active checker migration: integrated
 Safety semantics structural migration: integrated
 inheritance/graph structural migration: integrated
-R1C optional embedded SAFETY_GATES migration: pending
+R1C optional embedded SAFETY_GATES migration: integrated
+legacy Safety Gate structural helper consumers: none
 semantic utility location/retention decision: pending
 parity-only helper strategy: pending
-kdsl_parser_adapter.py retirement: blocked
+kdsl_parser_adapter.py retirement: blocked pending readiness proof
 ```
 
 ## Next step
 
 ```text
-Phase 6D-8D R1C optional embedded SAFETY_GATES migration
+Phase 6D-9 adapter and parity readiness inventory
 → semantic utility retention/location decision
 → parity-only helper strategy
 → adapter file retirement or explicit retention last
