@@ -73,6 +73,31 @@ sha256:<64 lowercase hexadecimal characters>
 
 The digest is computed over the canonical JSON bytes, not over the Markdown/YAML source bytes.
 
+### 3.1 Self-digest substitution
+
+`IDENTITY.digest` is required in the stored instance but its stored value must not be hashed as-is.
+
+Digest computation uses this deterministic substitution:
+
+```text
+1. construct the complete schema-ordered semantic projection
+2. replace only IDENTITY.digest with the fixed string `sha256:SELF`
+3. serialize canonical JSON
+4. UTF-8 encode
+5. compute SHA-256
+6. store `sha256:<computed lowercase hex>` in IDENTITY.digest
+```
+
+Validation repeats the same substitution and compares the computed digest with the stored digest.
+
+```text
+stored digest included as-is in digest input→prohibited
+stored digest=`sha256:SELF`→blocked
+other fields excluded to avoid recursion→prohibited
+```
+
+The substitution removes self-reference without removing the `IDENTITY.digest` key from the canonical field structure.
+
 ## 4. Identity record
 
 Every canonical K1/PF1 instance declares:
@@ -93,7 +118,7 @@ source_ref only != immutable identity
 digest only != semantic equivalence
 ```
 
-Digest mismatch, unsupported canonicalization ID, unknown field, or duplicate field results in `blocked`.
+Digest mismatch, unsupported canonicalization ID, invalid self-digest substitution, unknown field, or duplicate field results in `blocked`.
 
 ## 5. Nested referenced definitions
 
