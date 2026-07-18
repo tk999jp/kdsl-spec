@@ -1,17 +1,21 @@
-# KDSL Agent Execution Layer v1.0
+# KDSL Agent Execution Layer v1.1
 
-## 0. 位置づけ
+## 0. 目的
 
 ```text
-KDSL:=何を依頼するかを漢字圧縮
-P1L:=agent実行内容を損失なく固定する長形式契約
-P1:=P1Lの短縮serialization
-K1:=1回のagent run状態
-PF1:=project固有の既定条件
-R1:=実行結果の短い報告
+Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了
 ```
 
-Agent層はKDSL Coreの下位層。KDSLの第一目的・漢字identityを変更しない。
+Agent層の完成対象はschemaではなく、U価値としての作業完走。
+
+```text
+KDSL:=依頼内容を漢字圧縮
+K1:=agent run状態
+P1L:=厳密handoff用長形式契約
+P1:=任意の短縮転送表現
+PF1:=継続project既定
+R1:=結果報告
+```
 
 ```text
 KDSL Core > Agent層
@@ -19,129 +23,65 @@ Agent層!=KDSL本体
 Agent層!=汎用安全framework
 ```
 
-## 1. 使用条件
+## 1. 標準経路
 
-次のいずれかを含む時、Agent層を使用する。
-
-```text
-repo書込
-複数step実装
-再帰完走
-複数tool使用
-中断再開
-commit／push／release操作
-```
-
-通常会話、単発回答、変換だけの依頼では省略可。
-
-```text
-agent: required|optional
-```
-
-`agent: required`時:
-
-```text
-P1L必須
-P1必須
-K1必須
-継続project／project既定あり→PF1必須
-PF1なし→全条件をP1Lへ明示
-```
-
-## 2. 正規経路
+Codex開発作業ではAgent駆動を使用する。ただし通常投入は最小構成とする。
 
 ```text
 U自然文
 →ChatGPT converter
-→KDSL dev-prompt／KDSL-DP
-→P1L正規化
-→P1短縮
-→PF1適用
+→KDSL_PROMPT
 →K1初期化
-→Codex agent再帰実行
+→Codex再帰実行
 →R1
 →ChatGPT
 →U
 ```
 
-## 3. P1L
-
-### 3.1 目的
-
-P1Lは、ChatGPTからCodexへ渡す実行契約の損失なし長形式。
+標準必須:
 
 ```text
-P1L:
-版: kdsl-agent@1
-実行方式: agent再帰|単発
-目的:
-成功条件:
-正本:
-対象:
-非対象:
-権限:
-  読取: 可|不可|承認待|対象外
-  編集: 可|不可|承認待|対象外
-  試験: 可|不可|承認待|対象外
-  stage: 可|不可|承認待|対象外
-  commit: 可|不可|承認待|対象外
-  push: 可|不可|承認待|対象外
-  release: 可|不可|承認待|対象外
-  public履歴: 可|不可|承認待|対象外
-  破壊操作: 可|不可|承認待|対象外
-承認境界:
-作業:
-試験:
-検証:
-実機要否: 要|不要
-停止条件:
-完了条件:
-報告: R1
+KDSL_PROMPT＋K1
 ```
 
-### 3.2 権限
+次の場合だけ厳密契約を追加する。
 
 ```text
-権限元:=U明示指示／Project明示指示／PF1
-権限推測追加禁止
-P1L valid != 全操作許可
-必要操作=承認待→その境界直前まで実行可
-対象外操作→実行禁止
-PF1適用→権限拡張禁止／同値または縮小のみ
+中断再開
+複数agent handoff
+長時間run
+複雑な承認境界
+project既定の再利用
+U明示
+→PF1参照→P1L生成→K1初期化
 ```
 
-Uが修正・実装を明示した場合、明示scope内の読取／編集／試験はP1Lへ正規化可。commit／push／release／public履歴変更／破壊操作は、UまたはPF1の明示条件を必要とする。
+P1は転送量削減が必要な場合だけP1Lの代わりに使用する。P1LとP1の同時記載禁止。
 
-### 3.3 変更境界
-
-P1L成立後、K1は目的・scope・権限を変更できない。
+## 2. Agent再帰
 
 ```text
-目的／成功条件／対象／権限変更
-→P1L再生成
-→必要時U確認
+K1確認
+→未完から次作業選択
+→明示権限照合
+→実行
+→検証
+→K1更新
+→完了条件判定
+→未完ありなら再帰
 ```
 
-通常実装補正、targeted test追加、明示scope内の内部整理はP1L変更に当たらない。
-
-## 4. P1
-
-P1はP1Lの短縮serialization。意味省略禁止。
+Agentは明示scope内で次まで進める。
 
 ```text
-P1|版:kdsl-agent@1|実行方式:agent再帰|目的:...|成功条件:...|正本:...|対象:...|非対象:...|権限:読取=可,編集=可,試験=可,stage=対象外,commit=対象外,push=対象外,release=対象外,public履歴=不可,破壊操作=不可|承認境界:...|作業:...|試験:...|検証:...|実機要否:不要|停止条件:...|完了条件:...|報告:R1
+調査→実装→targeted test→必要broader test→runtime候補提示
 ```
 
-```text
-P1→P1L復元不能→P1不成立
-P1 field省略禁止
-P1権限rail省略禁止
-P1 compact化→漢字identity解除禁止
-```
+内部component完了、file数、test数、作業量、途中commitは停止理由にしない。
 
-## 5. K1
+## 3. K1
 
-### 5.1 状態
+K1は通常経路の最小状態block。
 
 ```text
 K1:
@@ -151,50 +91,88 @@ K1:
 未完:
 検証: 未実行|一部|成功|失敗
 実機: 不要|未確認|確認済
-次遷移:
+次:
 停止理由:
 ```
 
-### 5.2 再帰
+中断再開／handoff時だけ識別情報を追加する。
 
 ```text
-K1確認
-→未完から次作業選択
-→P1権限照合
-→実行
-→検証
-→K1更新
-→完了条件判定
-→未完ありなら再帰
+run:
+契約:
+baseline:
+PF1:
 ```
 
-停止条件:
+完了条件:
 
 ```text
-P1L停止条件成立
-必要操作権限=承認待／不可
-要件両立不能
-必要正本取得不能
-実行継続で明示scope変更必須
-```
-
-内部component完了、file数、test数、作業量、途中commitは停止理由にしない。
-
-### 5.3 完了
-
-```text
-K1状態=完了
+状態=完了
 →未完=なし
 →検証=成功
 →実機要否=不要なら実機=不要
 →実機要否=要なら実機=確認済
 ```
 
-build／lint／test／CI成功だけで実機確認済へ変更禁止。
+K1更新で目的・成功条件・対象・権限を変更しない。変更が必要ならKDSL_PROMPTまたはP1Lを再生成する。
+
+## 4. P1L
+
+P1Lは厳密handoff／中断再開時の長形式契約。通常runでは省略可。
+
+```text
+P1L:
+版: kdsl-agent@1.1
+目的:
+成功条件:
+正本:
+対象:
+非対象:
+権限:
+  読取: 可
+  編集: 可
+  試験: 可
+  commit: 承認待
+承認境界:
+作業:
+検証:
+実機要否: 要|不要
+停止条件:
+完了条件:
+報告: R1
+```
+
+権限は今回runに関係する操作だけ記載する。
+
+```text
+記載済操作:=契約値を適用
+未記載操作:=P1Lから許可しない
+U明示指示>PF1>P1L生成時既定
+PF1適用→権限拡張禁止
+```
+
+release／public履歴／破壊操作を使用しないrunで定型列挙しない。必要な場合だけ明示する。
+
+## 5. P1
+
+P1は任意の短縮転送表現。正本はP1LまたはKDSL_PROMPT。
+
+```text
+P1|版:kdsl-agent@1.1|目的:...|成功:...|正本:...|対象:...|非対象:...|権限:読取=可,編集=可,試験=可,commit=承認待|作業:...|検証:...|停止:...|完了:...|報告:R1
+```
+
+```text
+P1:=任意短縮
+P1!=可逆性保証
+P1!=P1Lとの同時必須
+P1欠落→Agent実行阻害なし
+```
+
+escape／round-tripが正式実装されるまで「可逆serialization」と称さない。
 
 ## 6. PF1
 
-PF1は継続projectの既定条件。P1L生成時に参照し、P1Lへ展開する。
+PF1は継続projectの既定。P1L生成前に参照する。
 
 ```text
 PF1:
@@ -204,15 +182,6 @@ project:
 既定mode: min
 Phase方針:
 権限既定:
-  読取:
-  編集:
-  試験:
-  stage:
-  commit:
-  push:
-  release:
-  public履歴:
-  破壊操作:
 承認必須:
 試験方針:
 実機方針:
@@ -220,37 +189,47 @@ Phase方針:
 ```
 
 ```text
-PF1:=project既定
-PF1!=今回依頼
 U明示指示>PF1
 PF1でU禁止反転禁止
 PF1で権限拡張禁止
 PF1未確認値推測禁止
 ```
 
-## 7. Agent駆動と安全契機
-
-Agent層は実行状態を管理する。潜在risk探索やgate自動生成は行わない。
+正規順序:
 
 ```text
-安全契機:=P1Lへ明示条件を保持
-K1:=実行状態遷移
-PF1:=project既定供給
+U指示＋PF1
+→KDSL_PROMPT／必要時P1L
+→必要時P1
+→K1初期化
 ```
 
-禁止:
+## 7. 停止
+
+停止は次だけ。
 
 ```text
-潜在risk→新承認gate自動追加
-K1更新→scope追加
-PF1適用→権限拡張
-検証成功→RT:v自動昇格
-未依頼hardening→未完追加
+明示停止条件成立
+必要操作権限=承認待／不可
+要件両立不能
+必要正本取得不能
+継続にscope変更必須
 ```
 
-## 8. 非採用
+必要操作が承認待なら、その境界直前まで進めてK1を更新する。
 
-Agent層v1では次を導入しない。
+## 8. 限定安全
+
+```text
+明示criticalだけ保持
+潜在risk→新gate追加禁止
+K1更新→scope追加禁止
+PF1適用→権限拡張禁止
+検証成功→RT:v自動昇格禁止
+未依頼hardening→未完追加禁止
+```
+
+## 9. 非採用
 
 ```text
 Safety Gate Registry
@@ -262,16 +241,12 @@ content digest／canonical JSON
 runtime evaluator
 ```
 
-必要性が実用上確認された場合のみ、Agent層の独立拡張として再審査する。
-
-## 9. 正規判定
+## 10. 検証境界
 
 ```text
-P1L:=正規長形式
-P1:=P1L可逆短縮
-K1:=run状態正本
-PF1:=project既定正本
-R1:=結果報告
+validator pass:=形式整合
+validator pass!=Agent実効性
+CI pass!=Codex runtime確認
 ```
 
-validator passは実行許可・意味同等・RT:vの証明ではない。
+Codex再帰完走・中断再開・承認境界停止は実runで確認し、未確認時は未証明として扱う。
