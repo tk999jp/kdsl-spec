@@ -58,7 +58,7 @@ critical exact-string change
 - [ ] `build_test_ci_is_rt_v:false` is present.
 - [ ] NEXT and COMMIT authority boundaries are preserved.
 - [ ] Binding evidence is external/content-addressed and `executable:false`.
-- [ ] Binding-evidence schema remains deferred, not invented.
+- [ ] Binding evidence references `kdsl-binding-evidence@0.1-draft`; record lint remains separate.
 
 Blocked:
 
@@ -209,10 +209,8 @@ Any implicit PF1 dependency→blocked.
 
 ## 12. Validator limitation
 
-Until Phase 9C:
-
 ```text
-no canonical K1/PF1 resolver/parser/validator implementation
-manual lint evidence only
-existing validator pass != K1/PF1 conformance proof
+K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice
+binding-evidence parser/validator:=not implemented
+validator pass != binding-evidence conformance|runtime binding|authority proof
 ```

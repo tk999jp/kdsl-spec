@@ -56,7 +56,7 @@ RESTRICTIONS:
 AUTHORITY:
   state: sufficient
   rails:
-    read: &read_rail
+    read:
       requested: allow
       k1_disposition: preserve
       pf1_mode: allow_max
@@ -70,7 +70,7 @@ AUTHORITY:
       effective_scope: any
       effective_cardinality: any
       state: sufficient
-    edit: &forbid_rail
+    edit:
       requested: forbid
       k1_disposition: preserve
       pf1_mode: forbid
@@ -84,12 +84,90 @@ AUTHORITY:
       effective_scope: none
       effective_cardinality: none
       state: sufficient
-    stage: *forbid_rail
-    commit: *forbid_rail
-    push: *forbid_rail
-    release: *forbid_rail
-    public_repo: *forbid_rail
-    destructive_ops: *forbid_rail
+    stage:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
+    commit:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
+    push:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
+    release:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
+    public_repo:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
+    destructive_ops:
+      requested: forbid
+      k1_disposition: preserve
+      pf1_mode: forbid
+      pf1_scope: any
+      pf1_cardinality: any
+      approval_requirement: not_required
+      approval_evidence_id: none
+      targets: []
+      operation_instance: none
+      effective_value: forbid
+      effective_scope: none
+      effective_cardinality: none
+      state: sufficient
 APPROVALS:
   state: not_required
   requirements: []

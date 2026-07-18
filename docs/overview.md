@@ -169,6 +169,7 @@ P1/P1L valid != executable
 K1 schema: kdsl-k1@0.1-draft
 PF1 schema: kdsl-pf1@0.1-draft
 canonicalization: kdsl-runtime-control-c14n@0.1-draft
+binding evidence: kdsl-binding-evidence@0.1-draft
 status: adopted v2-draft / non-executable
 ```
 
@@ -178,8 +179,9 @@ PF1 may narrow but never widen P1L authority
 capability != permission
 Stop continuation/routing != authority
 binding evidence:=external content-addressed record
+binding-evidence schema/lint:=adopted v2-draft
 BINDING.executable:false
-resolver/runtime binding/binding-evidence schema:=not implemented
+binding evaluator/runtime binding:=not implemented
 ```
 
 ## 8. Packet boundary

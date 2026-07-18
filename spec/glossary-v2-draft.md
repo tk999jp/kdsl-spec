@@ -229,6 +229,20 @@ PF1 may narrow but never widen P1L authority
 ceiling dimensions:=mode/scope/cardinality
 ```
 
+### Binding evidence
+
+```text
+binding evidence:=external content-addressed runtime-control evaluation record
+schema: kdsl-binding-evidence@0.1-draft
+P1L reference:=compact JSON schema/id/revision/digest
+```
+
+```text
+bound != authority sufficient|capability sufficient|executable
+approval content validity != source trust
+all eight authority rails and all evaluation dimensions remain explicit
+```
+
 ### Runtime-control canonicalization
 
 ```text

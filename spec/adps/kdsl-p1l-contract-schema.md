@@ -158,7 +158,7 @@ NORMALIZATION:
   round_trip: not_tested|structural_pass|loss_detected|blocked
   semantic_equivalence: not_proven
 BINDING:
-  runtime_control: "<K1/PF1 reference or unresolved>"
+  runtime_control: "<compact kdsl-binding-evidence reference or unresolved>"
   state: unbound|bound|blocked
   executable: false
 ```
@@ -328,7 +328,13 @@ Critical classes include scope, non-target, observation classification, goal, pl
 
 ## 13. BINDING
 
-Schema adoption does not define runtime control.
+`kdsl-binding-evidence@0.1-draft` defines the external evidence-record fields. P1L stores only this compact JSON scalar reference:
+
+```text
+{"schema":"kdsl-binding-evidence@0.1-draft","id":"<exact id>","revision":"<exact revision>","digest":"sha256:<64 lowercase hex>"}
+```
+
+The fixed key order is `schema,id,revision,digest` with no insignificant whitespace. A resolved reference must match the exact external record. This reference form does not define a runtime evaluator.
 
 ```text
 BINDING.state default: unbound
