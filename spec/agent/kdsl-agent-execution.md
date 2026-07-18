@@ -244,8 +244,9 @@ runtime evaluator
 
 ```text
 validator pass:=形式整合
-validator pass!=Agent実効性
+運用回帰pass:=状態遷移／承認境界／再開契約の自動確認
+運用回帰pass!=Codex実効性
 CI pass!=Codex runtime確認
 ```
 
-Codex再帰完走・中断再開・承認境界停止は実runで確認し、未確認時は未証明として扱う。
+`examples/kanji/agent-operational-proof.kdsl.md`を`tools/validator/kdsl_agent_operational_regression.py`で検証する。Codex再帰完走・中断再開・承認境界停止は実runで確認し、未確認時は未証明として扱う。
