@@ -29,7 +29,7 @@ Core/R1/Bridge canonical meaning
 > K1 runtime-control semantics
 > PF1 project-scoped exact definitions
 > lint
-> future resolver/parser/validator
+> bounded resolver/parser/validator
 > route/skill/tool implementation
 > example/template/tool
 ```
@@ -52,15 +52,34 @@ BINDING.executable:false under P1L/P1 v0.1 draft
 ```text
 Phase 9A design: complete
 Phase 9B schema/lint/examples: adopted v2-draft
-Phase 9C resolver/parser/validator: not implemented
+Phase 9C resolver/parser/validator bounded first slice: adoption candidate
 Phase 9D binding-evidence schema: not implemented
 runtime binding: not implemented
+```
+
+## Validator entry points
+
+```text
+python tools/validator/kdsl_validate.py --target k1 <file>
+python tools/validator/kdsl_validate.py --target pf1 <file>
+python tools/validator/kdsl_validate.py --target runtime-control <bundle-file>
+python tools/validator/kdsl_runtime_control_compatibility.py <k1-file> <pf1-file>
+python tools/validator/run_runtime_control_samples.py
+```
+
+```text
+validator pass != executable|authority grant
+compatibility valid != P1L binding|authority sufficient
+runtime-control report executable:false
+semantic_equivalence:not_proven
+execution_authority:none
 ```
 
 ## Examples
 
 ```text
 examples/runtime/k1-pf1-non-executable.example.md
+examples/runtime/k1-canonical.example.md
 ```
 
-Examples are explanatory and are not specification sources, digest proofs, approval evidence, capability evidence, or execution instructions.
+The explanatory example is not a specification source. The canonical K1 machine sample is validator corpus input, but its pass result is not a safety proof, approval, runtime binding, execution authority, or RT:v evidence.
