@@ -1,113 +1,64 @@
-# Task Template: Investigation Only v0.1-draft
-
-目的: 実装・編集を行わず、共有材料/リポジトリ/ログ/差分を調査して、次の安全な判断材料をR1で返すためのtask template。
-
-status: template-draft
-requires:
+# Task Template: 調査のみ
 
 ```text
-templates/base/kdsl_base_dev.md
-templates/result/r1_result_spec.md
+用途:=共有材／repo／log／差分を確認し、実装せず判断材料を返す
 ```
 
-## Intent
+## Instance
 
 ```text
-action: investigation_only
-edit: forbid
-commit: forbid
-push: forbid
-purpose: 原因候補/影響範囲/次の安全な一手を整理する
+KDSL_PROMPT:
+format: KDSL
+profile: dev-prompt
+mode: min
+safety: normal
+
+局面: {{調査名}}
+目的: {{明らかにする事項}}
+成功条件:
+- 観測事実／推定／未確認を分離
+- 原因候補を根拠付きで限定
+- 実装／編集なし
+
+根拠:
+- {{共有file／log／screenshot／repo}}
+
+正本:
+- repo: {{repo}}
+- branch: {{branch}}
+
+対象:
+- {{調査対象}}
+
+非対象:
+- file編集
+- commit／push／release
+- 未依頼の改善設計
+
+作業:
+1. 共有材先読
+2. 必要箇所だけrepo確認
+3. 事実／推定／未確認整理
+4. 依頼質問へ直接回答
+
+検証:
+- 実行commandは実行欄へ限定記録
+- 未実行検証→pass扱禁止
+- 検索失敗→不存在断定禁止
+
+停止条件:
+- 対象資料取得不能
+- 正本候補が相互矛盾し判断不能
+
+報告:
+KDSL_RESULTで調査結果を簡潔報告
 ```
 
-## Required instance fields
+## 禁止
 
 ```text
-PHASE:
-QUESTION:
-REPO_OR_MATERIAL:
-TARGET_SCOPE:
-NON_TARGET:
-KNOWN_OBSERVATIONS:
-STOP_CONDITIONS:
-```
-
-## Scope
-
-```text
-allow:
-  - read
-  - search
-  - inspect
-  - summarize
-  - propose
-
-deny:
-  - file edit
-  - code change
-  - git add
-  - git commit
-  - git push
-  - public repo操作
-  - release/tag/assets操作
-  - rollback/revert
-  - destructive operation
-```
-
-## AUTHORITY default
-
-```text
-read: allow
-edit: forbid
-stage: forbid
-commit: forbid
-push: forbid
-release: forbid
-destructive_ops: forbid
-```
-
-## Investigation rules
-
-```text
-共有材先読必須
-共有材判可→AI丸投禁止
-検索失敗→不存在断定禁止
-原因未確→広域修正禁止
-観測/推論/未確認を分離
-U観測 > AI推測
-```
-
-## Stop conditions
-
-```text
-調査範囲外の実装変更が必要→停止
-D禁止含む方針変更が必要→承認待
-破壊操作が必要→停止
-runtime確認が必要だが未実行→RT:u|p
-証拠不十分で断定不能→needs_userまたはblocked
-```
-
-## Output expectations
-
-```text
-観測
-原因候補
-主犯候補
-影響範囲
-改善済/未改善
-次の安全な一手
-未確認点
-```
-
-## R1 requirements
-
-```text
-KDSL_RESULT必須
-STATUSはsuccess/partial/blocked/needs_user/noopから選択
-FILESはchanged:noneを明記
-CMDは実行cmdのみ
-VERIFYは実行した確認のみ
-RTは通常naまたはu/p
-NEXTは提案のみ
-COMMITはnone/proposedのみ, 実行禁止
+調査を実装Phaseへ自動拡張禁止
+潜在riskから追加課題生成禁止
+AUTHORITY／Safety Registry追加禁止
+未確認→断定禁止
 ```
