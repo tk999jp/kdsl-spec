@@ -1,0 +1,58 @@
+name: Phase 9B K1 PF1 Runner
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/kdsl-phase9b-k1-pf1-schema
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Execute bounded alignment patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/phase9b-k1-pf1-alignment.yml').read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          end = "\n          PY\n\n      - name: Run bounded verification"
+          if marker not in workflow or end not in workflow:
+              raise SystemExit('alignment script markers not found')
+          script = workflow.split(marker, 1)[1].split(end, 1)[0]
+          exec(textwrap.dedent(script), {'__name__': '__main__'})
+
+          for path in [
+              '.github/workflows/phase9b-k1-pf1-runner.yml',
+              'docs/reviews/.phase9b-alignment-trigger',
+              'docs/reviews/.phase9b-alignment-trigger-2',
+          ]:
+              p = Path(path)
+              if p.exists():
+                  p.unlink()
+          PY
+      - name: Run bounded verification
+        run: |
+          python tools/validator/run_p1_shared_ast_samples.py
+          python tools/validator/run_p1_contract_samples.py
+          python tools/validator/run_packet_p1_normalization_samples.py
+          python tools/validator/run_all_samples.py
+      - name: Commit aligned Phase 9B candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Spec: align Phase 9B K1 PF1 adoption"
+          git push origin HEAD:agent/kdsl-phase9b-k1-pf1-schema
