@@ -1,6 +1,6 @@
 # Phase 9D — Binding Evidence Schema Review
 
-status: schema-candidate
+status: schema-adoption-candidate
 review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 132

@@ -1,7 +1,7 @@
 # KDSL Binding Evidence Schema v0.1 Draft
 
-status: v2-draft candidate
-canonical: v2-draft candidate
+status: v2-draft adopted
+canonical: v2-draft
 schema_id: kdsl-binding-evidence@0.1-draft
 canonicalization: kdsl-runtime-control-c14n@0.1-draft
 executable: no

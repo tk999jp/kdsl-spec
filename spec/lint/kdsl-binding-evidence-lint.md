@@ -1,6 +1,6 @@
 # KDSL Binding Evidence Lint v0.1 Draft
 
-status: v2-draft candidate
+status: v2-draft adopted
 applies_to: kdsl-binding-evidence@0.1-draft
 
 ## Required checks
