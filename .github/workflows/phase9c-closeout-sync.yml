@@ -1,16 +1,15 @@
 name: Phase 9C Closeout Sync
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - agent/kdsl-phase9c-k1-pf1-closeout
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -101,7 +100,9 @@ runtime binding/binding-evidence schema:=not implemented''')
           python tools/validator/run_all_samples.py
       - name: Store closeout synchronization
         run: |
-          rm .github/workflows/phase9c-closeout-sync.yml
+          git show origin/main:.github/workflows/validator.yml > .github/workflows/validator.yml
+          rm -f .github/workflows/phase9c-closeout-sync.yml
+          rm -f docs/reviews/.phase9c-closeout-trigger
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
