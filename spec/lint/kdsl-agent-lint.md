@@ -1,76 +1,30 @@
-# KDSL Agent Lint v1.0
+# KDSL Agent Lint v1.1
 
-## 対象
+## 目的
 
 ```text
-P1L
-P1
+Agent lint:=最小run状態と条件付き厳密契約の形式検査
+```
+
+形式lintはCodex Agent実効性・実行許可・RT:vを証明しない。
+
+## 標準Agent
+
+`agent: required`時の必須:
+
+```text
+KDSL_PROMPT
 K1
-PF1
 ```
 
-## P1L
-
-必須:
-
-```text
-版
-実行方式
-目的
-成功条件
-正本
-対象
-非対象
-権限
-承認境界
-作業
-試験
-検証
-実機要否
-停止条件
-完了条件
-報告
-```
-
-権限rail必須:
-
-```text
-読取／編集／試験／stage／commit／push／release／public履歴／破壊操作
-```
-
-値:
-
-```text
-可／不可／承認待／対象外
-```
-
-禁止:
-
-```text
-rail省略
-未定義権限値
-P1L valid=全操作許可扱い
-PF1による権限拡張
-```
-
-## P1
-
-```text
-marker:=P1|
-separator:=|
-権限separator:=,
-key／value:=:
-rail／value:==
-```
-
-P1L必須fieldと全権限railを保持する。P1からP1Lへ復元不能ならfail。
+P1L／P1／PF1は通常必須ではない。
 
 ## K1
 
 必須:
 
 ```text
-状態／現在／完了／未完／検証／実機／次遷移／停止理由
+状態／現在／完了／未完／検証／実機／次／停止理由
 ```
 
 状態:
@@ -87,17 +41,51 @@ P1L必須fieldと全権限railを保持する。P1からP1Lへ復元不能なら
 状態=完了→実機=不要|確認済
 ```
 
+中断再開／handoff時のみ追加必須:
+
+```text
+run／契約／baseline
+```
+
 K1内の目的／対象／権限再定義はfail。
+
+## P1L
+
+P1Lは厳密handoff／中断再開時だけ使用する。
+
+必須:
+
+```text
+版／目的／成功条件／正本／対象／非対象／権限／承認境界／作業／検証／実機要否／停止条件／完了条件／報告
+```
+
+権限は今回runに関係する操作だけ記載する。値は `可／不可／承認待／対象外`。
+
+```text
+全rail列挙強制禁止
+未記載操作:=P1Lから許可しない
+PF1適用→権限拡張禁止
+```
+
+## P1
+
+```text
+P1:=任意短縮
+P1Lと同時記載禁止
+P1!=可逆性保証
+```
+
+P1使用時は最低限、版／目的／成功／正本／対象／権限／作業／検証／停止／完了／報告を保持する。
 
 ## PF1
 
-必須:
+PF1は継続project既定。
 
 ```text
 project／正本／既定profile／既定mode／Phase方針／権限既定／承認必須／試験方針／実機方針／報告方針
 ```
 
-PF1権限railはP1Lと同一。PF1値をP1Lへ適用する時、同値または縮小だけ許可する。
+PF1はP1L生成前に参照し、U明示指示を反転・拡張しない。
 
 ## 共通
 
@@ -109,5 +97,6 @@ Packet依存禁止
 R1C依存禁止
 Binding Evidence必須化禁止
 validator pass != 実行許可
+validator pass != Codex Agent実効性
 validator pass != RT:v
 ```
