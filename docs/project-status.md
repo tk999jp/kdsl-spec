@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase8-p1l-shared-ast-complete
+phase: phase9a-k1-pf1-runtime-control-design-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
-tracking_issue: 128
-verified_main_head: cdb907d139bf562bc6cca9c4fdb436d12d802ea6
+tracking_issue: 132
+verified_main_head: d65c6eae6947b251246946bfafb9e51636efb145
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -93,6 +93,7 @@ Phase 7D Packet→P1L/P1 target-specific normalization preview: integrated
 Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
 Phase 8 shared AST v2 P1L first-class integration: complete
+Phase 9A K1/PF1 runtime-control design: complete
 ```
 
 ## 5. Repository enforcement
@@ -109,7 +110,22 @@ force push: blocked
 deletions: restricted
 ```
 
-## 6. Latest verified implementation
+## 6. Latest verified design / implementation
+
+Phase 9A design proof:
+
+```text
+PR: 133
+source head: b0ec16600686b1b372ab71236df794e03ee23267
+squash commit: d65c6eae6947b251246946bfafb9e51636efb145
+workflow run: 29630096451 / #465
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+scope: design documents only
+```
+
+Phase 8 implementation proof:
 
 ```text
 PR: 129
@@ -175,6 +191,7 @@ Phase 7D run #430/#431 unified failure→legacy structural helper import detecte
 property checker migrated to NormalizationCompatibilityView→run #433 all jobs success
 Phase 7 closeout audit detected canonical glossary over-compression→canonical glossary restored / v2 detailed terms preserved→run #435 success
 Phase 8 branch diagnostics exposed runner self-match/newline/indentation generation defects before commit→clean runner generation and final cleanup→run #449 success
+Phase 9A design self-audit separated authority from capability and reduced unresolved schema decisions to five
 ```
 
 ```text
@@ -195,7 +212,7 @@ P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
 shared AST v2 P1L marker registration: first-class integrated / bootstrap removed / compatibility corpus 10 failed 0
 runtime binding: not implemented
-K1/PF1 canonical schema: absent
+K1/PF1 canonical schema: absent / Phase 9A design integrated
 BINDING.state: unbound
 BINDING.executable: false
 ```
@@ -305,6 +322,7 @@ P1L canonical v2-draft structured contract schema
 P1 subordinate compact serialization
 P1L/P1 bounded validator/round-trip first slice
 Packet→P1L/P1 non-executable preview normalization first slice
+K1/PF1 non-executable runtime-control design
 experimental heuristic validator helpers
 ```
 
@@ -314,6 +332,7 @@ Do not present as:
 stable KDSL release
 public-ready guarantee
 P1L/P1 executable runtime contract
+canonical K1/PF1 runtime-control schema
 Packet normalized/executable runtime contract
 semantic equivalence proof
 complete safety proof
@@ -323,8 +342,8 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: close tracking issue #128 after final-status PR merge
-P1: K1/PF1 canonical runtime-control design only under separate approval
+P0: resolve the five Phase 9B schema decisions under separate approval
+P1: canonical K1/PF1 schema/lint/examples only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
