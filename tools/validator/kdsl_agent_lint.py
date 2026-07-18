@@ -49,6 +49,7 @@ PF1_FIELDS = (
     "実機方針",
     "報告方針",
 )
+BLOCK_MARKERS = {"P1L:", "K1:", "PF1:"}
 
 
 def _parse_block(text: str, marker: str, nested_key: str | None = None) -> tuple[dict[str, str], dict[str, str]]:
@@ -58,15 +59,20 @@ def _parse_block(text: str, marker: str, nested_key: str | None = None) -> tuple
     in_nested = False
     for raw in text.splitlines():
         line = raw.rstrip()
+        stripped = line.strip()
         if not in_block:
-            if line.strip() == marker:
+            if stripped == marker:
                 in_block = True
             continue
-        if not line.strip():
+        if stripped in BLOCK_MARKERS and stripped != marker:
+            break
+        if stripped.startswith("P1|"):
+            break
+        if not stripped:
             continue
         if line.startswith("  "):
             if in_nested and ":" in line:
-                key, value = line.strip().split(":", 1)
+                key, value = stripped.split(":", 1)
                 nested[key.strip()] = value.strip()
             continue
         if ":" not in line:
@@ -180,15 +186,16 @@ def lint_pf1(text: str) -> list[str]:
 
 def lint_text(text: str) -> list[str]:
     errors: list[str] = []
+    has_p1 = any(line.strip().startswith("P1|") for line in text.splitlines())
     if "P1L:" in text:
         errors.extend(lint_p1l(text))
-    if any(line.strip().startswith("P1|") for line in text.splitlines()):
+    if has_p1:
         errors.extend(lint_p1(text))
     if "K1:" in text:
         errors.extend(lint_k1(text))
     if "PF1:" in text:
         errors.extend(lint_pf1(text))
-    if not any(("P1L:" in text, "K1:" in text, "PF1:" in text, any(line.strip().startswith("P1|") for line in text.splitlines()))):
+    if not any(("P1L:" in text, "K1:" in text, "PF1:" in text, has_p1)):
         errors.append("Agent契約block欠落")
     return errors
 
