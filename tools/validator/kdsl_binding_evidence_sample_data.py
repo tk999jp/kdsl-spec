@@ -1,1 +1,0 @@
-# Binding evidence sample data.
