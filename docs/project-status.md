@@ -23,12 +23,11 @@ P1L／P1最小契約: 完了
 K1 run状態: 完了
 PF1 project既定: 完了
 Agent lint／回帰例: 完了
-validator compile: pass候補
-identity lint: pass候補
-canonical regression: pass候補
+validator compile: pass
+identity lint: pass
+Agent contract lint: pass
+canonical regression: pass
 ```
-
-最終passはPR CI成功後に確定する。
 
 ## 正本
 
@@ -99,4 +98,4 @@ canonical branch rules: U設定済
 stable tag／release: 対象外／別途U承認必須
 ```
 
-Agent層は1Phaseで実装・回帰・CI・mergeまで完了させる。stable tag／releaseは今回scope外。
+Agent層は1Phaseで実装・回帰・CIまで完了。PR merge後に正本反映完了。stable tag／releaseは今回scope外。
