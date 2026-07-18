@@ -17,6 +17,7 @@ ACTIVE_DOCUMENTS = [
     ROOT / "examples/kanji/midfd-dev-prompt.kdsl.md",
     ROOT / "examples/kanji/blog-meta.kdsl.md",
     ROOT / "examples/kanji/agent-codex-run.kdsl.md",
+    ROOT / "examples/kanji/agent-operational-proof.kdsl.md",
 ]
 
 AGENT_DOCUMENT = ROOT / "examples/kanji/agent-codex-run.kdsl.md"

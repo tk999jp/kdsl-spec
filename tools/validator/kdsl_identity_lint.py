@@ -18,9 +18,11 @@ REQUIRED_FILES = (
     "spec/lint/kdsl-agent-lint.md",
     "spec/bridge/kdsl-adps-bridge.md",
     "docs/reviews/kdsl-v2-asset-audit.md",
+    "examples/kanji/agent-operational-proof.kdsl.md",
     "tools/validator/kdsl_document_lint.py",
     "tools/validator/r1_result_lint.py",
     "tools/validator/kdsl_agent_lint.py",
+    "tools/validator/kdsl_agent_operational_regression.py",
     "tools/validator/run_canonical_samples.py",
 )
 
