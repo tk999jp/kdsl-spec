@@ -1,0 +1,35 @@
+name: Phase 9E Slice C Sync
+on:
+  push:
+    branches: [phase9e-binding-evaluation-plan]
+    paths:
+      - tools/validator/phase9e_slice_c_sync.py
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: phase9e-binding-evaluation-plan
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Apply Slice C integration
+        run: python tools/validator/phase9e_slice_c_sync.py
+      - name: Validate Phase 9E implementation
+        run: |
+          python tools/validator/run_binding_evidence_samples.py
+          python tools/validator/run_binding_evaluator_samples.py
+          python tools/validator/run_all_samples.py
+      - name: Store integrated branch
+        run: |
+          rm tools/validator/phase9e_slice_c_sync.py
+          rm .github/workflows/phase9e-slice-c-sync.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Validator: integrate Phase 9E evaluator pipeline"
+          git push origin HEAD:phase9e-binding-evaluation-plan
