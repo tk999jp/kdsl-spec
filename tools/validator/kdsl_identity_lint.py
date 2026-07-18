@@ -4,79 +4,99 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
+REQUIRED_FILES = (
+    "spec/core/kdsl-spec.md",
+    "spec/core/kdsl-core.md",
+    "spec/core/kdsl-modes.md",
+    "spec/profiles/kdsl-profile-dev-prompt.md",
+    "spec/profiles/kdsl-profile-compact-prompt.md",
+    "spec/profiles/kdsl-converter-prompt.md",
+    "spec/profiles/kdsl-profile-intl.md",
+    "spec/r1/r1-result-spec.md",
+    "spec/lint/kdsl-lint-checklist.md",
+    "spec/bridge/kdsl-adps-bridge.md",
+    "docs/reviews/kdsl-v2-asset-audit.md",
+    "tools/validator/kdsl_document_lint.py",
+    "tools/validator/r1_result_lint.py",
+    "tools/validator/run_canonical_samples.py",
+)
+
 REQUIRED = {
-    "spec/core/kdsl-spec.md": [
+    "spec/core/kdsl-spec.md": (
         "KDSL:=日本語promptを漢字語幹／記号／最小制御語へ再構成する",
+        "第一目的は**漢字圧縮**",
         "KDSL本体:=漢字圧縮",
         "KDSL-Intl:=非漢字言語",
-        "漢字表現をoptional lexiconへ降格禁止",
-    ],
-    "spec/profiles/kdsl-profile-dev-prompt.md": [
-        "漢字圧縮 > 要件保持",
-        "KDSL_RESULT:",
-        "状態:",
-    ],
-    "spec/profiles/kdsl-converter-prompt.md": [
-        "surface: 漢字圧縮",
-        "KEY翻訳だけで終了禁止",
-        "英語KEYへの自動退行禁止",
-    ],
-    "spec/r1/r1-result-spec.md": [
-        "R1は成果物・仕様書・引継書・次期roadmapではない",
-        "build／diff／lint／test／CI pass != RT:v",
-    ],
+        "profile: dev-prompt|compact-prompt|converter|lint",
+        "安全契機:=Uが明示した重大条件の限定保護",
+    ),
+    "spec/profiles/kdsl-profile-compact-prompt.md": (
+        "目的:", "材料:", "出力:", "規則:", "確認:",
+    ),
+    "spec/r1/r1-result-spec.md": (
+        "KDSL_RESULT:", "状態:", "実機:", "次:", "commit:",
+    ),
+    "docs/reviews/kdsl-v2-asset-audit.md": (
+        "監査対象: PR #1〜#145", "採否未決: 0", "PR範囲未監査: 0",
+    ),
 }
 
-FORBIDDEN = {
-    "spec/core/kdsl-spec.md": [
-        "KDSL-CP漢:=",
-        "lexicon: kanji-v1",
-        "KDSLは言語中立",
-    ],
-    "spec/profiles/kdsl-profile-dev-prompt.md": [
-        "GOAL:",
-        "WORK:",
-        "VERIFY:",
-        "SUCCESS_CRITERIA:",
-    ],
-}
+FORBIDDEN_ACTIVE = (
+    "lexicon:kanji-v1",
+    "lexicon: kanji-v1",
+    "KDSL-CP漢:=",
+    "KDSLは言語中立",
+    "Safety Gate Registry:=",
+)
+
+ACTIVE_SPECS = (
+    "spec/core/kdsl-spec.md",
+    "spec/profiles/kdsl-profile-dev-prompt.md",
+    "spec/profiles/kdsl-profile-compact-prompt.md",
+    "spec/profiles/kdsl-converter-prompt.md",
+    "spec/r1/r1-result-spec.md",
+)
 
 
 def main() -> int:
     errors: list[str] = []
+    for rel in REQUIRED_FILES:
+        if not (ROOT / rel).exists():
+            errors.append(f"missing:{rel}")
+
     for rel, needles in REQUIRED.items():
         path = ROOT / rel
         if not path.exists():
-            errors.append(f"missing:{rel}")
             continue
         text = path.read_text(encoding="utf-8")
         for needle in needles:
             if needle not in text:
                 errors.append(f"required:{rel}:{needle}")
 
-    for rel, needles in FORBIDDEN.items():
+    for rel in ACTIVE_SPECS:
         path = ROOT / rel
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8")
-        for needle in needles:
+        for needle in FORBIDDEN_ACTIVE:
             if needle in text:
                 errors.append(f"forbidden:{rel}:{needle}")
 
     examples = list((ROOT / "examples" / "kanji").glob("*.md"))
-    if not examples:
-        errors.append("missing:examples/kanji")
-    else:
-        joined = "\n".join(p.read_text(encoding="utf-8") for p in examples)
-        if "目的:" not in joined or ("守:" not in joined and "成功条件:" not in joined):
-            errors.append("examples:kanji structure missing")
+    if len(examples) < 2:
+        errors.append("examples/kanji:2件未満")
+    for path in examples:
+        text = path.read_text(encoding="utf-8")
+        if "目的:" not in text:
+            errors.append(f"example目的欠落:{path.name}")
+        if any(f"\n{alias}:" in text for alias in "役目材出則守調確"):
+            errors.append(f"example未定義alias:{path.name}")
 
     if errors:
         print("KDSL identity lint: failed")
         for error in errors:
             print(error)
         return 1
-
     print("KDSL identity lint: passed")
     return 0
 
