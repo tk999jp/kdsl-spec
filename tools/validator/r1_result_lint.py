@@ -6,7 +6,7 @@ from pathlib import Path
 
 REQUIRED = ["状態", "局面", "要約", "変更", "理由", "実行", "検証", "実機", "危険", "次", "commit"]
 ENGLISH = {"STATUS", "PHASE", "S", "FILES", "WHY", "CMD", "VERIFY", "RT", "RISK", "NEXT", "COMMIT"}
-FIELD_RE = re.compile(r"(?m)^([^\s:#][^:\n]*):\s*(.*)$")
+FIELD_RE = re.compile(r"(?m)^([^\s:#][^:\n]*):[ \t]*(.*)$")
 
 
 def parse_fields(text: str) -> list[tuple[str, str]]:
