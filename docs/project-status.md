@@ -1,9 +1,9 @@
 # KDSL Project Status
 
 ```text
-status: canonical-rebuild-candidate
+status: canonical
 date: 2026-07-18
-branch: rebuild/kdsl-kanji-canonical
+branch: canonical/kdsl-kanji
 base: 39a51b71950340b83f6e525dd1a76724530bb0df
 archive: archive/kdsl-framework-20260718
 ```
