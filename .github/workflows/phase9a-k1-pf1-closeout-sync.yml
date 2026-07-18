@@ -1,5 +1,6 @@
 name: Phase 9A K1 PF1 Closeout Sync
 
+# Synchronize after the workflow is present on the PR branch.
 on:
   pull_request:
     branches:
