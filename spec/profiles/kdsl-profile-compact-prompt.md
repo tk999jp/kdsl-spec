@@ -66,9 +66,9 @@ compact-prompt→dev-prompt
 
 ```text
 目的／材料／出力／規則／確認の欠落なし
-Goal／Input／Output／Guard／Check既定化なし
-lexicon:kanji-v1なし
-KDSL-CP漢なし
+英語構造KEY既定化なし
+漢字optional化なし
+旧CompactPrompt漢字別名なし
 本文漢字圧縮あり
 安全条件自動追加なし
 ```
