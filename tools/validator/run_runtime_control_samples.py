@@ -193,7 +193,9 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         pf1_path = tmp_path / 'pf1.md'
+        bundle_path = tmp_path / 'runtime-control-bundle.md'
         pf1_path.write_text(pf1_text, encoding='utf-8')
+        bundle_path.write_text(k1_text + '\n' + pf1_text, encoding='utf-8')
         results.append(
             run_cli(
                 'K1 CLI accepts canonical sample',
@@ -219,6 +221,33 @@ def main():
                 [K1_SAMPLE, pf1_path],
                 0,
                 ('STATUS: valid', 'RUNTIME_CONTROL_STATE: valid', 'EXECUTABLE: false', 'EXECUTION_AUTHORITY: none'),
+            )
+        )
+        results.append(
+            run_cli(
+                'public k1 target is connected',
+                'kdsl_validate.py',
+                ['--target', 'k1', K1_SAMPLE],
+                0,
+                ('TARGET: k1', 'STATUS: pass', 'EXECUTABLE: no'),
+            )
+        )
+        results.append(
+            run_cli(
+                'public pf1 target is connected',
+                'kdsl_validate.py',
+                ['--target', 'pf1', pf1_path],
+                0,
+                ('TARGET: pf1', 'STATUS: pass', 'EXECUTABLE: no'),
+            )
+        )
+        results.append(
+            run_cli(
+                'public runtime-control target is connected',
+                'kdsl_validate.py',
+                ['--target', 'runtime-control', bundle_path],
+                0,
+                ('TARGET: runtime-control', 'STATUS: valid', 'EXECUTABLE: false'),
             )
         )
 
