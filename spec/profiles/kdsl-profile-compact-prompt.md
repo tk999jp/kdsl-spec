@@ -5,15 +5,6 @@
 一般LLM、Project instructions、単体instruction向けpromptを、漢字圧縮を維持したまま短く再構成する。
 
 ```text
-profile: compact-prompt
-mode: min
-afsafety: normal
-language: ja
-```
-
-`afsafety`は無効なfieldではなく、上記は誤記防止のため使用禁止。正式headerは次。
-
-```text
 format: KDSL
 profile: compact-prompt
 mode: min
