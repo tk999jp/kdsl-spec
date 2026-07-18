@@ -4,8 +4,25 @@ import copy
 
 from kdsl_binding_evaluator_cases_base import check
 from kdsl_binding_evaluator_input import evaluate_inputs
-from kdsl_binding_evaluator_sample_data import base_inputs, rebind
+from kdsl_binding_evaluator_sample_data import HEX_D, base_inputs, rebind
 from run_runtime_control_samples import render_envelope
+
+
+def observation(current_state: str = 'current', valid_until: str = '2026-07-19T00:00:00Z') -> dict:
+    return {
+        'id': 'obs-1',
+        'revision': '0.1',
+        'digest': HEX_D,
+        'capability': 'repo-read',
+        'state': 'observed',
+        'scope': 'repository:tk999jp/kdsl-spec',
+        'observed_at': '2026-07-17T23:30:00Z',
+        'valid_until': valid_until,
+        'environment_digest': HEX_D,
+        'evidence_ref': 'generated:evaluator-corpus/capability',
+        'invalidation': [],
+        'current_state': current_state,
+    }
 
 
 def run_state_cases() -> list[bool]:
@@ -29,16 +46,13 @@ def run_state_cases() -> list[bool]:
     model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
     check(results, 'missing capability is insufficient but bound', model is not None and not errors and model['CAPABILITIES']['state'] == 'insufficient' and model['BINDING']['state'] == 'bound')
 
-    changed_facts['capability_observations'] = [{
-        'id': 'obs-1',
-        'capability': 'repo-read',
-        'scope': 'repository:tk999jp/kdsl-spec',
-        'state': 'observed',
-        'current_state': 'stale',
-        'valid_until': '2026-07-17T00:00:00Z',
-    }]
+    changed_facts['capability_observations'] = [observation(current_state='stale')]
     model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
     check(results, 'stale capability remains bound', model is not None and not errors and model['CAPABILITIES']['state'] == 'stale' and model['BINDING']['state'] == 'bound')
+
+    changed_facts['capability_observations'] = [observation()]
+    model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
+    check(results, 'current capability becomes sufficient without authority effect', model is not None and not errors and model['CAPABILITIES']['state'] == 'sufficient' and model['AUTHORITY']['state'] == 'sufficient')
 
     changed_facts = copy.deepcopy(facts)
     changed_facts['stop']['state'] = 'active'
