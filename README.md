@@ -49,8 +49,8 @@ lint: spec/lint/kdsl-lint-checklist.md
 ## 現在状態
 
 ```text
-branch: rebuild/kdsl-kanji-canonical
-status: canonical-rebuild-candidate
+branch: canonical/kdsl-kanji
+status: canonical
 base: 39a51b71950340b83f6e525dd1a76724530bb0df
 archive: archive/kdsl-framework-20260718
 ```
