@@ -1,0 +1,53 @@
+name: Phase 9B K1 PF1 Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/kdsl-phase9b-k1-pf1-schema
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reproduce alignment patch
+        id: reproduce
+        continue-on-error: true
+        run: |
+          set +e
+          python - <<'PY' > phase9b-align.log 2>&1
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/phase9b-k1-pf1-alignment.yml').read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          end = "\n          PY\n\n      - name: Run bounded verification"
+          print('marker_count', workflow.count(marker))
+          print('end_count', workflow.count(end))
+          script = workflow.split(marker, 1)[1].split(end, 1)[0]
+          print('script_lines', len(script.splitlines()))
+          exec(textwrap.dedent(script), {'__name__': '__main__'})
+          print('PATCH_SUCCESS')
+          PY
+          code=$?
+          echo "exit_code=$code" >> phase9b-align.log
+          exit $code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase9b-alignment-diagnostic
+          path: phase9b-align.log
+          if-no-files-found: error
+      - name: Preserve failure status
+        if: steps.reproduce.outcome == 'failure'
+        run: exit 1
