@@ -55,10 +55,10 @@ P1使用→P1Lと併記禁止
 ## 検証状態
 
 ```text
-validator compile: CI確認対象
-identity lint: CI確認対象
-Agent contract lint: CI確認対象
-canonical regression: CI確認対象
+validator compile: pass
+identity lint: pass
+Agent contract lint: pass
+canonical regression: pass
 Codex実run再帰完走: 未確認
 中断再開: 未確認
 承認境界停止: 未確認
