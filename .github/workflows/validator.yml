@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - canonical/kdsl-kanji
-      - rebuild/kdsl-kanji-canonical
+      - audit/kdsl-kanji-completion
 
 jobs:
   kdsl-validation:
@@ -16,4 +16,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python tools/validator/kdsl_identity_lint.py
+      - name: Compile validators
+        run: python -m compileall -q tools/validator
+      - name: Validate KDSL identity
+        run: python tools/validator/kdsl_identity_lint.py
+      - name: Run canonical regression corpus
+        run: python tools/validator/run_canonical_samples.py
