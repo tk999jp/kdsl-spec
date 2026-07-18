@@ -52,7 +52,8 @@ BINDING.executable:false under P1L/P1 v0.1 draft
 ```text
 Phase 9A design: complete
 Phase 9B schema/lint/examples: adopted v2-draft
-Phase 9C resolver/parser/validator bounded first slice: adoption candidate
+Phase 9C resolver/parser/validator bounded first slice: integrated
+Phase 9C runtime-control corpus: 16 / failed 0
 Phase 9D binding-evidence schema: not implemented
 runtime binding: not implemented
 ```
