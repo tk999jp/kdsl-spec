@@ -20,11 +20,11 @@
 | `spec/core/kdsl-spec.md` | KDSL identity／第一目的／全体定義 |
 | `spec/core/kdsl-core.md` | 演算子／圧縮文型／保護語／変換禁止 |
 | `spec/core/kdsl-modes.md` | 圧縮強度／限定安全 |
-| `spec/profiles/kdsl-profile-dev-prompt.md` | Codex向け漢字dev-prompt／Agent使用条件 |
+| `spec/profiles/kdsl-profile-dev-prompt.md` | Codex向け漢字dev-prompt／Agent完走 |
 | `spec/profiles/kdsl-profile-compact-prompt.md` | 一般LLM／Project向け短縮prompt |
 | `spec/profiles/kdsl-converter-prompt.md` | 変換契約 |
 | `spec/profiles/kdsl-profile-intl.md` | 非漢字派生subset |
-| `spec/agent/kdsl-agent-execution.md` | P1L／P1／K1／PF1最小Agent契約 |
+| `spec/agent/kdsl-agent-execution.md` | 最小Agent経路／K1／条件付きP1L・P1・PF1 |
 | `spec/r1/r1-result-spec.md` | 簡潔結果報告 |
 | `spec/lint/kdsl-lint-checklist.md` | identity／圧縮／過剰安全lint |
 | `spec/lint/kdsl-agent-lint.md` | Agent契約lint |
@@ -44,11 +44,11 @@ Intl境界:=spec/profiles/kdsl-profile-intl.md
 R1:=spec/r1/r1-result-spec.md
 ```
 
-下位fileが上位正本と競合する場合、上位を優先する。
-
 ```text
 KDSL Core > Agent層 > profile／R1 > lint／bridge > template／example／tool
 ```
+
+下位fileが上位正本と競合する場合、上位を優先する。
 
 ## 非正本
 
@@ -65,22 +65,21 @@ validator pass・CI pass・実装量・Phase完了記録を正本化根拠にし
 ## Agent層
 
 ```text
-P1L:=agent実行契約長形式
-P1:=P1L可逆短縮
-K1:=agent run状態
-PF1:=project既定
+目的:=U明示scopeを必要最小契約で完走
+標準:=KDSL_PROMPT＋K1
+P1L:=厳密handoff／中断再開時のみ
+P1:=任意短縮／P1Lと併記禁止／可逆性保証なし
+PF1:=継続project既定／P1L生成前参照
 ```
 
-Agent層使用条件:
+Codex開発作業ではAgent駆動を使用するが、全schemaを毎回展開しない。
 
 ```text
-repo書込／複数step実装／再帰完走／複数tool／中断再開
-→必須
+通常run→KDSL_PROMPT＋K1
+中断再開／handoff／複雑承認→PF1参照＋P1L＋K1
 ```
 
-通常会話・単発回答・変換のみでは省略可。
-
-Agent層v1非依存:
+Agent層非依存:
 
 ```text
 Safety Gate Registry
@@ -99,9 +98,7 @@ runtime evaluator
 := 現Agent層の正本ではない
 ```
 
-旧P1／K1系統をそのまま復帰せず、agent駆動に必要な機能核だけを `kdsl-agent@1` として再定義した。
-
-採否記録は `docs/reviews/kdsl-v2-asset-audit.md` を参照する。
+旧P1／K1系統をそのまま復帰せず、Agent完走に必要な機能核だけを `kdsl-agent@1.1` として再定義した。
 
 ## 変更分類
 
@@ -114,8 +111,8 @@ breaking:
 KDSL-Intlを本体化
 安全契機を主目的化
 Agent層をKDSL Coreより上位化
-P1L／P1権限railを暗黙化
 K1完了条件を弱化
+P1を可逆保証済みと偽装
 ```
 
 compatible:
@@ -124,7 +121,7 @@ compatible:
 圧縮例追加
 明示保護語追加
 Agent lint追加
-PF1項目追加
+条件付きP1L／PF1項目追加
 ```
 
 patch:
