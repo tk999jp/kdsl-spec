@@ -1,0 +1,1 @@
+from kdsl_binding_evidence_record_core import validate_model
