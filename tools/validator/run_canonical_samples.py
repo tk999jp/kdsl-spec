@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from kdsl_agent_lint import lint_text as lint_agent
 from kdsl_document_lint import lint_paths, lint_text
 from r1_result_lint import lint_text as lint_r1
 
@@ -15,13 +16,17 @@ ACTIVE_DOCUMENTS = [
     ROOT / "templates/result/r1_result_spec.md",
     ROOT / "examples/kanji/midfd-dev-prompt.kdsl.md",
     ROOT / "examples/kanji/blog-meta.kdsl.md",
+    ROOT / "examples/kanji/agent-codex-run.kdsl.md",
 ]
+
+AGENT_DOCUMENT = ROOT / "examples/kanji/agent-codex-run.kdsl.md"
 
 VALID_DEV = """KDSL_PROMPT:
 format: KDSL
 profile: dev-prompt
 mode: min
 safety: normal
+agent: required
 局面: 修正
 目的: 表示不具合修正
 対象: MainForm.cs
@@ -91,6 +96,42 @@ INVALID_RT = """KDSL_RESULT:
 次: 提案なし
 commit: none
 """
+INVALID_AGENT_MISSING_RAIL = """P1L:
+版: kdsl-agent@1
+実行方式: agent再帰
+目的: 修正
+成功条件: 完了
+正本: repo/main
+対象: src
+非対象: docs
+権限:
+  読取: 可
+  編集: 可
+  試験: 可
+  stage: 対象外
+  commit: 承認待
+  push: 承認待
+  release: 対象外
+  public履歴: 不可
+承認境界: commit前
+作業: 実装
+試験: targeted
+検証: pass
+実機要否: 不要
+停止条件: scope変更
+完了条件: 未完なし
+報告: R1
+"""
+INVALID_K1_COMPLETE = """K1:
+状態: 完了
+現在: close
+完了: 実装
+未完: runtime
+検証: 一部
+実機: 未確認
+次遷移: R1
+停止理由: なし
+"""
 
 
 def expect(name: str, errors: list[str], should_pass: bool) -> list[str]:
@@ -111,12 +152,15 @@ def main() -> int:
     failures += expect("valid-r1", lint_r1(VALID_R1), True)
     failures += expect("invalid-r1-english", lint_r1(INVALID_R1_ENGLISH), False)
     failures += expect("invalid-rt", lint_r1(INVALID_RT), False)
+    failures += expect("valid-agent", lint_agent(AGENT_DOCUMENT.read_text(encoding="utf-8")), True)
+    failures += expect("invalid-agent-rail", lint_agent(INVALID_AGENT_MISSING_RAIL), False)
+    failures += expect("invalid-k1-complete", lint_agent(INVALID_K1_COMPLETE), False)
     failures.extend(lint_paths(ACTIVE_DOCUMENTS, ROOT))
     if failures:
         for failure in failures:
             print("FAIL", failure)
         return 1
-    print(f"PASS cases=8 documents={len(ACTIVE_DOCUMENTS)}")
+    print(f"PASS cases=11 documents={len(ACTIVE_DOCUMENTS)} agent=1")
     return 0
 
 
