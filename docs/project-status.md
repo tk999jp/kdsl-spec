@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase9b-k1-pf1-schema-adoption-candidate
+phase: phase9b-k1-pf1-schema-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 132
-verified_main_head: d65c6eae6947b251246946bfafb9e51636efb145
+verified_main_head: f779ce38e9e37fafec4de72832edd138a5da7bbc
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -98,7 +98,7 @@ Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
 Phase 8 shared AST v2 P1L first-class integration: complete
 Phase 9A K1/PF1 runtime-control design: complete
-Phase 9B K1/PF1 schema/lint/examples: adoption candidate
+Phase 9B K1/PF1 schema/lint/examples: complete
 ```
 
 ## 5. Repository enforcement
@@ -116,6 +116,20 @@ deletions: restricted
 ```
 
 ## 6. Latest verified design / implementation
+
+Phase 9B schema proof:
+
+```text
+PR: 135
+source head: 63980b24c106ee0a62c13c9f7d56100d95bcd8aa
+squash commit: f779ce38e9e37fafec4de72832edd138a5da7bbc
+workflow run: 29634153852 / #489
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+scope: schema/lint/examples/canonical alignment
+K1/PF1 resolver/parser/validator: not implemented
+```
 
 Phase 9A design proof:
 
@@ -197,6 +211,7 @@ property checker migrated to NormalizationCompatibilityView→run #433 all jobs 
 Phase 7 closeout audit detected canonical glossary over-compression→canonical glossary restored / v2 detailed terms preserved→run #435 success
 Phase 8 branch diagnostics exposed runner self-match/newline/indentation generation defects before commit→clean runner generation and final cleanup→run #449 success
 Phase 9A design self-audit separated authority from capability and reduced unresolved schema decisions to five
+Phase 9B adoption self-audit removed digest self-reference and separated approval content integrity from source verification before merge
 ```
 
 ```text
@@ -217,7 +232,7 @@ P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
 shared AST v2 P1L marker registration: first-class integrated / bootstrap removed / compatibility corpus 10 failed 0
 runtime binding: not implemented
-K1/PF1 canonical schema: Phase 9B adoption candidate / resolver not implemented
+K1/PF1 canonical schema: adopted v2-draft / resolver not implemented
 BINDING.state: unbound
 BINDING.executable: false
 ```
@@ -328,7 +343,7 @@ P1 subordinate compact serialization
 P1L/P1 bounded validator/round-trip first slice
 Packet→P1L/P1 non-executable preview normalization first slice
 K1/PF1 non-executable runtime-control design
-K1/PF1 canonical schema/lint/manual examples adoption candidate
+K1/PF1 canonical schema/lint/manual examples
 experimental heuristic validator helpers
 ```
 
@@ -349,9 +364,8 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: merge Phase 9B schema/lint/examples adoption and close alignment
-P1: Phase 9C resolver/parser/validator first slice only under separate approval
-P2: Phase 9D binding-evidence field schema only under separate approval
+P0: Phase 9C resolver/parser/validator first slice only under separate approval
+P1: Phase 9D binding-evidence field schema only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 
