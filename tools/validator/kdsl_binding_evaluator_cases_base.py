@@ -5,13 +5,31 @@ import copy
 from kdsl_binding_evidence_core import match_reference, parse_reference
 from kdsl_binding_evaluator_input import evaluate_inputs
 from kdsl_binding_evaluator_model import compact_reference
-from kdsl_binding_evaluator_sample_data import base_inputs, rebind
+from kdsl_binding_evaluator_sample_data import HEX_D, base_inputs, rebind
 from run_runtime_control_samples import render_envelope
 
 
 def check(results: list[bool], name: str, value: bool) -> None:
     results.append(bool(value))
     print(('PASS: ' if value else 'FAIL: ') + name)
+
+
+def approval(operation: str = 'read', scope: str = 'spec/runtime/kdsl-binding-evidence-schema.md') -> dict:
+    return {
+        'id': 'approval-1',
+        'revision': '0.1',
+        'digest': HEX_D,
+        'source_ref': 'generated:evaluator-corpus/approval',
+        'issuer': 'user:test',
+        'issued_at': '2026-07-17T00:00:00Z',
+        'operation': operation,
+        'scope': scope,
+        'valid_until': 'none',
+        'revoked': False,
+        'content_state': 'valid',
+        'trust_state': 'verified',
+        'trust_policy_ref': 'policy:test',
+    }
 
 
 def run_base_cases() -> list[bool]:
@@ -44,9 +62,13 @@ def run_base_cases() -> list[bool]:
     changed_text = rebind(changed_contract, changed_pf1)
     changed_pf1_text = render_envelope('PF1', changed_pf1)
     model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
-    check(results, 'missing approval is insufficient but bound', model is not None and not errors and model['AUTHORITY']['state'] == 'insufficient' and model['BINDING']['state'] == 'bound')
+    check(results, 'missing approval blocks authority but remains bound', model is not None and not errors and model['AUTHORITY']['state'] == 'blocked' and model['BINDING']['state'] == 'bound')
 
-    changed_facts['approval_by_rail'] = {'read': {'id': 'approval-1', 'content_state': 'valid', 'trust_state': 'verified'}}
+    changed_facts['approval_by_rail'] = {'read': approval()}
     model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
     check(results, 'supplied trusted approval satisfies rail', model is not None and not errors and model['AUTHORITY']['state'] == 'sufficient')
+
+    changed_facts['approval_by_rail'] = {'read': approval(operation='edit')}
+    model, _, errors = evaluate_inputs(changed_text, k1_text, changed_pf1_text, changed_facts)
+    check(results, 'approval operation mismatch blocks binding', model is not None and not errors and model['BINDING']['state'] == 'blocked')
     return results
