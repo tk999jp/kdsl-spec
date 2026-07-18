@@ -174,14 +174,21 @@ authority sufficient != executed
 ### K1 / PF1
 
 ```text
-K1/PF1:=Runtime Control系の実行制御層
+K1:=canonical runtime-control semantics + exact conforming project/repository instance
+PF1:=project-scoped exact defaults/presets/restrictions/authority ceilings/capability requirements/routing definitions
+schemas: kdsl-k1@0.1-draft / kdsl-pf1@0.1-draft
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
 ```
 
-現status:
-
 ```text
-詳細仕様は本repoでは未整備
-P1L/P1 schema adoptionで自動生成/推測禁止
+K1/PF1 valid|lint pass != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation != authority
+routing != authority
+binding evidence:=external content-addressed record
+BINDING.executable:false under P1L/P1 v0.1 draft
+resolver/runtime binding/binding-evidence schema:=not implemented
 ```
 
 ### R1
