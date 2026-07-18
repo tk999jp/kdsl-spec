@@ -1,0 +1,133 @@
+from pathlib import Path
+
+
+def replace_once(path: str, old: str, new: str) -> None:
+    target = Path(path)
+    text = target.read_text(encoding='utf-8')
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(f'{path}: expected one replacement, found {count}')
+    target.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+
+status = 'docs/project-status.md'
+replace_once(status, 'phase: phase9b-k1-pf1-schema-complete', 'phase: phase9c-k1-pf1-validator-complete')
+replace_once(
+    status,
+    'verified_main_head: f779ce38e9e37fafec4de72832edd138a5da7bbc',
+    'verified_main_head: c2d6e8be0e8f54b73db6ba410ada1b93260c70cb',
+)
+replace_once(
+    status,
+    'Phase 9B K1/PF1 schema/lint/examples: complete\n',
+    'Phase 9B K1/PF1 schema/lint/examples: complete\n'
+    'Phase 9C K1/PF1 parser/validator compatibility first slice: complete\n',
+)
+replace_once(
+    status,
+    '## 6. Latest verified design / implementation\n\nPhase 9B schema proof:',
+    '''## 6. Latest verified design / implementation
+
+Phase 9C validator proof:
+
+```text
+PR: 137
+source head: 0b66ba14279063c2069591569482ce96b0251a42
+squash commit: c2d6e8be0e8f54b73db6ba410ada1b93260c70cb
+workflow run: 29636378733 / #500
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+focused runtime-control corpus: 16 / failed 0
+scope: bounded parser/validator/canonical digest/exact K1-PF1 compatibility
+runtime binding: not implemented
+```
+
+Phase 9B schema proof:''',
+)
+replace_once(
+    status,
+    '''P1L/P1 contract corpus: 14 / failed 0
+P1L shared AST compatibility corpus: 10 / failed 0
+Packet→P1L/P1 normalization corpus: 17 / failed 0
+unified runners: 38
+unified expectations: 483 / failed 0''',
+    '''P1L/P1 contract corpus: 14 / failed 0
+P1L shared AST compatibility corpus: 10 / failed 0
+Packet→P1L/P1 normalization corpus: 17 / failed 0
+K1/PF1 runtime-control corpus: 16 / failed 0
+unified runners: 39
+unified expectations: 499 / failed 0''',
+)
+replace_once(
+    status,
+    'Phase 9B adoption self-audit removed digest self-reference and separated approval content integrity from source verification before merge\n',
+    'Phase 9B adoption self-audit removed digest self-reference and separated approval content integrity from source verification before merge\n'
+    'Phase 9C shared-parser registration was validated before storage; final parser diff added only K1/PF1 markers\n',
+)
+replace_once(
+    status,
+    '''runtime binding: not implemented
+K1/PF1 canonical schema: adopted v2-draft / resolver not implemented
+BINDING.state: unbound''',
+    '''runtime binding: not implemented
+K1/PF1 canonical schema: adopted v2-draft
+K1/PF1 parser/validator: bounded first slice integrated
+K1/PF1 exact compatibility: id/revision/digest/project_scope/contract_schemas
+BINDING.state: unbound''',
+)
+replace_once(
+    status,
+    'K1/PF1 canonical schema/lint/manual examples\nexperimental heuristic validator helpers',
+    'K1/PF1 canonical schema/lint/manual examples\n'
+    'K1/PF1 bounded non-executable validator/compatibility first slice\n'
+    'experimental heuristic validator helpers',
+)
+replace_once(
+    status,
+    'K1/PF1 resolver/runtime binding implementation',
+    'K1/PF1 runtime binding/execution authorization implementation',
+)
+replace_once(
+    status,
+    '''P0: Phase 9C resolver/parser/validator first slice only under separate approval
+P1: Phase 9D binding-evidence field schema only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+    '''P0: Phase 9D binding-evidence field schema only under separate approval
+P1: future P1L→K1/PF1 binding evaluator only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+)
+
+runtime_index = 'spec/runtime/README.md'
+replace_once(
+    runtime_index,
+    'Phase 9C resolver/parser/validator bounded first slice: adoption candidate',
+    'Phase 9C resolver/parser/validator bounded first slice: integrated',
+)
+
+manifest = 'spec/manifest.md'
+replace_once(
+    manifest,
+    '> future resolver/lint\n> route/skill/tool',
+    '> bounded parser/validator\n> route/skill/tool',
+)
+replace_once(
+    manifest,
+    '''binding evidence:=external content-addressed record
+BINDING.executable:false under P1L/P1 v0.1 draft
+resolver/runtime binding/binding-evidence schema:=not implemented''',
+    '''binding evidence:=external content-addressed record
+BINDING.executable:false under P1L/P1 v0.1 draft
+parser/validator/exact compatibility:=Phase 9C bounded first slice integrated
+runtime binding/binding-evidence schema:=not implemented''',
+)
+replace_once(
+    manifest,
+    'resolver/binding未実装明記',
+    'bounded parser/validator scope明記 / binding未実装明記',
+)
+replace_once(
+    manifest,
+    'K1/PF1 resolver/validator:=not implemented',
+    'K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice integrated',
+)
