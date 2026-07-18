@@ -26,6 +26,17 @@ stored adopted head: 490f9f49da866e730b9d16e0682d37cbf3055a04
 
 The adoption workflow reported a final-step failure after the branch update, but the stored branch contains the adopted schema/lint status and no temporary workflow, patch script, or trigger file. Repository-required checks were rerun from normal commit `dc090a26593e920a550545957dce092e6fed1e7d` and all required jobs succeeded in run #524. The schema PR was squash-merged as `b4fbec0d0be3bd2a06bf61afa4cac0e409c19571`.
 
+## Closeout alignment
+
+```text
+closeout run: 29639431685 / Phase 9D Closeout Sync #1
+status/review synchronization: success
+unified validator suite: success
+temporary files removed: yes
+stored closeout head: eaaa918db6beceb7469eef2bd0498a346790d972
+final changed files: project status and two Phase 9D review records
+```
+
 ```text
 validator/CI pass != authority grant
 validator/CI pass != semantic equivalence|complete safety proof|RT:v
