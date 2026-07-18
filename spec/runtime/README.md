@@ -28,7 +28,8 @@ Core/R1/Bridge canonical meaning
 > P1L/P1 canonical contract meaning
 > K1 runtime-control semantics
 > PF1 project-scoped exact definitions
-> future resolver/lint
+> lint
+> future resolver/parser/validator
 > route/skill/tool implementation
 > example/template/tool
 ```
