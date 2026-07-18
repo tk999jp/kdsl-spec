@@ -58,6 +58,7 @@ format: KDSL
 profile: dev-prompt|compact-prompt|converter|lint
 mode: readable|min|dense|lock
 safety: normal|lock-critical|lock-all
+agent: required|optional
 language: ja
 ```
 
@@ -68,10 +69,20 @@ format: KDSL
 profile: dev-prompt
 mode: min
 safety: normal
+agent: optional
 language: ja
 ```
 
 profile変更で漢字圧縮を解除しない。実装／repo操作／runtime確認を含んでも本文は漢字圧縮を維持する。
+
+Agent層使用条件:
+
+```text
+repo書込／複数step実装／再帰完走／複数tool／中断再開／commit・push・release操作
+→agent: required
+```
+
+通常会話、単発回答、変換のみは `agent: optional`。
 
 ## 4 漢字圧縮
 
@@ -135,6 +146,7 @@ format: KDSL
 profile: dev-prompt
 mode: min
 safety: normal
+agent: optional
 
 局面:
 目的:
@@ -156,7 +168,35 @@ KDSL_PROMPT前自然文禁止
 英語構造KEY必須化禁止
 ```
 
-## 7 KDSL_RESULT
+## 7 Agent層
+
+```text
+KDSL:=依頼内容を漢字圧縮
+P1L:=agent実行内容の正規長形式
+P1:=P1Lの可逆短縮
+K1:=agent run状態
+PF1:=project既定
+R1:=結果報告
+```
+
+`agent: required`時:
+
+```text
+P1L／P1／K1必須
+継続project／project既定あり→PF1必須
+PF1なし→全条件をP1Lへ明示
+```
+
+```text
+P1L／P1 valid != 全操作許可
+実行許可:=P1L権限rail
+K1更新→目的／scope／権限変更禁止
+PF1→P1L権限拡張禁止
+```
+
+Agent層正本は `spec/agent/kdsl-agent-execution.md`。
+
+## 8 KDSL_RESULT
 
 KDSL_RESULTは短い一時報告であり、仕様書・引継書・roadmapではない。
 
@@ -185,24 +225,28 @@ commit:=実行済commitまたは推奨message
 自動commit許可扱禁止
 ```
 
-## 8 境界
+## 9 境界
 
 ```text
 KDSL:=LLM直投入可能な漢字圧縮prompt
-KDSL-DP:=ADPS向けAuthoring形式
-P1／P1L:=実行契約候補
+KDSL-DP:=Agent向けAuthoring形式
+P1／P1L:=agent実行時の正規契約
+K1:=agent run状態制御
+PF1:=project既定制約
 R1／KDSL_RESULT:=結果報告
 ```
 
 ```text
 KDSL-DP直接実行禁止
-KDSL-DP→P1／P1L正規化必須
-P1／P1L valid != 実行許可
+KDSL-DP→P1L／P1正規化必須
+P1L／P1 valid != 全操作許可
+通常会話／単発prompt→Agent層省略可
+repo実装／再帰完走／複数tool→Agent層必須
 ```
 
-P1／Packet／Runtime Control等の拡張はKDSL本体の漢字identityを上書きできない。存在だけを本体採用理由にしない。
+Agent層はKDSL Coreの下位。P1／K1／PF1は漢字identityを上書きできない。Safety Gate Registry／Packet／R1C／Binding EvidenceをAgent層の必須依存にしない。
 
-## 9 変換禁止
+## 10 変換禁止
 
 ```text
 command／path／URL／repo名／branch名／tag名／package名
@@ -211,7 +255,7 @@ class名／method名／property名／API名／file名／拡張子／Windows path
 
 英語技術識別子を無理に漢字化しない。
 
-## 10 identity変更
+## 11 identity変更
 
 次はbreakingであり、U明示承認必須。
 
@@ -221,4 +265,5 @@ class名／method名／property名／API名／file名／拡張子／Windows path
 漢字をoptional化
 KDSL-Intlを本体化
 安全契機を第一目的化
+Agent層をKDSL本体より上位化
 ```
