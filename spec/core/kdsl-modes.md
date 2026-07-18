@@ -1,126 +1,84 @@
-# KDSL Modes v0.1-draft
-
-目的: KDSLの mode / safety / profile / high-risk 運用を定義する。
+# KDSL Modes v2.0-kanji-canonical
 
 ## mode
 
-### mode:readable
+```text
+readable:=人間review重視
+min:=実運用標準／中密度
+dense:=AI直投入／高密度
+lock:=明示critical箇所の意味保持重視
+```
 
-人間レビュー重視。仕様書/共有/記事化向け。
+全modeで漢字圧縮identityを維持する。
 
-### mode:min
-
-実運用向け中密度圧縮。ChatGPT/Codex project prompt向け。通常既定。
-
-### mode:dense
-
-高密度圧縮。AI直投入/Project file圧縮/文字数削減向け。
+### min
 
 ```text
-章見出し最小
+短い日本語構造KEY
+本文の漢字語幹化
+重複統合
+修正可能性維持
+```
+
+### dense
+
+```text
+章最小
 箇条書き最小
-章本文1〜3行目安
-safety checkは本文外
+同義説明統合
+条件／遷移記号化
+技術識別子保持
 ```
-
-### mode:lock
-
-高risk箇所の意味保持重視。D禁止/rollback/未確認/承認gate/public tag/Release Assets向け。
-
-廃止:
-
-```text
-mode:converter
-```
-
-理由: converterは圧縮強度ではなく用途であるため、`profile: converter` に統合する。
 
 ## safety
 
 ```text
-normal=低risk用途
-lock-critical=高risk箇所のみlock適用, dev-prompt標準
-lock-all=全文lock寄り, 破壊操作/migration/rollback周辺向け
+normal:=明示条件のみ保持
+lock-critical:=明示critical箇所だけ強保護
+lock-all:=Uが全文保護を明示した場合のみ
 ```
 
-優先順位:
+既定:
 
 ```text
-safety > high-risk判定 > mode > profile
+safety: normal
 ```
 
-## 推奨組合せ
-
-| mode | safety | 用途 |
-|---|---|---|
-| readable | normal | 共有/説明 |
-| min | lock-critical | 標準運用 |
-| dense | lock-critical | 高密度、high-riskはdense-lock-lite |
-| dense | lock-all | 保守的dense |
-| lock | lock-all | 検査/保守/破壊操作 |
-
-## 補助用語
+禁止:
 
 ```text
-dense-safe = mode:dense + safety:lock-critical
-dense-lock = mode:dense + safety:lock-all相当
-dense-lock-lite = mode:dense内のhigh-risk箇所だけを短く保護
+critical語1件→全文lock化禁止
+潜在risk推測→gate追加禁止
+safetyをmode／profile／漢字圧縮より上位目的化禁止
+安全理由scope／Phase／architecture拡張禁止
 ```
 
-注意:
+## high-risk限定
+
+high-riskは次の明示文脈だけ。
 
 ```text
-dense-safe/dense-lock/dense-lock-liteは正式mode名ではなく運用呼称
-指定値としては使わない
-```
-
-## high-risk
-
-```text
-D禁止
-rollback/revert
-未確認/未実行
-承認gate
-実機確認分離
-public履歴/公開済tag/Release Assets
-data migration
-正本変更
-UI契約変更
-破壊操作
+U要件変更
+rollback／revert
+未push差分破棄
+public履歴改変
+公開済tag／Release Assets変更
+data schema／保存形式の破壊的変更
 KDSL-DP直接実行
+RT:v偽装
+```
+
+通常bug修正・targeted test・内部整理・明示scope内完成はhigh-riskへ自動昇格しない。
+
+## dense時保護
+
+```text
+禁止
+未確認
+未実行
+承認待
 RT:v
-KDSL_RESULT NEXT
-KDSL_RESULT COMMIT
+KDSL-DP直接実行禁止
 ```
 
-判定順:
-
-```text
-[high-risk]明示 > high-risk語を含む行 > high-risk章 > safety指定
-```
-
-過検出抑制:
-
-```text
-high-risk語が例示/辞書定義のみ→note扱
-実装/変更/削除/承認/rollback文脈→high-risk扱
-```
-
-## mode:dense時の安全規則
-
-mode:denseでも以下は短縮弱化しない。
-
-```text
-禁止→禁 への短縮禁止
-未確認→未確 への短縮禁止
-未実行→未実 への短縮禁止
-承認待→承待 への短縮禁止
-実行済扱→実済扱 への短縮禁止
-確認済扱→確済扱 への短縮禁止
-成功扱→成扱 への短縮禁止
-断定禁止→断禁 への短縮禁止
-KDSL-DP直接実行禁止保持
-P1/P1L正規化必須保持
-RT:v条件保持
-KDSL_RESULT NEXT/COMMIT条件保持
-```
+は意味を弱化しない。ただし保護語を理由に追加条件を生成しない。
