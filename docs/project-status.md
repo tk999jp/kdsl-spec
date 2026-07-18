@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase9c-k1-pf1-validator-complete
+phase: phase9d-binding-evidence-schema-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 132
-verified_main_head: c2d6e8be0e8f54b73db6ba410ada1b93260c70cb
+verified_main_head: b4fbec0d0be3bd2a06bf61afa4cac0e409c19571
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -56,6 +56,8 @@ Packet→P1L/P1 lint:=spec/lint/kdsl-packet-p1-normalization-lint.md
 K1:=spec/runtime/kdsl-k1-runtime-kernel-schema.md
 PF1:=spec/runtime/kdsl-pf1-project-profile-schema.md
 K1/PF1 lint:=spec/lint/kdsl-k1-pf1-lint.md
+Binding evidence:=spec/runtime/kdsl-binding-evidence-schema.md
+Binding evidence lint:=spec/lint/kdsl-binding-evidence-lint.md
 validator結果:=非権威的heuristic evidence
 ```
 
@@ -100,6 +102,7 @@ Phase 8 shared AST v2 P1L first-class integration: complete
 Phase 9A K1/PF1 runtime-control design: complete
 Phase 9B K1/PF1 schema/lint/examples: complete
 Phase 9C K1/PF1 parser/validator compatibility first slice: complete
+Phase 9D binding-evidence schema/lint/example: complete
 ```
 
 ## 5. Repository enforcement
@@ -117,6 +120,20 @@ deletions: restricted
 ```
 
 ## 6. Latest verified design / implementation
+
+Phase 9D schema proof:
+
+```text
+PR: 142
+source head: dc090a26593e920a550545957dce092e6fed1e7d
+squash commit: b4fbec0d0be3bd2a06bf61afa4cac0e409c19571
+workflow run: 29639314207 / #524
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+scope: binding-evidence schema/lint/example/canonical alignment
+binding-evidence parser/validator/evaluator: not implemented
+```
 
 Phase 9C validator proof:
 
@@ -230,6 +247,7 @@ Phase 8 branch diagnostics exposed runner self-match/newline/indentation generat
 Phase 9A design self-audit separated authority from capability and reduced unresolved schema decisions to five
 Phase 9B adoption self-audit removed digest self-reference and separated approval content integrity from source verification before merge
 Phase 9C shared-parser registration was validated before storage; final parser diff added only K1/PF1 markers
+Phase 9D self-audit separated bound state from authority/capability sufficiency and aligned candidate/adopted status before merge
 ```
 
 ```text
@@ -253,6 +271,9 @@ runtime binding: not implemented
 K1/PF1 canonical schema: adopted v2-draft
 K1/PF1 parser/validator: bounded first slice integrated
 K1/PF1 exact compatibility: id/revision/digest/project_scope/contract_schemas
+Binding evidence schema: kdsl-binding-evidence@0.1-draft / adopted v2-draft
+Binding evidence parser/validator/evaluator: not implemented
+P1L runtime_control reference: compact JSON schema/id/revision/digest
 BINDING.state: unbound
 BINDING.executable: false
 ```
@@ -365,6 +386,7 @@ Packet→P1L/P1 non-executable preview normalization first slice
 K1/PF1 non-executable runtime-control design
 K1/PF1 canonical schema/lint/manual examples
 K1/PF1 bounded non-executable validator/compatibility first slice
+Binding-evidence canonical schema/lint/non-executable example
 experimental heuristic validator helpers
 ```
 
@@ -375,7 +397,7 @@ stable KDSL release
 public-ready guarantee
 P1L/P1 executable runtime contract
 K1/PF1 executable runtime contract
-K1/PF1 runtime binding/execution authorization implementation
+Binding-evidence parser/evaluator and runtime binding implementation
 Packet normalized/executable runtime contract
 semantic equivalence proof
 complete safety proof
@@ -385,7 +407,7 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: Phase 9D binding-evidence field schema only under separate approval
+P0: Phase 9E binding-evidence parser/validator first slice only under separate approval
 P1: future P1L→K1/PF1 binding evaluator only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
