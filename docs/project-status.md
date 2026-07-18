@@ -25,6 +25,7 @@ P1可逆性偽装除去: 完了
 PF1適用順補正: 完了
 K1再開識別条件追加: 完了
 Agent lint／回帰例: 完了
+Agent運用状態遷移回帰: 完了
 ```
 
 ## 正本
@@ -58,13 +59,17 @@ P1使用→P1Lと併記禁止
 validator compile: pass
 identity lint: pass
 Agent contract lint: pass
+Agent運用状態遷移回帰: pass
+- 通常run完了収束: pass
+- 承認境界直前停止: pass
+- 中断再開識別／未完継続: pass
 canonical regression: pass
 Codex実run再帰完走: 未確認
-中断再開: 未確認
-承認境界停止: 未確認
+Codex実run中断再開: 未確認
+Codex実run承認境界停止: 未確認
 ```
 
-形式検証成功だけでCodex Agent実効性を確認済扱いしない。
+運用回帰passは状態遷移契約の自動確認。形式／自動回帰成功だけでCodex Agent実効性を確認済扱いしない。
 
 ## 不採用
 
