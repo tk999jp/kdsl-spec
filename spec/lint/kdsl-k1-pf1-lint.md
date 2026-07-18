@@ -27,6 +27,8 @@ lint pass != semantic equivalence|safety proof
 - [ ] `id/revision/canonicalization/digest/source_ref` are explicit.
 - [ ] Canonicalization ID is `kdsl-runtime-control-c14n@0.1-draft`.
 - [ ] Digest shape is `sha256:<64 lowercase hex>`.
+- [ ] Digest recomputation substitutes only `IDENTITY.digest` with `sha256:SELF`.
+- [ ] Stored `IDENTITY.digest` is not `sha256:SELF`.
 - [ ] Unknown or duplicate fields are absent.
 - [ ] Repo/path/URL/command/API/file/branch/tag/package/class/method/property strings remain exact.
 - [ ] No implicit default or similar-name inference is used.
@@ -36,6 +38,7 @@ Blocked:
 ```text
 identity mismatch
 unsupported canonicalization
+invalid/circular self-digest computation
 unknown/duplicate field
 implicit meaning
 critical exact-string change
