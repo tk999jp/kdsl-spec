@@ -6,14 +6,15 @@ canonicalization_id: kdsl-runtime-control-c14n@0.1-draft
 applies_to:
   - kdsl-k1@0.1-draft
   - kdsl-pf1@0.1-draft
+  - kdsl-binding-evidence@0.1-draft
 
 ## 1. Purpose
 
-Define deterministic semantic projection and content identity for K1/PF1 definitions.
+Define deterministic semantic projection and content identity for K1/PF1 definitions and binding-evidence records.
 
 ```text
 source document
-→ parse one canonical K1 or PF1 envelope
+→ parse one canonical K1, PF1, or BINDING_EVIDENCE envelope
 → construct schema-ordered semantic projection
 → serialize canonical JSON
 → UTF-8 encode
@@ -100,7 +101,7 @@ The substitution removes self-reference without removing the `IDENTITY.digest` k
 
 ## 4. Identity record
 
-Every canonical K1/PF1 instance declares:
+Every canonical K1/PF1 instance and binding-evidence record declares:
 
 ```yaml
 IDENTITY:

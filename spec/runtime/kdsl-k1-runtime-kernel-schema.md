@@ -162,7 +162,7 @@ CONFLICT_POLICY:
   critical_exact_string_change: blocked
 BINDING_REQUIREMENTS:
   evidence_representation: external_content_addressed_record
-  evidence_schema: deferred_phase9d
+  evidence_schema: kdsl-binding-evidence@0.1-draft
   reference_from_p1l_binding: required
   executable: false
   semantic_equivalence: not_proven
@@ -350,13 +350,13 @@ binding evidence:=external content-addressed record
 P1L.BINDING.runtime_control:=exact reference to that record
 ```
 
-The record schema and resolver implementation remain Phase 9D/9C work. No executable-looking canonical envelope is introduced in Phase 9B.
+The record schema is `kdsl-binding-evidence@0.1-draft`. Evaluator and record-generation implementations remain separate future work.
 
 ## 12. Non-goals
 
 ```text
-runtime-binding resolver implementation
-binding-evidence field schema
+runtime-binding evaluator implementation
+binding-evidence record generation
 BINDING.executable:true
 execution authorization artifact
 executable transformer

@@ -3,7 +3,7 @@
 目的: kdsl-spec内で使う主要用語を定義し、表記揺れと誤解を減らす。
 
 status: draft-main-v2-sync
-source_alignment: spec/core v1.1-v2-sync / manifest v2-draft-sync / bridge v0.3 / P1L-P1 v0.1-draft / R1 v0.1-draft
+source_alignment: spec/core v1.1-v2-sync / manifest v2-draft-sync / bridge v0.3 / P1L-P1 v0.1-draft / K1-PF1-binding v0.1-draft / R1 v0.1-draft
 
 ## Core terms
 
@@ -186,9 +186,23 @@ PF1 may narrow but never widen P1L authority
 capability != permission
 Stop continuation != authority
 routing != authority
-binding evidence:=external content-addressed record
+binding evidence:=external content-addressed record / schema kdsl-binding-evidence@0.1-draft
 BINDING.executable:false under P1L/P1 v0.1 draft
-resolver/runtime binding/binding-evidence schema:=not implemented
+K1/PF1 bounded validator:=integrated / binding evaluator:=not implemented
+```
+
+### Binding evidence
+
+```text
+binding evidence:=P1L contractとexact K1/PF1評価次元を結ぶexternal content-addressed record
+schema: kdsl-binding-evidence@0.1-draft
+```
+
+```text
+bound != executable|authority sufficient|capability sufficient|RT:v
+approval content validity != source trust
+capability != authority
+all evaluation dimensions/provenance保持必須
 ```
 
 ### R1

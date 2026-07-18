@@ -193,9 +193,9 @@ binding evidence:=external content-addressed record referenced by P1L.BINDING.ru
 ```
 
 ```text
-K1/PF1 resolver/parser/validator:=not implemented
-binding-evidence field schema:=not implemented
-runtime binding:=not implemented
+K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice
+binding-evidence field schema:=kdsl-binding-evidence@0.1-draft
+runtime evaluator/binding:=not implemented
 BINDING.executable:false fixed under P1L/P1 v0.1 draft
 ```
 
@@ -294,8 +294,8 @@ Packet executable promotion禁止
 ## 11. Non-goals
 
 ```text
-runtime binding/resolver implementation
-binding-evidence field schema
+runtime evaluator/resolver implementation
+binding-evidence record generation
 BINDING.executable:true
 executable transformer
 automatic AI tool execution

@@ -24,7 +24,9 @@ K1/PF1 runtime control:
   spec/runtime/kdsl-k1-runtime-kernel-schema.md
   spec/runtime/kdsl-pf1-project-profile-schema.md
   spec/runtime/kdsl-runtime-control-canonicalization.md
+  spec/runtime/kdsl-binding-evidence-schema.md
   spec/lint/kdsl-k1-pf1-lint.md
+  spec/lint/kdsl-binding-evidence-lint.md
 
 Packet→P1L/P1 normalization:
   spec/packet/kdsl-packet-p1-normalization-contract.md
@@ -45,6 +47,7 @@ Core/Profile/R1/Bridge canonical meaning
 > K1 runtime-control semantics
 > PF1 exact project definitions
 > K1/PF1 lint
+> binding-evidence schema/lint
 > Packet target-specific mapping contract/property
 > validator/example/tool
 ```
@@ -91,8 +94,9 @@ K1 schema: kdsl-k1@0.1-draft adopted / non-executable
 PF1 schema: kdsl-pf1@0.1-draft adopted / non-executable
 runtime-control canonicalization: kdsl-runtime-control-c14n@0.1-draft adopted
 K1/PF1 lint/examples: adopted explanatory/manual corpus
-K1/PF1 resolver/parser/validator: not implemented
-binding-evidence field schema: not implemented
+K1/PF1 parser/validator/exact compatibility: Phase 9C bounded first slice
+binding-evidence schema/lint/example: kdsl-binding-evidence@0.1-draft adopted
+binding-evidence evaluator/generator: not implemented
 Packet executable promotion: prohibited
 ```
 
@@ -126,6 +130,7 @@ examples/adps/p1-profile-completed.example.md
 examples/adps/p1-unknown-profile-blocked.example.md
 examples/adps/p1-authority-missing-blocked.example.md
 examples/packet/packet-p1l-normalization.example.md
+examples/runtime/binding-evidence-non-executable.example.md
 ```
 
 Examples are not specification sources.

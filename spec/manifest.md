@@ -84,7 +84,8 @@ Runtime Control:
   K1 canonical runtime-control semantics
   PF1 project-scoped exact definitions/restrictions/ceilings/capability requirements/routing
   valid != executable|authority grant
-  resolver/runtime bindingとは分離
+  binding evidence:=external content-addressed record
+  evaluator/runtime bindingとは分離
 
 Packet / Normalization:
   non-executable authoring/transport/mapping/preview evidence
@@ -131,6 +132,7 @@ Project Status:
 | `spec/runtime/kdsl-k1-runtime-kernel-schema.md` | Runtime Control schema | canonical K1 semantics/state/binding requirements | v2 draft adopted / non-executable |
 | `spec/runtime/kdsl-pf1-project-profile-schema.md` | Runtime Control schema | project-scoped PF1 defaults/restrictions/ceilings/capability/routing | v2 draft adopted / non-executable |
 | `spec/runtime/kdsl-runtime-control-canonicalization.md` | Runtime Control identity | schema-ordered JSON projection / SHA-256 | v2 draft adopted |
+| `spec/runtime/kdsl-binding-evidence-schema.md` | Runtime Control evidence | external content-addressed binding dimensions/provenance | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-schema.md` | Packet schema | PACKET_DRAFT fields / authority / normalization boundary | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-normalization-contract.md` | Normalization schema | generic mapping/loss/round-trip evidence | v2 draft adopted / non-executable |
 | `spec/packet/kdsl-packet-p1-normalization-contract.md` | Target normalization | BASE-ADPS-P1→P1L/P1 preview mapping | v2 draft adopted subordinate / non-executable |
@@ -144,6 +146,7 @@ Project Status:
 | `spec/lint/kdsl-r1c-lint.md` | Lint | R1C order/RT/NEXT/COMMIT/round-trip | v2 draft adopted |
 | `spec/lint/kdsl-p1-p1l-lint.md` | Lint | P1L/P1 profile/authority/runtime/round-trip | v2 draft adopted |
 | `spec/lint/kdsl-k1-pf1-lint.md` | Lint | K1/PF1 identity/completion/authority/capability/routing/boundary | v2 draft adopted |
+| `spec/lint/kdsl-binding-evidence-lint.md` | Lint | binding evidence identity/dimensions/provenance/boundary | v2 draft adopted |
 | `spec/lint/kdsl-packet-lint.md` | Lint | Packet envelope/registry/gate/authority | v2 draft adopted |
 | `spec/lint/kdsl-packet-normalization-lint.md` | Lint | generic normalization mapping/loss/round-trip | v2 draft adopted |
 | `spec/lint/kdsl-packet-p1-normalization-lint.md` | Lint | Packet→P1L/P1 target preview/property | v2 draft adopted subordinate |
@@ -277,7 +280,9 @@ Core/R1/Bridge meaning
 > P1L/P1 contract meaning
 > K1 runtime-control semantics
 > PF1 project definitions
+> binding-evidence schema
 > bounded parser/validator
+> future binding evaluator
 > route/skill/tool
 > example/template/tool
 ```
@@ -291,7 +296,8 @@ routing != authority
 binding evidence:=external content-addressed record
 BINDING.executable:false under P1L/P1 v0.1 draft
 parser/validator/exact compatibility:=Phase 9C bounded first slice integrated
-runtime binding/binding-evidence schema:=not implemented
+binding-evidence schema:=kdsl-binding-evidence@0.1-draft adopted
+runtime evaluator/binding:=not implemented
 ```
 
 ### 4.5 R1 / R1C
@@ -514,7 +520,7 @@ capability != permission
 approval scope/operation/time/revocation exact
 Stop continuation/routing != authority
 binding evidence external/content-addressed/non-executable
-bounded parser/validator scope明記 / binding未実装明記
+bounded parser/validator scope明記 / binding-evidence schema明記 / evaluator未実装明記
 ```
 
 Packet→P1L/P1 additional checks:
@@ -562,7 +568,7 @@ kdsl-k1@0.1-draft:=adopted canonical runtime-control semantics / non-executable 
 kdsl-pf1@0.1-draft:=adopted project runtime-control profile / non-executable / no authority grant
 kdsl-runtime-control-c14n@0.1-draft:=adopted canonical projection/digest rules
 K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice integrated
-binding-evidence schema:=not implemented / external content-addressed representation selected
+kdsl-binding-evidence@0.1-draft:=adopted external content-addressed evidence record / non-executable
 kdsl-packet@0.1-draft:=adopted authoring schema / non-executable
 kdsl-packet-normalization@0.1-draft:=adopted / non-executable
 kdsl-packet-p1-normalization@0.1-draft:=Phase 7D target-specific first slice integrated

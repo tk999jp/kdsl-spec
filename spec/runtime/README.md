@@ -17,8 +17,13 @@ Canonicalization:
   spec/runtime/kdsl-runtime-control-canonicalization.md
   id: kdsl-runtime-control-c14n@0.1-draft
 
+Binding evidence:
+  spec/runtime/kdsl-binding-evidence-schema.md
+  schema: kdsl-binding-evidence@0.1-draft
+
 Lint:
   spec/lint/kdsl-k1-pf1-lint.md
+  spec/lint/kdsl-binding-evidence-lint.md
 ```
 
 ## Ownership
@@ -30,6 +35,8 @@ Core/R1/Bridge canonical meaning
 > PF1 project-scoped exact definitions
 > lint
 > bounded resolver/parser/validator
+> binding-evidence schema
+> future binding evaluator
 > route/skill/tool implementation
 > example/template/tool
 ```
@@ -54,7 +61,7 @@ Phase 9A design: complete
 Phase 9B schema/lint/examples: adopted v2-draft
 Phase 9C resolver/parser/validator bounded first slice: integrated
 Phase 9C runtime-control corpus: 16 / failed 0
-Phase 9D binding-evidence schema: not implemented
+Phase 9D binding-evidence schema/lint/example: adopted v2-draft
 runtime binding: not implemented
 ```
 
@@ -81,6 +88,7 @@ execution_authority:none
 ```text
 examples/runtime/k1-pf1-non-executable.example.md
 examples/runtime/k1-canonical.example.md
+examples/runtime/binding-evidence-non-executable.example.md
 ```
 
 The explanatory example is not a specification source. The canonical K1 machine sample is validator corpus input, but its pass result is not a safety proof, approval, runtime binding, execution authority, or RT:v evidence.
