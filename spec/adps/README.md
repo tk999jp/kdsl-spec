@@ -19,6 +19,13 @@ P1 subordinate compact serialization:
 P1L/P1 lint:
   spec/lint/kdsl-p1-p1l-lint.md
 
+K1/PF1 runtime control:
+  spec/runtime/README.md
+  spec/runtime/kdsl-k1-runtime-kernel-schema.md
+  spec/runtime/kdsl-pf1-project-profile-schema.md
+  spec/runtime/kdsl-runtime-control-canonicalization.md
+  spec/lint/kdsl-k1-pf1-lint.md
+
 Packet→P1L/P1 normalization:
   spec/packet/kdsl-packet-p1-normalization-contract.md
   spec/lint/kdsl-packet-p1-normalization-lint.md
@@ -35,6 +42,9 @@ Core/Profile/R1/Bridge canonical meaning
 > P1L canonical v2-draft contract schema
 > P1 compact serialization profile
 > P1/P1L lint
+> K1 runtime-control semantics
+> PF1 exact project definitions
+> K1/PF1 lint
 > Packet target-specific mapping contract/property
 > validator/example/tool
 ```
@@ -48,6 +58,9 @@ P1L/P1 valid != executable
 P1L/P1 lint/round-trip/property pass != execution authority
 profile completion != inference
 unknown profile/alias/preset→blocked
+K1/PF1 valid|lint pass != executable|authority grant
+capability != permission
+Stop continuation/routing != authority
 BINDING.executable:false under v0.1 draft
 RT:v result claim belongs to R1/R1C after target-environment evidence
 NEXT remains proposal only
@@ -74,7 +87,12 @@ Packet P1 normalization corpus: 17 expectations / failed 0
 Packet preview markers: P1L_PREVIEW / P1_PREVIEW
 Packet normalized-state promotion: not implemented
 runtime binding: not implemented
-K1/PF1 canonical schema: absent
+K1 schema: kdsl-k1@0.1-draft adopted / non-executable
+PF1 schema: kdsl-pf1@0.1-draft adopted / non-executable
+runtime-control canonicalization: kdsl-runtime-control-c14n@0.1-draft adopted
+K1/PF1 lint/examples: adopted explanatory/manual corpus
+K1/PF1 resolver/parser/validator: not implemented
+binding-evidence field schema: not implemented
 Packet executable promotion: prohibited
 ```
 

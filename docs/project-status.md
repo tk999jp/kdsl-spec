@@ -2,7 +2,7 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase9a-k1-pf1-runtime-control-design-complete
+phase: phase9b-k1-pf1-schema-adoption-candidate
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 132
@@ -43,6 +43,7 @@ R1: spec/r1/*
 Lint: spec/lint/*
 Bridge: spec/bridge/*
 Registry: spec/registry/*
+Runtime Control: spec/runtime/*
 Glossary: spec/glossary.md / spec/glossary-v2-draft.md
 ```
 
@@ -52,6 +53,9 @@ P1:=spec/adps/kdsl-p1-compact-contract-schema.md
 Packet→P1L/P1:=spec/packet/kdsl-packet-p1-normalization-contract.md
 P1L/P1 lint:=spec/lint/kdsl-p1-p1l-lint.md
 Packet→P1L/P1 lint:=spec/lint/kdsl-packet-p1-normalization-lint.md
+K1:=spec/runtime/kdsl-k1-runtime-kernel-schema.md
+PF1:=spec/runtime/kdsl-pf1-project-profile-schema.md
+K1/PF1 lint:=spec/lint/kdsl-k1-pf1-lint.md
 validator結果:=非権威的heuristic evidence
 ```
 
@@ -94,6 +98,7 @@ Phase 7D manifest/glossary/index/review/status alignment: integrated
 Phase 7 canonical P1/P1L contract scope: complete
 Phase 8 shared AST v2 P1L first-class integration: complete
 Phase 9A K1/PF1 runtime-control design: complete
+Phase 9B K1/PF1 schema/lint/examples: adoption candidate
 ```
 
 ## 5. Repository enforcement
@@ -212,7 +217,7 @@ P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
 shared AST v2 P1L marker registration: first-class integrated / bootstrap removed / compatibility corpus 10 failed 0
 runtime binding: not implemented
-K1/PF1 canonical schema: absent / Phase 9A design integrated
+K1/PF1 canonical schema: Phase 9B adoption candidate / resolver not implemented
 BINDING.state: unbound
 BINDING.executable: false
 ```
@@ -323,6 +328,7 @@ P1 subordinate compact serialization
 P1L/P1 bounded validator/round-trip first slice
 Packet→P1L/P1 non-executable preview normalization first slice
 K1/PF1 non-executable runtime-control design
+K1/PF1 canonical schema/lint/manual examples adoption candidate
 experimental heuristic validator helpers
 ```
 
@@ -332,7 +338,8 @@ Do not present as:
 stable KDSL release
 public-ready guarantee
 P1L/P1 executable runtime contract
-canonical K1/PF1 runtime-control schema
+K1/PF1 executable runtime contract
+K1/PF1 resolver/runtime binding implementation
 Packet normalized/executable runtime contract
 semantic equivalence proof
 complete safety proof
@@ -342,8 +349,9 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: resolve the five Phase 9B schema decisions under separate approval
-P1: canonical K1/PF1 schema/lint/examples only under separate approval
+P0: merge Phase 9B schema/lint/examples adoption and close alignment
+P1: Phase 9C resolver/parser/validator first slice only under separate approval
+P2: Phase 9D binding-evidence field schema only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 

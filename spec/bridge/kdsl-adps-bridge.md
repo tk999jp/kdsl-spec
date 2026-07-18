@@ -21,7 +21,10 @@ Canonical v2-draft schema:
 ```text
 P1L: spec/adps/kdsl-p1l-contract-schema.md / kdsl-p1l@0.1-draft
 P1:  spec/adps/kdsl-p1-compact-contract-schema.md / kdsl-p1@0.1-draft
-lint: spec/lint/kdsl-p1-p1l-lint.md
+K1:  spec/runtime/kdsl-k1-runtime-kernel-schema.md / kdsl-k1@0.1-draft
+PF1: spec/runtime/kdsl-pf1-project-profile-schema.md / kdsl-pf1@0.1-draft
+runtime c14n: spec/runtime/kdsl-runtime-control-canonicalization.md / kdsl-runtime-control-c14n@0.1-draft
+lint: spec/lint/kdsl-p1-p1l-lint.md / spec/lint/kdsl-k1-pf1-lint.md
 ```
 
 Ownership:
@@ -31,6 +34,9 @@ Core/Profile/R1/Bridge canonical meaning
 > P1L canonical v2-draft contract schema
 > P1 compact serialization profile
 > P1/P1L lint
+> K1 runtime-control semantics
+> PF1 exact project definitions
+> K1/PF1 lint
 > validator/example/tool
 ```
 
@@ -175,7 +181,25 @@ AP/H意味推測禁止
 Authority rails不在→canonical昇格blocked
 ```
 
-## 6. KDSL_PROMPT
+## 6. K1 / PF1 Runtime Control
+
+```text
+K1/PF1 valid != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation != authority
+routing != authority
+binding evidence:=external content-addressed record referenced by P1L.BINDING.runtime_control
+```
+
+```text
+K1/PF1 resolver/parser/validator:=not implemented
+binding-evidence field schema:=not implemented
+runtime binding:=not implemented
+BINDING.executable:false fixed under P1L/P1 v0.1 draft
+```
+
+## 7. KDSL_PROMPT
 
 ChatGPTがAI coding tool向けpromptを作る場合は、先頭を `KDSL_PROMPT:` に固定する。
 
@@ -199,7 +223,7 @@ P1L/P1 schema/lint passのみでKDSL_PROMPT生成許可扱い
 
 P1L/P1はKDSL_PROMPTと同一ではない。runtime binding/authority評価を経ないP1L/P1から実行指示を生成してはならない。
 
-## 7. KDSL_RESULT
+## 8. KDSL_RESULT
 
 Codex / AI coding tool の最終回答には、先頭に `KDSL_RESULT:` を要求する。
 
@@ -237,7 +261,7 @@ blk=runtime確認不能
 
 P1L/P1の`RUNTIME`はpre-execution dispositionであり、KDSL_RESULT/R1の実行結果RTと混同しない。
 
-## 8. KDSL本体への影響
+## 9. KDSL本体への影響
 
 KDSL本体は汎用直投入記法のまま維持する。  
 ADPS/KDSL-DP/P1L/P1規則は、ADPS向けprofileまたはdev-prompt用途で適用する。  
@@ -256,7 +280,7 @@ lint warning追加→compatible
 説明/例追加→patch
 ```
 
-## 9. Packet relation
+## 10. Packet relation
 
 Canonical P1/P1L schema adoption alone does not resolve Packet normalization.
 
@@ -267,11 +291,12 @@ P1L_PREVIEW/P1_PREVIEW != P1L:/P1|
 Packet executable promotion禁止
 ```
 
-## 10. Non-goals
+## 11. Non-goals
 
 ```text
-runtime binding implementation
-K1/PF1 canonical schema
+runtime binding/resolver implementation
+binding-evidence field schema
+BINDING.executable:true
 executable transformer
 automatic AI tool execution
 complete semantic equivalence proof

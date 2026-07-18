@@ -163,7 +163,26 @@ KDSL-DP→P1/P1L正規化必須
 P1/P1L valid != executable
 ```
 
-## 7. Packet boundary
+## 7. K1 / PF1 Runtime Control
+
+```text
+K1 schema: kdsl-k1@0.1-draft
+PF1 schema: kdsl-pf1@0.1-draft
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
+status: adopted v2-draft / non-executable
+```
+
+```text
+K1/PF1 valid|lint pass != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation/routing != authority
+binding evidence:=external content-addressed record
+BINDING.executable:false
+resolver/runtime binding/binding-evidence schema:=not implemented
+```
+
+## 8. Packet boundary
 
 KDSL-Packetはv2-draft authoring schemaですが、実行仕様ではありません。
 
@@ -181,7 +200,7 @@ normalization preview != executable target
 semantic/property pass != semantic equivalence proof
 ```
 
-## 8. Why R1 exists
+## 9. Why R1 exists
 
 AI toolの報告では、実行事実・検証結果・推論・Runtime・権限が混同されやすくなります。
 
@@ -226,7 +245,7 @@ COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
 
 See [`r1-quickstart.md`](r1-quickstart.md) for a minimal workflow.
 
-## 9. Specification layers
+## 10. Specification layers
 
 ```text
 spec/core:       KDSL記法・保護語・mode/safety

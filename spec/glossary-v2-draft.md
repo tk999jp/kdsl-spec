@@ -202,6 +202,58 @@ state: unbound|bound|blocked
 
 `kdsl-p1l@0.1-draft` / `kdsl-p1@0.1-draft`では`executable:false`固定。
 
+### K1
+
+```text
+K1:=canonical runtime-control semantics and state-separation schema
+schema: kdsl-k1@0.1-draft
+```
+
+```text
+K1 valid != executable|authority grant
+completion != inference
+capability != permission
+binding evidence != execution instruction
+```
+
+### PF1
+
+```text
+PF1:=project-scoped exact runtime-control profile
+schema: kdsl-pf1@0.1-draft
+```
+
+```text
+PF1 default/ceiling/route != authority grant
+PF1 may narrow but never widen P1L authority
+ceiling dimensions:=mode/scope/cardinality
+```
+
+### Runtime-control canonicalization
+
+```text
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
+schema-ordered semantic projection→compact JSON→UTF-8→SHA-256
+```
+
+```text
+digest match != semantic equivalence|approval|authority|executable
+```
+
+### Approval reference / Capability observation
+
+```text
+approval reference:=content-addressed explicit operation/scope/time/revocation evidence
+capability observation:=scoped/timestamped/expiring/invalidatable runtime fact
+```
+
+```text
+remembered conversation approval→invalid
+approval valid != executable
+capability observed != permission|RT:v
+stale|inferred|unverified capability→insufficient
+```
+
 ### Legacy operational P1
 
 ```text
