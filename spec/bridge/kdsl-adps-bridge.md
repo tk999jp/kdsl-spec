@@ -1,45 +1,62 @@
-# KDSL / Agent Bridge v3.0-minimal
+# KDSL / Agent Bridge v3.1-minimal
 
 ## 境界
 
 ```text
 KDSL:=LLM直投入可能な漢字圧縮prompt
 KDSL-DP:=Agent向けAuthoring形式
-P1L:=agent実行契約の正規長形式
-P1:=P1Lの可逆短縮
-K1:=1回のagent run状態
-PF1:=project固有既定
+K1:=標準agent run状態
+P1L:=厳密handoff／中断再開用長形式契約
+P1:=任意短縮転送表現
+PF1:=継続project既定
 R1／KDSL_RESULT:=結果報告
 ```
 
-## 使用
+## 目的
 
 ```text
-通常会話／単発回答／変換のみ→Agent層省略可
-repo書込／複数step実装／再帰完走／複数tool／中断再開→Agent層必須
+Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了
 ```
+
+## 正規経路
+
+通常:
 
 ```text
 KDSL_PROMPT
-→KDSL-DP
-→P1L
-→P1
-→PF1適用
 →K1初期化
-→Codex agent実行
+→Codex再帰実行
 →R1
 ```
+
+厳密handoff／中断再開:
+
+```text
+U指示＋PF1
+→P1L生成
+→K1識別付き初期化
+→Codex再帰実行
+→R1
+```
+
+短縮転送が必要な場合:
+
+```text
+P1LまたはKDSL_PROMPT
+→P1
+```
+
+P1LとP1を同一promptへ併記しない。
 
 ## 保持
 
 ```text
 KDSL-DP直接実行禁止
-KDSL-DP→P1L／P1正規化必須
-P1L／P1 valid != 全操作許可
-実行許可:=P1L権限rail
 K1更新→目的／scope／権限変更禁止
-PF1→P1L権限拡張禁止
+PF1→権限拡張禁止
+P1L／P1 valid != 全操作許可
 build／lint／test／CI pass != RT:v
+形式lint pass != Codex Agent実効性
 ```
 
 ## identity境界
@@ -51,11 +68,7 @@ Agent層→漢字圧縮解除禁止
 Agent層!=汎用安全framework
 ```
 
-KDSL本体は漢字圧縮の直投入prompt。Agent層はChatGPT／Codex実行の安定化を担い、KDSLの第一目的を変更しない。
-
 ## 除外
-
-Agent層v1は次へ依存しない。
 
 ```text
 Safety Gate Registry

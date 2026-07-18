@@ -33,25 +33,23 @@ REQUIRED = {
         "profile: dev-prompt|compact-prompt|converter|lint",
         "agent: required|optional",
         "安全契機:=Uが明示した重大条件の限定保護",
-        "P1L:=agent実行時の正規契約",
-        "K1:=agent run状態制御",
-        "PF1:=project既定制約",
+        "標準Agent:=KDSL_PROMPT＋K1",
+        "P1:=任意短縮転送表現",
     ),
     "spec/profiles/kdsl-profile-dev-prompt.md": (
         "agent: required",
-        "P1L:=実行契約長形式",
-        "P1:=P1L可逆短縮",
-        "K1:=run状態",
-        "PF1:=project既定",
+        "通常投入は `KDSL_PROMPT＋K1`",
+        "P1は任意短縮",
+        "形式lint pass!=Codex Agent実効性",
     ),
     "spec/profiles/kdsl-profile-compact-prompt.md": (
         "目的:", "材料:", "出力:", "規則:", "確認:",
     ),
     "spec/agent/kdsl-agent-execution.md": (
-        "P1L:=agent実行内容を損失なく固定する長形式契約",
-        "P1:=P1Lの短縮serialization",
-        "K1:=1回のagent run状態",
-        "PF1:=project固有の既定条件",
+        "Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了",
+        "標準必須:",
+        "KDSL_PROMPT＋K1",
+        "P1!=可逆性保証",
         "Agent層!=汎用安全framework",
     ),
     "spec/r1/r1-result-spec.md": (
@@ -68,6 +66,8 @@ FORBIDDEN_ACTIVE = (
     "KDSL-CP漢:=",
     "KDSLは言語中立",
     "Safety Gate Registry:=",
+    "P1:=P1L可逆短縮",
+    "P1:=P1Lの可逆短縮",
 )
 
 ACTIVE_SPECS = (

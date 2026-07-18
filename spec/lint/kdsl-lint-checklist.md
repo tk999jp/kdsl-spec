@@ -1,4 +1,4 @@
-# KDSL Lint Checklist v3.0-kanji-agent
+# KDSL Lint Checklist v3.1-kanji-agent
 
 ## 合格必須
 
@@ -29,8 +29,6 @@ KDSL_PROMPTへ英語構造KEY必須化
 Agent層をKDSL Coreより上位化
 ```
 
-1件でもあれば不合格。
-
 ## 圧縮不足
 
 ```text
@@ -38,7 +36,7 @@ Agent層をKDSL Coreより上位化
 同義block重複
 長い安全説明の再掲
 GOAL→目的等のKEY翻訳だけ
-本文が通常日本語のまま
+KDSL_PROMPT／P1L／P1で同一内容を多重記載
 ```
 
 ## 安全過剰
@@ -50,10 +48,8 @@ U未指定承認gate
 安全理由scope拡張
 安全理由Phase細分化
 追加hardening完成条件化
-「念のため」停止条件
+未使用release／public履歴／破壊操作railの定型列挙
 ```
-
-1件でも修正対象。
 
 ## KDSL_PROMPT
 
@@ -62,8 +58,8 @@ U未指定承認gate
 日本語構造KEY
 本文漢字圧縮
 成功条件／対象／非対象／検証保持
-停止条件は限定
-KDSL_RESULT簡潔
+停止条件限定
+報告R1
 ```
 
 ## Agent
@@ -71,27 +67,30 @@ KDSL_RESULT簡潔
 `agent: required`時:
 
 ```text
-P1L／P1／K1あり
-継続project／既定あり→PF1あり
-P1L全必須fieldあり
-P1L／P1全権限railあり
-P1→P1L可逆
+標準:=KDSL_PROMPT＋K1
 K1更新→目的／対象／権限変更なし
-PF1→P1L権限拡張なし
 K1完了→未完なし／検証成功／実機確定
+```
+
+条件付き:
+
+```text
+中断再開／handoff→P1L＋識別付きK1
+継続project既定→PF1参照
+短縮転送→P1またはP1Lの一方
 ```
 
 禁止:
 
 ```text
-P1L valid=全操作許可扱い
-権限rail暗黙化
+P1L／P1同時記載
+P1可逆性偽装
+P1L／P1／PF1全量の毎回必須化
+全権限rail列挙強制
 K1でscope追加
-PF1でU禁止反転
+PF1でU禁止反転／権限拡張
 Agent状態をR1へ全複製
-Safety Gate Registry必須依存
-Packet必須依存
-Binding Evidence必須依存
+Safety Gate Registry／Packet／Binding Evidence必須依存
 ```
 
 詳細は `spec/lint/kdsl-agent-lint.md`。
@@ -103,7 +102,7 @@ Binding Evidence必須依存
 未実行偽装なし
 RT:v偽装なし
 roadmap化なし
-P1L／P1／K1／PF1複製なし
+Agent契約複製なし
 ```
 
 ## validator
@@ -112,6 +111,7 @@ P1L／P1／K1／PF1複製なし
 validator未実行→pass扱禁止
 validator pass != 意味同等
 validator pass != 漢字圧縮品質
+validator pass != Agent実効性
 validator pass != safety proof
 validator pass != 実行許可
 validator pass != U承認

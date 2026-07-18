@@ -34,7 +34,7 @@ KDSL-Intlを本体扱い禁止
 
 ```text
 第一目的:=漢字圧縮
-成立条件:=意味保持／LLM直投入／判断分岐保持／明示制約保持／出力安定／人間修正可能
+成立条件:=意味保持／LLM直投入／判断分岐保持／明示制約保持／Agent完走／出力安定／人間修正可能
 ```
 
 不可侵:
@@ -73,16 +73,13 @@ agent: optional
 language: ja
 ```
 
-profile変更で漢字圧縮を解除しない。実装／repo操作／runtime確認を含んでも本文は漢字圧縮を維持する。
-
-Agent層使用条件:
+Codex開発作業では `agent: required`。通常会話、単発回答、変換のみは `agent: optional`。
 
 ```text
-repo書込／複数step実装／再帰完走／複数tool／中断再開／commit・push・release操作
-→agent: required
+Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了
 ```
 
-通常会話、単発回答、変換のみは `agent: optional`。
+Agent必須でもP1L／P1／PF1全量を自動必須化しない。
 
 ## 4 漢字圧縮
 
@@ -146,20 +143,32 @@ format: KDSL
 profile: dev-prompt
 mode: min
 safety: normal
-agent: optional
+agent: required
 
 局面:
 目的:
 成功条件:
 根拠:
 正本:
+権限:
+承認境界:
 対象:
 非対象:
 作業:
 試験:
 検証:
 停止条件:
-報告:
+報告: R1
+
+K1:
+状態: 計画
+現在: 初期化
+完了: なし
+未完:
+検証: 未実行
+実機: 不要|未確認
+次: 調査
+停止理由: なし
 ```
 
 ```text
@@ -171,27 +180,29 @@ KDSL_PROMPT前自然文禁止
 ## 7 Agent層
 
 ```text
-KDSL:=依頼内容を漢字圧縮
-P1L:=agent実行内容の正規長形式
-P1:=P1Lの可逆短縮
-K1:=agent run状態
-PF1:=project既定
+標準Agent:=KDSL_PROMPT＋K1
+P1L:=厳密handoff／中断再開用長形式
+P1:=任意短縮転送表現
+PF1:=継続project既定
 R1:=結果報告
 ```
 
-`agent: required`時:
+P1L／PF1追加条件:
 
 ```text
-P1L／P1／K1必須
-継続project／project既定あり→PF1必須
-PF1なし→全条件をP1Lへ明示
+中断再開
+複数agent handoff
+長時間run
+複雑承認境界
+project既定再利用
+U明示
 ```
 
 ```text
-P1L／P1 valid != 全操作許可
-実行許可:=P1L権限rail
+PF1参照→P1L生成→K1初期化
+P1使用時→P1Lと併記禁止
+P1!=可逆性保証
 K1更新→目的／scope／権限変更禁止
-PF1→P1L権限拡張禁止
 ```
 
 Agent層正本は `spec/agent/kdsl-agent-execution.md`。
@@ -230,21 +241,22 @@ commit:=実行済commitまたは推奨message
 ```text
 KDSL:=LLM直投入可能な漢字圧縮prompt
 KDSL-DP:=Agent向けAuthoring形式
-P1／P1L:=agent実行時の正規契約
-K1:=agent run状態制御
-PF1:=project既定制約
+K1:=標準agent run状態
+P1L:=条件付き厳密契約
+P1:=条件付き短縮転送
+PF1:=条件付きproject既定
 R1／KDSL_RESULT:=結果報告
 ```
 
 ```text
 KDSL-DP直接実行禁止
-KDSL-DP→P1L／P1正規化必須
+通常Agent→KDSL_PROMPT＋K1
+厳密handoff→PF1参照＋P1L＋K1
 P1L／P1 valid != 全操作許可
-通常会話／単発prompt→Agent層省略可
-repo実装／再帰完走／複数tool→Agent層必須
+形式lint pass != Codex Agent実効性
 ```
 
-Agent層はKDSL Coreの下位。P1／K1／PF1は漢字identityを上書きできない。Safety Gate Registry／Packet／R1C／Binding EvidenceをAgent層の必須依存にしない。
+Agent層はKDSL Coreの下位。P1／K1／PF1は漢字identityを上書きできない。Safety Gate Registry／Packet／R1C／Binding Evidenceを必須依存にしない。
 
 ## 10 変換禁止
 
