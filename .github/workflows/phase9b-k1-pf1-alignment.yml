@@ -1,0 +1,522 @@
+name: Phase 9B K1 PF1 Alignment
+
+on:
+  pull_request:
+    branches: [main]
+    types: [synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/kdsl-phase9b-k1-pf1-schema
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Synchronize canonical references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one replacement, found {count}: {old!r}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          # manifest
+          replace_once(
+              'spec/manifest.md',
+              'v2_direction: CompactPrompt / Safety Semantics / R1C / Packet / P1L-P1 contract / non-executable Packet→P1 previews',
+              'v2_direction: CompactPrompt / Safety Semantics / R1C / Packet / P1L-P1 contract / K1-PF1 runtime control / non-executable Packet→P1 previews',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''ADPS Contracts:
+  KDSL-DPから正規化されたP1LとP1 serialization
+  valid != executable
+  runtime binding/authority evaluationとは分離
+
+Packet / Normalization:''',
+              '''ADPS Contracts:
+  KDSL-DPから正規化されたP1LとP1 serialization
+  valid != executable
+  runtime binding/authority evaluationとは分離
+
+Runtime Control:
+  K1 canonical runtime-control semantics
+  PF1 project-scoped exact definitions/restrictions/ceilings/capability requirements/routing
+  valid != executable|authority grant
+  resolver/runtime bindingとは分離
+
+Packet / Normalization:''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''| `spec/adps/kdsl-p1-compact-contract-schema.md` | ADPS serialization | P1Lのreversible compact serialization | v2 draft adopted subordinate / non-executable |
+| `spec/packet/kdsl-packet-schema.md`''',
+              '''| `spec/adps/kdsl-p1-compact-contract-schema.md` | ADPS serialization | P1Lのreversible compact serialization | v2 draft adopted subordinate / non-executable |
+| `spec/runtime/README.md` | Runtime Control index | K1/PF1 schema・canonicalization・lint index | v2 draft adopted index |
+| `spec/runtime/kdsl-k1-runtime-kernel-schema.md` | Runtime Control schema | canonical K1 semantics/state/binding requirements | v2 draft adopted / non-executable |
+| `spec/runtime/kdsl-pf1-project-profile-schema.md` | Runtime Control schema | project-scoped PF1 defaults/restrictions/ceilings/capability/routing | v2 draft adopted / non-executable |
+| `spec/runtime/kdsl-runtime-control-canonicalization.md` | Runtime Control identity | schema-ordered JSON projection / SHA-256 | v2 draft adopted |
+| `spec/packet/kdsl-packet-schema.md`''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''| `spec/lint/kdsl-p1-p1l-lint.md` | Lint | P1L/P1 profile/authority/runtime/round-trip | v2 draft adopted |
+| `spec/lint/kdsl-packet-lint.md`''',
+              '''| `spec/lint/kdsl-p1-p1l-lint.md` | Lint | P1L/P1 profile/authority/runtime/round-trip | v2 draft adopted |
+| `spec/lint/kdsl-k1-pf1-lint.md` | Lint | K1/PF1 identity/completion/authority/capability/routing/boundary | v2 draft adopted |
+| `spec/lint/kdsl-packet-lint.md`''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''missing Authority rails→canonical promotion blocked
+```
+
+### 4.5 R1 / R1C''',
+              '''missing Authority rails→canonical promotion blocked
+```
+
+### 4.4.1 K1 / PF1 Runtime Control
+
+```text
+index: spec/runtime/README.md
+K1: spec/runtime/kdsl-k1-runtime-kernel-schema.md / kdsl-k1@0.1-draft
+PF1: spec/runtime/kdsl-pf1-project-profile-schema.md / kdsl-pf1@0.1-draft
+canonicalization: spec/runtime/kdsl-runtime-control-canonicalization.md / kdsl-runtime-control-c14n@0.1-draft
+lint: spec/lint/kdsl-k1-pf1-lint.md
+```
+
+```text
+Core/R1/Bridge meaning
+> P1L/P1 contract meaning
+> K1 runtime-control semantics
+> PF1 project definitions
+> future resolver/lint
+> route/skill/tool
+> example/template/tool
+```
+
+```text
+K1/PF1 valid != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation != authority
+routing != authority
+binding evidence:=external content-addressed record
+BINDING.executable:false under P1L/P1 v0.1 draft
+resolver/runtime binding/binding-evidence schema:=not implemented
+```
+
+### 4.5 R1 / R1C''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''ADPS Contract:=正規化契約/serialization境界
+Packet Contract:=non-executable mapping/property境界''',
+              '''ADPS Contract:=正規化契約/serialization境界
+Runtime Control:=K1/PF1 non-executable semantics/project definitions
+Packet Contract:=non-executable mapping/property境界''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''P1L/P1 BINDING.executable:false弱化→breaking/prohibited
+Packet authority/normalization非実行境界弱化→breaking/prohibited''',
+              '''P1L/P1 BINDING.executable:false弱化→breaking/prohibited
+K1 state/authority/capability分離変更→breaking候補
+PF1 ceiling vocabulary/canonicalization変更→breakingまたは新schema ID必須
+K1/PF1 validをauthority/executable扱い→prohibited
+Packet authority/normalization非実行境界弱化→breaking/prohibited''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''P1L/P1 additional checks:
+
+```text
+ownership固定''',
+              '''P1L/P1 additional checks:
+
+```text
+ownership固定''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''BINDING.executable:false
+```
+
+Packet→P1L/P1 additional checks:''',
+              '''BINDING.executable:false
+```
+
+K1/PF1 additional checks:
+
+```text
+exact id/revision/digest/canonicalization
+completion != inference
+PF1 ceiling non-widening
+capability != permission
+approval scope/operation/time/revocation exact
+Stop continuation/routing != authority
+binding evidence external/content-addressed/non-executable
+resolver/binding未実装明記
+```
+
+Packet→P1L/P1 additional checks:''',
+          )
+          replace_once(
+              'spec/manifest.md',
+              '''P1L/P1 runtime binding:=not implemented
+kdsl-packet@0.1-draft''',
+              '''P1L/P1 runtime binding:=not implemented
+kdsl-k1@0.1-draft:=adopted canonical runtime-control semantics / non-executable / no authority grant
+kdsl-pf1@0.1-draft:=adopted project runtime-control profile / non-executable / no authority grant
+kdsl-runtime-control-c14n@0.1-draft:=adopted canonical projection/digest rules
+K1/PF1 resolver/validator:=not implemented
+binding-evidence schema:=not implemented / external content-addressed representation selected
+kdsl-packet@0.1-draft''',
+          )
+
+          # canonical glossary
+          replace_once(
+              'spec/glossary.md',
+              '''### K1 / PF1
+
+```text
+K1/PF1:=Runtime Control系の実行制御層
+```
+
+現status:
+
+```text
+詳細仕様は本repoでは未整備
+P1L/P1 schema adoptionで自動生成/推測禁止
+```''',
+              '''### K1 / PF1
+
+```text
+K1:=canonical runtime-control semantics + exact conforming project/repository instance
+PF1:=project-scoped exact defaults/presets/restrictions/authority ceilings/capability requirements/routing definitions
+schemas: kdsl-k1@0.1-draft / kdsl-pf1@0.1-draft
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
+```
+
+```text
+K1/PF1 valid|lint pass != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation != authority
+routing != authority
+binding evidence:=external content-addressed record
+BINDING.executable:false under P1L/P1 v0.1 draft
+resolver/runtime binding/binding-evidence schema:=not implemented
+```''',
+          )
+
+          # v2 glossary
+          replace_once(
+              'spec/glossary-v2-draft.md',
+              '''`kdsl-p1l@0.1-draft` / `kdsl-p1@0.1-draft`では`executable:false`固定。
+
+### Legacy operational P1''',
+              '''`kdsl-p1l@0.1-draft` / `kdsl-p1@0.1-draft`では`executable:false`固定。
+
+### K1
+
+```text
+K1:=canonical runtime-control semantics and state-separation schema
+schema: kdsl-k1@0.1-draft
+```
+
+```text
+K1 valid != executable|authority grant
+completion != inference
+capability != permission
+binding evidence != execution instruction
+```
+
+### PF1
+
+```text
+PF1:=project-scoped exact runtime-control profile
+schema: kdsl-pf1@0.1-draft
+```
+
+```text
+PF1 default/ceiling/route != authority grant
+PF1 may narrow but never widen P1L authority
+ceiling dimensions:=mode/scope/cardinality
+```
+
+### Runtime-control canonicalization
+
+```text
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
+schema-ordered semantic projection→compact JSON→UTF-8→SHA-256
+```
+
+```text
+digest match != semantic equivalence|approval|authority|executable
+```
+
+### Approval reference / Capability observation
+
+```text
+approval reference:=content-addressed explicit operation/scope/time/revocation evidence
+capability observation:=scoped/timestamped/expiring/invalidatable runtime fact
+```
+
+```text
+remembered conversation approval→invalid
+approval valid != executable
+capability observed != permission|RT:v
+stale|inferred|unverified capability→insufficient
+```
+
+### Legacy operational P1''',
+          )
+
+          # ADPS index
+          replace_once(
+              'spec/adps/README.md',
+              '''P1L/P1 lint:
+  spec/lint/kdsl-p1-p1l-lint.md
+
+Packet→P1L/P1 normalization:''',
+              '''P1L/P1 lint:
+  spec/lint/kdsl-p1-p1l-lint.md
+
+K1/PF1 runtime control:
+  spec/runtime/README.md
+  spec/runtime/kdsl-k1-runtime-kernel-schema.md
+  spec/runtime/kdsl-pf1-project-profile-schema.md
+  spec/runtime/kdsl-runtime-control-canonicalization.md
+  spec/lint/kdsl-k1-pf1-lint.md
+
+Packet→P1L/P1 normalization:''',
+          )
+          replace_once(
+              'spec/adps/README.md',
+              '''> P1/P1L lint
+> Packet target-specific mapping contract/property''',
+              '''> P1/P1L lint
+> K1 runtime-control semantics
+> PF1 exact project definitions
+> K1/PF1 lint
+> Packet target-specific mapping contract/property''',
+          )
+          replace_once(
+              'spec/adps/README.md',
+              '''unknown profile/alias/preset→blocked
+BINDING.executable:false under v0.1 draft''',
+              '''unknown profile/alias/preset→blocked
+K1/PF1 valid|lint pass != executable|authority grant
+capability != permission
+Stop continuation/routing != authority
+BINDING.executable:false under v0.1 draft''',
+          )
+          replace_once(
+              'spec/adps/README.md',
+              '''runtime binding: not implemented
+K1/PF1 canonical schema: absent
+Packet executable promotion: prohibited''',
+              '''runtime binding: not implemented
+K1 schema: kdsl-k1@0.1-draft adopted / non-executable
+PF1 schema: kdsl-pf1@0.1-draft adopted / non-executable
+runtime-control canonicalization: kdsl-runtime-control-c14n@0.1-draft adopted
+K1/PF1 lint/examples: adopted explanatory/manual corpus
+K1/PF1 resolver/parser/validator: not implemented
+binding-evidence field schema: not implemented
+Packet executable promotion: prohibited''',
+          )
+
+          # Bridge
+          replace_once(
+              'spec/bridge/kdsl-adps-bridge.md',
+              '''P1L: spec/adps/kdsl-p1l-contract-schema.md / kdsl-p1l@0.1-draft
+P1:  spec/adps/kdsl-p1-compact-contract-schema.md / kdsl-p1@0.1-draft
+lint: spec/lint/kdsl-p1-p1l-lint.md''',
+              '''P1L: spec/adps/kdsl-p1l-contract-schema.md / kdsl-p1l@0.1-draft
+P1:  spec/adps/kdsl-p1-compact-contract-schema.md / kdsl-p1@0.1-draft
+K1:  spec/runtime/kdsl-k1-runtime-kernel-schema.md / kdsl-k1@0.1-draft
+PF1: spec/runtime/kdsl-pf1-project-profile-schema.md / kdsl-pf1@0.1-draft
+runtime c14n: spec/runtime/kdsl-runtime-control-canonicalization.md / kdsl-runtime-control-c14n@0.1-draft
+lint: spec/lint/kdsl-p1-p1l-lint.md / spec/lint/kdsl-k1-pf1-lint.md''',
+          )
+          replace_once(
+              'spec/bridge/kdsl-adps-bridge.md',
+              '''> P1 compact serialization profile
+> P1/P1L lint
+> validator/example/tool''',
+              '''> P1 compact serialization profile
+> P1/P1L lint
+> K1 runtime-control semantics
+> PF1 exact project definitions
+> K1/PF1 lint
+> validator/example/tool''',
+          )
+          replace_once(
+              'spec/bridge/kdsl-adps-bridge.md',
+              '''## 6. KDSL_PROMPT''',
+              '''## 6. K1 / PF1 Runtime Control
+
+```text
+K1/PF1 valid != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation != authority
+routing != authority
+binding evidence:=external content-addressed record referenced by P1L.BINDING.runtime_control
+```
+
+```text
+K1/PF1 resolver/parser/validator:=not implemented
+binding-evidence field schema:=not implemented
+runtime binding:=not implemented
+BINDING.executable:false fixed under P1L/P1 v0.1 draft
+```
+
+## 7. KDSL_PROMPT''',
+          )
+          replace_once('spec/bridge/kdsl-adps-bridge.md', '## 7. KDSL_RESULT', '## 8. KDSL_RESULT')
+          replace_once('spec/bridge/kdsl-adps-bridge.md', '## 8. KDSL本体への影響', '## 9. KDSL本体への影響')
+          replace_once('spec/bridge/kdsl-adps-bridge.md', '## 9. Packet relation', '## 10. Packet relation')
+          replace_once('spec/bridge/kdsl-adps-bridge.md', '## 10. Non-goals', '## 11. Non-goals')
+          replace_once(
+              'spec/bridge/kdsl-adps-bridge.md',
+              '''runtime binding implementation
+K1/PF1 canonical schema
+executable transformer''',
+              '''runtime binding/resolver implementation
+binding-evidence field schema
+BINDING.executable:true
+executable transformer''',
+          )
+
+          # public overview
+          replace_once(
+              'docs/overview.md',
+              '''P1/P1L valid != executable
+```
+
+## 7. Packet boundary''',
+              '''P1/P1L valid != executable
+```
+
+## 7. K1 / PF1 Runtime Control
+
+```text
+K1 schema: kdsl-k1@0.1-draft
+PF1 schema: kdsl-pf1@0.1-draft
+canonicalization: kdsl-runtime-control-c14n@0.1-draft
+status: adopted v2-draft / non-executable
+```
+
+```text
+K1/PF1 valid|lint pass != executable|authority grant
+PF1 may narrow but never widen P1L authority
+capability != permission
+Stop continuation/routing != authority
+binding evidence:=external content-addressed record
+BINDING.executable:false
+resolver/runtime binding/binding-evidence schema:=not implemented
+```
+
+## 8. Packet boundary''',
+          )
+          replace_once('docs/overview.md', '## 8. Why R1 exists', '## 9. Why R1 exists')
+          replace_once('docs/overview.md', '## 9. Specification layers', '## 10. Specification layers')
+
+          # project status candidate alignment
+          replace_once(
+              'docs/project-status.md',
+              'phase: phase9a-k1-pf1-runtime-control-design-complete',
+              'phase: phase9b-k1-pf1-schema-adoption-candidate',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''Registry: spec/registry/*
+Glossary:''',
+              '''Registry: spec/registry/*
+Runtime Control: spec/runtime/*
+Glossary:''',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''Packet→P1L/P1 lint:=spec/lint/kdsl-packet-p1-normalization-lint.md
+validator結果''',
+              '''Packet→P1L/P1 lint:=spec/lint/kdsl-packet-p1-normalization-lint.md
+K1:=spec/runtime/kdsl-k1-runtime-kernel-schema.md
+PF1:=spec/runtime/kdsl-pf1-project-profile-schema.md
+K1/PF1 lint:=spec/lint/kdsl-k1-pf1-lint.md
+validator結果''',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''Phase 9A K1/PF1 runtime-control design: complete
+```''',
+              '''Phase 9A K1/PF1 runtime-control design: complete
+Phase 9B K1/PF1 schema/lint/examples: adoption candidate
+```''',
+          )
+          replace_once(
+              'docs/project-status.md',
+              'K1/PF1 canonical schema: absent / Phase 9A design integrated',
+              'K1/PF1 canonical schema: Phase 9B adoption candidate / resolver not implemented',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''K1/PF1 non-executable runtime-control design
+experimental heuristic validator helpers''',
+              '''K1/PF1 non-executable runtime-control design
+K1/PF1 canonical schema/lint/manual examples adoption candidate
+experimental heuristic validator helpers''',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''canonical K1/PF1 runtime-control schema
+Packet normalized/executable runtime contract''',
+              '''K1/PF1 executable runtime contract
+K1/PF1 resolver/runtime binding implementation
+Packet normalized/executable runtime contract''',
+          )
+          replace_once(
+              'docs/project-status.md',
+              '''P0: resolve the five Phase 9B schema decisions under separate approval
+P1: canonical K1/PF1 schema/lint/examples only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+              '''P0: merge Phase 9B schema/lint/examples adoption and close alignment
+P1: Phase 9C resolver/parser/validator first slice only under separate approval
+P2: Phase 9D binding-evidence field schema only under separate approval
+Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets''',
+          )
+
+          Path('.github/workflows/phase9b-k1-pf1-alignment.yml').unlink()
+          PY
+
+      - name: Run bounded verification
+        run: |
+          python tools/validator/run_p1_shared_ast_samples.py
+          python tools/validator/run_p1_contract_samples.py
+          python tools/validator/run_packet_p1_normalization_samples.py
+          python tools/validator/run_all_samples.py
+
+      - name: Commit aligned Phase 9B candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Spec: align Phase 9B K1 PF1 adoption"
+          git push origin HEAD:agent/kdsl-phase9b-k1-pf1-schema
