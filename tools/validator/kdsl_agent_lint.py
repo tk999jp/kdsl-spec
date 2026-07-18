@@ -20,6 +20,10 @@ PF1_FIELDS = (
 BLOCK_MARKERS = {"P1L:", "K1:", "PF1:", "KDSL_RESULT:"}
 
 
+def _has_marker(text: str, marker: str) -> bool:
+    return any(line.strip() == marker for line in text.splitlines())
+
+
 def _parse_block(text: str, marker: str, nested_key: str | None = None) -> tuple[dict[str, str], dict[str, str]]:
     fields: dict[str, str] = {}
     nested: dict[str, str] = {}
@@ -137,10 +141,10 @@ def lint_pf1(text: str) -> list[str]:
 def lint_text(text: str) -> list[str]:
     errors: list[str] = []
     agent_required = "agent: required" in text
-    has_k1 = "K1:" in text
-    has_p1l = "P1L:" in text
+    has_k1 = _has_marker(text, "K1:")
+    has_p1l = _has_marker(text, "P1L:")
     has_p1 = any(line.strip().startswith("P1|") for line in text.splitlines())
-    has_pf1 = "PF1:" in text
+    has_pf1 = _has_marker(text, "PF1:")
 
     if agent_required and not has_k1:
         errors.append("Agent必須時K1欠落")
