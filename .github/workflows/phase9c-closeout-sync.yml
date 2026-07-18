@@ -1,9 +1,9 @@
 name: Phase 9C Closeout Sync
 
 on:
-  push:
-    branches:
-      - agent/kdsl-phase9c-k1-pf1-closeout
+  pull_request:
+    branches: [main]
+    types: [reopened]
 
 permissions:
   contents: write
@@ -100,7 +100,6 @@ runtime binding/binding-evidence schema:=not implemented''')
           python tools/validator/run_all_samples.py
       - name: Store closeout synchronization
         run: |
-          git show origin/main:.github/workflows/validator.yml > .github/workflows/validator.yml
           rm -f .github/workflows/phase9c-closeout-sync.yml
           rm -f docs/reviews/.phase9c-closeout-trigger
           git config user.name github-actions[bot]
