@@ -1,25 +1,28 @@
-name: Phase 9C Closeout Helper
+name: Phase 9C Isolated Closeout
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - agent/kdsl-phase9c-closeout-base
+    types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  prepare-closeout:
+  synchronize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: main
+          ref: agent/kdsl-phase9c-closeout-final
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - name: Prepare synchronized closeout files
+      - name: Apply bounded closeout updates
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -94,14 +97,16 @@ runtime binding/binding-evidence schema:=not implemented''')
           replace_once(manifest, 'resolver/binding未実装明記', 'bounded parser/validator scope明記 / binding未実装明記')
           replace_once(manifest, 'K1/PF1 resolver/validator:=not implemented', 'K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice integrated')
           PY
-      - name: Validate closeout candidate
+          rm -f docs/reviews/.phase9c-isolated-trigger
+          git rm .github/workflows/phase9c-closeout-helper.yml
+      - name: Validate synchronized tree
         run: |
           python tools/validator/run_runtime_control_samples.py
           python tools/validator/run_all_samples.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: phase9c-closeout-files
-          path: |
-            docs/project-status.md
-            spec/manifest.md
-            spec/runtime/README.md
+      - name: Store final closeout branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Docs: close Phase 9C validator first slice"
+          git push origin HEAD:agent/kdsl-phase9c-closeout-final
