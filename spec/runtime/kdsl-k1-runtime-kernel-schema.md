@@ -272,15 +272,27 @@ approval_ref:
   revoked: false
 ```
 
-Validity requires exact operation/scope match, current time validity, and `revoked:false`.
+Approval handling separates structural integrity from trusted-source acceptance.
+
+Structural validity requires:
+
+```text
+exact operation/scope match
+current time validity
+revoked:false
+digest recomputation match
+```
+
+Authority sufficiency additionally requires trusted-source verification of the issuer/source under an explicit repository/project trust policy or immutable platform record.
 
 ```text
 remembered conversation approval→invalid
-approval reference valid != executable
+structurally valid approval without trusted-source verification→blocked
+approval accepted != executable
 digest match != issuer authenticity proof
 ```
 
-Cryptographic signer authentication is outside v0.1 draft.
+Cryptographic signer authentication is outside v0.1 draft. When no independently trusted source can verify issuer identity, the approval requirement remains unsatisfied and authority is `blocked`.
 
 ## 9. Capability observations
 
