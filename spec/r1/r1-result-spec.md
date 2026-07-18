@@ -1,308 +1,81 @@
-# R1 Result Specification v0.1-draft
+# R1 Result Specification v2.0-minimal
 
-目的: AI coding tool / Codex の作業結果を、人間と統括LLMが検収可能な証跡として返すための結果仕様を定義する。
-
-位置づけ:
+## 位置づけ
 
 ```text
-R1:=Evidence / 結果証跡
-KDSL_RESULT:=R1系の人間/AI向け結果block
+R1:=作業結果の短い証跡
+KDSL_RESULT:=R1の標準報告block
 ```
 
-R1は単なる報告テンプレートではなく、AI作業の検収票である。
+R1は成果物・仕様書・引継書・次期roadmapではない。
 
-## 1. 基本契約
-
-AI coding tool / Codex の最終回答は、必要時に先頭へ `KDSL_RESULT:` blockを出力する。
+## 標準
 
 ```text
 KDSL_RESULT:
-STATUS:
-PHASE:
-S:
-FILES:
-WHY:
-CMD:
-VERIFY:
-RT:
-RISK:
-NEXT:
-COMMIT:
+状態:
+局面:
+要約:
+変更:
+理由:
+実行:
+検証:
+実機:
+危険:
+次:
+commit:
 ```
 
-補足自然文は `KDSL_RESULT` の後に置く。
-
-禁止:
+## 状態
 
 ```text
-KDSL_RESULT省略禁止
-自然文の結論だけで終了禁止
-未実行cmdをCMD記載禁止
-未実行verifyをpass扱禁止
-build/diff/lint/test passをRT:v扱禁止
-NEXTを次task実行許可扱禁止
-COMMITを自動commit許可扱禁止
+成功
+一部
+停止
+変更なし
+失敗
+U確認待
 ```
 
-## 2. STATUS
+## 規則
 
 ```text
-success: 指示範囲内で完了
-partial: 一部完了/一部未完了
-blocked: 停止条件/承認待/前提不一致で停止
-noop: 変更不要/実施対象なし
-failed: 実行失敗
-needs_user: ユーザー確認/承認が必要
+実行:=実行したcommandのみ
+検証:=実行したverifyのみ
+未実行command→実行欄記載禁止
+未実行verify→pass扱禁止
+build／diff／lint／test／CI pass != RT:v
+実機:v:=対象環境runtime確認済のみ
+次:=提案、実行許可扱禁止
+commit:=実行済commitまたは推奨message
+自動commit許可扱禁止
 ```
 
-## 3. RT
+## 範囲
 
-Runtime verification status.
+報告は依頼scope内だけ。
+
+自動追加禁止:
 
 ```text
-p=runtime確認未完了
-u=U実機確認待ち
-v=対象環境runtime確認済
-na=runtime対象なし
-fail=runtime確認失敗
-blk=runtime確認不能
+新hardening
+別Phase候補
+将来architecture
+未依頼改善課題
+大量の観測分類
+権限registry
 ```
 
-制約:
+重大な未解決riskがscope内にある場合だけ `危険:` へ簡潔に記載する。
+
+## 任意
+
+必要時のみ:
 
 ```text
-RT:v=対象環境runtime確認済のみ
-build pass != RT:v
-diff pass != RT:v
-lint pass != RT:v
-test pass != RT:v
-U実機観測に基づくRT:vは根拠を明記
-Runtime未確認→RT:u|RT:p + RISK:runtime_unverified
-docs/guidance only→理由明記でRT:na可
+根拠:
+未確認:
+権限:
 ```
 
-RT:vとして扱える根拠:
-
-```text
-対象環境runtime確認
-U実機観測
-U共有runtime log
-明示された実機確認結果
-```
-
-RT:vとして扱えない根拠:
-
-```text
-build成功
-diff確認
-lint pass
-unit test pass
-静的確認
-推測
-再現していないはずという判断
-```
-
-## 4. CMD / VERIFY
-
-CMD:
-
-```text
-実行したcommandのみ記載
-未実行cmd記載禁止
-推奨cmd/次候補cmdはCMDへ混入禁止
-```
-
-VERIFY:
-
-```text
-実行した検証のみ記載
-未実行verifyをpass扱禁止
-未実行verifyはnot_runとして記録可
-```
-
-推奨:
-
-```text
-VERIFYは executed / not_run / failed を分離
-```
-
-## 5. FILES / WHY
-
-FILES:
-
-```text
-変更ファイルのみ記録
-閲覧のみのファイルは必要時にinspectedとして分離
-対象外変更が出た場合はRISK/STOPへ記録
-```
-
-WHY:
-
-```text
-変更理由を記録
-推測と観測を混同禁止
-未確認要因を断定禁止
-```
-
-## 6. NEXT / COMMIT
-
-NEXT:
-
-```text
-NEXT:=提案
-NEXTを次task実行許可扱禁止
-NEXTに実行許可が必要な作業を含む場合は承認待を明記
-```
-
-COMMIT:
-
-```text
-COMMIT:=実行済commitまたは推奨message
-COMMITを自動commit許可扱禁止
-commit実行済ならcommit hash/messageを明記
-commit未実行ならproposed messageとして明記
-```
-
-推奨構造:
-
-```text
-COMMIT:
-  actual: <hash/message | none>
-  proposed: <message | none>
-  permission_basis: <KDSL_PROMPT authority | U承認 | none>
-```
-
-## 7. Evidence separation
-
-R1では、観測・推論・未観測・未確認を分離する。
-
-推奨block:
-
-```text
-EVIDENCE:
-  OBSERVED:
-  INFERRED:
-  NOT_OBSERVED:
-  UNVERIFIED:
-```
-
-定義:
-
-```text
-OBSERVED:=ログ/実機/実行結果/差分などにより観測された事実
-INFERRED:=観測から推論したが直接観測ではない内容
-NOT_OBSERVED:=確認対象だが観測されなかった内容
-UNVERIFIED:=未確認であり、確認済み扱いしてはいけない内容
-```
-
-規則:
-
-```text
-observed=false→confirmed扱禁止
-not_observed→確認済扱禁止
-unverified→RT:v根拠禁止
-inferred→observed扱禁止
-推論をWHYへ書く場合はinferredであることを明示
-```
-
-例:
-
-```text
-OBSERVED:
-- QuickAccess.Open approx 170-215ms
-- resolvedSync=False / reason=unc-path
-
-NOT_OBSERVED:
-- cache=hit
-
-UNVERIFIED:
-- cache hitによる改善
-
-FORBIDDEN_REPORT:
-- cache hit確認済み
-- cache hit改善断定
-```
-
-## 8. Authority separation
-
-R1は権限状態を混同しない。
-
-```text
-commit候補 != commit許可
-push候補 != push許可
-NEXT != 実行許可
-report != approval
-```
-
-推奨block:
-
-```text
-AUTHORITY:
-  read:
-  edit:
-  stage:
-  commit:
-  push:
-  release:
-```
-
-推奨値:
-
-```text
-allow
-forbid
-target_only
-allow_once
-propose_only
-not_requested
-not_applicable
-```
-
-規則:
-
-```text
-AUTHORITY.commit=propose_only → git commit実行禁止
-AUTHORITY.push=forbid → push/update_ref禁止
-AUTHORITY.release=forbid → release/tag/assets操作禁止
-COMMIT.proposed != AUTHORITY.commit=allow_once
-```
-
-## 9. R1-HMI optional block
-
-Human-AI work interfaceとして、必要時に次のblockを追加できる。
-
-```text
-ANNUNCIATOR:
-  STATUS:
-  PHASE:
-  AUTHORITY:
-  RT:
-  PUBLIC_OPS:
-  DESTRUCTIVE_OPS:
-```
-
-用途:
-
-```text
-mode confusion防止
-権限状態の先頭表示
-runtime状態の明示
-public/release/destructive操作のlock表示
-```
-
-## 10. R1 lint minimum
-
-```text
-KDSL_RESULT先頭固定
-STATUS/PHASE/S/FILES/WHY/CMD/VERIFY/RT/RISK/NEXT/COMMIT保持
-未実行cmd→CMD記載禁止保持
-未実行verify→pass扱禁止保持
-RT:v条件保持
-build/diff/lint/test pass != RT:v保持
-NEXT:=提案保持
-COMMIT:=推奨message/実行済commit保持
-NEXT実行許可扱禁止保持
-COMMIT自動commit許可扱禁止保持
-観測/推論/未観測/未確認分離
-AUTHORITY権限混同なし
-```
+任意blockを既定必須化しない。
