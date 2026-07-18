@@ -16,6 +16,7 @@ KANJI_KEYS = re.compile(
     r"作業|試験|検証|停止条件|報告|材料|出力|規則|確認|状態|要約|変更|"
     r"理由|実行|実機|危険|次|commit)\s*:"
 )
+UNDEFINED_ALIASES = re.compile(r"(?m)^\s*(?:役|目|材|出|則|守|調|確)\s*:")
 FORBIDDEN = (
     "lexicon:kanji-v1",
     "lexicon: kanji-v1",
@@ -33,6 +34,9 @@ def lint_text(text: str, *, intl: bool = False, require_keys: bool = True) -> li
         matches = sorted({match.group(0).strip() for match in ENGLISH_KEYS.finditer(text)})
         if matches:
             errors.append("英語構造KEY:" + ",".join(matches))
+        aliases = sorted({match.group(0).strip() for match in UNDEFINED_ALIASES.finditer(text)})
+        if aliases:
+            errors.append("未定義一字alias:" + ",".join(aliases))
         for token in FORBIDDEN:
             if token in text:
                 errors.append("旧v2構造:" + token)
