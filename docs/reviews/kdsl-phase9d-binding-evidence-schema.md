@@ -1,6 +1,6 @@
 # Phase 9D — Binding Evidence Schema Review
 
-status: schema-adoption-candidate
+status: adopted-v2-draft
 review_date: 2026-07-18
 repository: tk999jp/kdsl-spec
 tracking_issue: 132
@@ -41,4 +41,4 @@ route/tool integration
 release-state changes
 ```
 
-Repository validation and closeout alignment are required before adoption. Lint and CI success remain heuristic evidence only.
+Adopted by PR #142 at `b4fbec0d0be3bd2a06bf61afa4cac0e409c19571`. Lint and CI success remain heuristic evidence only.
