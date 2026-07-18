@@ -1,0 +1,1 @@
+# Binding record state checks.
