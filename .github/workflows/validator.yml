@@ -1,0 +1,19 @@
+name: KDSL Validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - rebuild/kdsl-kanji-canonical
+
+jobs:
+  kdsl-validation:
+    name: KDSL Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/validator/kdsl_identity_lint.py
