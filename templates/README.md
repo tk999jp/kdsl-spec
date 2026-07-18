@@ -1,74 +1,52 @@
 # Templates
 
-KDSL / R1 の再利用可能なprompt template置き場。
+KDSLの漢字圧縮を維持した再利用部品。TemplateはCore正本でも実行許可でもない。
 
-このディレクトリは、Core仕様ではなく実運用向けの部品管理を目的とする。
-
-## 想定構成
+## 構成
 
 ```text
 templates/
-  base/
-    kdsl_base_dev.md
-  tasks/
-    task_docs_state_closeout.md
-    task_corrective_impl.md
-    task_investigation_only.md
-  result/
-    r1_result_spec.md
+  base/kdsl_base_dev.md
+  tasks/task_corrective_impl.md
+  tasks/task_investigation_only.md
+  tasks/task_docs_state_closeout.md
+  result/r1_result_spec.md
 ```
 
-## 位置づけ
+## 原則
 
 ```text
-Template:=共通契約/定型手順/報告形式を再利用するための部品
-Template != Core正本
-Template != 実行許可
-Template参照 != 読了
+本文:=漢字圧縮
+英語構造KEY既定禁止
+Template未読→内容推測禁止
+instance固有値:=利用時に明示
+安全条件自動追加禁止
+AUTHORITY registry／Packet依存禁止
 ```
 
-## 運用規則
+## 利用
 
 ```text
-template_unreadable→停止
-unknown template/alias/preset推測禁止
-template参照のみで読了扱禁止
-D禁止/RT:v/NEXT/COMMIT等の保護語弱化禁止
-template展開不能→作業禁止またはU確認
-template衝突→safety/禁止/停止条件優先
+base + task + result
+=> 1つのKDSL_PROMPTへ展開
 ```
 
-## AI coding toolへ渡す場合
+参照名だけをAI coding toolへ渡さない。必要なtemplate本文を読ませ、instance側で目的／正本／対象／成功条件／検証を指定する。
 
-必須:
+## task方針
 
 ```text
-使用template名を明記
-template本文を読ませる
-template未読時の停止条件を明記
-instance側でPhase/HEAD/target/evidence/authorityを明記
+修正実装:=調査→実装→試験→検証を同一Phaseで完走
+調査のみ:=編集せず事実／推定／未確認を分離
+Docs closeout:=明示依頼時だけ、対象docs／stateへ結果反映
 ```
 
 禁止:
 
 ```text
-use: template名 だけで実行指示扱い
-未読templateを過去文脈から推測
-templateのcommit/push権限をinstanceへ自動継承
-```
-
-## 推奨template分類
-
-```text
-base: 共通安全契約
-accountability: actor/authority責務
-result: R1/KDSL_RESULT
-stable_task: 実運用済みtask template
-experimental_task: 検証中task template
-```
-
-注意:
-
-```text
-テンプレートはKDSL本文を短くするためのものだが、未読時に意味が消えるため、AI coding toolへ渡す場合は読込必須条件を明記する。
+内部component別Phase化
+closeout自動生成
+未依頼hardening
+安全理由scope拡張
+旧v2英語KEY／Safety Gate Registry／Authority Railの再導入
 ```

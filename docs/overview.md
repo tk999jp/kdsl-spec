@@ -1,122 +1,98 @@
-# KDSL / R1 Overview
-
-status: overview-draft
-
-## 1. What this repository is
-
-`kdsl-spec` は、KDSL と R1 を管理するためのprivate draft specification repository。
+# KDSL Overview
 
 ```text
-KDSL:=LLM直投入可能な安全gate保持型半構造化prompt記法
-R1:=AI作業結果のEvidence/検収仕様
+状態:=漢字identity復元監査
+KDSL:=日本語prompt向け漢字圧縮DSL
+R1:=短い作業結果報告
 ```
 
-このrepositoryは、prompt圧縮だけではなく、Human-AI work interface / 作業契約 / 結果証跡 / 検収可能性を扱う。
+## 目的
 
-## 2. Why KDSL exists
-
-通常の長文promptでは、次の問題が起きやすい。
+KDSLは、自然文promptを次へ再構成する。
 
 ```text
-禁止事項が埋もれる
-承認gateが弱化する
-未確認/未実行が確認済み扱いされる
-Runtime確認とbuild/test passが混同される
-NEXTが実行許可として誤解される
-COMMIT候補がcommit許可として誤解される
+自然文
+=> 助詞削減
+ + 重複統合
+ + 漢字語幹化
+ + 条件／遷移記号化
+ + 最小制御語化
 ```
 
-KDSLは、これらを短くしながらも削らないための記法である。
+第一目的は漢字圧縮。安全契機は、入力で明示された禁止・未確認・rollback等を圧縮時に落とさないための限定保護である。
 
-## 3. Why R1 exists
-
-AI coding toolの結果報告では、次の問題が起きやすい。
+## 構成
 
 ```text
-実行していないcmdが実行済みのように書かれる
-未実行verifyがpass扱いされる
-build成功がRuntime確認済み扱いされる
-推論と観測が混ざる
-次候補提案が実行許可に見える
-commit message候補がcommit許可に見える
+Core:=identity／記法／mode
+Profile:=dev-prompt／compact-prompt／converter／Intl
+R1:=簡潔KDSL_RESULT
+Lint:=漢字退行／意味欠落／過剰安全検出
+Bridge:=KDSL-DP／P1境界
+Template／Example:=非正本の実用部品
 ```
 
-R1は、これらを検収可能に分離するための結果仕様である。
-
-## 4. Main components
+## 非漢字言語
 
 ```text
-spec/core:
-  KDSLの記法・保護語・mode/safety
-
-spec/r1:
-  KDSL_RESULT / RT / Evidence / Authority
-
-spec/lint:
-  KDSL/R1の保持・弱化・欠落検査
-
-spec/bridge:
-  KDSL / KDSL-DP / ADPS / P1/P1L / R1 境界
-
-spec/manifest:
-  正本参照関係
-
-spec/glossary:
-  用語定義
-
-templates:
-  dev-prompt実運用向け再利用部品
-
-examples:
-  before/after/R1例
-
-tools/validator:
-  機械検査の設計。実装なし
+KDSL本体:=漢字圧縮
+KDSL-Intl:=非漢字言語向け派生subset
 ```
 
-## 5. Safety principles
+英語KEYは無指定の既定にしない。
+
+## 安全契機
+
+保持:
 
 ```text
-意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
+明示禁止
+明示未確認／未実行
+明示承認待
+明示rollback／revert
+明示data／public保護
+明示RT:v
 ```
 
-重要:
+追加禁止:
 
 ```text
-KDSL-DP直接実行禁止
-P1/P1L正規化必須
-RT:v=対象環境runtime確認済のみ
-build/diff/lint/test pass != RT:v
-NEXT:=提案, 実行許可扱禁止
-COMMIT:=実行済commitまたは推奨message, 自動commit許可扱禁止
+潜在risk推測
+未指定承認gate
+安全理由scope／Phase／architecture拡張
+未依頼hardening
 ```
 
-## 6. Current maturity
+## R1
 
 ```text
-state: private draft
-release: none
-public: not_yet
-tag: not_created
-validator implementation: not_started
+KDSL_RESULT:
+状態:
+局面:
+要約:
+変更:
+理由:
+実行:
+検証:
+実機:
+危険:
+次:
+commit:
 ```
 
-現時点では、仕様・テンプレート・例・validator設計が揃った段階。
+R1は成果物ではなく一時報告。build／test／CI passはRT:vではない。
 
-## 7. Recommended use now
+## 現在の検証
 
-```text
-KDSL/R1の設計検討
-MidFD等のAI coding prompt運用改善
-template分離の検証
-R1結果報告の検収観点確認
+```bash
+python tools/validator/kdsl_identity_lint.py
+python tools/validator/run_canonical_samples.py
 ```
 
-非推奨:
+validatorは補助であり、意味同等・U承認・runtime・release readinessを証明しない。
 
-```text
-public release
-外部標準として告知
-validator passを承認/RT:v代替にすること
-tag作成の無承認実行
-```
+## 旧v2系統
+
+Safety Gate Registry、R1C、Packet、Normalization、semantic parser、P1 schema、K1／PF1、Binding Evidenceは `archive/kdsl-framework-20260718` の回収候補。KDSL本体の正本ではない。
+
+採否詳細は `docs/reviews/kdsl-v2-asset-audit.md` を参照する。

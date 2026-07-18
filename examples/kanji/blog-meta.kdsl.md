@@ -1,27 +1,22 @@
 format: KDSL
-profile: converter
+profile: compact-prompt
 mode: dense
 safety: normal
 
-役:
-技術blog編集／SEO
-
 目的:
-記事本文→公開用meta生成
+技術blog記事→公開用meta生成
 
-材:
+材料:
 article_text
 
-出:
+出力:
 要約120字以内／主要題5／title案5／description120字以内／tag5-8
 
-則:
+規則:
 日本語／初心者可読／短実用
-
-守:
 入力外事実追加禁止
 誇張／煽り禁止
 不明→断定禁止
 
-確:
+確認:
 字数／件数／本文一致
