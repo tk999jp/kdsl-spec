@@ -1,36 +1,28 @@
 # KDSL Project Status
 
 ```text
-status: identity-restoration-audit
+status: canonical
 updated: 2026-07-18
-branch: audit/kdsl-kanji-completion
-baseline: canonical/kdsl-kanji
+branch: canonical/kdsl-kanji
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
 framework-archive: archive/kdsl-framework-20260718
 ```
 
-## 目的
+## 完了
 
 ```text
-漢字圧縮identity復元
-現v2資産の機能単位全件監査
-必要機能のみ選別回収
-仕様／template／validator／実例の回帰整合
+漢字圧縮identity復元: 完了
+PR #1〜#145機能群監査: 完了
+旧Core以降309-path監査: 完了
+必要機能選別回収: 完了
+Core／Profile／Template／R1／Lint／Bridge整合: 完了
+validator compile: pass
+identity lint: pass
+canonical regression: pass
 ```
 
-## 現在判定
-
-```text
-漢字identity baseline: 成立
-v2全資産監査: 実行中
-必要機能回収: 実行中
-正規版判定: 未成立
-GitHub default branch切替: 禁止／監査完了後
-stable tag／release: 対象外／別途U承認必須
-```
-
-## 固定原則
+## 正本
 
 ```text
 KDSL本体:=漢字圧縮
@@ -40,26 +32,45 @@ R1:=簡潔一時報告
 validator:=非権威
 ```
 
-## 現v2系統
+## 回収
 
 ```text
-扱い:=archive／回収元
-今後のroadmap正本扱い禁止
-既存Phase完了→継続義務扱い禁止
-採否:=機能／意味単位
+CompactPrompt用途profile
+漢字document lint
+日本語R1 lint
+valid／invalid回帰corpus
+GitHub Actions
+.gitignore
+```
+
+## 不採用
+
+```text
+漢字optional lexicon／英語KEY既定／旧CompactPrompt漢字別名
+Safety Gate Registry／R1C／Packet／Normalization
+semantic parser v2／P1 schema／K1／PF1／Binding Evidence
+closeout／status同期の自己増殖
+```
+
+詳細: `docs/reviews/kdsl-v2-asset-audit.md`
+
+## 旧系統
+
+```text
+main:=frozen legacy framework
+archive/kdsl-framework-20260718:=回収元保存
+旧roadmap:=停止
 ```
 
 Phase 9E PR #145は未mergeで閉鎖。Issue #132／#144も旧roadmapとして閉鎖済み。
 
-## 完成条件
+## Repository管理
 
 ```text
-PR #1〜#145資産を機能群単位で採否確定
-採用／簡略移植／Intl分離／不採用の未決=0
-Core／Profile／Converter／CompactPrompt／R1／Lint／Bridge整合
-active templateの英語構造KEY退行=0
-漢字圧縮実例／R1実例／Intl実例の回帰成功
-identity lint／document lint／R1 lint／sample runner成功
-安全契機過剰追加=0
-旧frameworkへのactive参照=0
+GitHub default branch: mainのまま／UI切替待ち
+正規default候補: canonical/kdsl-kanji
+canonical branch rules: UI確認／設定待ち
+stable tag／release: 対象外／別途U承認必須
 ```
+
+仕様再構築は完了。残るのはGitHub管理画面上のdefault branch切替とbranch rules設定のみ。
