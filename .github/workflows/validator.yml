@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - canonical/kdsl-kanji
-      - agent/kdsl-agent-layer
 
 jobs:
   kdsl-validation:
