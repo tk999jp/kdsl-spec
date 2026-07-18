@@ -1,6 +1,6 @@
 # kdsl-spec
 
-KDSL（漢字圧縮DSL）と最小R1結果仕様の再構築repository。
+KDSL（漢字圧縮DSL）と最小R1結果仕様の正本repository。
 
 ## 定義
 
@@ -30,15 +30,15 @@ KDSL本体 > KDSL-Intl
 
 安全契機は第一目的ではない。Uが明示した重大条件の意味消失を防ぐ限定保護であり、潜在risk推測による自動増殖を禁止する。
 
-## 正本候補
+## 正本
 
 ```text
 全体定義: spec/core/kdsl-spec.md
 記法: spec/core/kdsl-core.md
 mode／安全契機: spec/core/kdsl-modes.md
 dev-prompt: spec/profiles/kdsl-profile-dev-prompt.md
-converter: spec/profiles/kdsl-converter-prompt.md
 CompactPrompt: spec/profiles/kdsl-profile-compact-prompt.md
+converter: spec/profiles/kdsl-converter-prompt.md
 Intl subset: spec/profiles/kdsl-profile-intl.md
 R1: spec/r1/r1-result-spec.md
 lint: spec/lint/kdsl-lint-checklist.md
@@ -50,23 +50,23 @@ lint: spec/lint/kdsl-lint-checklist.md
 ## 現在状態
 
 ```text
-branch: audit/kdsl-kanji-completion
-status: identity-restoration-audit
-base: canonical/kdsl-kanji
+branch: canonical/kdsl-kanji
+status: canonical
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-archive: archive/kdsl-framework-20260718
+v2-asset-audit: complete
 ```
 
-`canonical/kdsl-kanji`は漢字identity復元baseline。現v2 framework全資産の機能単位監査・必要機能回収・回帰検証が完了するまで正式canonical扱いしない。
+PR #1〜#145と旧Core以降309-pathを機能群単位で監査し、採用／簡略移植／Intl分離／不採用を確定。詳細は `docs/reviews/kdsl-v2-asset-audit.md`。
 
-現v2 framework系統は回収元。既存実装量・CI実績・Phase完了記録だけで採用しない。採用条件は、漢字圧縮へ実用上必要／有効であること。
+旧v2 framework系統は回収元。既存実装量・CI実績・Phase完了記録だけで採用しない。
 
 ## 運用原則
 
 ```text
 英語KEY既定禁止
 漢字optional化禁止
-安全理由のscope／Phase／architecture増殖禁止
+安全理由scope／Phase／architecture増殖禁止
 KDSL_RESULT成果物化禁止
 validator非権威
 build／lint／test／CI pass != RT:v
@@ -81,4 +81,4 @@ python tools/validator/kdsl_identity_lint.py
 python tools/validator/run_canonical_samples.py
 ```
 
-GitHub Actionsの `KDSL Validation` で同じ検証を実行する。
+GitHub Actions `KDSL Validation`でvalidator compile、identity、canonical regressionを実行する。
