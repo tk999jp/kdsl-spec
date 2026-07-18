@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Iterable
 
 ENGLISH_KEYS = re.compile(
-    r"(?mi)^\s*(?:PHASE|GOAL|SUCCESS_CRITERIA|EVIDENCE|SOURCE_OF_TRUTH|"
+    r"(?m)^\s*(?:PHASE|GOAL|SUCCESS_CRITERIA|EVIDENCE|SOURCE_OF_TRUTH|"
     r"AUTHORITY|APPROVAL_BOUNDARY|SCOPE|NON_GOALS|WORK|TEST|VERIFY|"
     r"STOP_CONDITIONS|REPORT|STATUS|FILES|WHY|CMD|RT|RISK|NEXT|COMMIT|"
     r"Goal|Input|Output|Guard|Check)\s*:"
@@ -25,7 +25,7 @@ FORBIDDEN = (
     "SAFETY_GATES:",
     "PACKET_DRAFT:",
 )
-OVER_SAFETY = re.compile(r"(?mi)^\s*AUTHORITY\s*:")
+OVER_SAFETY = re.compile(r"(?m)^\s*AUTHORITY\s*:")
 
 
 def lint_text(text: str, *, intl: bool = False, require_keys: bool = True) -> list[str]:
