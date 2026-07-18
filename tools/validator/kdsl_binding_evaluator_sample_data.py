@@ -51,7 +51,9 @@ def base_inputs() -> tuple[str, str, str, dict[str, Any], dict[str, Any], dict[s
     contract['NORMALIZATION']['state'] = 'explicit'
     contract['BINDING'] = {'runtime_control': 'unresolved', 'state': 'unbound', 'executable': False}
     contract_text = render_envelope('P1L', contract)
-    contract_digest = 'sha256:' + hashlib.sha256(json.dumps(contract, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
+    contract_digest = 'sha256:' + hashlib.sha256(
+        json.dumps(contract, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+    ).hexdigest()
 
     facts = {
         'record_id': 'kdsl.reference.binding.review',
@@ -61,10 +63,18 @@ def base_inputs() -> tuple[str, str, str, dict[str, Any], dict[str, Any], dict[s
         'contract_source_ref': 'generated:evaluator-corpus/contract',
         'evaluated_at': '2026-07-18T00:00:00Z',
         'evaluator_ref': {'id': 'kdsl.reference.evaluator', 'revision': '0.1.0', 'digest': HEX_D, 'immutable_ref': 'none'},
+        'evaluator_source_ref': 'tools/validator/kdsl_binding_evaluator.py',
         'repository_state_ref': 'commit:031f11286526e77034da5d803e6b01bf0d61a60a',
         'environment_state_ref': 'none',
-        'stop': {'state': 'clear', 'rules_checked': [], 'matches': []},
-        'preconditions': {'state': 'satisfied', 'requirements': [], 'evidence': []},
+        'environment_digest': HEX_D,
+        'stop': {
+            'state': 'clear', 'rules_checked': [], 'matches': [],
+            'source_record': {'kind': 'stop', 'id': 'stop-facts-1', 'revision': '0.1', 'digest': HEX_D, 'source_ref': 'generated:evaluator-corpus/stop'},
+        },
+        'preconditions': {
+            'state': 'satisfied', 'requirements': [], 'evidence': [],
+            'source_record': {'kind': 'precondition', 'id': 'precondition-facts-1', 'revision': '0.1', 'digest': HEX_D, 'source_ref': 'generated:evaluator-corpus/preconditions'},
+        },
     }
     return contract_text, k1_text, render_envelope('PF1', pf1_model), facts, contract, pf1_model
 
