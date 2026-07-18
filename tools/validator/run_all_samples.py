@@ -11,6 +11,7 @@ RUNNERS = (
     ('p1-contract', 'run_p1_contract_samples.py'),
     ('p1-shared-ast', 'run_p1_shared_ast_samples.py'),
     ('runtime-control', 'run_runtime_control_samples.py'),
+    ('binding-evidence', 'run_binding_evidence_samples.py'),
     ('packet-p1-normalization', 'run_packet_p1_normalization_samples.py'),
     ('parser', 'run_parser_samples.py'),
     ('parser-v2', 'run_parser_v2_samples.py'),

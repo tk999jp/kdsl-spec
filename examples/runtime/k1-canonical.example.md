@@ -7,7 +7,7 @@ IDENTITY:
   id: "kdsl.reference.kernel"
   revision: "0.1.0"
   canonicalization: "kdsl-runtime-control-c14n@0.1-draft"
-  digest: "sha256:b916d5884b6d25e0a00ca8ad490247b02e5e588a0f1a4af4894fba4057c4d5ae"
+  digest: "sha256:9b0da769d9b38b8d849f06cbc883831b3ea9810d8efad4909116c07f7f692236"
   source_ref: "examples/runtime/k1-canonical.example.md"
 APPLIES_TO:
   contract_schemas: ["kdsl-p1l@0.1-draft","kdsl-p1@0.1-draft"]
@@ -58,7 +58,7 @@ CONFLICT_POLICY:
   critical_exact_string_change: "blocked"
 BINDING_REQUIREMENTS:
   evidence_representation: "external_content_addressed_record"
-  evidence_schema: "deferred_phase9d"
+  evidence_schema: "kdsl-binding-evidence@0.1-draft"
   reference_from_p1l_binding: "required"
   executable: false
   semantic_equivalence: "not_proven"

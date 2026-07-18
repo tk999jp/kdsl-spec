@@ -406,7 +406,7 @@ def validate_k1(model: dict[str, Any], result: RuntimeControlParseResult) -> Non
         'BINDING_REQUIREMENTS',
         {
             'evidence_representation': 'external_content_addressed_record',
-            'evidence_schema': 'deferred_phase9d',
+            'evidence_schema': 'kdsl-binding-evidence@0.1-draft',
             'reference_from_p1l_binding': 'required',
             'executable': False,
             'semantic_equivalence': 'not_proven',

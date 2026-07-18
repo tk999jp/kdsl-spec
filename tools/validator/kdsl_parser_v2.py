@@ -13,6 +13,7 @@ KNOWN_ENVELOPES = {
     'P1L',
     'K1',
     'PF1',
+    'BINDING_EVIDENCE',
     'KDSL_RESULT',
     'PACKET_DRAFT',
     'NORMALIZATION_DRAFT',
