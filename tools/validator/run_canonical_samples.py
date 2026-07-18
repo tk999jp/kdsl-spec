@@ -32,7 +32,16 @@ agent: required
 対象: MainForm.cs
 作業: 原因限定→実装→試験
 検証: targeted test
-報告: KDSL_RESULT
+報告: R1
+K1:
+状態: 計画
+現在: 初期化
+完了: なし
+未完: 調査／実装／試験
+検証: 未実行
+実機: 不要
+次: 調査
+停止理由: なし
 """
 INVALID_ENGLISH = """KDSL_PROMPT:
 GOAL: fix
@@ -96,9 +105,9 @@ INVALID_RT = """KDSL_RESULT:
 次: 提案なし
 commit: none
 """
-INVALID_AGENT_MISSING_RAIL = """P1L:
-版: kdsl-agent@1
-実行方式: agent再帰
+VALID_STRICT = """handoff: required
+P1L:
+版: kdsl-agent@1.1
 目的: 修正
 成功条件: 完了
 正本: repo/main
@@ -108,28 +117,49 @@ INVALID_AGENT_MISSING_RAIL = """P1L:
   読取: 可
   編集: 可
   試験: 可
-  stage: 対象外
   commit: 承認待
-  push: 承認待
-  release: 対象外
-  public履歴: 不可
 承認境界: commit前
 作業: 実装
-試験: targeted
-検証: pass
+検証: targeted
 実機要否: 不要
 停止条件: scope変更
 完了条件: 未完なし
 報告: R1
+K1:
+run: run-1
+契約: P1L-1
+baseline: main@abc
+PF1: project-default
+状態: 計画
+現在: 初期化
+完了: なし
+未完: 実装／検証
+検証: 未実行
+実機: 不要
+次: 実装
+停止理由: なし
 """
-INVALID_K1_COMPLETE = """K1:
+INVALID_DUPLICATE = VALID_STRICT + "\nP1|版:kdsl-agent@1.1|目的:修正|成功:完了|正本:repo/main|対象:src|権限:読取=可|作業:実装|検証:targeted|停止:scope変更|完了:未完なし|報告:R1\n"
+INVALID_RESUME_ID = """handoff: required
+K1:
+状態: 計画
+現在: 初期化
+完了: なし
+未完: 実装
+検証: 未実行
+実機: 不要
+次: 実装
+停止理由: なし
+"""
+INVALID_K1_COMPLETE = """agent: required
+K1:
 状態: 完了
 現在: close
 完了: 実装
 未完: runtime
 検証: 一部
 実機: 未確認
-次遷移: R1
+次: R1
 停止理由: なし
 """
 
@@ -152,15 +182,18 @@ def main() -> int:
     failures += expect("valid-r1", lint_r1(VALID_R1), True)
     failures += expect("invalid-r1-english", lint_r1(INVALID_R1_ENGLISH), False)
     failures += expect("invalid-rt", lint_r1(INVALID_RT), False)
-    failures += expect("valid-agent", lint_agent(AGENT_DOCUMENT.read_text(encoding="utf-8")), True)
-    failures += expect("invalid-agent-rail", lint_agent(INVALID_AGENT_MISSING_RAIL), False)
+    failures += expect("valid-agent-minimal", lint_agent(VALID_DEV), True)
+    failures += expect("valid-agent-strict", lint_agent(VALID_STRICT), True)
+    failures += expect("invalid-agent-duplicate", lint_agent(INVALID_DUPLICATE), False)
+    failures += expect("invalid-agent-resume-id", lint_agent(INVALID_RESUME_ID), False)
     failures += expect("invalid-k1-complete", lint_agent(INVALID_K1_COMPLETE), False)
+    failures += expect("valid-agent-document", lint_agent(AGENT_DOCUMENT.read_text(encoding="utf-8")), True)
     failures.extend(lint_paths(ACTIVE_DOCUMENTS, ROOT))
     if failures:
         for failure in failures:
             print("FAIL", failure)
         return 1
-    print(f"PASS cases=11 documents={len(ACTIVE_DOCUMENTS)} agent=1")
+    print(f"PASS cases=14 documents={len(ACTIVE_DOCUMENTS)} agent=3")
     return 0
 
 
