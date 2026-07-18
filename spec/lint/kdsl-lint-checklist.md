@@ -1,4 +1,4 @@
-# KDSL Lint Checklist v2.0-kanji-canonical
+# KDSL Lint Checklist v3.0-kanji-agent
 
 ## 合格必須
 
@@ -26,6 +26,7 @@ KDSL-Intlを本体化
 安全契機を第一目的化
 dev-promptで漢字圧縮解除
 KDSL_PROMPTへ英語構造KEY必須化
+Agent層をKDSL Coreより上位化
 ```
 
 1件でもあれば不合格。
@@ -65,6 +66,36 @@ U未指定承認gate
 KDSL_RESULT簡潔
 ```
 
+## Agent
+
+`agent: required`時:
+
+```text
+P1L／P1／K1あり
+継続project／既定あり→PF1あり
+P1L全必須fieldあり
+P1L／P1全権限railあり
+P1→P1L可逆
+K1更新→目的／対象／権限変更なし
+PF1→P1L権限拡張なし
+K1完了→未完なし／検証成功／実機確定
+```
+
+禁止:
+
+```text
+P1L valid=全操作許可扱い
+権限rail暗黙化
+K1でscope追加
+PF1でU禁止反転
+Agent状態をR1へ全複製
+Safety Gate Registry必須依存
+Packet必須依存
+Binding Evidence必須依存
+```
+
+詳細は `spec/lint/kdsl-agent-lint.md`。
+
 ## KDSL_RESULT
 
 ```text
@@ -72,6 +103,7 @@ KDSL_RESULT簡潔
 未実行偽装なし
 RT:v偽装なし
 roadmap化なし
+P1L／P1／K1／PF1複製なし
 ```
 
 ## validator
@@ -81,6 +113,7 @@ validator未実行→pass扱禁止
 validator pass != 意味同等
 validator pass != 漢字圧縮品質
 validator pass != safety proof
+validator pass != 実行許可
 validator pass != U承認
 validator pass != RT:v
 validator pass != release readiness
