@@ -1,27 +1,16 @@
-# KDSL Specification v2.0-kanji-canonical
+# KDSL Specification — Kanji Core
 
 ## 0 定義
 
 ```text
 KDSL:=日本語promptを漢字語幹／記号／最小制御語へ再構成する、LLM直投入可能な漢字圧縮DSL
-```
-
-```text
 自然文=>助詞削減+重複統合+漢字語幹化+条件記号化+最小制御語化
 ```
 
-KDSLの第一目的は漢字圧縮。単なる日本語化、英語KEY構造化、安全契約framework化、schema化、証跡管理を第一目的へ置かない。
-
-KDSL identity:
+第一目的は**漢字圧縮**。単なる日本語化、英語KEY構造化、安全契約framework化、schema化、証跡管理を第一目的へ置かない。
 
 ```text
-日本語
-漢字圧縮
-意味保持
-LLM直投入
-判断分岐保持
-低tool依存
-必要最小限の安全保護
+identity:=日本語／漢字圧縮／意味保持／LLM直投入／判断分岐保持／低tool依存／限定安全
 ```
 
 ## 1 派生subset
@@ -36,31 +25,19 @@ KDSL本体 > KDSL-Intl
 
 ```text
 KDSL-Intlを本体扱い禁止
-英語KEYを無指定既定にすること禁止
+英語KEYを無指定既定化禁止
 漢字表現をoptional lexiconへ降格禁止
 非漢字対応を理由にidentity変更禁止
 ```
 
 ## 2 設計順位
 
-第一目的:
-
 ```text
-漢字圧縮
+第一目的:=漢字圧縮
+成立条件:=意味保持／LLM直投入／判断分岐保持／明示制約保持／出力安定／人間修正可能
 ```
 
-成立条件:
-
-```text
-意味保持
-LLM直投入可能
-判断分岐保持
-明示制約保持
-出力安定
-人間修正可能
-```
-
-不可侵条件:
+不可侵:
 
 ```text
 明示禁止
@@ -72,13 +49,13 @@ LLM直投入可能
 明示RT:v条件
 ```
 
-不可侵条件は限定保護であり、汎用安全frameworkではない。
+不可侵条件は意味消失防止の限定保護であり、汎用安全frameworkではない。
 
 ## 3 設計単位
 
 ```text
 format: KDSL
-profile: dev-prompt|converter|lint|rulebook
+profile: dev-prompt|compact-prompt|converter|lint
 mode: readable|min|dense|lock
 safety: normal|lock-critical|lock-all
 language: ja
@@ -94,7 +71,7 @@ safety: normal
 language: ja
 ```
 
-`profile`変更で漢字圧縮を解除しない。AI coding tool向け、repo操作、runtime確認を含んでも本文は漢字圧縮を維持する。
+profile変更で漢字圧縮を解除しない。実装／repo操作／runtime確認を含んでも本文は漢字圧縮を維持する。
 
 ## 4 漢字圧縮
 
@@ -108,35 +85,22 @@ VERIFY→検証
 
 だけでは不足。本文も助詞削減・重複統合・漢字語幹化・記号化する。
 
-例:
-
 ```text
-helperがdestination parentを先に作成していても、
-cross-volume directory moveがdestination collisionで失敗しない。
-
+helperがdestination parentを先に作成していても、cross-volume directory moveがdestination collisionで失敗しない。
 =>
-
-跨volume dir移動:
-helper先行dst親作成済→collision失敗禁止
+跨volume dir移動: helper先行dst親作成済→collision失敗禁止
 ```
 
 標準構造KEY:
 
 ```text
-局面
-目的
-成功条件
-根拠
-正本
-権限
-承認境界
-対象
-非対象
-作業
-試験
-検証
-停止条件
-報告
+局面／目的／成功条件／根拠／正本／権限／承認境界／対象／非対象／作業／試験／検証／停止条件／報告
+```
+
+CompactPrompt構造KEY:
+
+```text
+目的／材料／出力／規則／確認
 ```
 
 未定義一字alias推測禁止。短い日本語KEYを優先する。
@@ -165,8 +129,6 @@ U未指定承認gate追加禁止
 
 ## 6 KDSL_PROMPT
 
-AI coding prompt:
-
 ```text
 KDSL_PROMPT:
 format: KDSL
@@ -179,8 +141,6 @@ safety: normal
 成功条件:
 根拠:
 正本:
-権限:
-承認境界:
 対象:
 非対象:
 作業:
@@ -231,44 +191,29 @@ commit:=実行済commitまたは推奨message
 KDSL:=LLM直投入可能な漢字圧縮prompt
 KDSL-DP:=ADPS向けAuthoring形式
 P1／P1L:=実行契約候補
-K1／PF1:=Runtime Control候補
-R1／KDSL_RESULT:=結果証跡
+R1／KDSL_RESULT:=結果報告
 ```
 
 ```text
 KDSL-DP直接実行禁止
 KDSL-DP→P1／P1L正規化必須
 P1／P1L valid != 実行許可
-Packet valid != 実行許可
 ```
 
-境界仕様がKDSL本体の漢字identityを上書きすることを禁止する。
+P1／Packet／Runtime Control等の拡張はKDSL本体の漢字identityを上書きできない。存在だけを本体採用理由にしない。
 
 ## 9 変換禁止
 
 ```text
-command
-path
-URL
-repo名
-branch名
-tag名
-package名
-class名
-method名
-property名
-API名
-file名
-拡張子
-Windows path
-inline code
+command／path／URL／repo名／branch名／tag名／package名
+class名／method名／property名／API名／file名／拡張子／Windows path／inline code
 ```
 
 英語技術識別子を無理に漢字化しない。
 
-## 10 正本変更
+## 10 identity変更
 
-KDSL identity変更はbreaking。次を含む変更は明示承認必須。
+次はbreakingであり、U明示承認必須。
 
 ```text
 漢字圧縮を第一目的から外す
