@@ -2,11 +2,11 @@
 
 status: canonical-project-status
 last_updated: 2026-07-18
-phase: phase9b-k1-pf1-schema-complete
+phase: phase9c-k1-pf1-validator-complete
 repository: tk999jp/kdsl-spec
 default_branch: main
 tracking_issue: 132
-verified_main_head: f779ce38e9e37fafec4de72832edd138a5da7bbc
+verified_main_head: c2d6e8be0e8f54b73db6ba410ada1b93260c70cb
 
 この文書は、`kdsl-spec` repository の現在状態を示す運用上の状態正本です。
 仕様正本とfile責務は `spec/manifest.md` を参照します。
@@ -99,6 +99,7 @@ Phase 7 canonical P1/P1L contract scope: complete
 Phase 8 shared AST v2 P1L first-class integration: complete
 Phase 9A K1/PF1 runtime-control design: complete
 Phase 9B K1/PF1 schema/lint/examples: complete
+Phase 9C K1/PF1 parser/validator compatibility first slice: complete
 ```
 
 ## 5. Repository enforcement
@@ -116,6 +117,21 @@ deletions: restricted
 ```
 
 ## 6. Latest verified design / implementation
+
+Phase 9C validator proof:
+
+```text
+PR: 137
+source head: 0b66ba14279063c2069591569482ce96b0251a42
+squash commit: c2d6e8be0e8f54b73db6ba410ada1b93260c70cb
+workflow run: 29636378733 / #500
+KDSL Validation: success
+Packet Semantic Property: success
+Packet P1 Normalization Property: success
+focused runtime-control corpus: 16 / failed 0
+scope: bounded parser/validator/canonical digest/exact K1-PF1 compatibility
+runtime binding: not implemented
+```
 
 Phase 9B schema proof:
 
@@ -198,8 +214,9 @@ Verified current additions:
 P1L/P1 contract corpus: 14 / failed 0
 P1L shared AST compatibility corpus: 10 / failed 0
 Packet→P1L/P1 normalization corpus: 17 / failed 0
-unified runners: 38
-unified expectations: 483 / failed 0
+K1/PF1 runtime-control corpus: 16 / failed 0
+unified runners: 39
+unified expectations: 499 / failed 0
 ```
 
 Corrective record:
@@ -212,6 +229,7 @@ Phase 7 closeout audit detected canonical glossary over-compression→canonical 
 Phase 8 branch diagnostics exposed runner self-match/newline/indentation generation defects before commit→clean runner generation and final cleanup→run #449 success
 Phase 9A design self-audit separated authority from capability and reduced unresolved schema decisions to five
 Phase 9B adoption self-audit removed digest self-reference and separated approval content integrity from source verification before merge
+Phase 9C shared-parser registration was validated before storage; final parser diff added only K1/PF1 markers
 ```
 
 ```text
@@ -232,7 +250,9 @@ P1L/P1 parser/validator: first bounded slice integrated
 P1L→P1→P1L structural round-trip: integrated first slice
 shared AST v2 P1L marker registration: first-class integrated / bootstrap removed / compatibility corpus 10 failed 0
 runtime binding: not implemented
-K1/PF1 canonical schema: adopted v2-draft / resolver not implemented
+K1/PF1 canonical schema: adopted v2-draft
+K1/PF1 parser/validator: bounded first slice integrated
+K1/PF1 exact compatibility: id/revision/digest/project_scope/contract_schemas
 BINDING.state: unbound
 BINDING.executable: false
 ```
@@ -344,6 +364,7 @@ P1L/P1 bounded validator/round-trip first slice
 Packet→P1L/P1 non-executable preview normalization first slice
 K1/PF1 non-executable runtime-control design
 K1/PF1 canonical schema/lint/manual examples
+K1/PF1 bounded non-executable validator/compatibility first slice
 experimental heuristic validator helpers
 ```
 
@@ -354,7 +375,7 @@ stable KDSL release
 public-ready guarantee
 P1L/P1 executable runtime contract
 K1/PF1 executable runtime contract
-K1/PF1 resolver/runtime binding implementation
+K1/PF1 runtime binding/execution authorization implementation
 Packet normalized/executable runtime contract
 semantic equivalence proof
 complete safety proof
@@ -364,8 +385,8 @@ complete semantic parser
 ## 11. Next safe steps
 
 ```text
-P0: Phase 9C resolver/parser/validator first slice only under separate approval
-P1: Phase 9D binding-evidence field schema only under separate approval
+P0: Phase 9D binding-evidence field schema only under separate approval
+P1: future P1L→K1/PF1 binding evaluator only under separate approval
 Hold: runtime binding/executable promotion/stable/public-ready/tag/release/Release Assets
 ```
 

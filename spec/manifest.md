@@ -277,7 +277,7 @@ Core/R1/Bridge meaning
 > P1L/P1 contract meaning
 > K1 runtime-control semantics
 > PF1 project definitions
-> future resolver/lint
+> bounded parser/validator
 > route/skill/tool
 > example/template/tool
 ```
@@ -290,7 +290,8 @@ Stop continuation != authority
 routing != authority
 binding evidence:=external content-addressed record
 BINDING.executable:false under P1L/P1 v0.1 draft
-resolver/runtime binding/binding-evidence schema:=not implemented
+parser/validator/exact compatibility:=Phase 9C bounded first slice integrated
+runtime binding/binding-evidence schema:=not implemented
 ```
 
 ### 4.5 R1 / R1C
@@ -513,7 +514,7 @@ capability != permission
 approval scope/operation/time/revocation exact
 Stop continuation/routing != authority
 binding evidence external/content-addressed/non-executable
-resolver/binding未実装明記
+bounded parser/validator scope明記 / binding未実装明記
 ```
 
 Packet→P1L/P1 additional checks:
@@ -560,7 +561,7 @@ P1L/P1 runtime binding:=not implemented
 kdsl-k1@0.1-draft:=adopted canonical runtime-control semantics / non-executable / no authority grant
 kdsl-pf1@0.1-draft:=adopted project runtime-control profile / non-executable / no authority grant
 kdsl-runtime-control-c14n@0.1-draft:=adopted canonical projection/digest rules
-K1/PF1 resolver/validator:=not implemented
+K1/PF1 parser/validator/exact compatibility:=Phase 9C bounded first slice integrated
 binding-evidence schema:=not implemented / external content-addressed representation selected
 kdsl-packet@0.1-draft:=adopted authoring schema / non-executable
 kdsl-packet-normalization@0.1-draft:=adopted / non-executable
