@@ -119,7 +119,7 @@ protected wording weakened
 - [ ] K1 absolute forbid always wins.
 - [ ] `target_only` requires exact non-empty target.
 - [ ] `once` requires exact operation instance.
-- [ ] `approval_required` requires exact current approval reference.
+- [ ] `approval_required` follows K1 Section 8 acceptance requirements.
 - [ ] Capability is absent from the authority intersection table.
 - [ ] Composite effective constraints are preserved without scalar loss.
 
@@ -131,7 +131,7 @@ P1L forbid × PF1 allow_max → forbid
 P1L propose_only × PF1 allow_max → propose_only
 P1L not_requested × PF1 allow_max → not_requested
 P1L allow_once × missing operation instance → blocked
-approval_required × missing approval_ref → blocked
+approval_required × unsatisfied approval evidence → blocked
 ```
 
 ## 7. Approval evidence
@@ -139,6 +139,7 @@ approval_required × missing approval_ref → blocked
 - [ ] Approval reference contains exact id/revision/digest/source/issuer/time/operation/scope.
 - [ ] Approval operation and scope exactly match the evaluated rail.
 - [ ] Expiry and revocation are checked.
+- [ ] K1 Section 8 structural and source-verification requirements are satisfied.
 - [ ] Conversation memory is not used as approval evidence.
 - [ ] Approval evidence is not described as executable authorization by itself.
 
@@ -149,6 +150,7 @@ remembered approval
 scope/operation mismatch
 expired/revoked approval
 missing digest/source
+K1 Section 8 acceptance unsatisfied
 ```
 
 ## 8. Capability requirements and observations
