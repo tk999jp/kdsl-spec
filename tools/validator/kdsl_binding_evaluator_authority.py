@@ -1,1 +1,1 @@
-from kdsl_binding_evaluator_authority_core import evaluate_authority
+from kdsl_binding_authority_core import evaluate_authority
