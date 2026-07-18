@@ -1,77 +1,43 @@
-# Validator Design
+# Validator
 
-目的: KDSL / R1 / Template をPython等で機械検査するための設計置き場。
+KDSL漢字identityと最小R1境界を検査する軽量補助。
 
-status: design-draft
-implementation: not_started
-
-## 位置づけ
+## 実装
 
 ```text
-Validator:=形式/整合性/欠落/権限衝突を検査する補助器
-Validator != 承認者
-Validator != Runtime確認者
-Validator != 要件判断者
-Validator != D禁止解除者
+kdsl_identity_lint.py:=正本identity／必須file／禁止構造確認
+kdsl_document_lint.py:=active template／exampleの英語KEY・旧v2構造・未定義alias検出
+r1_result_lint.py:=日本語KDSL_RESULT field順／RT:v／次／commit境界確認
+run_canonical_samples.py:=valid／invalid corpus＋active document回帰
 ```
 
-## 目的
+## 実行
 
-```text
-KDSL_PROMPTの必須要素欠落検出
-Template参照の未読/未定義検出
-R1/KDSL_RESULTの必須block欠落検出
-RT:v根拠の不正検出
-NEXT/COMMIT権限混同検出
-EVIDENCEの観測/推論/未観測/未確認分離検査
-AUTHORITYのcommit/push/release衝突検査
+```bash
+python tools/validator/kdsl_identity_lint.py
+python tools/validator/run_canonical_samples.py
 ```
 
-## 非目的
+個別:
 
-```text
-AIの判断を代行しない
-ユーザー承認を代行しない
-実機Runtime確認を代行しない
-仕様変更の可否を判断しない
-D禁止を解除しない
-曖昧ログの意味を断定しない
+```bash
+python tools/validator/kdsl_document_lint.py <file...>
+python tools/validator/r1_result_lint.py <result-file>
 ```
 
-## 想定構成
+## 境界
 
 ```text
-tools/validator/
-  README.md
-  r1-validator-design.md
-  kdsl-template-lint-design.md
-```
-
-## 設計方針
-
-```text
-最初は実装しない
-検査項目を仕様として固定しすぎない
-R1 validatorを優先
-Template lintは未読/未定義/権限衝突を優先
-KDSL parserは過剰に厳密化しない
-Markdown + code block + key-value風blockの軽量検査から始める
-```
-
-## 検査レベル
-
-```text
-ERROR: safety gate破損/権限事故/RT:v誤認/必須block欠落
-WARN: 曖昧/弱化/推奨block欠落
-INFO: 任意改善/表記揺れ
-```
-
-## Safety first
-
-```text
-validator未実行→pass扱禁止
-validator pass != RT:v
+validator:=非権威的補助
+validator pass != 意味同等
+validator pass != 漢字圧縮品質の最終判断
 validator pass != U承認
-validator pass != 実装妥当性保証
-validator failure時→該当箇所を修正またはU確認
+validator pass != RT:v
+validator pass != release readiness
 ```
+
+## 非採用
+
+旧v2の共通AST、Packet parser、Safety Gate Registry、R1C、P1／K1等のvalidatorは正規branchへ移植しない。必要な状態反転防止・field順・source保持の考え方だけを軽量lintへ回収した。
+
+既存の `*-design.md` は歴史設計資料であり、現行実装正本ではない。
