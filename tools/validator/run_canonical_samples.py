@@ -20,7 +20,7 @@ ACTIVE_DOCUMENTS = [
     ROOT / "examples/kanji/agent-operational-proof.kdsl.md",
 ]
 
-AGENT_DOCUMENT = ROOT / "examples/kanji/agent-codex-run.kdsl.md"
+KANJI_EXAMPLE_ROOT = ROOT / "examples/kanji"
 
 VALID_DEV = """KDSL_PROMPT:
 format: KDSL
@@ -173,6 +173,17 @@ def expect(name: str, errors: list[str], should_pass: bool) -> list[str]:
     return []
 
 
+def active_agent_documents() -> list[Path]:
+    documents: list[Path] = []
+    for path in ACTIVE_DOCUMENTS:
+        if path.parent != KANJI_EXAMPLE_ROOT:
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "profile: dev-prompt" in text:
+            documents.append(path)
+    return documents
+
+
 def main() -> int:
     failures: list[str] = []
     failures += expect("valid-dev", lint_text(VALID_DEV), True)
@@ -188,13 +199,22 @@ def main() -> int:
     failures += expect("invalid-agent-duplicate", lint_agent(INVALID_DUPLICATE), False)
     failures += expect("invalid-agent-resume-id", lint_agent(INVALID_RESUME_ID), False)
     failures += expect("invalid-k1-complete", lint_agent(INVALID_K1_COMPLETE), False)
-    failures += expect("valid-agent-document", lint_agent(AGENT_DOCUMENT.read_text(encoding="utf-8")), True)
+
+    agent_documents = active_agent_documents()
+    for document in agent_documents:
+        name = document.relative_to(ROOT).as_posix()
+        text = document.read_text(encoding="utf-8")
+        failures += expect(f"valid-agent-document:{name}", lint_agent(text), True)
+
     failures.extend(lint_paths(ACTIVE_DOCUMENTS, ROOT))
     if failures:
         for failure in failures:
             print("FAIL", failure)
         return 1
-    print(f"PASS cases=14 documents={len(ACTIVE_DOCUMENTS)} agent=3")
+    print(
+        f"PASS cases=14 documents={len(ACTIVE_DOCUMENTS)} "
+        f"agent_documents={len(agent_documents)}"
+    )
     return 0
 
 
