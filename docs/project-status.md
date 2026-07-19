@@ -3,7 +3,7 @@
 ```text
 status: canonical
 updated: 2026-07-19
-branch: canonical/kdsl-kanji
+branch: main
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
 framework-archive: archive/kdsl-framework-20260718
@@ -106,7 +106,8 @@ closeout／status同期の自己増殖
 ## Repository管理
 
 ```text
-GitHub default branch: canonical/kdsl-kanji／確認済
-canonical branch rules: U設定済
+GitHub default branch: main／確認済
+main branch rules: U設定済
+framework archive: archive/kdsl-framework-20260718
 stable tag／release: 対象外／別途U承認必須
 ```
