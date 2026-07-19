@@ -1,7 +1,8 @@
 # KDSL漢字正規版 検証記録
 
 ```text
-branch: canonical/kdsl-kanji
+validation_branch: canonical/kdsl-kanji
+current_canonical_branch: main
 rebuild_pr: #146
 rebuild_merge: e8a77e14e64273fcceaf0ec5a81740946447ed97
 workflow: KDSL Validation
