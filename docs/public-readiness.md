@@ -2,12 +2,12 @@
 
 ```text
 repository: public
-仕様状態: identity-restoration-audit
+仕様状態: canonical
 stable release: none
 Release Assets: none
 ```
 
-repositoryは既にpublicだが、`canonical/kdsl-kanji`を正式default branchへ切り替える前に、漢字identity監査とbranch rules設定を完了する。
+repositoryはpublic。漢字identity監査、正本内容の`main`反映、default branch切替、main branch rules設定を完了した。
 
 ## 公開上の説明
 
@@ -29,16 +29,17 @@ CompactPrompt／Intl profile
 軽量validator／sample runner
 v2資産監査
 旧framework archive
+正本内容main反映
+GitHub default branch: main
+main branch rules設定
 ```
 
-## 正本切替前に必要
+## Repository系統
 
 ```text
-監査branch CI成功
-canonical/kdsl-kanjiへ監査結果merge
-GitHub default branch切替
-canonical branch rules設定
-main旧系統の凍結表示維持
+正本: main
+旧framework保存: archive/kdsl-framework-20260718
+旧正本名canonical/kdsl-kanji: 削除対象
 ```
 
 ## Release
