@@ -87,7 +87,7 @@ Agent lint: spec/lint/kdsl-agent-lint.md
 ## 現在状態
 
 ```text
-branch: canonical/kdsl-kanji
+branch: main
 status: canonical
 framework-archive: archive/kdsl-framework-20260718
 v2-asset-audit: complete／Agent再審査反映済
