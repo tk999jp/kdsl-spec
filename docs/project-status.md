@@ -26,6 +26,7 @@ PF1適用順補正: 完了
 K1再開識別条件追加: 完了
 Agent lint／回帰例: 完了
 Agent運用状態遷移回帰: 完了
+Codex実run三経路確認: 完了
 ```
 
 ## 正本
@@ -64,12 +65,31 @@ Agent運用状態遷移回帰: pass
 - 承認境界直前停止: pass
 - 中断再開識別／未完継続: pass
 canonical regression: pass
-Codex実run再帰完走: 未確認
-Codex実run中断再開: 未確認
-Codex実run承認境界停止: 未確認
+Codex実run再帰完走: verified
+Codex実run承認境界停止: verified
+Codex実run中断再開: verified
 ```
 
 運用回帰passは状態遷移契約の自動確認。形式／自動回帰成功だけでCodex Agent実効性を確認済扱いしない。
+
+### Codex実run確認範囲
+
+```text
+確認日: 2026-07-19
+環境: Codex／Windows
+対象repository: MidFD
+baseline: 879cd4c415584830e2cad181a9139dc07134cf7d
+検証Task: Breadcrumb drive-root表示判定の内部helper抽出
+通常完走: verified
+承認境界停止: verified
+中断再開: verified
+対象test: BreadcrumbPathModelTests 12/12 pass
+diff check: pass
+stage／commit／push: 未実行
+検証worktree／local branch: cleanup済み
+```
+
+上記verifiedは当該環境／repository／Taskでの実測。全model／全environment／全repositoryへの一般保証ではない。
 
 ## 不採用
 
