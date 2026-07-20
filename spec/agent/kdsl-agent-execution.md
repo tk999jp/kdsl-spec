@@ -309,9 +309,10 @@ runtime evaluator
 ```text
 validator pass:=形式整合
 運用回帰pass:=状態遷移／承認境界／再開契約／Run差分算出の自動確認
+Git回帰pass:=一時repository上の実Git操作／BaselineState／FinalState比較確認
 運用回帰pass!=Codex実効性
-運用回帰pass!=実baseline取得確認
+Git回帰pass!=任意Agentのbaseline取得完全性
 CI pass!=Codex runtime確認
 ```
 
-`examples/kanji/agent-operational-proof.kdsl.md`を`tools/validator/kdsl_agent_operational_regression.py`で検証する。Codex再帰完走・中断再開・承認境界停止・実repositoryでのRunChanged帰属は実runで確認し、未確認時は未証明として扱う。
+`examples/kanji/agent-operational-proof.kdsl.md`を`tools/validator/kdsl_agent_operational_regression.py`で検証し、`tools/validator/kdsl_run_changed_git_regression.py`で実Git repository上の候補収集とRunChanged帰属を検証する。Codex再帰完走・中断再開・承認境界停止、および任意Agentが対象repositoryでbaselineを正確に取得したことは実runで確認し、未確認時は未証明として扱う。
