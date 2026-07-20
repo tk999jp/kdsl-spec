@@ -23,5 +23,7 @@ jobs:
         run: python tools/validator/kdsl_agent_lint.py examples/kanji/agent-codex-run.kdsl.md
       - name: Validate Agent operational scenarios
         run: python tools/validator/kdsl_agent_operational_regression.py
+      - name: Validate RunChanged with Git repository
+        run: python tools/validator/kdsl_run_changed_git_regression.py
       - name: Run canonical regression corpus
         run: python tools/validator/run_canonical_samples.py
