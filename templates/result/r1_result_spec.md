@@ -16,6 +16,11 @@ commit:
 ```
 
 ```text
+変更:=現在runのRunChanged完全repo相対path全件
+複数file:=1行1件
+変更なし:=なし
+Task対象／最終dirtyから推定禁止
+主要file＋総件数への省略禁止
 未実行command→実行欄記載禁止
 未実行verify→pass扱禁止
 build／lint／test／CI pass != RT:v

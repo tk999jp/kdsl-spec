@@ -47,12 +47,14 @@ agent: required
 - {{明示除外}}
 
 作業:
-1. 共有材／現実装確認→原因限定
-2. 明示scope内で実装
-3. targeted test追加／更新
-4. 必要broader test実行
-5. 差分再確認→不足時は同一Phase内で補正
-6. K1未完=なしまで再帰
+1. production edit前にInitialHEAD／開始dirty・untracked file state固定
+2. 共有材／現実装確認→原因限定
+3. 明示scope内で実装
+4. targeted test追加／更新
+5. 必要broader test実行
+6. 終了時state取得→RunCandidate生成→RunChanged確定
+7. 差分再確認→不足時は同一Phase内で補正
+8. K1未完=なしまで再帰
 
 試験:
 - {{targeted test}}
@@ -62,9 +64,11 @@ agent: required
 - {{成功条件との対応}}
 - 未実行項目→pass扱禁止
 - build／test pass != RT:v
+- R1.変更=RunChanged完全repo相対path全件
 
 停止条件:
 - 正本／branch／baseline競合
+- baseline取得不能
 - U要件両立不能
 - 明示scope外仕様変更不可避
 - 必要操作権限=承認待／不可
@@ -75,10 +79,10 @@ K1:
 状態: 計画
 現在: 初期化
 完了: なし
-未完: 原因調査／実装／試験／検証
+未完: baseline固定／原因調査／実装／試験／検証／RunChanged確定
 検証: 未実行
 実機: {{不要|未確認}}
-次: 原因調査
+次: baseline固定
 停止理由: なし
 ```
 
@@ -92,4 +96,8 @@ K1:
 K1更新によるscope／権限変更禁止
 未確認→確認済扱禁止
 command／path／API名変換禁止
+最終dirtyだけから今回変更を推定禁止
+Task対象／test対象をRunChangedへ自動採用禁止
+pre-existing dirty不変fileのR1記載禁止
+主要file＋総件数への省略禁止
 ```

@@ -1,9 +1,9 @@
 # Agent運用回帰事例
 
-形式lintとは別に、Agent goalを阻害しない状態遷移を固定する。
+形式lintとは別に、Agent goalを阻害しない状態遷移とRun変更file帰属を固定する。
 
 ```text
-目的: Agent状態遷移／承認境界／中断再開の回帰固定
+目的: Agent状態遷移／承認境界／中断再開／Run差分の回帰固定
 Agent goal:=U明示scopeを必要最小契約で調査→実装→検証→完了
 ```
 
@@ -122,4 +122,35 @@ baseline: main@HEAD
 停止理由: なし
 ```
 
-この事例のpassは状態遷移契約の自動回帰であり、Codex実run確認ではない。
+## Run差分
+
+```text
+事例: Run差分
+候補: src/Clean.cs／src/DirtyChanged.cs／src/DirtyUnchanged.cs／src/New.cs／src/Delete.cs／src/OldName.cs／src/NewName.cs／src/Restored.cs／tests/ExecutedOnlyTests.cs
+期待変更: src/Clean.cs／src/DirtyChanged.cs／src/New.cs／src/Delete.cs／src/OldName.cs／src/NewName.cs
+期待除外: src/DirtyUnchanged.cs／src/Restored.cs／tests/ExecutedOnlyTests.cs
+
+開始:
+src/Clean.cs: tracked|file|sha-base
+src/DirtyChanged.cs: tracked|file|sha-dirty-1
+src/DirtyUnchanged.cs: tracked|file|sha-dirty-same
+src/New.cs: absent
+src/Delete.cs: tracked|file|sha-delete
+src/OldName.cs: tracked|file|sha-rename
+src/NewName.cs: absent
+src/Restored.cs: tracked|file|sha-restored
+tests/ExecutedOnlyTests.cs: tracked|file|sha-test
+
+終了:
+src/Clean.cs: tracked|file|sha-final
+src/DirtyChanged.cs: tracked|file|sha-dirty-2
+src/DirtyUnchanged.cs: tracked|file|sha-dirty-same
+src/New.cs: untracked|file|sha-new
+src/Delete.cs: absent
+src/OldName.cs: absent
+src/NewName.cs: tracked|file|sha-rename
+src/Restored.cs: tracked|file|sha-restored
+tests/ExecutedOnlyTests.cs: tracked|file|sha-test
+```
+
+この事例のpassは状態遷移とRunChanged算出規則の自動回帰であり、Codex実run確認や実際のbaseline取得を証明しない。

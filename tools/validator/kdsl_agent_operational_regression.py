@@ -190,10 +190,59 @@ def _lint_resume(case: dict[str, dict[str, str]]) -> list[str]:
     return errors
 
 
+def _lint_run_changed(case: dict[str, dict[str, str]]) -> list[str]:
+    errors: list[str] = []
+    meta = case.get("meta", {})
+    start = case.get("開始", {})
+    end = case.get("終了", {})
+    candidates = _items(meta.get("候補", ""))
+    expected_changed = _items(meta.get("期待変更", ""))
+    expected_unchanged = _items(meta.get("期待除外", ""))
+
+    if not candidates:
+        errors.append("Run差分:候補欠落")
+        return errors
+    if set(start) != candidates:
+        errors.append("Run差分:開始state候補不一致")
+    if set(end) != candidates:
+        errors.append("Run差分:終了state候補不一致")
+    if expected_changed & expected_unchanged:
+        errors.append("Run差分:期待変更／除外重複")
+    if expected_changed | expected_unchanged != candidates:
+        errors.append("Run差分:期待分類不足")
+
+    actual_changed = {path for path in candidates if start.get(path) != end.get(path)}
+    if actual_changed != expected_changed:
+        errors.append(
+            "Run差分:RunChanged不一致:"
+            + "期待=" + "／".join(sorted(expected_changed))
+            + ":実際=" + "／".join(sorted(actual_changed))
+        )
+
+    required_changed = {
+        "src/Clean.cs",
+        "src/DirtyChanged.cs",
+        "src/New.cs",
+        "src/Delete.cs",
+        "src/OldName.cs",
+        "src/NewName.cs",
+    }
+    required_unchanged = {
+        "src/DirtyUnchanged.cs",
+        "src/Restored.cs",
+        "tests/ExecutedOnlyTests.cs",
+    }
+    if not required_changed.issubset(expected_changed):
+        errors.append("Run差分:変更代表事例不足")
+    if not required_unchanged.issubset(expected_unchanged):
+        errors.append("Run差分:除外代表事例不足")
+    return errors
+
+
 def lint_text(text: str) -> list[str]:
     cases = _parse_cases(text)
     errors: list[str] = []
-    for required in ("通常", "承認境界", "中断再開"):
+    for required in ("通常", "承認境界", "中断再開", "Run差分"):
         if required not in cases:
             errors.append(f"事例欠落:{required}")
     if errors:
@@ -201,11 +250,12 @@ def lint_text(text: str) -> list[str]:
     errors += _lint_normal(cases["通常"])
     errors += _lint_approval(cases["承認境界"])
     errors += _lint_resume(cases["中断再開"])
+    errors += _lint_run_changed(cases["Run差分"])
     return errors
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="KDSL Agent運用状態遷移回帰")
+    parser = argparse.ArgumentParser(description="KDSL Agent運用状態遷移／Run差分回帰")
     parser.add_argument(
         "path",
         nargs="?",
@@ -218,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
         for error in errors:
             print("ERROR", error)
         return 1
-    print("PASS scenarios=3 normal=1 approval=1 resume=1 runtime=unverified")
+    print("PASS scenarios=4 normal=1 approval=1 resume=1 run_changed=1 runtime=unverified")
     return 0
 
 

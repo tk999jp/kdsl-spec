@@ -2,7 +2,7 @@
 
 ```text
 status: canonical
-updated: 2026-07-19
+updated: 2026-07-20
 branch: main
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
@@ -27,6 +27,7 @@ K1再開識別条件追加: 完了
 Agent lint／回帰例: 完了
 Agent運用状態遷移回帰: 完了
 Codex実run三経路確認: 完了
+RunChanged契約／R1変更file帰属: 検証完了
 ```
 
 ## 正本
@@ -64,13 +65,22 @@ Agent運用状態遷移回帰: pass
 - 通常run完了収束: pass
 - 承認境界直前停止: pass
 - 中断再開識別／未完継続: pass
+- RunChanged算出規則: pass
+Git repository RunChanged回帰: pass
+- 開始clean変更: pass
+- 開始dirty追加変更／不変分離: pass
+- pre-existing untracked変更／不変分離: pass
+- create／delete／rename: pass
+- 開始状態復元除外: pass
+- test直接編集／実行のみ分離: pass
+- InitialHEAD／FinalHEAD commit差分: pass
 canonical regression: pass
 Codex実run再帰完走: verified
 Codex実run承認境界停止: verified
 Codex実run中断再開: verified
 ```
 
-運用回帰passは状態遷移契約の自動確認。形式／自動回帰成功だけでCodex Agent実効性を確認済扱いしない。
+運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
 
 ### Codex実run確認範囲
 
@@ -90,6 +100,39 @@ stage／commit／push: 未実行
 ```
 
 上記verifiedは当該環境／repository／Taskでの実測。全model／全environment／全repositoryへの一般保証ではない。
+
+## RunChanged検証範囲
+
+```text
+確認日: 2026-07-20
+方式: 一時Git repository自動生成
+script: tools/validator/kdsl_run_changed_git_regression.py
+候補: 11
+RunChanged: 9
+除外確認: 4
+CI: KDSL Validationへ統合
+```
+
+確認済:
+
+```text
+開始時clean file変更
+開始時dirty fileの追加変更
+開始時dirty不変file除外
+pre-existing untracked変更／不変分離
+新規作成／削除／rename旧新path
+編集後に開始状態へ復元したfile除外
+test直接編集を採用
+test実行のみを除外
+run中commit差分を採用
+```
+
+未証明:
+
+```text
+任意Agentが実対象repositoryで開始状態を漏れなく採取すること
+全platform／全Git設定での一般成立
+```
 
 ## 不採用
 
