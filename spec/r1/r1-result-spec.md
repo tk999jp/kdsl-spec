@@ -51,6 +51,36 @@ commit:=実行済commitまたは推奨message
 自動commit許可扱禁止
 ```
 
+### 変更file
+
+```text
+変更:=現在runのRunChangedのみ
+RunChanged:=BaselineState(path) != FinalState(path)のRunCandidate
+```
+
+`変更:`には完全repo相対pathを全件記載する。複数fileは1行1件、変更なしは`なし`。
+
+```text
+rename→旧path／新path
+delete→削除前path
+test直接編集→含む
+test実行だけ→含まない
+開始時dirty不変→含まない
+編集後に開始時状態へ復元→含まない
+```
+
+禁止:
+
+```text
+Task対象fileから推定
+最終dirty fileを無差別列挙
+主要file＋総件数
+path省略／wildcard
+説明文／件数／総称を変更一覧へ混入
+```
+
+validator／lintはpath形式を検査できるが、実baselineとの意味一致やRunChanged完全性を証明しない。
+
 ## 範囲
 
 報告は依頼scope内だけ。
