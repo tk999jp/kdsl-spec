@@ -27,7 +27,7 @@ K1再開識別条件追加: 完了
 Agent lint／回帰例: 完了
 Agent運用状態遷移回帰: 完了
 Codex実run三経路確認: 完了
-RunChanged契約／R1変更file帰属: PR #159検証済／merge前
+RunChanged契約／R1変更file帰属: 検証完了
 ```
 
 ## 正本
