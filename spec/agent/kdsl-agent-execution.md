@@ -115,6 +115,70 @@ PF1:
 
 K1更新で目的・成功条件・対象・権限を変更しない。変更が必要ならKDSL_PROMPTまたはP1Lを再生成する。
 
+## 3A. Run変更file帰属
+
+Runは、1回の編集／実装／修正指示受領から対応R1または停止結果まで。production edit前に開始状態を固定し、終了時状態との差で今回runの変更fileを確定する。
+
+```text
+InitialHEAD:=run開始時HEAD
+FinalHEAD:=run終了時HEAD
+
+CommittedCandidate:=
+InitialHEAD != FinalHEAD
+  ? InitialHEAD→FinalHEAD差分のA／M／D path＋R／C旧path／新path
+  : ∅
+
+RunCandidate:=
+開始時dirty／untracked
+∪ 終了時dirty／untracked
+∪ CommittedCandidate
+∪ working tree rename旧path／新path
+∪ working tree delete path
+
+BaselineState:=
+開始時dirty／untracked→開始時file state
+開始時clean tracked→InitialHEAD上のfile state
+開始時不存在→absent
+
+FinalState:=
+終了時working treeのexistence／kind／mode／content identity
+
+RunChanged:={
+  path∈RunCandidate
+  | BaselineState(path) != FinalState(path)
+}
+```
+
+file stateは、通常fileなら内容identity、linkならlink種別＋target、不存在なら`absent`を保持する。全repo fileの開始snapshotは不要。
+
+```text
+開始clean→終了変更: 含む
+開始dirty→内容追加変化: 含む
+開始dirty→内容不変: 含まない
+今回新規作成／削除: 含む
+今回rename: 旧path／新pathを含む
+編集後に開始時状態へ復元: 含まない
+test直接編集: 含む
+test実行だけで未編集: 含まない
+```
+
+```text
+R1.変更:=RunChangedの完全repo相対path全件
+```
+
+禁止:
+
+```text
+Task対象file一覧から推定
+最終working tree全dirty列挙
+editor表示fileから推定
+test実行対象を変更file扱い
+主要file＋総件数へ省略
+pre-existing dirty不変fileを混入
+```
+
+baseline取得不能時はproduction editを開始しない。validator／lintはpath形式を検査できるが、実baselineとの意味一致は証明しない。
+
 ## 4. P1L
 
 P1Lは厳密handoff／中断再開時の長形式契約。通常runでは省略可。
@@ -244,9 +308,10 @@ runtime evaluator
 
 ```text
 validator pass:=形式整合
-運用回帰pass:=状態遷移／承認境界／再開契約の自動確認
+運用回帰pass:=状態遷移／承認境界／再開契約／Run差分算出の自動確認
 運用回帰pass!=Codex実効性
+運用回帰pass!=実baseline取得確認
 CI pass!=Codex runtime確認
 ```
 
-`examples/kanji/agent-operational-proof.kdsl.md`を`tools/validator/kdsl_agent_operational_regression.py`で検証する。Codex再帰完走・中断再開・承認境界停止は実runで確認し、未確認時は未証明として扱う。
+`examples/kanji/agent-operational-proof.kdsl.md`を`tools/validator/kdsl_agent_operational_regression.py`で検証する。Codex再帰完走・中断再開・承認境界停止・実repositoryでのRunChanged帰属は実runで確認し、未確認時は未証明として扱う。
