@@ -80,7 +80,7 @@ Codex実run承認境界停止: verified
 Codex実run中断再開: verified
 ```
 
-運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが実repository baselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
+運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
 
 ### Codex実run確認範囲
 
@@ -125,6 +125,13 @@ pre-existing untracked変更／不変分離
 test直接編集を採用
 test実行のみを除外
 run中commit差分を採用
+```
+
+未証明:
+
+```text
+任意Agentが実対象repositoryで開始状態を漏れなく採取すること
+全platform／全Git設定での一般成立
 ```
 
 ## 不採用
