@@ -32,7 +32,7 @@ v2資産監査
 正本内容main反映
 GitHub default branch: main
 main branch rules設定
-RunChanged契約／Git repository回帰: PR #159検証済／merge前
+RunChanged契約／Git repository回帰
 ```
 
 ## Repository系統
