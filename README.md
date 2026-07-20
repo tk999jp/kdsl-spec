@@ -128,7 +128,9 @@ runtime evaluator
 ```bash
 python tools/validator/kdsl_identity_lint.py
 python tools/validator/kdsl_agent_lint.py examples/kanji/agent-codex-run.kdsl.md
+python tools/validator/kdsl_agent_operational_regression.py
+python tools/validator/kdsl_run_changed_git_regression.py
 python tools/validator/run_canonical_samples.py
 ```
 
-GitHub Actions `KDSL Validation`でcompile、identity、Agent contract、canonical regressionを実行する。形式passはCodex Agent実効性やRT:vを証明しない。
+GitHub Actions `KDSL Validation`でcompile、identity、Agent contract、状態遷移、Git repository上のRunChanged帰属、canonical regressionを実行する。形式／自動回帰passはCodex Agent実効性やRT:vを証明しない。
