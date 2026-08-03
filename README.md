@@ -6,9 +6,6 @@ KDSL（漢字圧縮DSL）、軽量Agent実行層、最小R1結果仕様の正本
 
 ```text
 KDSL:=日本語promptを漢字語幹／記号／最小制御語へ再構成する、LLM直投入可能な漢字圧縮DSL
-```
-
-```text
 KDSL本体:=漢字圧縮
 KDSL-Intl:=非漢字言語／ASCII／英語KEY向け互換subset
 KDSL本体 > KDSL-Intl
@@ -27,30 +24,30 @@ KDSL本体 > KDSL-Intl
 > 人間修正可能
 ```
 
-安全契機はU明示重大条件の限定保護。潜在risk推測による自動増殖を禁止する。
+安全契機はユーザー明示重大条件の限定保護。潜在risk推測による自動増殖を禁止する。
 
 ## Agent goal
 
 ```text
-U明示scopeを必要最小契約で調査→実装→検証→完了
+ユーザー明示scopeを必要最小契約で調査→実装→検証→完了
 ```
 
 通常のCodex開発run:
 
 ```text
-U自然文
+ユーザー自然文
 →ChatGPT converter
 →KDSL_PROMPT＋K1
 →Codex再帰実行
 →R1
 →ChatGPT
-→U
+→ユーザー
 ```
 
 厳密handoff／中断再開時だけ:
 
 ```text
-U指示＋PF1
+ユーザー指示＋PF1
 →P1L
 →識別付きK1
 →Codex再帰実行
@@ -84,13 +81,33 @@ Agent lint: spec/lint/kdsl-agent-lint.md
 用語: spec/glossary.md
 ```
 
+## Repository構成
+
+```text
+spec/              正本
+prompts/           単独投入用compiled prompt／非正本
+templates/         再利用部品／非正本
+examples/          regression・利用例／非正本
+tools/validator/   軽量lint・回帰実装／非正本
+docs/              overview／状態／監査／履歴
+.github/workflows/ CI
+```
+
+`main`には現行運用と検証に必要な資産だけを置く。旧framework実験、実装前validator設計、完了済みdraft計画はGit履歴、`v0.1.0-draft` tag、`archive/kdsl-framework-20260718`へ保持する。
+
+履歴要約:
+
+```text
+docs/history/v0.1.0-draft.md
+```
+
 ## 単独Project投入
 
 ```text
 prompts/kdsl-converter-standalone.md
 ```
 
-ChatGPT Project instructions／単独instruction向けに、KDSL identity、Core記法、mode、converter、lintを1fileへ統合したcompiled prompt。正本ではなく配布・投入用であり、正本と競合する場合は `spec/` 配下を優先する。
+ChatGPT Project instructions／単独instruction向けに、KDSL identity、Core記法、mode、converter、lintを1fileへ統合したcompiled prompt。正本ではなく配布・投入用であり、正本と競合する場合は`spec/`配下を優先する。
 
 ## 現在状態
 
