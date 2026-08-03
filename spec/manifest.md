@@ -3,14 +3,14 @@
 ## 参照順位
 
 ```text
-1. U明示指示
+1. ユーザー明示指示
 2. spec/core/kdsl-spec.md
 3. spec/core/kdsl-core.md
 4. spec/core/kdsl-modes.md
 5. profile／Agent／R1／lint／bridge正本
 6. prompts／templates／examples
 7. tools／validator
-8. docs／review
+8. docs／review／history
 ```
 
 ## 正本地図
@@ -45,7 +45,7 @@ R1:=spec/r1/r1-result-spec.md
 ```
 
 ```text
-KDSL Core > Agent層 > profile／R1 > lint／bridge > prompt／template／example／tool
+KDSL Core > Agent層 > profile／R1 > lint／bridge > prompt／template／example／tool／docs
 ```
 
 下位fileが上位正本と競合する場合、上位を優先する。
@@ -73,20 +73,31 @@ spec/lint/kdsl-lint-checklist.md
 ## 非正本
 
 ```text
-prompts（compiled配布物）
-templates
-examples
-tools／validator
-docs／reviews
-archive branch
+prompts/: compiled配布物
+templates/: 再利用部品
+examples/: regression／利用例
+tools/validator/: 非権威的lint／回帰
+docs/reviews/: 採否・評価記録
+docs/history/: 完了済み歴史要約
+archive branch: 旧framework資産
 ```
 
 validator pass・CI pass・実装量・Phase完了記録を正本化根拠にしない。
 
+## Main配置原則
+
+```text
+main:=現行正本＋現行配布物＋現行検証＋必要最小履歴要約
+旧framework実験→archive branch
+実装済toolの旧design draft→Git履歴／tag／archive
+完了済み計画／checklist→docs/historyへ統合
+同一内容のPhase／closeout記録をmainへ累積禁止
+```
+
 ## Agent層
 
 ```text
-目的:=U明示scopeを必要最小契約で完走
+目的:=ユーザー明示scopeを必要最小契約で完走
 標準:=KDSL_PROMPT＋K1
 P1L:=厳密handoff／中断再開時のみ
 P1:=任意短縮／P1Lと併記禁止／可逆性保証なし
@@ -111,15 +122,16 @@ Binding Evidence
 runtime evaluator
 ```
 
-## 旧v2資産
+## 履歴
 
 ```text
-旧Safety Gate Registry／R1C／Packet／Normalization／semantic parser／重P1 schema／旧K1／旧PF1／Binding Evidence
-:= archive/kdsl-framework-20260718の回収候補
-:= 現Agent層の正本ではない
+初期draft固定点: v0.1.0-draft
+初期draft要約: docs/history/v0.1.0-draft.md
+旧framework: archive/kdsl-framework-20260718
+旧v2採否: docs/reviews/kdsl-v2-asset-audit.md
 ```
 
-旧P1／K1系統をそのまま復帰せず、Agent完走に必要な機能核だけを `kdsl-agent@1.1` として再定義した。
+旧P1／K1系統をそのまま復帰せず、Agent完走に必要な機能核だけを`kdsl-agent@1.1`として再定義した。
 
 ## 変更分類
 
@@ -152,4 +164,5 @@ patch:
 誤記修正
 example追加
 compiled prompt同期
+repository配置整理
 ```
