@@ -1,14 +1,15 @@
 # KDSL Overview
 
 ```text
-状態:=漢字identity復元監査
+状態:=canonical
 KDSL:=日本語prompt向け漢字圧縮DSL
+Agent:=明示scope完走用軽量実行層
 R1:=短い作業結果報告
 ```
 
 ## 目的
 
-KDSLは、自然文promptを次へ再構成する。
+KDSLは自然文promptを次へ再構成する。
 
 ```text
 自然文
@@ -26,10 +27,13 @@ KDSLは、自然文promptを次へ再構成する。
 ```text
 Core:=identity／記法／mode
 Profile:=dev-prompt／compact-prompt／converter／Intl
+Agent:=KDSL_PROMPT＋K1／条件付きP1L・P1・PF1
 R1:=簡潔KDSL_RESULT
-Lint:=漢字退行／意味欠落／過剰安全検出
-Bridge:=KDSL-DP／P1境界
+Lint:=漢字退行／意味欠落／過剰安全／Agent契約検出
+Bridge:=KDSL-DP／Agent／R1境界
+Prompt:=単独投入用compiled配布物
 Template／Example:=非正本の実用部品
+Validator:=非権威的lint／回帰
 ```
 
 ## 非漢字言語
@@ -63,6 +67,17 @@ KDSL-Intl:=非漢字言語向け派生subset
 未依頼hardening
 ```
 
+## Agent
+
+```text
+目的:=ユーザー明示scopeを必要最小契約で調査→実装→検証→完了
+通常:=KDSL_PROMPT＋K1
+厳密handoff／中断再開:=PF1参照＋P1L＋識別付きK1
+P1:=任意短縮／P1Lと併記禁止／可逆性保証なし
+```
+
+Agent層はKDSL Core下位。K1更新で目的／対象／権限を変更しない。
+
 ## R1
 
 ```text
@@ -82,17 +97,35 @@ commit:
 
 R1は成果物ではなく一時報告。build／test／CI passはRT:vではない。
 
-## 現在の検証
+## 単独投入
+
+```text
+prompts/kdsl-converter-standalone.md
+```
+
+Core／mode／converter／lintを統合した非正本compiled prompt。正本競合時は`spec/`を優先する。
+
+## 検証
 
 ```bash
 python tools/validator/kdsl_identity_lint.py
+python tools/validator/kdsl_standalone_lint.py
+python tools/validator/kdsl_agent_lint.py examples/kanji/agent-codex-run.kdsl.md
+python tools/validator/kdsl_agent_operational_regression.py
+python tools/validator/kdsl_run_changed_git_regression.py
+python tools/validator/kdsl_compression_evaluation.py
 python tools/validator/run_canonical_samples.py
 ```
 
-validatorは補助であり、意味同等・U承認・runtime・release readinessを証明しない。
+validatorは補助であり、意味同等、ユーザー承認、Agent実効性、runtime、release readinessを証明しない。
 
-## 旧v2系統
+## 履歴
 
-Safety Gate Registry、R1C、Packet、Normalization、semantic parser、P1 schema、K1／PF1、Binding Evidenceは `archive/kdsl-framework-20260718` の回収候補。KDSL本体の正本ではない。
+```text
+初期draft: tag v0.1.0-draft
+旧framework: archive/kdsl-framework-20260718
+初期draft要約: docs/history/v0.1.0-draft.md
+旧v2採否: docs/reviews/kdsl-v2-asset-audit.md
+```
 
-採否詳細は `docs/reviews/kdsl-v2-asset-audit.md` を参照する。
+Safety Gate Registry、R1C、Packet、Normalization、semantic parser、旧重P1／K1／PF1、Binding Evidenceは現行正本ではない。
