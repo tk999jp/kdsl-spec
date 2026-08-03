@@ -13,7 +13,9 @@
 ### Added
 
 - `spec/profiles/kdsl-profile-compact-prompt.md`
+- `prompts/kdsl-converter-standalone.md`
 - `docs/reviews/kdsl-v2-asset-audit.md`
+- `docs/history/v0.1.0-draft.md`
 - `tools/validator/kdsl_document_lint.py`
 - `tools/validator/r1_result_lint.py`
 - `tools/validator/run_canonical_samples.py`
@@ -25,6 +27,8 @@
 - active task templateを日本語構造KEYへ置換。
 - 現役例と歴史例を分離。
 - GitHub Actionsをidentity＋sample回帰へ変更。
+- `main`を現行正本・配布物・検証へ集中し、旧実験／未実装design／完了済みdraft計画を履歴側へ整理。
+- Validator案内を現行実装一覧へ同期。
 
 ### Archived
 
@@ -35,6 +39,8 @@ lexicon:kanji-v1／KDSL-CP漢／CP-Lift
 Safety Gate Registry／R1C／Packet／Normalization
 semantic parser v2／P1 schema／K1／PF1／Binding Evidence
 大量closeout／status同期
+experimental Actor Model／Protocol Stack
+実装前validator design draft
 ```
 
 採否詳細: `docs/reviews/kdsl-v2-asset-audit.md`
@@ -47,13 +53,14 @@ GitHub Release: 未作成
 Release Assets: なし
 ```
 
-release操作は今回scope外。Uの別途明示承認が必要。
+release操作は今回scope外。ユーザーの別途明示承認が必要。
 
 ## Historical v0.1.0-draft
 
 ```text
 tag: v0.1.0-draft
 tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
+record: docs/history/v0.1.0-draft.md
 ```
 
 初期draftと以後の旧framework履歴は改変せず保持する。
