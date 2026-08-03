@@ -8,7 +8,7 @@
 3. spec/core/kdsl-core.md
 4. spec/core/kdsl-modes.md
 5. profile／Agent／R1／lint／bridge正本
-6. templates／examples
+6. prompts／templates／examples
 7. tools／validator
 8. docs／review
 ```
@@ -45,14 +45,35 @@ R1:=spec/r1/r1-result-spec.md
 ```
 
 ```text
-KDSL Core > Agent層 > profile／R1 > lint／bridge > template／example／tool
+KDSL Core > Agent層 > profile／R1 > lint／bridge > prompt／template／example／tool
 ```
 
 下位fileが上位正本と競合する場合、上位を優先する。
 
+## 配布用compiled prompt
+
+```text
+prompts/kdsl-converter-standalone.md
+:= ChatGPT Project instructions／単独instruction向け
+:= identity＋Core＋mode＋converter＋lint統合
+:= 非正本／配布・投入用
+:= 正本競合時はspec/優先
+```
+
+生成元:
+
+```text
+spec/core/kdsl-spec.md
+spec/core/kdsl-core.md
+spec/core/kdsl-modes.md
+spec/profiles/kdsl-converter-prompt.md
+spec/lint/kdsl-lint-checklist.md
+```
+
 ## 非正本
 
 ```text
+prompts（compiled配布物）
 templates
 examples
 tools／validator
@@ -130,4 +151,5 @@ patch:
 説明修正
 誤記修正
 example追加
+compiled prompt同期
 ```

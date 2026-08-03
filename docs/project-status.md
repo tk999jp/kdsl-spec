@@ -2,7 +2,7 @@
 
 ```text
 status: canonical
-updated: 2026-07-20
+updated: 2026-08-04
 branch: main
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
@@ -28,6 +28,9 @@ Agent lint／回帰例: 完了
 Agent運用状態遷移回帰: 完了
 Codex実run三経路確認: 完了
 RunChanged契約／R1変更file帰属: 検証完了
+漢字圧縮定量評価: 完了
+単独Project用compiled converter: 完了
+standalone専用lint／CI統合: 完了
 ```
 
 ## 正本
@@ -46,6 +49,17 @@ R1:=簡潔一時報告
 validator:=非権威
 ```
 
+## 配布用compiled prompt
+
+```text
+path: prompts/kdsl-converter-standalone.md
+用途: ChatGPT Project instructions／単独instruction
+状態: 非正本／配布・投入用
+生成元: identity＋Core＋mode＋converter＋lint
+競合: spec/正本優先
+検査: tools/validator/kdsl_standalone_lint.py
+```
+
 ## Agent使用
 
 ```text
@@ -58,9 +72,10 @@ P1使用→P1Lと併記禁止
 ## 検証状態
 
 ```text
-validator compile: pass
-identity lint: pass
-Agent contract lint: pass
+validator compile: CI対象
+identity lint: CI対象
+standalone converter lint: CI対象
+Agent contract lint: CI対象
 Agent運用状態遷移回帰: pass
 - 通常run完了収束: pass
 - 承認境界直前停止: pass
@@ -74,15 +89,37 @@ Git repository RunChanged回帰: pass
 - 開始状態復元除外: pass
 - test直接編集／実行のみ分離: pass
 - InitialHEAD／FinalHEAD commit差分: pass
+圧縮定量評価: pass
 canonical regression: pass
 Codex実run再帰完走: verified
 Codex実run承認境界停止: verified
 Codex実run中断再開: verified
 ```
 
-運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
+`CI対象`はworkflow登録状態を示し、特定commitのcheck成功を意味しない。運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
 
-### Codex実run確認範囲
+## 圧縮定量評価
+
+```text
+確認日: 2026-07-20
+対象: AI coding／業務blog meta／創作seed
+尺度: 空白除外Unicode文字数
+min本文: 45.1%削減
+min投入全体: 30.5%削減
+dense本文: 48.0%削減
+dense投入全体: 32.3%削減
+概念marker: 21/21 pass
+script: tools/validator/kdsl_compression_evaluation.py
+CI: KDSL Validationへ統合
+```
+
+```text
+通常運用:=mode:min
+dense:=minより実投入量減少時／AI直投入密度優先時
+marker pass!=完全意味同等／応答品質証明
+```
+
+## Codex実run確認範囲
 
 ```text
 確認日: 2026-07-19
