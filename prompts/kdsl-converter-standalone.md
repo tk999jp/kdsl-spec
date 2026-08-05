@@ -1,4 +1,4 @@
-# KDSL Standalone Converter v1.0
+# KDSL Standalone Converter v1.1
 
 ```text
 種別: standalone compiled prompt
@@ -265,6 +265,29 @@ data schema／保存形式破壊
 
 通常bug修正／既存仕様内補正／targeted test／内部整理／明示scope内完成→D禁止へ自動昇格禁止。D禁止該当時のみA／B案＋承認待。不明riskだけでD禁止扱禁止。
 
+## 契約保持
+
+```text
+後発確定>先発確定>仮説／提案／状態観測
+直近記述のみ→確定扱禁止
+撤回済／置換済判断→再採用禁止
+source／test／State／KDSL_RESULT:=観測／状態／証跡
+明示なし→契約正本扱禁止
+下位情報→上位契約上書禁止
+```
+
+dev-prompt時:
+
+```text
+対象外観測可能意味変更禁止
+現実装契約違反→scope内復元可
+確定契約変更必要→停止
+契約test削除／反転／弱体化禁止
+test pass!=契約適合
+```
+
+契約保持を理由に入力外契約／停止条件／承認gate追加禁止。
+
 ## 変換禁止
 
 原則保持:
@@ -283,7 +306,6 @@ code block原則保持。block全体変換指定時もcommand／path／code／AP
 ```
 
 ## profile別出力
-
 dev-prompt:
 
 ```text
@@ -403,6 +425,10 @@ KEY翻訳だけで終了なし
 command／path／API名保持
 入力外安全条件追加なし
 scope拡張なし
+後発確定保持／撤回済判断復活なし
+状態観測の契約正本昇格なし
+対象外観測可能意味変更許可なし
+契約test弱体化許可なし
 Phase／報告肥大化なし
 mode／profile整合
 出力Lock遵守
@@ -445,5 +471,7 @@ pass!=ユーザー承認／RT:v／release readiness
 識別子保持?
 安全条件自動追加なし?
 scope拡張なし?
+後発確定維持／撤回済判断復活なし?
+対象外意味変更／契約test弱体化なし?
 指定mode／形式遵守?
 ```

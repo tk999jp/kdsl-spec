@@ -1,4 +1,4 @@
-# KDSL Converter Prompt v2.0-kanji-canonical
+# KDSL Converter Prompt v2.1-kanji-canonical
 
 ## 役割
 
@@ -26,6 +26,7 @@ surface: 漢字圧縮
 →条件／遷移記号化
 →構造KEY短縮
 →明示不可侵条件照合
+→契約世代／正本／意味scope照合
 →identity lint
 ```
 
@@ -64,6 +65,19 @@ E／lintのみ→変換なし
 F／CompactPrompt→漢字圧縮維持
 G／Intl→KDSL-Intl
 ```
+
+## 契約保持
+
+```text
+同一事項競合→後発確定>先発確定>仮説／提案／状態観測
+直近記述のみ→確定扱禁止
+撤回済／置換済判断→再採用禁止
+状態観測／source／test／State／結果証跡→明示なし契約正本扱禁止
+下位情報→上位契約上書禁止
+対象外の観測可能意味変更を許可する表現追加禁止
+```
+
+契約保持は入力意味の保存であり、入力外の契約・停止条件・承認gateを追加する根拠にしない。
 
 ## 安全契機
 

@@ -1,4 +1,4 @@
-# KDSL Core v2.0-kanji-canonical
+# KDSL Core v2.1-kanji-canonical
 
 ## 優先
 
@@ -109,6 +109,22 @@ targeted test追加
 ```
 
 は自動的にD禁止へ昇格しない。
+
+## 契約保持
+
+```text
+同一事項競合→後発確定>先発確定>仮説／提案／状態観測
+直近記述のみ→確定扱禁止
+撤回済／置換済判断→再採用禁止
+状態観測／実装／test／結果証跡→明示なし契約正本扱禁止
+下位情報→上位契約上書禁止
+```
+
+```text
+対象外の観測可能意味変更禁止
+意味変更:=集合演算／追加／置換／結合／clear／保存範囲／routing／fallback／default／副作用
+内部rename／refactor可; 対象外動作同値必須
+```
 
 ## 変換禁止
 
