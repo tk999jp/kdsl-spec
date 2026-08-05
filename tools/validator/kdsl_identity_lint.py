@@ -37,15 +37,32 @@ REQUIRED = {
         "安全契機:=Uが明示した重大条件の限定保護",
         "標準Agent:=KDSL_PROMPT＋K1",
         "P1:=任意短縮転送表現",
+        "同一事項競合→後発確定>先発確定>仮説／提案／状態観測",
+        "撤回済／置換済判断→再採用禁止",
+        "対象外の観測可能意味変更禁止",
+    ),
+    "spec/core/kdsl-core.md": (
+        "直近記述のみ→確定扱禁止",
+        "状態観測／実装／test／結果証跡→明示なし契約正本扱禁止",
+        "内部rename／refactor可; 対象外動作同値必須",
     ),
     "spec/profiles/kdsl-profile-dev-prompt.md": (
         "agent: required",
         "通常投入は `KDSL_PROMPT＋K1`",
         "P1は任意短縮",
         "形式lint pass!=Codex Agent実効性",
+        "直近U確定 > canonical contract > 確認済実機契約",
+        "現実装が確定契約違反→scope内復元可",
+        "確定契約testの削除／期待値反転／弱体化禁止",
+        "test pass != 契約適合",
     ),
     "spec/profiles/kdsl-profile-compact-prompt.md": (
         "目的:", "材料:", "出力:", "規則:", "確認:",
+    ),
+    "spec/profiles/kdsl-converter-prompt.md": (
+        "契約世代／正本／意味scope照合",
+        "撤回済／置換済判断→再採用禁止",
+        "対象外の観測可能意味変更を許可する表現追加禁止",
     ),
     "spec/agent/kdsl-agent-execution.md": (
         "Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了",
@@ -56,6 +73,12 @@ REQUIRED = {
     ),
     "spec/r1/r1-result-spec.md": (
         "KDSL_RESULT:", "状態:", "実機:", "次:", "commit:",
+    ),
+    "spec/lint/kdsl-lint-checklist.md": (
+        "後発確定保持／撤回済判断復活なし",
+        "状態観測の契約正本昇格なし",
+        "契約変更と契約違反復元の混同なし",
+        "契約test弱体化許可なし",
     ),
     "docs/reviews/kdsl-v2-asset-audit.md": (
         "監査対象: PR #1〜#145", "採否未決: 0", "PR範囲未監査: 0", "Agent再審査",
