@@ -17,16 +17,16 @@
 
 | Path | 責務 |
 |---|---|
-| `spec/core/kdsl-spec.md` | KDSL identity／第一目的／全体定義 |
-| `spec/core/kdsl-core.md` | 演算子／圧縮文型／保護語／変換禁止 |
+| `spec/core/kdsl-spec.md` | KDSL identity／第一目的／全体定義／契約世代・正本・意味scope |
+| `spec/core/kdsl-core.md` | 演算子／圧縮文型／保護語／契約保持／変換禁止 |
 | `spec/core/kdsl-modes.md` | 圧縮強度／限定安全 |
-| `spec/profiles/kdsl-profile-dev-prompt.md` | Codex向け漢字dev-prompt／Agent完走 |
+| `spec/profiles/kdsl-profile-dev-prompt.md` | Codex向け漢字dev-prompt／Agent完走／契約統制 |
 | `spec/profiles/kdsl-profile-compact-prompt.md` | 一般LLM／Project向け短縮prompt |
-| `spec/profiles/kdsl-converter-prompt.md` | 変換契約 |
+| `spec/profiles/kdsl-converter-prompt.md` | 変換契約／契約世代保持 |
 | `spec/profiles/kdsl-profile-intl.md` | 非漢字派生subset |
 | `spec/agent/kdsl-agent-execution.md` | 最小Agent経路／K1／条件付きP1L・P1・PF1 |
 | `spec/r1/r1-result-spec.md` | 簡潔結果報告 |
-| `spec/lint/kdsl-lint-checklist.md` | identity／圧縮／過剰安全lint |
+| `spec/lint/kdsl-lint-checklist.md` | identity／圧縮／過剰安全／契約保持lint |
 | `spec/lint/kdsl-agent-lint.md` | Agent契約lint |
 | `spec/bridge/kdsl-adps-bridge.md` | KDSL／Agent／R1境界 |
 | `spec/glossary.md` | 用語 |
@@ -35,6 +35,7 @@
 
 ```text
 漢字identity:=spec/core/kdsl-spec.md
+契約世代／正本／意味scope:=spec/core/kdsl-spec.md
 演算子:=spec/core/kdsl-core.md
 mode／safety:=spec/core/kdsl-modes.md
 Codex運用:=spec/profiles/kdsl-profile-dev-prompt.md
@@ -153,6 +154,7 @@ compatible:
 ```text
 圧縮例追加
 明示保護語追加
+契約世代／正本／意味scope規則追加
 Agent lint追加
 条件付きP1L／PF1項目追加
 ```
