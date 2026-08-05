@@ -2,7 +2,7 @@
 
 ```text
 status: canonical
-updated: 2026-08-04
+updated: 2026-08-05
 branch: main
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
@@ -31,6 +31,8 @@ RunChanged契約／R1変更file帰属: 検証完了
 漢字圧縮定量評価: 完了
 単独Project用compiled converter: 完了
 standalone専用lint／CI統合: 完了
+standalone参照behavior corpus／CI統合: 完了
+repository旧資産整理: 完了
 ```
 
 ## 正本
@@ -58,6 +60,7 @@ path: prompts/kdsl-converter-standalone.md
 生成元: identity＋Core＋mode＋converter＋lint
 競合: spec/正本優先
 検査: tools/validator/kdsl_standalone_lint.py
+behavior: tools/validator/kdsl_standalone_behavior.py
 ```
 
 ## Agent使用
@@ -75,6 +78,14 @@ P1使用→P1Lと併記禁止
 validator compile: CI対象
 identity lint: CI対象
 standalone converter lint: CI対象
+standalone behavior regression: pass
+- case: 12
+- kind: 7
+- required marker: 63/63
+- exact identifier: 12/12
+- min／dense pair: 2/2
+- output lock violation: 0
+- safety growth violation: 0
 Agent contract lint: CI対象
 Agent運用状態遷移回帰: pass
 - 通常run完了収束: pass
@@ -94,9 +105,45 @@ canonical regression: pass
 Codex実run再帰完走: verified
 Codex実run承認境界停止: verified
 Codex実run中断再開: verified
+ChatGPT Project standalone実投入: RT:u
 ```
 
-`CI対象`はworkflow登録状態を示し、特定commitのcheck成功を意味しない。運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
+`CI対象`はworkflow登録状態を示し、特定commitのcheck成功を意味しない。standalone behavior regressionは人間review済み参照出力のbounded regressionであり、任意LLMの同一出力、完全意味同等、ChatGPT Project RT:vを証明しない。運用回帰passは状態遷移契約の自動確認。Git repository回帰は一時repositoryで実Git操作とBaselineState／FinalState比較を確認する。これらの成功だけで、任意Agentが対象repositoryのbaselineを漏れなく取得することやCodex Agent実効性を一般保証しない。
+
+## Standalone behavior検証
+
+```text
+確認日: 2026-08-05
+corpus: examples/behavior/standalone-cases.toml
+script: tools/validator/kdsl_standalone_behavior.py
+review: docs/reviews/kdsl-standalone-behavior-validation.md
+対象: AI coding／創作seed／C〜G／不可侵状態／識別子／安全非増殖
+repository回帰: pass
+ChatGPT Project実投入: RT:u
+```
+
+確認済:
+
+```text
+A／B min・dense形式
+C結果のみ出力Lock
+D元文／min／dense比較
+E変換なしlint
+F CompactPrompt構造
+G KDSL-Intl派生境界
+明示禁止／未確認／未実行／承認待保持
+command／path／API名完全一致
+入力外承認gate／停止条件／hardening非追加
+dense採用:=minより実投入量が短い場合
+```
+
+未確認:
+
+```text
+実ChatGPT Projectでの同corpus応答
+model更新後の応答安定性
+全model／全platform一般成立
+```
 
 ## 圧縮定量評価
 

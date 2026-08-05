@@ -1,0 +1,283 @@
+version = 1
+status = "reference-corpus"
+note = "参照変換結果。実model応答の一般保証ではない。"
+
+[[case]]
+id = "dev-min"
+kind = "min"
+category = "AI coding"
+group = "dev"
+recommended_mode = "dense"
+input = '''
+MidFDでBreadcrumb root表示を修正してください。対象repoはG:\source\repos\MidFDです。Controls/BreadcrumbPathControl.csと関連testだけを調査し、Path.GetFullPathの挙動は変えないでください。検証はdotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTestsを実行してください。stage、commit、pushは禁止です。buildやtest成功をRT:v扱いしないでください。
+'''
+output = '''
+KDSL_PROMPT:
+format: KDSL
+profile: dev-prompt
+mode: min
+safety: normal
+agent: required
+
+局面: MidFD Breadcrumb root表示補正
+目的: root表示修正
+成功条件: root表示補正／既存navigation・UNC・drive判定維持
+正本: G:\source\repos\MidFD
+対象: Controls/BreadcrumbPathControl.cs／関連test
+非対象: Path.GetFullPath挙動変更
+作業: 現実装・test確認→原因限定→必要箇所修正
+試験: dotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTests
+検証: build／test pass != RT:v
+権限: 読取／編集／試験=可、stage／commit／push=禁止
+停止条件: 対象外仕様変更必要／baseline不一致
+'''
+required = ["KDSL_PROMPT:", "profile: dev-prompt", "mode: min", "stage／commit／push=禁止", "build／test pass != RT:v"]
+forbidden = ["Path.GetFullPath変更", "RT:v済", "承認待"]
+identifiers = ['G:\source\repos\MidFD', "Controls/BreadcrumbPathControl.cs", "Path.GetFullPath", 'dotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTests']
+prefix = "KDSL_PROMPT:"
+
+[[case]]
+id = "dev-dense"
+kind = "dense"
+category = "AI coding"
+group = "dev"
+recommended_mode = "dense"
+input = '''
+MidFDでBreadcrumb root表示を修正してください。対象repoはG:\source\repos\MidFDです。Controls/BreadcrumbPathControl.csと関連testだけを調査し、Path.GetFullPathの挙動は変えないでください。検証はdotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTestsを実行してください。stage、commit、pushは禁止です。buildやtest成功をRT:v扱いしないでください。
+'''
+output = '''
+KDSL_PROMPT:
+format:KDSL
+profile:dev-prompt
+mode:dense
+safety:normal
+agent:required
+局面:MidFD Breadcrumb root補正;目的:root表示修正;正本:G:\source\repos\MidFD;対象:Controls/BreadcrumbPathControl.cs/関連test;非対象:Path.GetFullPath挙動変更;作業:現実装・test確認→原因限定→必要修正;試験:dotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTests;検証:build/test pass!=RT:v;権限:読取/編集/試験=可,stage/commit/push=禁止
+'''
+required = ["KDSL_PROMPT:", "profile:dev-prompt", "mode:dense", "stage/commit/push=禁止", "build/test pass!=RT:v"]
+forbidden = ["Path.GetFullPath変更", "RT:v済", "承認待"]
+identifiers = ['G:\source\repos\MidFD', "Controls/BreadcrumbPathControl.cs", "Path.GetFullPath", 'dotnet test .\tests\MidFD.Tests\MidFD.Tests.csproj --filter FullyQualifiedName~PathModelTests']
+prefix = "KDSL_PROMPT:"
+
+[[case]]
+id = "creative-min"
+kind = "min"
+category = "創作seed"
+group = "creative"
+recommended_mode = "min"
+input = '''
+入力された一行アイデアから、異常設定、感情の核、観測事実、不可逆の変化、最後に残る状態を抽出してください。完成シナリオや本文は作らず、各項目を短く出力してください。入力にない固有名詞や設定を追加しないでください。
+'''
+output = '''
+format: KDSL
+profile: compact-prompt
+mode: min
+safety: normal
+
+目的: 一行案→創作seed抽出
+材料: 入力案のみ
+出力: 異常設定／感情核／観測事実／不可逆変化／残存状態
+規則: 各項目短文
+禁止: 完成scenario／本文生成／入力外固有名・設定追加
+'''
+required = ["profile: compact-prompt", "mode: min", "異常設定", "感情核", "観測事実", "不可逆変化", "残存状態"]
+forbidden = ["完成scenario生成", "入力外設定追加可"]
+prefix = "format: KDSL"
+
+[[case]]
+id = "creative-dense"
+kind = "dense"
+category = "創作seed"
+group = "creative"
+recommended_mode = "min"
+input = '''
+入力された一行アイデアから、異常設定、感情の核、観測事実、不可逆の変化、最後に残る状態を抽出してください。完成シナリオや本文は作らず、各項目を短く出力してください。入力にない固有名詞や設定を追加しないでください。
+'''
+output = '''
+format:KDSL;profile:compact-prompt;mode:dense;safety:normal
+目的:一行案→創作seed抽出;材料:入力案限定;出力:異常設定/感情核/観測事実/不可逆変化/最後に残る状態;規則:各項目短文;禁止:完成scenario/本文生成/入力外固有名詞・設定追加
+'''
+required = ["profile:compact-prompt", "mode:dense", "異常設定", "感情核", "観測事実", "不可逆変化", "最後に残る状態"]
+forbidden = ["完成scenario生成可", "入力外設定追加可"]
+prefix = "format:KDSL"
+
+[[case]]
+id = "result-only"
+kind = "result-only"
+category = "C出力Lock"
+input = '''
+C。次のpromptをdense結果だけで変換してください。記事本文だけを根拠に100字以内で要約し、本文外の事実を追加しない。
+'''
+output = '''
+format:KDSL
+profile:compact-prompt
+mode:dense
+safety:normal
+目的:記事要約;材料:記事本文限定;出力:100字以内要約;禁止:本文外事実追加
+'''
+required = ["format:KDSL", "mode:dense", "100字以内", "本文外事実追加"]
+forbidden = ["変換しました", "説明", "比較", "```"]
+prefix = "format:KDSL"
+
+[[case]]
+id = "compare"
+kind = "compare"
+category = "D比較"
+input = '''
+D。入力文をminとdenseで比較してください。ファイル名とURLは変更せず、未確認事項を確認済みにしない。
+'''
+output = '''
+元文:
+入力文をminとdenseで比較してください。ファイル名とURLは変更せず、未確認事項を確認済みにしない。
+
+min:
+目的: 入力文KDSL比較
+規則: file名／URL保持
+禁止: 未確認→確認済扱
+
+dense:
+目的:入力文KDSL比較;規則:file名/URL保持;禁止:未確認→確認済扱
+
+削減点:
+助詞削減／同義統合／条件記号化
+
+意味risk:
+denseは可読性低下。識別子・未確認状態は保持。
+
+推奨:
+mode:min
+'''
+required = ["元文:", "min:", "dense:", "削減点:", "意味risk:", "推奨:", "未確認→確認済扱"]
+forbidden = ["識別子翻訳"]
+prefix = "元文:"
+
+[[case]]
+id = "lint-only"
+kind = "lint"
+category = "E lint"
+input = '''
+E。次のKDSLをlintしてください。
+GOAL: 調査する
+WORK: 必要なら修正する
+安全のため承認gateを追加する
+'''
+output = '''
+lint:
+状態: fail
+違反:
+- 英語KEY退行: GOAL／WORK
+- KEY翻訳だけで本文圧縮不足
+- 入力外承認gate追加
+変換: 未実施
+'''
+required = ["lint:", "状態: fail", "英語KEY退行", "本文圧縮不足", "入力外承認gate追加", "変換: 未実施"]
+forbidden = ["format: KDSL", "目的: 調査", "承認gate追加済"]
+prefix = "lint:"
+
+[[case]]
+id = "compact-project"
+kind = "compact"
+category = "F CompactPrompt"
+input = '''
+F。会議メモだけを材料に、決定事項、未決事項、担当者、期限を整理するProject用promptへ変換してください。推測で担当者や期限を補わないでください。
+'''
+output = '''
+format: KDSL
+profile: compact-prompt
+mode: min
+safety: normal
+language: ja
+
+目的: 会議memo整理
+材料: 会議memoのみ
+出力: 決定事項／未決事項／担当者／期限
+規則: 簡潔／未記載は未確認
+確認: 担当者・期限推測補完なし
+'''
+required = ["profile: compact-prompt", "目的:", "材料:", "出力:", "規則:", "確認:", "未確認"]
+forbidden = ["担当者自動補完", "期限自動補完"]
+prefix = "format: KDSL"
+
+[[case]]
+id = "intl"
+kind = "intl"
+category = "G KDSL-Intl"
+input = '''
+G。ASCIIだけを使える環境向けに、入力だけを根拠に3項目で要約するpromptへ変換してください。
+'''
+output = '''
+subset: KDSL-Intl
+status: derived-non-kanji-subset
+goal: summarize input only
+output: exactly 3 items
+rules: ASCII only; no external facts
+boundary: KDSL Core remains kanji-compression canonical
+'''
+required = ["KDSL-Intl", "derived-non-kanji-subset", "exactly 3 items", "KDSL Core remains kanji-compression canonical"]
+forbidden = ["KDSL-Intl is KDSL Core", "KDSL Core is language-neutral"]
+prefix = "subset: KDSL-Intl"
+
+[[case]]
+id = "approval-unverified"
+kind = "min"
+category = "不可侵状態"
+input = '''
+変更案は承認待です。実装、test、commitは未実行です。対象環境のruntimeは未確認なのでRT:vと記録しないでください。rollbackはユーザー承認なしに実行しないでください。
+'''
+output = '''
+format: KDSL
+profile: compact-prompt
+mode: min
+safety: normal
+
+状態: 変更案承認待
+未実行: 実装／test／commit
+実機: 未確認／RT:v記録禁止
+禁止: ユーザー承認なしrollback
+'''
+required = ["承認待", "未実行", "実機: 未確認", "RT:v記録禁止", "ユーザー承認なしrollback"]
+forbidden = ["承認済", "実行済", "RT:v済", "rollback実行可"]
+prefix = "format: KDSL"
+
+[[case]]
+id = "identifier-preservation"
+kind = "min"
+category = "技術識別子"
+input = '''
+C:\work\app\config.jsonを読み、HttpClient.GetAsyncとParser.ParseValueの呼出関係を説明してください。curl https://api.example.com/v1/itemsは変更せず保持してください。
+'''
+output = '''
+format: KDSL
+profile: compact-prompt
+mode: min
+safety: normal
+目的: 呼出関係説明
+材料: C:\work\app\config.json
+対象: HttpClient.GetAsync／Parser.ParseValue
+保持: curl https://api.example.com/v1/items
+'''
+required = ["目的: 呼出関係説明", "材料:", "対象:", "保持:"]
+forbidden = ["HTTPクライアント取得非同期", "解析器.値解析"]
+identifiers = ['C:\work\app\config.json', "HttpClient.GetAsync", "Parser.ParseValue", "curl https://api.example.com/v1/items"]
+prefix = "format: KDSL"
+
+[[case]]
+id = "no-safety-growth"
+kind = "min"
+category = "安全非増殖"
+input = '''
+商品説明を80字以内に短縮し、色、素材、寸法を残してください。
+'''
+output = '''
+format: KDSL
+profile: compact-prompt
+mode: min
+safety: normal
+目的: 商品説明短縮
+材料: 元説明
+出力: 80字以内
+保持: 色／素材／寸法
+'''
+required = ["80字以内", "色／素材／寸法"]
+forbidden = ["承認待", "停止条件", "high-risk", "rollback", "追加hardening"]
+prefix = "format: KDSL"
