@@ -1,4 +1,4 @@
-# KDSL Lint Checklist v3.1-kanji-agent
+# KDSL Lint Checklist v3.2-kanji-agent
 
 ## 合格必須
 
@@ -13,6 +13,11 @@ KEY翻訳だけで終了していない
 command／path／API名保持
 AI推測安全条件追加なし
 scope拡張なし
+後発確定保持／撤回済判断復活なし
+状態観測の契約正本昇格なし
+対象外観測可能意味変更の許可なし
+契約変更と契約違反復元の混同なし
+契約test弱体化許可なし
 Phase／報告肥大化なし
 ```
 
@@ -50,6 +55,34 @@ U未指定承認gate
 追加hardening完成条件化
 未使用release／public履歴／破壊操作railの定型列挙
 ```
+
+## 契約保持
+
+```text
+同一事項競合→後発確定が保持されている
+直近記述だけを確定扱いしていない
+撤回済／置換済判断が復活していない
+仮説／提案／状態観測が確定契約へ昇格していない
+source／test／State／KDSL_RESULTが明示なしに正本化されていない
+下位情報が上位契約を上書きしていない
+対象外の観測可能意味変更を許可していない
+契約変更と現実装の契約違反復元を混同していない
+確定契約testの削除／反転／弱体化を許可していない
+test passを契約適合扱いしていない
+```
+
+意味変更例:
+
+```text
+集合演算／追加／置換／結合／clear
+保存／復元範囲
+routing／fallback
+default値
+UI操作結果
+副作用範囲
+```
+
+内部rename／refactorは対象外動作同値を保つ場合だけ許可する。
 
 ## KDSL_PROMPT
 
@@ -103,6 +136,7 @@ Safety Gate Registry／Packet／Binding Evidence必須依存
 RT:v偽装なし
 roadmap化なし
 Agent契約複製なし
+契約差分は必要時のみ一行
 ```
 
 ## validator
