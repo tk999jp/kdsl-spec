@@ -21,6 +21,8 @@ jobs:
         run: python tools/validator/kdsl_identity_lint.py
       - name: Validate standalone converter
         run: python tools/validator/kdsl_standalone_lint.py
+      - name: Validate standalone behavior
+        run: python tools/validator/kdsl_standalone_behavior.py
       - name: Validate Agent contract
         run: python tools/validator/kdsl_agent_lint.py examples/kanji/agent-codex-run.kdsl.md
       - name: Validate Agent operational scenarios
