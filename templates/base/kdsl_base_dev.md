@@ -1,4 +1,4 @@
-# KDSL Base Dev Prompt Template v3.1-kanji-agent
+# KDSL Base Dev Prompt Template v3.2-kanji-agent
 
 ```text
 KDSL_PROMPT:
@@ -43,6 +43,19 @@ K1:
 U観測>AI推測
 1機能=1Phase
 内部Slice完了→停止理由禁止
+```
+
+契約:
+
+```text
+直近U確定>canonical contract>確認済実機契約>State>source/test>過去結果/会話/旧実装
+source/test/State/KDSL_RESULT:=観測/状態/証跡; 明示なし正本扱禁止
+撤回済/置換済判断再採用禁止
+対象外観測可能意味変更禁止
+現実装契約違反→scope内復元
+確定契約変更必要→停止
+契約test削除/反転/弱体化禁止
+test pass!=契約適合
 ```
 
 Agent:
