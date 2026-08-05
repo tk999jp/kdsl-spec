@@ -1,4 +1,4 @@
-# KDSL Profile: dev-prompt v3.1-kanji-agent
+# KDSL Profile: dev-prompt v3.2-kanji-agent
 
 ## 目的
 
@@ -83,6 +83,57 @@ PF1参照→P1L生成→K1初期化
 
 P1は任意短縮。P1Lと同時記載しない。可逆性実装前は正本扱いしない。
 
+## 契約統制
+
+```text
+契約順位:
+直近U確定 > canonical contract > 確認済実機契約
+> current State > 現source／test > 過去結果／会話／旧実装
+```
+
+```text
+確定:=明示確定／補正／撤回
+直近記述のみ→確定扱禁止
+source／test／State／KDSL_RESULT:=実装観測／状態／証跡
+明示なし→契約正本扱禁止
+下位情報→上位契約上書禁止
+撤回済／置換済判断→再採用禁止
+```
+
+実装前:
+
+```text
+対象機能の観測可能操作契約確認
+replace／add／merge／clear／routing／default／保存範囲／副作用を必要範囲で確定
+正本間衝突→停止
+```
+
+scope:
+
+```text
+対象外の観測可能意味変更禁止
+集合演算／clear／add／replace／merge／保存範囲／routing／fallback／default／UI操作結果／副作用範囲
+→semantic change
+内部整理可; 対象外動作同値必須
+```
+
+契約境界:
+
+```text
+現実装が確定契約違反→scope内復元可
+依頼達成に確定契約変更必要→停止
+AI独自便利化／安全化／一般化による契約変更禁止
+```
+
+契約test:
+
+```text
+確定契約testの削除／期待値反転／弱体化禁止
+実装追従のみの期待値変更禁止
+誤test修正可; 上位契約根拠必須
+test pass != 契約適合
+```
+
 ## Agent再帰
 
 ```text
@@ -111,8 +162,10 @@ K1確認
 必要操作権限=承認待／不可
 要件両立不能
 必要正本なし
+正本間衝突
 baseline破棄必須
 明示scope変更必須
+確定契約変更必須
 ```
 
 必要操作が承認待なら境界直前まで進めてK1を更新する。
@@ -172,9 +225,16 @@ build／lint／test／CI pass != RT:v
 自動commit許可扱い禁止
 ```
 
+契約差分は必要時だけ一行で記載する。
+
+```text
+契約: 維持／復元／変更なし
+```
+
 ## 検証境界
 
 ```text
 形式lint pass!=Codex Agent実効性
+test pass!=契約適合
 Codex再帰／再開／承認停止未確認→未証明
 ```
