@@ -2,7 +2,7 @@
 
 ```text
 status: canonical
-updated: 2026-08-05
+updated: 2026-08-13
 branch: main
 historical-base: 39a51b71950340b83f6e525dd1a76724530bb0df
 framework-head: 031f11286526e77034da5d803e6b01bf0d61a60a
@@ -33,6 +33,9 @@ RunChanged契約／R1変更file帰属: 検証完了
 standalone専用lint／CI統合: 完了
 standalone参照behavior corpus／CI統合: 完了
 repository旧資産整理: 完了
+KDSL-Eval one-shot pilot: 完了
+Usage Placement Guide: 完了
+Core追加判断: 不要／freeze維持
 ```
 
 ## 正本
@@ -40,6 +43,7 @@ repository旧資産整理: 完了
 ```text
 KDSL本体:=漢字圧縮
 KDSL-Intl:=派生subset
+KDSL役割:=現在Taskの高密度意味伝達
 Agent目的:=U明示scopeを必要最小契約で完走
 標準Agent:=KDSL_PROMPT＋K1
 P1L:=厳密handoff／中断再開時のみ
@@ -70,7 +74,10 @@ Codex開発作業→Agent駆動
 通常run→KDSL_PROMPT＋K1
 中断再開／複数agent handoff／複雑承認→PF1参照＋P1L＋識別付きK1
 P1使用→P1Lと併記禁止
+Agent利用可能!=Agent必須
 ```
+
+配置詳細: `docs/usage-placement.md`
 
 ## 検証状態
 
@@ -105,6 +112,7 @@ canonical regression: pass
 Codex実run再帰完走: verified
 Codex実run承認境界停止: verified
 Codex実run中断再開: verified
+KDSL-Eval one-shot pilot: observed
 ChatGPT Project standalone実投入: RT:u
 ```
 
@@ -165,6 +173,27 @@ CI: KDSL Validationへ統合
 dense:=minより実投入量減少時／AI直投入密度優先時
 marker pass!=完全意味同等／応答品質証明
 ```
+
+## KDSL-Eval Pilot 01
+
+```text
+確認日: 2026-08-13
+対象: Python抽象背景動画Generator
+方式: one-shot／各条件1 run
+A: 単体LLM＋自然文
+B: 単体LLM＋KDSL
+C: Codex orchestration構成＋自然文
+D: Codex orchestration構成＋KDSL
+Task prompt削減: B/A 42.4%／D/C 40.1%
+必須機能欠落: 観測なし
+全12 probe動画生成: 成功
+KDSL完成品質非劣性: 初期観測
+Agent追加自体の品質優位: 未証明
+```
+
+限定結論のみ採用。統計的有意差、全Task／全model一般性、KDSL絶対優位、Agent実spawn詳細、総context token優位は未証明。
+
+詳細: `docs/reviews/kdsl-eval-pilot-01.md`
 
 ## Codex実run確認範囲
 
@@ -228,6 +257,7 @@ Safety Gate Registry／R1C／Packet／Normalization
 Binding Evidence／runtime evaluator
 全schema毎回展開
 closeout／status同期の自己増殖
+KDSL CoreへのAgent orchestration syntax追加
 ```
 
 ## Repository管理
