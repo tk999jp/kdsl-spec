@@ -185,6 +185,28 @@ def active_agent_documents() -> list[Path]:
     return documents
 
 
+def semantic_reference_sample_errors() -> list[str]:
+    path = ROOT / "examples" / "kanji" / "midfd-release-asset-reference.kdsl.md"
+    text = path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    required = (
+        "配布:=Asset/remote/live=候補",
+        "保全:=公開不変/他Asset・対象外dirty不変/候補再生成×",
+        "`gh release upload`使用; 引数:=候補tag/候補zip; option:=`--clobber`",
+    )
+    forbidden = (
+        "`gh release upload Tag Package --repo Repo --clobber`",
+        "Release ID／created_at不変",
+    )
+    for needle in required:
+        if needle not in text:
+            errors.append(f"semantic-reference-required:{needle}")
+    for needle in forbidden:
+        if needle in text:
+            errors.append(f"semantic-reference-forbidden:{needle}")
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     failures += expect("valid-dev", lint_text(VALID_DEV), True)
@@ -200,6 +222,7 @@ def main() -> int:
     failures += expect("invalid-agent-duplicate", lint_agent(INVALID_DUPLICATE), False)
     failures += expect("invalid-agent-resume-id", lint_agent(INVALID_RESUME_ID), False)
     failures += expect("invalid-k1-complete", lint_agent(INVALID_K1_COMPLETE), False)
+    failures.extend(semantic_reference_sample_errors())
 
     agent_documents = active_agent_documents()
     for document in agent_documents:
@@ -214,7 +237,7 @@ def main() -> int:
         return 1
     print(
         f"PASS cases=14 documents={len(ACTIVE_DOCUMENTS)} "
-        f"agent_documents={len(agent_documents)}"
+        f"agent_documents={len(agent_documents)} semantic_reference=1"
     )
     return 0
 
