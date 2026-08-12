@@ -29,6 +29,9 @@ REQUIRED = (
     "F. CompactPrompt",
     "G. KDSL-Intl",
     "KEY翻訳だけで完了禁止",
+    "→正本参照化",
+    "同一hash／version／path／tag／Asset名／固定状態→原則1回定義→短名参照",
+    "dense非膨張:",
     "条件→／変換=>／優先>／状態:=／衝突×／並列/",
     "安全契機:=ユーザー明示重大条件の限定保護",
     "command／path／URL／repo名／branch名／tag名／package名",
@@ -40,6 +43,8 @@ REQUIRED = (
     "入力外安全条件追加なし",
     "後発確定>先発確定>仮説／提案／状態観測",
     "撤回済／置換済判断→再採用禁止",
+    "AI判断!=U確定",
+    "source／test／Docs／State相互一致!=上位契約変更根拠",
     "対象外観測可能意味変更禁止",
     "test pass!=契約適合",
 )
