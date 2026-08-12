@@ -1,26 +1,66 @@
 # Changelog
 
-## Unreleased
+## Unreleased — Kanji Identity Restoration
 
-- No released changes recorded here yet.
+### Restored
 
-## 2026-08-05
+- KDSL第一目的を漢字圧縮へ復元。
+- KDSL-Intlを非漢字言語向け派生subsetへ分離。
+- dev-prompt／converter／CompactPromptを漢字既定へ統合。
+- 安全契機を明示重大条件の限定保護へ縮小。
+- KDSL_RESULTを日本語fieldの簡潔一時報告へ復元。
 
-- Added standalone KDSL converter distribution for ChatGPT Project instructions.
-- Added standalone behavior regression corpus and CI coverage.
-- Preserved contract generation precedence, canonical source boundaries, semantic scope, and contract-test protection.
+### Added
 
-## 2026-07-20
+- `spec/profiles/kdsl-profile-compact-prompt.md`
+- `prompts/kdsl-converter-standalone.md`
+- `docs/reviews/kdsl-v2-asset-audit.md`
+- `docs/history/v0.1.0-draft.md`
+- `tools/validator/kdsl_document_lint.py`
+- `tools/validator/r1_result_lint.py`
+- `tools/validator/run_canonical_samples.py`
+- `.gitignore`
 
-- Quantified KDSL compression effectiveness across AI coding, business meta, and creative prompt samples.
-- Added RunChanged Git regression and canonical sample validation.
+### Reworked
 
-## 2026-07-19
+- Core／manifest／glossary／overview／public readiness。
+- active task templateを日本語構造KEYへ置換。
+- 現役例と歴史例を分離。
+- GitHub Actionsをidentity＋sample回帰へ変更。
+- `main`を現行正本・配布物・検証へ集中し、旧実験／未実装design／完了済みdraft計画を履歴側へ整理。
+- Validator案内を現行実装一覧へ同期。
 
-- Restored minimal Agent execution layer under the Kanji Core.
-- Added Agent operational regression and verified bounded Codex run paths.
+### Archived
 
-## 2026-07-18
+次は正規KDSL本体へ採用せず、`archive/kdsl-framework-20260718`へ保持。
 
-- Restored KDSL Kanji canonical identity.
-- Archived framework-heavy v2 assets outside the active canonical dependency graph.
+```text
+lexicon:kanji-v1／KDSL-CP漢／CP-Lift
+Safety Gate Registry／R1C／Packet／Normalization
+semantic parser v2／P1 schema／K1／PF1／Binding Evidence
+大量closeout／status同期
+experimental Actor Model／Protocol Stack
+実装前validator design draft
+```
+
+採否詳細: `docs/reviews/kdsl-v2-asset-audit.md`
+
+### Release
+
+```text
+stable tag: 未作成
+GitHub Release: 未作成
+Release Assets: なし
+```
+
+release操作は今回scope外。ユーザーの別途明示承認が必要。
+
+## Historical v0.1.0-draft
+
+```text
+tag: v0.1.0-draft
+tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
+record: docs/history/v0.1.0-draft.md
+```
+
+初期draftと以後の旧framework履歴は改変せず保持する。
