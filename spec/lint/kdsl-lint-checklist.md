@@ -1,4 +1,4 @@
-# KDSL Lint Checklist v3.5-kanji-agent
+# KDSL Lint Checklist v3.6-kanji-agent
 
 ## 合格必須
 
@@ -65,6 +65,17 @@ section単独可読性目的で正本値／意味を再掲
 意味束定義済みなのに成功／作業／検証／停止／報告で構成要素再展開
 ```
 
+section閉包不足:
+
+```text
+同一意味を複数sectionが主所有
+意味保持済みなのに保持／非対象／報告等を独立sectionで再展開
+権限／承認境界／非対象／禁止を状態差なしに重複列挙
+標準R1で足りるのに報告内容を成功条件／検証から再設計
+section数維持を理由に同義sectionを残存
+denseで意味保持済み不要sectionを省略していない
+```
+
 意味束過剰:
 
 ```text
@@ -103,6 +114,8 @@ mode:
 min→重複統合／長値・意味正本参照／本文漢字語幹化が不足
 dense→min成立条件未達
 dense→意味束化可能なのに構成要素反復
+dense→同一意味のsection主所有が複数
+dense→意味保持済み不要section残存
 dense→説明追加／section再掲で不必要にminより膨張
 ```
 
@@ -162,6 +175,7 @@ UI操作結果
 停止条件限定
 報告R1
 正本定義済み長値／意味／意味束のsection再掲なし
+dense→意味保持済み不要section省略
 ```
 
 ## Agent
