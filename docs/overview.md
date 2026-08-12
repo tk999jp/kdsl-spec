@@ -78,6 +78,24 @@ P1:=任意短縮／P1Lと併記禁止／可逆性保証なし
 
 Agent層はKDSL Core下位。K1更新で目的／対象／権限を変更しない。
 
+## 使用配置
+
+```text
+現在Task意味／判断分岐→KDSL_PROMPT
+repo常設規則→AGENTS.md等
+反復procedure→Skill
+決定論検査→Hook／script
+外部tool／data→MCP等
+独立探索／大量分業→Agent／subagent
+長期仕様→Spec／SDD
+```
+
+KDSLはAgent framework／workflow engine／repo常設instructionの代替ではない。単体LLMへ直接投入可能な高密度意味伝達層を維持する。
+
+詳細: `docs/usage-placement.md`
+
+Pilot記録: `docs/reviews/kdsl-eval-pilot-01.md`
+
 ## R1
 
 ```text
