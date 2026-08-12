@@ -59,6 +59,8 @@ REQUIRED = {
     "spec/core/kdsl-modes.md": (
         "dense非膨張:",
         "同一長値・固定条件→正本一回定義→短名参照",
+        "同一意味→一section所有／他sectionは参照または省略",
+        "意味保持済み不要section→省略",
     ),
     "spec/profiles/kdsl-profile-dev-prompt.md": (
         "agent: required",
@@ -84,8 +86,11 @@ REQUIRED = {
         "対象外の観測可能意味変更を許可する表現追加禁止",
         "→正本値／意味参照化",
         "→意味束化",
+        "→section閉包",
         "意味束:=U明示／canonicalで既に存在する意味の圧縮名",
         "意味束による新条件生成×",
+        "各意味→主所有section一つ",
+        "報告→標準R1で足りるなら`報告:R1`",
         "派生観測→新規成功条件／停止条件／保持条件へ自動昇格×",
         "inline code内へ短名を未展開literalとして実行command化×",
         "dense:",
@@ -107,6 +112,7 @@ REQUIRED = {
         "契約test弱体化許可なし",
         "正本参照不足:",
         "意味束不足:",
+        "section閉包不足:",
         "意味束過剰:",
         "派生条件過剰:",
         "command境界:",
