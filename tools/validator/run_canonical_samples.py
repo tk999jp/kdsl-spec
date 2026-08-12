@@ -190,13 +190,19 @@ def semantic_reference_sample_errors() -> list[str]:
     text = path.read_text(encoding="utf-8")
     errors: list[str] = []
     required = (
-        "配布:=Asset/remote/live=候補",
-        "保全:=公開不変/他Asset・対象外dirty不変/候補再生成×",
-        "`gh release upload`使用; 引数:=候補tag/候補zip; option:=`--clobber`",
+        "候補:=Tag `v2026.08.11`/Asset `MidFD-win-x64.zip`/Package",
+        "公開:=main `f8d837bbeeb3e100ed09f536383bc21272dd929b`/tag→`f8d837bbeeb3e100ed09f536383bc21272dd929b`",
+        "保全:=Release/他Asset/source/design/開始dirty不変/候補再生成×",
+        "成功条件:\nremote/live=候補/公開・保全不変/Portal同期完",
+        "`gh release upload`使用; 引数:=候補Tag/Asset/Package; option:=`--clobber`",
+        "停止条件:\ngh不可/候補・公開・保全不成立/CLI安全置換不可/対象外semantic変更要",
     )
     forbidden = (
         "`gh release upload Tag Package --repo Repo --clobber`",
         "Release ID／created_at不変",
+        "PackageSize:=",
+        "PackageHash:=",
+        "MidFD公開基線:=",
     )
     for needle in required:
         if needle not in text:
