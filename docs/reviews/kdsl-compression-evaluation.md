@@ -59,3 +59,40 @@ python tools/validator/kdsl_compression_evaluation.py
 ```
 
 scriptは各sampleの文字数、15%以上の投入全体削減、21概念marker保持を確認する。marker passは完全な意味同等性やLLM応答品質を証明しない。
+
+## 追補 — 2026-08-12 長大dev-prompt
+
+MidFD Release Asset差替promptの実Project出力を確認し、長値の正本参照化だけではdense圧縮不足が残ることを確認した。
+
+残存:
+
+```text
+同一の公開不変／候補一致等を複数sectionへ意味再展開
+成功条件の否定形を停止条件へ反復
+作業手順の自然文説明残留
+上位禁止から導いた観測詳細の独立契約化
+正本短名をshell変数のようにinline commandへ埋込む曖昧さ
+```
+
+追加方針:
+
+```text
+値参照→値／意味参照へ拡張
+派生観測:=検証証拠; U明示／canonical根拠なし契約昇格×
+作業:=操作語幹＋対象＋遷移／Gate
+短名:=KDSL参照名; inline command literal化×
+```
+
+canonical例:
+
+```text
+examples/kanji/midfd-release-asset-reference.kdsl.md
+```
+
+例では`候補`／`公開`に加え、`配布`／`保全`を意味参照として定義する。
+
+```text
+validator pass != 意味同等
+validator pass != 漢字圧縮品質の完全証明
+canonical例 pass != ChatGPT Project RT:v
+```

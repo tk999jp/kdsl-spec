@@ -15,6 +15,7 @@ ACTIVE_DOCUMENTS = [
     ROOT / "templates/tasks/task_docs_state_closeout.md",
     ROOT / "templates/result/r1_result_spec.md",
     ROOT / "examples/kanji/midfd-dev-prompt.kdsl.md",
+    ROOT / "examples/kanji/midfd-release-asset-reference.kdsl.md",
     ROOT / "examples/kanji/blog-meta.kdsl.md",
     ROOT / "examples/kanji/agent-codex-run.kdsl.md",
     ROOT / "examples/kanji/agent-operational-proof.kdsl.md",
@@ -184,6 +185,34 @@ def active_agent_documents() -> list[Path]:
     return documents
 
 
+def semantic_reference_sample_errors() -> list[str]:
+    path = ROOT / "examples" / "kanji" / "midfd-release-asset-reference.kdsl.md"
+    text = path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    required = (
+        "候補:=Tag `v2026.08.11`/Asset `MidFD-win-x64.zip`/Package",
+        "公開:=main `f8d837bbeeb3e100ed09f536383bc21272dd929b`/tag→`f8d837bbeeb3e100ed09f536383bc21272dd929b`",
+        "保全:=Release/他Asset/source/design/開始dirty不変/候補再生成×",
+        "成功条件:\nremote/live=候補/公開・保全不変/Portal同期完",
+        "`gh release upload`使用; 引数:=候補Tag/Asset/Package; option:=`--clobber`",
+        "停止条件:\ngh不可/候補・公開・保全不成立/CLI安全置換不可/対象外semantic変更要",
+    )
+    forbidden = (
+        "`gh release upload Tag Package --repo Repo --clobber`",
+        "Release ID／created_at不変",
+        "PackageSize:=",
+        "PackageHash:=",
+        "MidFD公開基線:=",
+    )
+    for needle in required:
+        if needle not in text:
+            errors.append(f"semantic-reference-required:{needle}")
+    for needle in forbidden:
+        if needle in text:
+            errors.append(f"semantic-reference-forbidden:{needle}")
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     failures += expect("valid-dev", lint_text(VALID_DEV), True)
@@ -199,6 +228,7 @@ def main() -> int:
     failures += expect("invalid-agent-duplicate", lint_agent(INVALID_DUPLICATE), False)
     failures += expect("invalid-agent-resume-id", lint_agent(INVALID_RESUME_ID), False)
     failures += expect("invalid-k1-complete", lint_agent(INVALID_K1_COMPLETE), False)
+    failures.extend(semantic_reference_sample_errors())
 
     agent_documents = active_agent_documents()
     for document in agent_documents:
@@ -213,7 +243,7 @@ def main() -> int:
         return 1
     print(
         f"PASS cases=14 documents={len(ACTIVE_DOCUMENTS)} "
-        f"agent_documents={len(agent_documents)}"
+        f"agent_documents={len(agent_documents)} semantic_reference=1"
     )
     return 0
 
