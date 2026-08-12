@@ -1,4 +1,4 @@
-# KDSL Lint Checklist v3.2-kanji-agent
+# KDSL Lint Checklist v3.3-kanji-agent
 
 ## 合格必須
 
@@ -7,6 +7,7 @@
 英語KEYへ退行なし
 KEY翻訳だけで終了していない
 本文が漢字語幹／記号／最小制御語化
+同一長値／固定条件の不要再掲なし
 元意味保持
 明示禁止保持
 未確認／未実行の反転なし
@@ -41,8 +42,36 @@ Agent層をKDSL Coreより上位化
 同義block重複
 長い安全説明の再掲
 GOAL→目的等のKEY翻訳だけ
+本文自然文維持＋日本語KEY化だけ
 KDSL_PROMPT／P1L／P1で同一内容を多重記載
 ```
+
+正本参照不足:
+
+```text
+同一hash／version／path／tag／Asset名／固定状態を複数sectionへ長値再掲
+成功条件／検証／保持／停止条件で同一成立状態を全文再説明
+section単独可読性目的で正本値を再掲
+意味明確な短名で参照可能なのに長値反復
+```
+
+自然文残留候補:
+
+```text
+「場合／なら／とき」等が安全に→化可能なのに長文維持
+「確認する／維持する／変更しない」等の同義句反復
+非識別子のCandidate／baseline／read-only／exact／unrelated／fallback等を一般制御語として過剰残存
+```
+
+mode:
+
+```text
+min→重複統合／長値正本参照／本文漢字語幹化が不足
+ dense→min成立条件未達
+ dense→説明追加／section再掲で不必要にminより膨張
+```
+
+`dense>min`は即意味違反ではない。不可侵意味保持に必要な増量は許容し、説明追加・再掲による増量を圧縮不足として扱う。
 
 ## 安全過剰
 
@@ -63,11 +92,14 @@ U未指定承認gate
 直近記述だけを確定扱いしていない
 撤回済／置換済判断が復活していない
 仮説／提案／状態観測が確定契約へ昇格していない
-source／test／State／KDSL_RESULTが明示なしに正本化されていない
+source／test／Docs／State／KDSL_RESULTが明示なしに正本化されていない
+AI判断をU確定扱いしていない
+source／test／Docs／State相互一致だけを契約変更根拠にしていない
 下位情報が上位契約を上書きしていない
 対象外の観測可能意味変更を許可していない
 契約変更と現実装の契約違反復元を混同していない
 確定契約testの削除／反転／弱体化を許可していない
+期待値変更が現実装追従だけで正当化されていない
 test passを契約適合扱いしていない
 ```
 
@@ -93,6 +125,7 @@ UI操作結果
 成功条件／対象／非対象／検証保持
 停止条件限定
 報告R1
+正本定義済み長値のsection再掲なし
 ```
 
 ## Agent
@@ -136,7 +169,8 @@ Safety Gate Registry／Packet／Binding Evidence必須依存
 RT:v偽装なし
 roadmap化なし
 Agent契約複製なし
-契約差分は必要時のみ一行
+zero-delta報告増殖なし
+契約変更候補は発生時のみ既存欄へ簡潔記載
 ```
 
 ## validator
