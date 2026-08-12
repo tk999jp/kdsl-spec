@@ -15,6 +15,7 @@ ACTIVE_DOCUMENTS = [
     ROOT / "templates/tasks/task_docs_state_closeout.md",
     ROOT / "templates/result/r1_result_spec.md",
     ROOT / "examples/kanji/midfd-dev-prompt.kdsl.md",
+    ROOT / "examples/kanji/midfd-release-asset-reference.kdsl.md",
     ROOT / "examples/kanji/blog-meta.kdsl.md",
     ROOT / "examples/kanji/agent-codex-run.kdsl.md",
     ROOT / "examples/kanji/agent-operational-proof.kdsl.md",
