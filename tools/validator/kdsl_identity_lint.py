@@ -40,11 +40,20 @@ REQUIRED = {
         "同一事項競合→後発確定>先発確定>仮説／提案／状態観測",
         "撤回済／置換済判断→再採用禁止",
         "対象外の観測可能意味変更禁止",
+        "圧縮成立:=重複統合→正本参照化→助詞削減→漢字語幹化→条件記号化→最小制御語化",
+        "同一長値・固定条件は原則一回だけ定義",
+        "source／test／Docs／State相互一致!=上位契約変更根拠",
     ),
     "spec/core/kdsl-core.md": (
         "直近記述のみ→確定扱禁止",
-        "状態観測／実装／test／結果証跡→明示なし契約正本扱禁止",
+        "状態観測／実装／test／Docs／State／結果証跡→明示なし契約正本扱禁止",
         "内部rename／refactor可; 対象外動作同値必須",
+        "正本参照化",
+        "AI判断!=U確定",
+    ),
+    "spec/core/kdsl-modes.md": (
+        "dense非膨張:",
+        "同一長値・固定条件→正本一回定義→短名参照",
     ),
     "spec/profiles/kdsl-profile-dev-prompt.md": (
         "agent: required",
@@ -54,6 +63,8 @@ REQUIRED = {
         "直近U確定 > canonical contract > 確認済実機契約",
         "現実装が確定契約違反→scope内復元可",
         "確定契約testの削除／期待値反転／弱体化禁止",
+        "期待値変更→上位根拠必須",
+        "AI判断→U確定扱い禁止",
         "test pass != 契約適合",
     ),
     "spec/profiles/kdsl-profile-compact-prompt.md": (
@@ -63,6 +74,8 @@ REQUIRED = {
         "契約世代／正本／意味scope照合",
         "撤回済／置換済判断→再採用禁止",
         "対象外の観測可能意味変更を許可する表現追加禁止",
+        "→正本参照化",
+        "dense:",
     ),
     "spec/agent/kdsl-agent-execution.md": (
         "Agent目的:=U明示scopeを必要最小契約で調査→実装→検証→完了",
@@ -79,6 +92,7 @@ REQUIRED = {
         "状態観測の契約正本昇格なし",
         "契約変更と契約違反復元の混同なし",
         "契約test弱体化許可なし",
+        "正本参照不足:",
     ),
     "docs/reviews/kdsl-v2-asset-audit.md": (
         "監査対象: PR #1〜#145", "採否未決: 0", "PR範囲未監査: 0", "Agent再審査",
