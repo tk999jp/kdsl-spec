@@ -1,4 +1,4 @@
-# KDSL Modes v2.1-kanji-canonical
+# KDSL Modes v2.2-kanji-canonical
 
 ## mode
 
@@ -31,6 +31,10 @@ min成立条件を全保持
 同義説明強統合
 条件／遷移記号化強化
 正本参照を積極使用
+意味束成立→構成要素再展開禁止
+同一意味→一section所有／他sectionは参照または省略
+意味保持済み不要section→省略
+section数維持を目的化禁止
 非識別子制御英語→安定漢字語へ圧縮
 技術識別子保持
 ```
