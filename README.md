@@ -1,178 +1,145 @@
-# kdsl-spec
+# KDSL
 
-KDSL（漢字圧縮DSL）、軽量Agent実行層、最小R1結果仕様の正本repository。
-
-## 定義
+KDSLは、日本語promptを漢字語幹／記号／最小制御語へ再構成し、LLMへ直接投入可能な形へ圧縮するDSLです。
 
 ```text
-KDSL:=日本語promptを漢字語幹／記号／最小制御語へ再構成する、LLM直投入可能な漢字圧縮DSL
+自然文
+=> 助詞削減
+ + 重複統合
+ + 正本値／意味参照化
+ + 漢字語幹化
+ + 条件／遷移記号化
+ + 最小制御語化
+```
+
+第一目的は**漢字圧縮**です。
+
+KDSLは、英語KEY中心の汎用schema、安全契約framework、証跡管理方式を本体として定義しません。非漢字言語向けは派生subset `KDSL-Intl` として扱います。
+
+## Canonical identity
+
+```text
+KDSL:=日本語promptを対象にした漢字圧縮DSL
 KDSL本体:=漢字圧縮
 KDSL-Intl:=非漢字言語／ASCII／英語KEY向け互換subset
 KDSL本体 > KDSL-Intl
 ```
 
-## 設計順位
+Core:
+
+- `spec/core/kdsl-spec.md`
+- `spec/core/kdsl-core.md`
+- `spec/core/kdsl-modes.md`
+
+Profiles:
+
+- `spec/profiles/kdsl-profile-dev-prompt.md`
+- `spec/profiles/kdsl-profile-compact-prompt.md`
+- `spec/profiles/kdsl-converter-prompt.md`
+- `spec/profiles/kdsl-profile-intl.md`
+
+Agent:
+
+- `spec/agent/kdsl-agent-execution.md`
+
+Result:
+
+- `spec/r1/r1-result-spec.md`
+
+Lint:
+
+- `spec/lint/kdsl-lint-checklist.md`
+- `spec/lint/kdsl-agent-lint.md`
+
+## 圧縮原則
+
+KEYを日本語へ翻訳するだけではKDSL圧縮になりません。本文も圧縮します。
 
 ```text
-漢字圧縮
-> 意味保持
-> LLM直投入可能
-> 判断分岐保持
-> 明示制約保持
-> Agent完走
-> 出力安定
-> 人間修正可能
+helperがdestination parentを先に作成していても、
+cross-volume directory moveがdestination collisionで失敗しない。
+
+=>
+
+跨volume dir移動: helper先行dst親作成済→collision失敗禁止
 ```
 
-安全契機はユーザー明示重大条件の限定保護。潜在risk推測による自動増殖を禁止する。
-
-## Agent goal
+同一hash／version／path／固定状態、または同一の公開不変／候補一致等の契約意味は原則一回だけ定義し、以後は意味明確な短名で参照します。
 
 ```text
-ユーザー明示scopeを必要最小契約で調査→実装→検証→完了
+正本:
+候補:=<長値群>
+公開:=<固定状態群>
+
+成功条件:
+候補一致／公開不変
 ```
 
-通常のCodex開発run:
+上位契約の成立確認用に導いた具体観測は検証証拠として使用できますが、U明示／canonical根拠なしに新しい成功条件・停止条件へ昇格させません。
+
+## mode
 
 ```text
-ユーザー自然文
-→ChatGPT converter
-→KDSL_PROMPT＋K1
-→Codex再帰実行
-→R1
-→ChatGPT
-→ユーザー
+readable:=人間review重視
+min:=実運用標準／中密度
+dense:=AI直投入／高密度
+lock:=明示critical箇所の意味保持重視
 ```
 
-厳密handoff／中断再開時だけ:
+全modeで漢字圧縮を維持します。
+
+`dense`は`min`成立条件を保持し、自然文残留・同義再掲をさらに削ります。意味保持可能な範囲では、説明追加を理由に`min`より膨張させません。
+
+## dev-prompt
+
+開発promptでも漢字圧縮を解除しません。
 
 ```text
-ユーザー指示＋PF1
-→P1L
-→識別付きK1
-→Codex再帰実行
+KDSL_PROMPT:
+目的:
+成功条件:
+対象:
+作業:
+検証:
 ```
+
+必要なKEYだけを使い、同一内容のsection横断再掲を避けます。
+
+契約保持では、次を区別します。
 
 ```text
-K1:=標準run状態
-P1L:=条件付き厳密契約
-P1:=任意短縮／P1Lと併記禁止／可逆性保証なし
-PF1:=継続project既定
+直近U確定 > canonical contract > 確認済実機契約 > State > source/test
+AI判断 != U確定
+source/test/Docs/State相互一致 != 契約変更根拠
 ```
 
-Agent駆動は必須でも、P1L／P1／PF1全量を毎回展開しない。
+確定契約testの期待値変更には上位根拠を要求しますが、通常bug修正や既存契約への復元を一律承認gate化しません。
 
-## 正本
+## standalone converter
 
-```text
-全体定義: spec/core/kdsl-spec.md
-記法: spec/core/kdsl-core.md
-mode／安全契機: spec/core/kdsl-modes.md
-dev-prompt: spec/profiles/kdsl-profile-dev-prompt.md
-CompactPrompt: spec/profiles/kdsl-profile-compact-prompt.md
-converter: spec/profiles/kdsl-converter-prompt.md
-Intl subset: spec/profiles/kdsl-profile-intl.md
-Agent契約: spec/agent/kdsl-agent-execution.md
-R1: spec/r1/r1-result-spec.md
-lint: spec/lint/kdsl-lint-checklist.md
-Agent lint: spec/lint/kdsl-agent-lint.md
-境界: spec/bridge/kdsl-adps-bridge.md
-参照地図: spec/manifest.md
-用語: spec/glossary.md
-```
+ChatGPT Project instructions等へ投入する非正本配布prompt:
 
-## Repository構成
+- `prompts/kdsl-converter-standalone.md`
 
-```text
-spec/              正本
-prompts/           単独投入用compiled prompt／非正本
-templates/         再利用部品／非正本
-examples/          regression・利用例／非正本
-tools/validator/   軽量lint・回帰実装／非正本
-docs/              overview／状態／監査／履歴
-.github/workflows/ CI
-```
+正本と競合した場合は正本を優先します。
 
-`main`には現行運用と検証に必要な資産だけを置く。旧framework実験、実装前validator設計、完了済みdraft計画はGit履歴、`v0.1.0-draft` tag、`archive/kdsl-framework-20260718`へ保持する。
+## validation
 
-履歴要約:
+補助validator:
 
-```text
-docs/history/v0.1.0-draft.md
-```
+- identity lint
+- standalone lint／behavior
+- Agent lint／operational regression
+- RunChanged regression
+- compression evaluation
+- canonical sample regression
 
-## 単独Project投入
+validator passは、意味同等・圧縮品質・U承認・RT:v・release readinessの証明ではありません。
 
-```text
-prompts/kdsl-converter-standalone.md
-```
+## history
 
-ChatGPT Project instructions／単独instruction向けに、KDSL identity、Core記法、mode、converter、lintを1fileへ統合したcompiled prompt。正本ではなく配布・投入用であり、正本と競合する場合は`spec/`配下を優先する。
+KDSLはv2系で増えたframework-heavy資産を監査し、漢字圧縮identityを中心に再構築しています。監査記録は`docs/reviews/`を参照してください。
 
-## 現在状態
+## license
 
-```text
-branch: main
-status: canonical
-framework-archive: archive/kdsl-framework-20260718
-v2-asset-audit: complete／Agent再審査反映済
-agent-layer: kdsl-agent@1.1
-standalone-converter: prompts/kdsl-converter-standalone.md／非正本
-```
-
-## 運用原則
-
-```text
-英語KEY既定禁止
-漢字optional化禁止
-安全理由scope／Phase／architecture増殖禁止
-Agent層はKDSL Core下位
-通常Agent:=KDSL_PROMPT＋K1
-P1L／PF1:=条件付き
-P1:=任意／可逆偽装禁止
-K1更新によるscope変更禁止
-PF1による権限拡張禁止
-KDSL_RESULT成果物化禁止
-validator非権威
-build／lint／test／CI pass != RT:v
-command／path／API名保持
-```
-
-## 非採用
-
-```text
-Safety Gate Registry
-R1C
-Packet／Normalization
-共通AST／semantic parser
-Binding Evidence
-runtime evaluator
-```
-
-## 圧縮評価
-
-2026-07-20の3分類sampleでは、空白除外Unicode文字数で次を確認した。
-
-```text
-min本文: 45.1%削減
-min投入全体: 30.5%削減
-dense本文: 48.0%削減
-dense投入全体: 32.3%削減
-概念marker: 21/21 pass
-```
-
-`dense`は常に`min`より短いとは限らない。通常既定は`mode:min`とし、実投入量が減る場合またはAI直投入密度を優先する場合だけ`dense`を使用する。marker passは完全な意味同等性や応答品質を証明しない。
-
-## 検証
-
-```bash
-python tools/validator/kdsl_identity_lint.py
-python tools/validator/kdsl_standalone_lint.py
-python tools/validator/kdsl_agent_lint.py examples/kanji/agent-codex-run.kdsl.md
-python tools/validator/kdsl_agent_operational_regression.py
-python tools/validator/kdsl_run_changed_git_regression.py
-python tools/validator/kdsl_compression_evaluation.py
-python tools/validator/run_canonical_samples.py
-```
-
-GitHub Actions `KDSL Validation`でcompile、identity、standalone compiled prompt、Agent contract、状態遷移、Git repository上のRunChanged帰属、圧縮評価、canonical regressionを実行する。形式／自動回帰passは意味同等性、Codex Agent実効性、RT:v、release readinessを証明しない。
+MIT
