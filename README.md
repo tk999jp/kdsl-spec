@@ -2,6 +2,10 @@
 
 KDSL（漢字圧縮DSL）、軽量Agent実行層、最小R1結果仕様の正本repository。
 
+**KDSL — compact task specification DSL for AI coding agents**
+
+ChatGPT / Codex などの planner–executor 間で、scope・constraint・acceptance criteria を圧縮して受け渡すためのDSL。
+
 ## 定義
 
 ```text
