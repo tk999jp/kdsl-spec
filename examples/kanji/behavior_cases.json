@@ -4,15 +4,37 @@
     "natural": "MidFDの一覧で表示単位をBytesへ切り替えた際、KBへ丸めず実際のバイト数を表示するように修正してください。既存のKBとMBの計算、表示形式、切替動作を変更しないでください。実装と関連テストを調べ、必要な箇所を補正し、対象テストを実行してください。stage、commit、pushは禁止です。buildやtest成功だけでは実機確認済みとしないでください。",
     "min": "KDSL_PROMPT:\n目的: Bytes選択→実byte表示／丸め禁止\n成功条件: KB・MB計算／形式／切替不変\n作業: 実装・test確認→必要箇所補正→対象test実行\n禁止: stage／commit／push\n実機: build／test pass!=実機確認",
     "dense": "KDSL_PROMPT:\n目的:Bytes→実byte/丸め禁止;保持:KB・MB計算・形式・切替;作業:実装・test確認→補正→対象test;禁止:stage/commit/push;実機:build/test pass!=実機確認",
-    "required": ["Bytes", "KB", "MB", "stage", "commit", "push", "禁止", "実機"],
-    "protected": ["Bytes", "KB", "MB", "stage", "commit", "push"]
+    "required": [
+      "Bytes",
+      "KB",
+      "MB",
+      "stage",
+      "commit",
+      "push",
+      "禁止",
+      "実機"
+    ],
+    "protected": [
+      "Bytes",
+      "KB",
+      "MB",
+      "stage",
+      "commit",
+      "push"
+    ]
   },
   {
     "id": "blog-meta",
     "natural": "入力された記事本文だけを根拠にブログ公開用のメタ情報を日本語で作成してください。要約は120字以内、主要テーマは5件でそれぞれ短い説明、SEOタイトル案5件、説明文120字以内、タグは5件から8件です。記事にない情報は追加せず、断定できないことは断定しないでください。誇張や煽りを避け、初心者にわかる語彙で指定以外の前置きを出力しないでください。",
     "min": "目的: 記事本文→日本語公開meta\n出力: 要約120字以内／主要題5＋短説／SEO title案5／説明120字以内／tag5-8\n規則: 本文限定／入力外追加禁止／不明断定禁止／誇張・煽り禁止／初心者可読／前置禁止",
-    "dense": "目的:記事本文→日本語meta;出力:要約≤120字/主要題5+短説/SEO title5/説明≤120字/tag5-8;規則:本文限定/入力外追加禁止/不明断定禁止/誇張・煽り禁止/初心者可読/前置禁止",
-    "required": ["120", "5", "tag5-8", "入力外", "断定禁止"],
+    "dense": "目的:記事本文→日本語meta;出力:要約≤120字/主要題5+短説/SEO title案5/説明≤120字/tag5-8;規則:本文限定/入力外追加禁止/不明断定禁止/誇張・煽り禁止/初心者可読/前置禁止",
+    "required": [
+      "120",
+      "5",
+      "tag5-8",
+      "入力外",
+      "断定禁止"
+    ],
     "protected": []
   },
   {
@@ -20,15 +42,30 @@
     "natural": "入力された物語のアイデアから、日常を壊す異常設定、人物を動かす感情、観測可能な事実、元に戻れない不可逆の変化、最後に残る状態を抽出してください。今は完成した物語や会話台本を書かず、推測した内容は確定事実とせず提案として明記してください。重複を避け短く具体的にし、シナリオ化の方向性を3案だけ提示してください。",
     "min": "目的: 物語案→seed抽出\n抽出: 異常設定／感情核／観測事実／不可逆変化／終残状態\n非出力: 完成物語／会話台本\n規則: 推測=提案明示／事実化禁止／短具体／重複禁止\n出力: 異方向3案",
     "dense": "目的:物語案→seed;抽出:異常設定/感情核/観測事実/不可逆変化/終残状態;非出力:完成物語/会話台本;規則:推測=提案明示/事実化禁止/短具体/重複禁止;出力:異方向3案",
-    "required": ["異常設定", "感情核", "観測事実", "不可逆変化", "終残状態", "事実化禁止", "3案"],
+    "required": [
+      "異常設定",
+      "感情核",
+      "観測事実",
+      "不可逆変化",
+      "終残状態",
+      "事実化禁止",
+      "3案"
+    ],
     "protected": []
   },
   {
     "id": "condition-scope",
     "natural": "元ディレクトリが空であり、かつ移動処理が成功した場合にだけ元のディレクトリを削除してください。元ディレクトリが空ではない場合、または移動処理が失敗した場合は削除せず保持してください。確認してから削除を実行してください。",
-    "min": "条件: src dir空かつ移動成功→src dir削除／src dir非空または移動失敗→保持\n手順: 条件確認→削除",
-    "dense": "条件:src dir空かつ移動成功→src dir削除/src dir非空または移動失敗→保持;手順:条件確認→削除",
-    "required": ["かつ", "または", "移動成功", "移動失敗", "保持", "確認"],
+    "min": "条件: src dir空かつ移動成功→src dir削除／src dir非空または移動失敗→保持\n手順: 条件確認→成立時のみ削除",
+    "dense": "条件:src dir空かつ移動成功→src dir削除/src dir非空または移動失敗→保持;手順:条件確認→成立時のみ削除",
+    "required": [
+      "かつ",
+      "または",
+      "移動成功",
+      "移動失敗",
+      "保持",
+      "確認"
+    ],
     "protected": []
   },
   {
@@ -36,7 +73,61 @@
     "natural": "WindowsのC:\\work\\MidFD\\build.batを変更せず、MoveItemAsync API名と--no-restore引数もそのまま保持してください。実行する場合はdotnet test --no-restoreを使ってください。ただしこの指示段階ではコマンドは未実行であり、実行済みと報告しないでください。",
     "min": "保持: `C:\\work\\MidFD\\build.bat`／`MoveItemAsync`／`--no-restore`\n実行指定: `dotnet test --no-restore`\n状態: command未実行→実行済扱禁止",
     "dense": "保持:`C:\\work\\MidFD\\build.bat`/`MoveItemAsync`/`--no-restore`;実行指定:`dotnet test --no-restore`;状態:command未実行→実行済扱禁止",
-    "required": ["未実行", "実行済扱禁止"],
-    "protected": ["C:\\work\\MidFD\\build.bat", "MoveItemAsync", "--no-restore", "dotnet test --no-restore"]
+    "required": [
+      "未実行",
+      "実行済扱禁止"
+    ],
+    "protected": [
+      "C:\\work\\MidFD\\build.bat",
+      "MoveItemAsync",
+      "--no-restore",
+      "dotnet test --no-restore"
+    ]
+  },
+  {
+    "id": "condition-precedence",
+    "natural": "Aが成立し、さらにBかCの少なくとも一方が成立する場合に限って処理を実行してください。Aが不成立なら、BかCが成立しても実行しないでください。",
+    "min": "条件: Aかつ(BまたはC)→実行／A不成立→実行禁止",
+    "dense": "条件:Aかつ(BまたはC)→実行;A不成立→実行禁止",
+    "required": [
+      "Aかつ(BまたはC)",
+      "A不成立",
+      "実行禁止"
+    ],
+    "protected": []
+  },
+  {
+    "id": "explicit-approval",
+    "natural": "ソースコードの修正と関連テストの実行は許可します。しかしcommitはユーザーの明示承認まで実行しないでください。既存の未push差分は破棄しないでください。",
+    "min": "権限: 編集／試験=可／commit=承認待\n禁止: 未push差分破棄",
+    "dense": "権限:編集/試験=可,commit=承認待;禁止:未push差分破棄",
+    "required": [
+      "編集",
+      "試験",
+      "commit=承認待",
+      "未push差分破棄"
+    ],
+    "protected": [
+      "commit",
+      "未push"
+    ]
+  },
+  {
+    "id": "runtime-separation",
+    "natural": "buildとtestは成功しましたが、対象の実機で動作確認はしていません。作業結果ではbuildとtestの検証成功と実機未確認を分けて記載し、RT:v扱いしないでください。",
+    "min": "検証: build／test成功\n実機: 未確認／RT:v扱禁止",
+    "dense": "検証:build/test成功;実機:未確認/RT:v扱禁止",
+    "required": [
+      "build",
+      "test",
+      "成功",
+      "未確認",
+      "RT:v扱禁止"
+    ],
+    "protected": [
+      "build",
+      "test",
+      "RT:v"
+    ]
   }
 ]
