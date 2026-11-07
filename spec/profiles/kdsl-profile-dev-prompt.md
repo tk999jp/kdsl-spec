@@ -1,166 +1,48 @@
-# KDSL Profile: dev-prompt v0.1-draft
+# KDSL Profile — dev-prompt
 
-目的: ChatGPT / Codex / AI coding tool向け開発運用promptをKDSLで記述する。
-
-既定:
+## 既定
 
 ```text
 format: KDSL
 profile: dev-prompt
 mode: min
-safety: lock-critical
+safety: normal
+language: ja
 ```
 
-## 基本契約
+AI coding tool向けpromptは`KDSL_PROMPT:`を先頭とする。Agentの状態管理はKDSL言語本体と分離し、必要な実行環境でだけ追加する。
 
-優先:
-
-```text
-要件保持 > 判断安定 > 誤実装防止 > safety gate保持 > 短文化
-```
-
-言語:
-
-```text
-日本語固定, UI/理由/計画/検証/報告含, 英語指定時のみ英語
-```
-
-## ChatGPT責務
-
-```text
-共有材→ChatGPT先読必須
-共有材判可→AI丸投禁止
-質問回答/仕様整理/review完結→AI prompt出力禁止
-実装現象提示→現象分析優先, prompt評価へ逃げない
-```
-
-共有材:
-
-```text
-code/diff/log/screenshot/実機観測/GH connector source/repo state/docs
-```
-
-## 最優先
-
-```text
-通常機能破壊禁止
-U実機観測/screenshot/NG指摘/明示要望>AI推測
-原因未確→広域修正禁止
-未確認→確認済扱禁止
-未実行→実行済扱禁止
-build未確認→成功扱禁止
-Runtime未確認→確認済扱禁止
-実装状態未確認→断定禁止
-変更範囲→U価値ある1機能の最小成立単位
-1機能=1Phase
-Phase:=U視点完成機能単位
-Runtime NG→現policy内限定補正優先
-要件変/実装policy変/rollback/revert/再実装/未push破棄→未承認実装指示禁止
-方針変含→実装指示禁止, A/B案+承認待
-```
-
-## D禁止
-
-```text
-D禁止=要件変/方針変/rollback/revert/再実装/未push破棄/正本変/UI契約変/妥協案/data schema/public API/保存形式変更→実装指示禁止
-D禁止時→実装指示化保留/理由/現要件/A-B案/推奨案/承認理由
-D禁含→AI coding prompt全文禁止
-```
-
-## KDSL_PROMPT
-
-AI coding prompt出力時:
+## 最小例
 
 ```text
 KDSL_PROMPT:
-format: KDSL
-profile: dev-prompt
-mode: min
-safety: lock-critical
+局面: 表示単位修正
+目的: Bytes選択→実byte数表示
+成功条件: KB／MB計算・表示・切替不変
+対象: 表示処理／関連test
+作業: 原因特定→必要実装・test補正→対象test
+検証: 対象test実行／結果報告
 ```
 
-規則:
+`目的／成功条件／対象／作業／検証`以外は、依頼内容に必要な場合だけ追加する。明示された禁止／権限／停止／実機条件は保持する。作業に無関係な承認gate、Phase、hardeningを追加しない。
+
+## Agent補助（必要時）
 
 ```text
-KDSL_PROMPT先頭固定
-KDSL_PROMPT前の自然文禁止
-D禁止時KDSL_PROMPT出力禁止
-構成: Phase/目的/前提/対象Slice/非対象/変更対象/禁止/停止条件/作業手順/検証/報告形式
+K1:
+状態: 計画|実行中|検証中|実機待|完了|停止|失敗
+未完:
+検証: 未実行|一部|成功|失敗
+実機: 不要|未確認|確認済
+次:
 ```
 
-## KDSL_RESULT
+通常の短い変換ではK1不要。中断再開・複数Agent引継・長時間実行等で状態共有が実際に必要な場合のみ使用。K1更新で目的／対象／権限を変更しない。作業一覧の重複展開を避け、初期値は`未完: 作業全件`などの意味参照可。
 
-AI coding tool/Codexへの報告要求:
+## 限定D禁止
 
-```text
-KDSL_RESULT先頭固定
-結論/変更点/検証だけで終了禁止
-補足はKDSL_RESULT後
-```
+U要件変更／明示方針反転／rollback・revert／未push差分破棄／public履歴改変／公開済tag・Release Assets変更／破壊的data形式変更に限り、必要なら現行維持案と変更案を示しU判断待。通常bug修正／targeted test／内部整理は自動昇格しない。
 
-必須block:
+## 報告
 
-```text
-KDSL_RESULT:
-STATUS:
-PHASE:
-S:
-FILES:
-WHY:
-CMD:
-VERIFY:
-RT:
-RISK:
-NEXT:
-COMMIT:
-```
-
-制約:
-
-```text
-未実行cmd→CMD記載禁止
-未実行verify→pass扱禁止
-build/diff/lint/test pass != RT:v
-RT:v=対象環境runtime確認済のみ
-Runtime未確認→RT:u|RT:p + RISK:runtime_unverified
-docs/guidance only→理由明記でRT:na可
-NEXT:=提案, 実行許可扱禁止
-COMMIT:=推奨message/実行済commit, 自動commit許可扱禁止
-```
-
-## Rollback
-
-```text
-Runtime NG/表示崩/実行不整合時→即`git restore .`/`git clean -f`禁止
-rollback前→`git status --short`/`git diff --stat`/`git diff --name-only`
-退避: patch/status/stat/未追跡→`artifacts/tmp/`
-rollback→問題Slice単位優先
-全体rollback→全差分危険時のみ
-改善済あり→rollbackより維持+限定補正優先
-```
-
-## UI/Layout Runtime NG
-
-```text
-対象: UI表示/描画/layout/font/DPI/矩形/位置ズレ/見切/相対size崩
-即rollback/即parameter変/固定値変短絡/font候補変短絡/padding調整短絡/全面rollback短絡禁止
-先分解: 観測/改善済/未改善/主因候補/確認実値/限定補正案/停止条件
-同Phase UI NG 2回→次AI指示に診断log/実値確認含
-```
-
-## State/Docs
-
-```text
-後続実装拘束仕様/UI契約/keybinding契約/data正本/禁止/NG例/rollback消失/今後守る→state/docs固定
-破壊的変更/旧経路撤去/正本変→decision_log理由記録
-Runtime未確認→verified扱禁止
-```
-
-## GitHub/Repo
-
-```text
-LocalBuild/Runtime未実行→実行済扱禁止
-build/test/実機/WindowsRuntime→AI tool/U確認分離
-検索失敗→不存在断定禁止, 既知path/branch/個別取得/local grep
-public履歴改竄/公開済tag移動/Release Assets上書前提操作禁止
-```
+`報告: R1`で十分な場合は長い出力契約の再記述をしない。R1は簡潔結果であり、roadmapや実行許可ではない。

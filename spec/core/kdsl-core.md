@@ -1,171 +1,52 @@
-# KDSL Core v0.1-draft
+# KDSL Core — 最小演算子／文型
 
-目的: KDSLの共通記法 / 保護語 / 変換文型 / ADPS境界語を定義する。
+## 記号
 
-## 基本
+| 記号 | 意味 | 例 |
+|---|---|---|
+| `:` | 見出／定義 | `目的: 表示補正` |
+| `/` | 並列列挙 | `調査/実装/試験` |
+| `,` | 軽分節 | `編集可,commit承認待` |
+| `;` | 規則分節 | `対象:A;非対象:B` |
+| `→` | 条件／遷移 | `失敗→src保持` |
+| `=>` | 変換 | `自然文=>KDSL` |
+| `>` | 優先 | `U確定>提案` |
+| `=` | 略語定義／短同値 | `基点=旧Core` |
+| `:=` | 扱／状態指定 | `実機:=未確認` |
+| `×` | 衝突／不可 | `条件衝突×` |
 
-```text
-format: KDSL
-profile: <dev-prompt|converter|lint|rulebook>
-mode: <readable|min|dense|lock>
-safety: <normal|lock-critical|lock-all>
-```
+行頭`>`禁止（Markdown引用と衝突）。`=`を状態指定へ使わず`:=`を使用。`/`は選択／orを意味しない。`×`だけで明示禁止を代替しない。
 
-優先:
-
-```text
-意味保持 > safety gate保持 > 判断分岐保持 > 誤実装防止 > 文字数削減
-```
-
-## operator
-
-```text
-:  見出し/定義ラベル/値指定
-/  並列列挙
-,  軽分節
-;  強分節
-→  条件/処理遷移
-=>  変換/書換
->  優先
-=  略語定義/短い同値
-:= 扱/状態指定
-×  衝突/不可
-```
-
-注意:
-
-```text
-> 行頭使用禁止
-= を扱/状態指定に使用禁止
-:= は状態/扱い明示に使用
-/ は並列列挙を基本とする
-```
-
-## abbrev
-
-```text
-U=ユーザー
-GH=GitHub
-AI tool=AI coding tool
-D禁=D禁止
-KDP=KDSL-DP
-P1L=P1 readable form
-RT=Runtime verification status
-```
-
-## ADPS境界語
-
-```text
-KDSL:=LLM直投入可能な安全gate保持型prompt記法
-KDSL-DP:=ADPS向けAuthoring形式, 実行指示ではない
-P1/P1L:=実行契約候補
-K1/PF1:=Runtime Control
-R1/KDSL_RESULT:=Evidence/結果証跡
-```
-
-重要:
-
-```text
-KDSL-DP直接実行禁止
-KDSL-DP→P1/P1L正規化必須
-unknown profile/alias/preset推測禁止
-```
-
-## D禁止
-
-```text
-D禁止=要件変/方針変/rollback/revert/再実装/未push破棄/正本変/UI契約変/妥協案/data schema/public API/保存形式変更を含む場合に実装指示禁止
-```
-
-## 保護語
-
-```text
-禁止
-必須
-未確認
-未実行
-承認
-承認待
-停止条件
-正本
-rollback
-revert
-未push
-破棄
-退避
-実行済扱
-確認済扱
-成功扱
-断定禁止
-実機確認分離
-public履歴
-公開済tag
-Release Assets
-KDSL-DP直接実行禁止
-P1/P1L正規化必須
-RT:v
-KDSL_RESULT NEXT
-KDSL_RESULT COMMIT
-```
-
-## 禁止文型
+## 文型
 
 ```text
 X禁止
-X→Y扱禁止
-X→Y混入禁止
-X含→停止
-X含→承認待
-X未確認→断定禁止
-X未実行→実行済扱禁止
 X未確認→確認済扱禁止
-X未確認→成功扱禁止
-```
-
-## 必須文型
-
-```text
-X必須
-X先行
-X分離
-X確認
-X記録
-X退避
-X遵守
-X固定
-```
-
-## 条件文型
-
-```text
+X未実行→実行済扱禁止
 X時→Y
-X含→Y
 X不可→停止
-X不明→観測整理
 X衝突→Y優先
-X連続→診断先行
+A:=状態
+A>B
 ```
 
-## 変換禁止
+`→`は条件と手順の両方を表せるため、両者が混在して読み違える箇所だけ役割ラベルを補う。
 
 ```text
-inline code内
-command
-path
-URL
-repo名
-branch名
-tag名
-package名
-class/method/property/API名
-file名/拡張子
-Windows path
+条件: src空→削除／src非空→保持
+手順: 現状確認→補正→試験
 ```
 
-code block内:
+複数条件で`/`をORとして推測させない。必要時は`条件: AかつB→C`、`条件: AまたはB→C`と短い日本語制御語を用いる。括弧を省略すると作用範囲が変わる場合は省略しない。
+
+## 圧縮規則
 
 ```text
-原則変換禁止
-Uがcode block全体を変換対象として明示した場合のみ変換可
-command/path/code/API名は常に変換禁止
+同義反復→統合
+同一長値／固定条件→1回定義＋参照
+KEYのみ漢字化→圧縮未成立
+不可侵制約の削除／反転／弱化禁止
+技術識別子(command／path／API名等)→文字列完全保持
 ```
+
+短名は説明用の参照でありshell変数ではない。inline commandに短名を未展開literalとして挿入禁止。必要なcommandは実値を保持する。

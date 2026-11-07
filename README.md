@@ -1,164 +1,51 @@
-# kdsl-spec
-
-KDSL / R1 specification repository.
-
-このリポジトリは、KDSL（安全gate保持型prompt記法）と R1 Result Specification（AI作業結果の証跡・検収仕様）を管理するための正本候補です。
-
-## 目的
-
-KDSL/R1を、単なるプロンプト圧縮記法ではなく、Human-AI work interface / 作業契約・結果証跡仕様として整理します。
-
-主な目的:
-
-- AI coding tool向けpromptの意味保持と安全gate保持
-- D禁止 / rollback / 未確認 / 未実行 / 承認gate / 実機確認分離の保持
-- KDSL_PROMPT / KDSL_RESULT の入出力契約整理
-- R1による結果報告の検収可能化
-- lint / template / profile / experimental案の分離管理
-
-## Quick navigation
+# KDSL — 漢字圧縮Core 再構築候補
 
 ```text
-Overview:
-  docs/overview.md
-
-KDSL全体仕様:
-  spec/core/kdsl-spec.md
-
-operator / 保護語 / 変換禁止:
-  spec/core/kdsl-core.md
-
-mode / safety / high-risk:
-  spec/core/kdsl-modes.md
-
-manifest / glossary:
-  spec/manifest.md
-  spec/glossary.md
-
-dev-prompt運用:
-  spec/profiles/kdsl-profile-dev-prompt.md
-
-converter運用:
-  spec/profiles/kdsl-converter-prompt.md
-
-R1 / KDSL_RESULT:
-  spec/r1/r1-result-spec.md
-
-lint:
-  spec/lint/kdsl-lint-checklist.md
-
-KDSL / KDSL-DP / ADPS bridge:
-  spec/bridge/kdsl-adps-bridge.md
-
-テンプレート:
-  templates/README.md
-  templates/base/kdsl_base_dev.md
-  templates/result/r1_result_spec.md
-  templates/tasks/task_docs_state_closeout.md
-  templates/tasks/task_corrective_impl.md
-  templates/tasks/task_investigation_only.md
-
-実験案:
-  experimental/README.md
-  experimental/actor-model.md
-  experimental/protocol-stack.md
-
-例:
-  examples/README.md
-  examples/midfd/docs_state_closeout.before.md
-  examples/midfd/docs_state_closeout.after.md
-  examples/midfd/r1_result.example.md
-
-Validator design:
-  tools/validator/README.md
-  tools/validator/r1-validator-design.md
-  tools/validator/kdsl-template-lint-design.md
-  tools/validator/mvp-design.md
-
-Review / checklist:
-  docs/reviews/v0.1.0-draft-review.md
-  docs/reviews/v0.1.0-draft-checklist.md
-
-Release / public planning:
-  docs/release/v0.1.0-draft-tag-plan.md
-  docs/public-readiness.md
+KDSL:=日本語prompt→漢字語幹／記号／最小制御語へ再構成するLLM直投入可能な漢字圧縮DSL
+第一目的:=漢字圧縮
+成立条件:=意味保持／判断分岐保持／明示制約保持／直投入可能／人間修正可能
 ```
 
-## 構成
+## 最小利用
+
+自然文：
+
+> 共有された材料で判断できる場合は、AI coding toolに調査を丸投げしないでください。
+
+KDSL：
 
 ```text
-spec/
-  manifest.md  正本参照関係
-  glossary.md  用語集
-  core/         KDSLの正本・core記法・mode定義
-  profiles/     dev-prompt / converter など用途別profile
-  r1/           R1 Result Specification / KDSL_RESULT
-  lint/         KDSL/R1 lint checklist
-  bridge/       KDSL / KDSL-DP / ADPS / R1境界
-
-templates/      再利用prompt template置き場
-experimental/   Actor Model / Protocol Stack / HMI / Python Validator等の実験案
-examples/       変換例・運用例
-tools/          validator等の設計/将来実装置き場
-docs/           overview / review / release planning 等の運用文書
+共有材判可→AI丸投禁止
 ```
 
-## 仕様レベル
+開発指示では先頭に `KDSL_PROMPT:` を置き、本文も漢字語幹化する。基本は `mode:min`。`dense` は意味保持を満たし、投入効率に利点がある場合に選択する。
+
+## 責務
+
+- `spec/core/`：漢字圧縮の定義／記法／mode。ここがKDSL本体。
+- `spec/profiles/`：用途別の変換指針。
+- `spec/r1/`：作業結果の簡潔報告。KDSL本体ではない。
+- `spec/bridge/`：KDSL-DP／ADPSとの限定境界。KDSL本体を上書きしない。
+- `spec/lint/`：変換レビューの観点。形式合格は意味同等の証明ではない。
+- `examples/kanji/`：人間が査読する比較例。
+
+参照優先順位と非正本の扱いは `spec/manifest.md`。旧branchの`experimental/`・`templates/`・旧`docs/reviews/`は現行仕様の根拠にしない。
+
+## 簡易検査
+
+```bash
+python -m unittest discover -s tools/validator -p 'test_*.py' -v
+```
+
+この検査はサンプルの短縮、保護文字列、基本記法の退行を確認するだけであり、任意LLMの意味同等、Agent完走、実機確認を保証しない。
+
+## 起点と採用方針
 
 ```text
-Core: 壊してはいけない正本
-Manifest: 正本参照関係
-Glossary: 用語定義
-Profile: 用途別の運用仕様
-R1: AI作業結果の証跡・検収仕様
-Lint: 意味欠落・safety gate欠落検査
-Bridge: KDSL-DP / ADPS / R1境界
-Templates: 実運用向け再利用部品
-Experimental: 検証中の概念・拡張案
-Examples: 正本ではない理解補助
-Tools: 任意補助。validator passは承認/RT:vの代替ではない
-Reviews: tag/release前の判断記録
-Release planning: tag/release判断の準備文書。実行許可ではない
-Public readiness: 公開可否判断メモ。公開実行ではない
+基点:=39a51b71950340b83f6e525dd1a76724530bb0df
+参照:=c49d73a5bc6dfec884068903c9a157fc4ae2edd2
+移植:=機能／意味単位の選別
+現main:=参照資産／無条件正本化禁止
 ```
 
-## 現在の状態
-
-```text
-status: v0.1.0-draft tag recorded
-tag: v0.1.0-draft
-tag_type: annotated
-tag_object: 797c88ad176dde5286187984de945040ec5eb945
-tag_target: 89f508c4c8d5ea49a315e60cd3157b089942afee
-visibility: private
-stability: draft
-release: none
-public: not_yet
-```
-
-## 運用方針
-
-- Core / R1 / Lint は慎重に変更する
-- Manifest は正本参照関係を示す
-- Glossary は用語定義を示す
-- Experimental は正本扱いしない
-- Examples は正本扱いしない
-- Tools は補助であり、validator pass を承認/RT:v/要件妥当性の代替にしない
-- Templates は未読時に意味が消えるため、参照だけで読了扱いしない
-- Release planning は実行許可ではない
-- Public readiness は公開判断のメモであり、公開許可ではない
-- KDSL-DP は P1/P1L へ正規化するまで実行指示扱いしない
-- KDSL_RESULT の NEXT は提案であり、次タスク実行許可ではない
-- KDSL_RESULT の COMMIT は実行結果または推奨messageであり、自動commit許可ではない
-- unknown profile / alias / preset / template は推測しない
-
-## 次候補
-
-```text
-Phase 10: choose next track
-A. validator-mvp-r1-only の実装設計または実装へ進む
-B. public-facing README / examples/public 設計へ進む
-C. v0.1.0-draft以降のspec整理へ進む
-release作成なし
-public化なし
-```
+本ブランチは再構築候補。`main`へのmerge・release・RT:vは未実施。

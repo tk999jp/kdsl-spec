@@ -1,126 +1,28 @@
-# KDSL Modes v0.1-draft
-
-目的: KDSLの mode / safety / profile / high-risk 運用を定義する。
-
-## mode
-
-### mode:readable
-
-人間レビュー重視。仕様書/共有/記事化向け。
-
-### mode:min
-
-実運用向け中密度圧縮。ChatGPT/Codex project prompt向け。通常既定。
-
-### mode:dense
-
-高密度圧縮。AI直投入/Project file圧縮/文字数削減向け。
+# KDSL Modes — 圧縮強度と限定保護
 
 ```text
-章見出し最小
-箇条書き最小
-章本文1〜3行目安
-safety checkは本文外
+readable:=人間確認重視
+min:=通常運用／意味保持＋修正可能性
+dense:=高圧縮／同義統合と記号化を強化
+lock:=Uが明示した重要箇所の保持を重視
 ```
 
-### mode:lock
+## min
 
-高risk箇所の意味保持重視。D禁止/rollback/未確認/承認gate/public tag/Release Assets向け。
+本文も漢字語幹化。不要助詞・重複削減、意味が明確な条件のみ記号化。長値反復を避け、人間が修正可能な区切りを残す。
 
-廃止:
+## dense
 
-```text
-mode:converter
-```
+minの意味保持条件を全保持し、同義反復／不要sectionを削減。意味束化は**既存の同一意味**に限る。条件差を消して束ねない。
 
-理由: converterは圧縮強度ではなく用途であるため、`profile: converter` に統合する。
+`dense`は`min`より長くなる場合もある。判断は本文だけでなくheader込みの実投入量、モデルのtokenizer、および意味解釈の安定性で行う。短縮利益が小さく可読性が下がる場合は`min`を優先。
 
 ## safety
 
 ```text
-normal=低risk用途
-lock-critical=高risk箇所のみlock適用, dev-prompt標準
-lock-all=全文lock寄り, 破壊操作/migration/rollback周辺向け
+normal:=入力の明示制約だけ保持
+lock-critical:=U明示critical箇所に限定
+lock-all:=Uが全文保護を明示した時だけ
 ```
 
-優先順位:
-
-```text
-safety > high-risk判定 > mode > profile
-```
-
-## 推奨組合せ
-
-| mode | safety | 用途 |
-|---|---|---|
-| readable | normal | 共有/説明 |
-| min | lock-critical | 標準運用 |
-| dense | lock-critical | 高密度、high-riskはdense-lock-lite |
-| dense | lock-all | 保守的dense |
-| lock | lock-all | 検査/保守/破壊操作 |
-
-## 補助用語
-
-```text
-dense-safe = mode:dense + safety:lock-critical
-dense-lock = mode:dense + safety:lock-all相当
-dense-lock-lite = mode:dense内のhigh-risk箇所だけを短く保護
-```
-
-注意:
-
-```text
-dense-safe/dense-lock/dense-lock-liteは正式mode名ではなく運用呼称
-指定値としては使わない
-```
-
-## high-risk
-
-```text
-D禁止
-rollback/revert
-未確認/未実行
-承認gate
-実機確認分離
-public履歴/公開済tag/Release Assets
-data migration
-正本変更
-UI契約変更
-破壊操作
-KDSL-DP直接実行
-RT:v
-KDSL_RESULT NEXT
-KDSL_RESULT COMMIT
-```
-
-判定順:
-
-```text
-[high-risk]明示 > high-risk語を含む行 > high-risk章 > safety指定
-```
-
-過検出抑制:
-
-```text
-high-risk語が例示/辞書定義のみ→note扱
-実装/変更/削除/承認/rollback文脈→high-risk扱
-```
-
-## mode:dense時の安全規則
-
-mode:denseでも以下は短縮弱化しない。
-
-```text
-禁止→禁 への短縮禁止
-未確認→未確 への短縮禁止
-未実行→未実 への短縮禁止
-承認待→承待 への短縮禁止
-実行済扱→実済扱 への短縮禁止
-確認済扱→確済扱 への短縮禁止
-成功扱→成扱 への短縮禁止
-断定禁止→断禁 への短縮禁止
-KDSL-DP直接実行禁止保持
-P1/P1L正規化必須保持
-RT:v条件保持
-KDSL_RESULT NEXT/COMMIT条件保持
-```
+安全保持を理由に新しい承認境界・停止条件・Phase・scopeを生成しない。`mode`を変えても漢字圧縮identityを解除しない。
