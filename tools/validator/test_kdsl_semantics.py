@@ -148,11 +148,11 @@ class KDSLSemanticsTests(unittest.TestCase):
                 for before, after in changes:
                     with self.subTest(case=case_id, mode=mode, mutation=after):
                         source = self.cases[case_id][mode]
-                        # Ignore whitespace differences after colon in one-line dense.
-                        before_normalized = re.sub(r"\s+", "", before)
-                        target = re.sub(r"\s+", "", source)
-                        self.assertIn(before_normalized, target)
-                        mutant = target.replace(before_normalized, after, 1)
+                        # Adapt only optional spacing after a section colon.
+                        # Do not strip source whitespace: "src dir" is part of a term.
+                        needle = before if before in source else before.replace(":", ": ")
+                        self.assertIn(needle, source)
+                        mutant = source.replace(needle, after, 1)
                         self.assertFalse(CHECKS[case_id](mutant))
                         tested += 1
         self.assertEqual(18, tested)
