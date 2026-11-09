@@ -1,6 +1,6 @@
 """Small deterministic regression for the reviewed KDSL examples.
 
-No parser/LLM oracle: semantic equivalence and runtime behavior require independent checks.
+Marker checks only; decision oracles live in test_kdsl_semantics.py. Neither test suite proves LLM equivalence.
 """
 
 import json
@@ -59,20 +59,6 @@ class KDSLRebuildTests(unittest.TestCase):
             for mode in ("min", "dense"):
                 with self.subTest(case=case_id, mode=mode):
                     self.assertTrue(all(span in cases[case_id][mode] for span in spans))
-
-    def test_obvious_semantic_mutations_are_rejected(self):
-        cases = {c["id"]: c for c in self.samples}
-        changes = (
-            ("condition-precedence", "Aかつ(BまたはC)", "Aまたは(BかつC)"),
-            ("explicit-approval", "commit=承認待", "commit=可"),
-            ("runtime-separation", "未確認", "確認済"),
-        )
-        for case_id, before, after in changes:
-            for mode in ("min", "dense"):
-                with self.subTest(case=case_id, mode=mode):
-                    original = cases[case_id][mode]
-                    self.assertIn(before, original)
-                    self.assertNotIn(before, original.replace(before, after, 1))
 
     def test_technical_identifiers_are_unchanged(self):
         case = next(c for c in self.samples if c["id"] == "literal-preservation")
